@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     private float moveSpeed = 10f;
-    private PlayerStateController playerStateController;
     [SerializeField]
     private SkeletonAnimation skeletonAnimation;
     [SpineAnimation]
@@ -18,6 +17,10 @@ public class PlayerController : MonoBehaviour
     [SpineAnimation]
     [SerializeField]
     private string runAnim;
+
+    [SerializeField]
+    private InteractionDetectController interactionDetecter;
+    private PlayerStateController playerStateController;
 
     private void Awake()
     {
@@ -43,6 +46,13 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region OnStateUpdate
+    public void DialogueStateInputCheck()
+    {
+        if(Input.GetKeyDown(KeyCode.KeypadEnter)) 
+        {
+            
+        }
+    }
     public void PlayerMoveUpdate()
     {
         var hor = Input.GetAxis("Horizontal");
@@ -72,13 +82,27 @@ public class PlayerController : MonoBehaviour
     }
     public void PlayerInputCheck()
     {
+        if(InteractionInputCheck())
+        {
+            return;
+        }
+
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
-
         if(hor != 0 || ver != 0)
         {
             playerStateController.ChangeState(PlayerMove.Instance);
         }
+    }
+    public bool InteractionInputCheck() 
+    {
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            interactionDetecter.CurFocusingnIteraction.OnInteraction();
+            playerStateController.ChangeState(PlayerInteraction.Instance);
+            return true;
+        }
+        return false;
     }
     #endregion
 

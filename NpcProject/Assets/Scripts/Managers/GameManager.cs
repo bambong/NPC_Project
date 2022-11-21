@@ -2,20 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameStateController : StateController<GameSceneManager>
+public class GameStateController : StateController<GameManager>
 {
-    public GameStateController(GameSceneManager owner) : base(owner)
+    public GameStateController(GameManager owner) : base(owner)
     {
         Init();
     }
     public void Init()
     {
-        curState = .Instance;
+        curState = GameNormalState.Instance;
     }
 
 }
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : Singleton<GameManager>,IInit
 {
-    
+    GameStateController gameStateController;
+
+    public void Init()
+    {
+        gameStateController = new GameStateController(Instance);
+    }
+
+    #region SetState
+    public void SetStateNormal() => gameStateController.ChangeState(GameNormalState.Instance);
+    public void SetStateDialog() => gameStateController.ChangeState(GameDialogState.Instance);
+    #endregion
 }

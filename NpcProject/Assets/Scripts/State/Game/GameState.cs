@@ -2,8 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameNormalState : IState<GameManager>
+public class GameNormalState : Singleton<GameNormalState>,IState<GameManager>
 {
+    public void Init()
+    {
+    }
+
     public void Enter(GameManager stateController)
     {
     }
@@ -16,12 +20,16 @@ public class GameNormalState : IState<GameManager>
     {
     }
 
+
     public void UpdateActive(GameManager stateController)
     {
     }
 }
-public class GameDialogState : IState<GameManager>
+public class GameDialogState : Singleton<GameDialogState>, IState<GameManager>
 {
+    public void Init()
+    {
+    }
     public void Enter(GameManager stateController)
     {
     }

@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
 {
-
+    public void Init()
+    {
+    }
     public void Enter(PlayerController stateController)
     {
         stateController.SetAnimIdle();
@@ -19,6 +21,8 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
     {
     }
 
+    
+
     public void UpdateActive(PlayerController stateController)
     {
         stateController.PlayerInputCheck();
@@ -27,7 +31,9 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
 
 public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
 {
-
+    public void Init()
+    {
+    }
     public void Enter(PlayerController stateController)
     {
         stateController.SetAnimRun();
@@ -50,7 +56,9 @@ public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
 
 public class PlayerStop : Singleton<PlayerStop>, IState<PlayerController>
 {
-
+    public void Init()
+    {
+    }
     public void Enter(PlayerController stateController)
     {
     }
@@ -70,6 +78,9 @@ public class PlayerStop : Singleton<PlayerStop>, IState<PlayerController>
 
 public class PlayerInteraction : Singleton<PlayerInteraction>, IState<PlayerController>
 {
+    public void Init()
+    {
+    }
     public void Enter(PlayerController stateController)
     {
     }

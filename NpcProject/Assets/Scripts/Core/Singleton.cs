@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class Singleton<T> where T : new()
+public abstract class Singleton<T> where T : IInit , new()
 {
     public static T Instance 
     { 
@@ -24,5 +24,6 @@ public abstract class Singleton<T> where T : new()
         }
 
         instance = new T();
+        instance.Init();
     }
 }

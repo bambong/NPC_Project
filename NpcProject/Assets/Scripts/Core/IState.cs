@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-    public interface IState<T>
+    public interface IState<T> : IInit
     {
         public void Enter(T stateController);
         public void UpdateActive(T stateController);
