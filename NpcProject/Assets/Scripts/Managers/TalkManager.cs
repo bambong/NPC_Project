@@ -16,40 +16,37 @@ public class Speak
     public string speakerName;
     public Sprite speakerImage;
     public List<Dialogue> dialogues;
-    private int curIndex = 0;
-    public bool MoveNext(out Dialogue dialogue)
-    {
-        bool result = false;
-        if(curIndex <= dialogues.Count -1) 
-        {
-            curIndex = curIndex % dialogues.Count;
-            result = true;
-        }
-        var temp = dialogues[curIndex];
-        curIndex++;
-        dialogue = temp;
-        return result;
-    }
 }
 
-public class Talk : ScriptableObject
+public class TalkEvent 
 {
-    public int Id;
-    public List<Speak> talks;
+    public Talk talk;
     private int curIndex = 0;
-    public bool MoveNext(out Speak speak)
+    private TalkPanelController talkPanel;
+    public TalkEvent(Talk talk ,TalkPanelController talkpanel) 
     {
-        bool result = false;
-        if(curIndex <= talks.Count - 1)
+        this.talk = talk;
+        talkPanel = talkpanel;
+        talkPanel.SetText(talk.speaks[0]);
+    }
+    public bool ProgressTalk() 
+    {
+        while(true) 
         {
-            curIndex = curIndex % talks.Count;
-            result = true;
+            if(!talkPanel.MoveNext())
+            {
+                curIndex++;
+
+                if(talk.speaks.Count <= curIndex)
+                {
+                    return false;
+                }
+                talkPanel.SetText(talk.speaks[curIndex]);
+                continue;
+            }
+            break;
         }
-        curIndex = curIndex % talks.Count;
-        var temp = talks[curIndex];
-        curIndex++;
-        speak = temp;
-        return result; 
+        return true;
     }
 }
 
@@ -58,38 +55,49 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
     [SerializeField]
     private TalkPanelController talkPanel;
 
-    private Talk curTalk;
+    private TalkEvent curTalkEvent;
+    private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.01f);
     public void Init()
     {
         LoadTalkData();   
     }
     private void LoadTalkData() 
     {
-
     }
     public void EnterTalk(Talk talk) 
     {
-        curTalk = talk;
-       // Speak speak;
-       // talkPanel.SetText();
-
+        GameManager.Instance.SetStateDialog();
+        curTalkEvent = new TalkEvent(talk,talkPanel);
+        talkPanel.gameObject.SetActive(true);
+        
+        StartCoroutine(ProgressTalk());
     }
-    public void ProgressTalk() 
+    private void EndTalk() 
     {
-        Speak speak;
-        if(curTalk.MoveNext(out speak)) 
-        {
-            // 대화 종료
-        }
-        ProgressSpeak();
+        talkPanel.gameObject.SetActive(false);
+        GameManager.Instance.SetStateNormal();
     }
-    public void ProgressSpeak() 
-    {
-        if(talkPanel.MoveNext())
-        {
-            ProgressTalk();
-        }
-    }
-   
 
+    IEnumerator ProgressTalk() 
+    {
+        if(!curTalkEvent.ProgressTalk())
+        {
+            EndTalk();
+            yield break;
+        }
+        while(true) 
+        {
+            if(Input.GetKeyDown(KeyCode.X)) 
+            {
+                if(!curTalkEvent.ProgressTalk())
+                {
+                    EndTalk();
+                    break;
+                }
+            }
+            yield return INPUT_CHECK_WAIT;
+        }
+    }
+
+    
 }

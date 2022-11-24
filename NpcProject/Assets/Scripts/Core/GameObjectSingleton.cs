@@ -10,7 +10,7 @@ public interface IInit
 
 public abstract class GameObjectSingleton<T> : MonoBehaviour where T : MonoBehaviour , IInit
 {
-    public static T Instacne 
+    public static T Instance 
     {
         get 
         {

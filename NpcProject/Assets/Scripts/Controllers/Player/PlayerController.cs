@@ -98,13 +98,24 @@ public class PlayerController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.F))
         {
-            interactionDetecter.CurFocusingnIteraction.OnInteraction();
+            interactionDetecter.Interaction();
             playerStateController.ChangeState(PlayerInteraction.Instance);
             return true;
         }
         return false;
     }
     #endregion
-
+   
+    #region SetState
+    public void SetStateInteraction() 
+    {
+        playerStateController.ChangeState(PlayerInteraction.Instance);
+    }
+    public void SetStateIdle() 
+    {
+        playerStateController.ChangeState(PlayerIdle.Instance);
+    }
+    
+    #endregion
 
 }

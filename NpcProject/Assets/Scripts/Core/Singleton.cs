@@ -5,8 +5,8 @@ public abstract class Singleton<T> where T : IInit , new()
     public static T Instance 
     { 
         get 
-        {
-            if(instance  == null) 
+         {
+             if(instance  == null) 
             {
                 Generate();
             }

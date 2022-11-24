@@ -2,17 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameSceneManager : MonoBehaviour
+public class GameSceneManager : GameObjectSingletonDestroy<GameSceneManager>, IInit
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    private PlayerController player;
 
-    // Update is called once per frame
-    void Update()
+    public PlayerController Player { get => player; }
+    
+    public void Init()
     {
-        
+
     }
 }

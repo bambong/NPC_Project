@@ -13,6 +13,15 @@ public class InteractionDetectController : MonoBehaviour
     private readonly string INTERACTION_TAG = "Interaction";
     private Interaction curFocusingnIteraction;
 
+
+    public void Interaction() 
+    {
+        if(curFocusingnIteraction != null)
+        {
+            curFocusingnIteraction.OnInteraction();
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag(INTERACTION_TAG)) 

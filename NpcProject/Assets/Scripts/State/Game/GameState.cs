@@ -32,10 +32,12 @@ public class GameDialogState : Singleton<GameDialogState>, IState<GameManager>
     }
     public void Enter(GameManager stateController)
     {
+        GameSceneManager.Instacne.Player.SetStateInteraction();
     }
 
     public void Exit(GameManager stateController)
     {
+        GameSceneManager.Instacne.Player.SetStateIdle();
     }
 
     public void FixedUpdateActive(GameManager stateController)

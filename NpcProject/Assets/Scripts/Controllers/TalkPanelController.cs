@@ -15,18 +15,22 @@ public class TalkPanelController : MonoBehaviour
     private TextMeshProUGUI dialogueText;
 
     private Speak curSpeak;
+    private int curIndex =0;
     public void SetText(Speak speak) 
     {
         curSpeak = speak;
+        curIndex = 0;
         speakImage.sprite = speak.speakerImage;
         spekerName.text = speak.speakerName;
     }
     public bool MoveNext() 
     {
-        bool result = false;
-        Dialogue dialogue;
-        result = curSpeak.MoveNext(out dialogue);
-        dialogueText.text = dialogue.text;
-        return result;
+        if(curSpeak.dialogues.Count <= curIndex)
+        {
+            return false;
+        }
+        dialogueText.text = curSpeak.dialogues[curIndex].text;
+        curIndex++;
+        return true;
     }
 }
