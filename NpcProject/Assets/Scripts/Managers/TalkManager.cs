@@ -56,7 +56,7 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
     private TalkPanelController talkPanel;
 
     private TalkEvent curTalkEvent;
-    private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.01f);
+    private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.05f);
     public void Init()
     {
         LoadTalkData();   
@@ -98,6 +98,4 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
             yield return INPUT_CHECK_WAIT;
         }
     }
-
-    
 }
