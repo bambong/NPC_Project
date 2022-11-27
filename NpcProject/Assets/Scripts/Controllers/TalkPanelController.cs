@@ -20,8 +20,8 @@ public class TalkPanelController : MonoBehaviour
     {
         curSpeak = speak;
         curIndex = 0;
-        speakImage.sprite = speak.speakerImage;
-        spekerName.text = speak.speakerName;
+        speakImage.sprite = speak.speaker.sprite;
+        spekerName.text = speak.speaker.name;
     }
     public bool MoveNext() 
     {

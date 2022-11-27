@@ -13,8 +13,7 @@ public class Dialogue
 [Serializable]
 public class Speak
 {
-    public string speakerName;
-    public Sprite speakerImage;
+    public Speaker speaker;
     public List<Dialogue> dialogues;
 }
 
@@ -56,7 +55,7 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
     private TalkPanelController talkPanel;
 
     private TalkEvent curTalkEvent;
-    private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.05f);
+    private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.01f);
     public void Init()
     {
         LoadTalkData();   

@@ -16,7 +16,11 @@ public class InteractionUiController : MonoBehaviour
     private bool isOpening = false;
 
 
-
+    public void Open()
+    {
+        gameObject.SetActive(true);
+        StartCoroutine(OpenInteractionUi());
+    }
     public void Open(Vector3 pos)
     {
         rectTransform.position = pos;
@@ -25,6 +29,10 @@ public class InteractionUiController : MonoBehaviour
     }
     public void Close() 
     {
+        if(!gameObject.activeSelf) 
+        {
+            return;
+        }
         StartCoroutine(CloseInteractionUi());
     } 
     private void PlayOnState() 

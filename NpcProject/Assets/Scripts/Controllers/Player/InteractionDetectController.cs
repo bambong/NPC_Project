@@ -19,8 +19,11 @@ public class InteractionDetectController : MonoBehaviour
         if(curFocusingnIteraction != null)
         {
             curFocusingnIteraction.OnInteraction();
+            GameSceneManager.Instacne.Player.SetStateInteraction();
         }
     }
+    public void InteractionUiEnable() => interactionUi.Open();
+    public void InteractionUiDisable() => interactionUi.Close();
 
     private void OnTriggerEnter(Collider other)
     {
@@ -30,6 +33,8 @@ public class InteractionDetectController : MonoBehaviour
             curFocusingnIteraction = other.GetComponent<Interaction>();
         }
     }
+
+
 
     private void OnTriggerExit(Collider other)
     {
