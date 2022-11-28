@@ -17,7 +17,7 @@ public class KeywordFameController : MonoBehaviour
             return false;
         }
         hasKeyword = true;  
-        dragableController.SetPos(rectTransform.position);
+        dragableController.SetToKeywordFrame(rectTransform.position);
         return true;
     }
 

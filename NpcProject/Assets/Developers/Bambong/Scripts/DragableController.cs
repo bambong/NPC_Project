@@ -1,7 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class DragableController : MonoBehaviour, IDragHandler, IEndDragHandler,IBeginDragHandler ,IPointerExitHandler ,IPointerEnterHandler
 {
@@ -10,11 +10,12 @@ public class DragableController : MonoBehaviour, IDragHandler, IEndDragHandler,I
     private readonly float CELL_SIZE = 150f;
     [SerializeField]
     private RectTransform rectTransform;
+    [SerializeField]
+    private Image image;
 
     private int prevSibilintIndex;
     private Coroutine curAnimCoroutine;
     private Vector3 startDragPoint;
-    
     
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -31,11 +32,25 @@ public class DragableController : MonoBehaviour, IDragHandler, IEndDragHandler,I
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        var raycasts = GraphicRayCasterManager.Instacne.GetRaycastList(eventData);
 
-      //  Physics.BoxCast(Input.mousePosition, CELL_SIZE, Vector3.forward, Quaternion.identity, 1000f);
-     //   if()
-        rectTransform.anchoredPosition = startDragPoint;  
-        rectTransform.SetSiblingIndex(prevSibilintIndex);
+        if(raycasts.Count > 0) 
+        {
+            for(int i =0; i < raycasts.Count; ++i) 
+            {
+                if(raycasts[i].gameObject.CompareTag("KeywordFrame")) 
+                {
+                    var keywordController = raycasts[i].gameObject.GetComponent<KeywordFameController>();
+                    if(!keywordController.SetKeyWord(this)) 
+                    {
+                       ResetKeyword();
+                    }
+  
+                    return;
+                }
+            }
+        }
+        ResetKeyword();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -58,11 +73,18 @@ public class DragableController : MonoBehaviour, IDragHandler, IEndDragHandler,I
         }
     }
 
-    public void SetPos(Vector3 pos) 
+    public void SetToKeywordFrame(Vector3 pos) 
     {
+        image.raycastTarget = false;
         rectTransform.position = pos;
     }
 
+    public void ResetKeyword() 
+    {
+        image.raycastTarget = true;
+        rectTransform.anchoredPosition = startDragPoint;
+        rectTransform.SetSiblingIndex(prevSibilintIndex);
+    }
     public IEnumerator ChangeScaleLerpAnim(Vector3 desireScale, float time) 
     {
         float progress = 0f;
