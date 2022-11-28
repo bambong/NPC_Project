@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using Cinemachine;
+
 [Serializable]
 public class Dialogue 
 {
@@ -54,7 +56,7 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
 {
     [SerializeField]
     private TalkPanelController talkPanel;
-
+    private CinemachineVirtualCamera talkVircam = null;
     private TalkEvent curTalkEvent;
     private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.05f);
     public void Init()
@@ -64,18 +66,44 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
     private void LoadTalkData() 
     {
     }
-    public void EnterTalk(Talk talk) 
+    public void EnterTalk(Talk talk, CinemachineVirtualCamera virCam)
     {
         GameManager.Instance.SetStateDialog();
         curTalkEvent = new TalkEvent(talk,talkPanel);
         talkPanel.gameObject.SetActive(true);
-        
+        CameraSet(virCam);
+        EnterCamera(talkVircam);
+
         StartCoroutine(ProgressTalk());
     }
     private void EndTalk() 
     {
         talkPanel.gameObject.SetActive(false);
         GameManager.Instance.SetStateNormal();
+        ExitCamera(talkVircam);
+    }
+
+    private void CameraSet(CinemachineVirtualCamera virCam)
+    {
+        talkVircam = virCam;
+    }
+
+    private void EnterCamera(CinemachineVirtualCamera virCam)
+    {
+        if (virCam != null)
+        {
+            Camera.main.cullingMask = ~(1 << LayerMask.NameToLayer("Player"));
+            virCam.gameObject.SetActive(true);
+        }
+    }
+
+    private void ExitCamera(CinemachineVirtualCamera virCam)
+    {
+        if (talkPanel.gameObject.activeSelf == false)
+        {
+            virCam.gameObject.SetActive(false);
+            Camera.main.cullingMask = -1;
+        }
     }
 
     IEnumerator ProgressTalk() 
