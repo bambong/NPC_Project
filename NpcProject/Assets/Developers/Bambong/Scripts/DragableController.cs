@@ -7,12 +7,15 @@ public class DragableController : MonoBehaviour, IDragHandler, IEndDragHandler,I
 {
     private readonly float START_END_ANIM_TIME = 0.2f;
     private readonly float FOCUSING_SCALE = 1.2f;
+    private readonly float CELL_SIZE = 150f;
     [SerializeField]
     private RectTransform rectTransform;
 
     private int prevSibilintIndex;
     private Coroutine curAnimCoroutine;
     private Vector3 startDragPoint;
+    
+    
     public void OnBeginDrag(PointerEventData eventData)
     {
 
@@ -28,6 +31,9 @@ public class DragableController : MonoBehaviour, IDragHandler, IEndDragHandler,I
 
     public void OnEndDrag(PointerEventData eventData)
     {
+
+      //  Physics.BoxCast(Input.mousePosition, CELL_SIZE, Vector3.forward, Quaternion.identity, 1000f);
+     //   if()
         rectTransform.anchoredPosition = startDragPoint;  
         rectTransform.SetSiblingIndex(prevSibilintIndex);
     }
@@ -52,6 +58,10 @@ public class DragableController : MonoBehaviour, IDragHandler, IEndDragHandler,I
         }
     }
 
+    public void SetPos(Vector3 pos) 
+    {
+        rectTransform.position = pos;
+    }
 
     public IEnumerator ChangeScaleLerpAnim(Vector3 desireScale, float time) 
     {
