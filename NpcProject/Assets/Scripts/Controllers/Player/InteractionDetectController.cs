@@ -7,7 +7,9 @@ using UnityEngine.SceneManagement;
 public class InteractionDetectController : MonoBehaviour
 {
     [SerializeField]
-    private InteractionUiController interactionUi; 
+    private InteractionUiController interactionUi;
+    [SerializeField]
+    private GlitchEffectController glitchEffect;
 
     public Interaction CurFocusingnIteraction { get => curFocusingnIteraction;}
 
@@ -26,9 +28,12 @@ public class InteractionDetectController : MonoBehaviour
             if (SceneManager.GetActiveScene().name == "Test")
             {
                 SceneManager.LoadScene("Debug");
+                //glitchEffect.OnGlitch();
             }
+
             if (SceneManager.GetActiveScene().name == "Debug")
             {
+                //glitchEffect.OffGlitch();
                 SceneManager.LoadScene("Test");
             }
         }
