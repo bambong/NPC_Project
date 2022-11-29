@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class InteractionDetectController : MonoBehaviour
 {
@@ -19,6 +20,17 @@ public class InteractionDetectController : MonoBehaviour
         if(curFocusingnIteraction != null)
         {
             curFocusingnIteraction.OnInteraction();
+        }
+        else
+        {
+            if (SceneManager.GetActiveScene().name == "Test")
+            {
+                SceneManager.LoadScene("Debug");
+            }
+            if (SceneManager.GetActiveScene().name == "Debug")
+            {
+                SceneManager.LoadScene("Test");
+            }
         }
     }
 
