@@ -1,13 +1,15 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+
 public class DragableController : MonoBehaviour, IDragHandler, IEndDragHandler,IBeginDragHandler ,IPointerExitHandler ,IPointerEnterHandler
 {
     private readonly float START_END_ANIM_TIME = 0.2f;
     private readonly float FOCUSING_SCALE = 1.2f;
-    private readonly float CELL_SIZE = 150f;
+    private readonly float KEYWORD_FRAME_MOVE_TIME= 0.1f;
     [SerializeField]
     private RectTransform rectTransform;
     [SerializeField]
@@ -19,7 +21,6 @@ public class DragableController : MonoBehaviour, IDragHandler, IEndDragHandler,I
     
     public void OnBeginDrag(PointerEventData eventData)
     {
-
         prevSibilintIndex = rectTransform.GetSiblingIndex();
         rectTransform.SetAsLastSibling();
         startDragPoint = rectTransform.anchoredPosition;
@@ -76,14 +77,16 @@ public class DragableController : MonoBehaviour, IDragHandler, IEndDragHandler,I
     public void SetToKeywordFrame(Vector3 pos) 
     {
         image.raycastTarget = false;
-        rectTransform.position = pos;
+        rectTransform.DOMove(pos, KEYWORD_FRAME_MOVE_TIME);
     }
 
     public void ResetKeyword() 
     {
-        image.raycastTarget = true;
-        rectTransform.anchoredPosition = startDragPoint;
-        rectTransform.SetSiblingIndex(prevSibilintIndex);
+        rectTransform.DOAnchorPos(startDragPoint, START_END_ANIM_TIME).OnComplete(() =>
+        { 
+            image.raycastTarget = true;
+            rectTransform.SetSiblingIndex(prevSibilintIndex);
+        }); 
     }
     public IEnumerator ChangeScaleLerpAnim(Vector3 desireScale, float time) 
     {
