@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
+using DG.Tweening;
+
 public class TalkPanelController : MonoBehaviour
 {
     [SerializeField]
@@ -29,7 +32,8 @@ public class TalkPanelController : MonoBehaviour
         {
             return false;
         }
-        dialogueText.text = curSpeak.dialogues[curIndex].text;
+        dialogueText.text = "";        
+        dialogueText.DOText(curSpeak.dialogues[curIndex].text, 1.0f).SetEase(Ease.OutCubic);
         curIndex++;
         return true;
     }
