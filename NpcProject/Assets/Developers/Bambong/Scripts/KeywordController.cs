@@ -4,21 +4,39 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public enum E_KeywordType
+{
+    Action,
+    Object
+}
 
-public class DragableController : MonoBehaviour, IDragHandler, IEndDragHandler,IBeginDragHandler ,IPointerExitHandler ,IPointerEnterHandler
+public  class KeywordController : MonoBehaviour, IDragHandler, IEndDragHandler,IBeginDragHandler ,IPointerExitHandler ,IPointerEnterHandler
 {
     private readonly float START_END_ANIM_TIME = 0.2f;
     private readonly float FOCUSING_SCALE = 1.2f;
     private readonly float KEYWORD_FRAME_MOVE_TIME= 0.1f;
+    private readonly string KEYWORD_FRAME_TAG = "KeywordFrame";
+
     [SerializeField]
     private RectTransform rectTransform;
     [SerializeField]
     private Image image;
 
+    [SerializeField]
+    private E_KeywordType keywordType;
+
+    private string keywordId;
     private int prevSibilintIndex;
     private Coroutine curAnimCoroutine;
     private Vector3 startDragPoint;
-    
+
+    public E_KeywordType KeywordType { get => keywordType; }
+    public string KeywordId { get => keywordId; }
+
+    private void Awake()
+    {
+        keywordId = GetType().ToString();
+    }
     public void OnBeginDrag(PointerEventData eventData)
     {
         prevSibilintIndex = rectTransform.GetSiblingIndex();
@@ -39,20 +57,16 @@ public class DragableController : MonoBehaviour, IDragHandler, IEndDragHandler,I
         {
             for(int i =0; i < raycasts.Count; ++i) 
             {
-                if(raycasts[i].gameObject.CompareTag("KeywordFrame")) 
+                if(raycasts[i].gameObject.CompareTag(KEYWORD_FRAME_TAG)) 
                 {
-                    var keywordController = raycasts[i].gameObject.GetComponent<KeywordFameController>();
-                    if(!keywordController.SetKeyWord(this)) 
-                    {
-                       ResetKeyword();
-                    }
-  
+                    KeywordManager.Instance.SetKeyWord(this);
                     return;
                 }
             }
         }
         ResetKeyword();
     }
+  
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -103,5 +117,14 @@ public class DragableController : MonoBehaviour, IDragHandler, IEndDragHandler,I
         rectTransform.localScale = desireScale;
     }
 
+    public bool CompareKeywordType(E_KeywordType type)
+    {
+        return type == keywordType;
+    }
+
+    public virtual bool HandleObjectKeyword(KeywordController objectKeywordController)
+    {
+        return false;
+    }
 
 }
