@@ -58,7 +58,7 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
     private TalkPanelController talkPanel;
     private CinemachineVirtualCamera talkVircam = null;
     private TalkEvent curTalkEvent;
-    private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.05f);
+    private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.01f);
     public void Init()
     {
         LoadTalkData();   
@@ -115,7 +115,7 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
         }
         while(true) 
         {
-            if(Input.GetKeyDown(KeyCode.X)) 
+            if(Input.GetKeyDown(KeyCode.X) && talkPanel.IsAni() == true) 
             {
                 if(!curTalkEvent.ProgressTalk())
                 {
