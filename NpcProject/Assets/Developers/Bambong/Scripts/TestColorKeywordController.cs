@@ -17,7 +17,15 @@ public class TestColorKeywordController : KeywordController
         {
             case "TestColorKeywordController":
                 TestColorKeywordController colorKeywordController = (TestColorKeywordController)objectKeywordController;
-                return colorKeywordController.id == Id;
+               if(colorKeywordController.id == Id) 
+               {
+                    objectKeywordController.Remove();
+                    Remove();
+                    KeywordManager.Instance.ResetKeywordFrame();
+                   // KeywordManager.Instance.ResortKeywordArea();
+                    return true;
+               }
+               return false;
 
             default:
                 return false;

@@ -39,6 +39,10 @@ public  class KeywordController : MonoBehaviour, IDragHandler, IEndDragHandler,I
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if(eventData.button != PointerEventData.InputButton.Left) 
+        {
+            return;
+        }
         prevSibilintIndex = rectTransform.GetSiblingIndex();
         rectTransform.SetAsLastSibling();
         startDragPoint = rectTransform.anchoredPosition;
@@ -46,11 +50,21 @@ public  class KeywordController : MonoBehaviour, IDragHandler, IEndDragHandler,I
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (eventData.button != PointerEventData.InputButton.Left)
+        {
+            return;
+        }
+
         rectTransform.position = Input.mousePosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (eventData.button != PointerEventData.InputButton.Left)
+        {
+            return;
+        }
+
         var raycasts = GraphicRayCasterManager.Instacne.GetRaycastList(eventData);
 
         if(raycasts.Count > 0) 
@@ -91,11 +105,15 @@ public  class KeywordController : MonoBehaviour, IDragHandler, IEndDragHandler,I
     public void SetToKeywordFrame(Vector3 pos) 
     {
         image.raycastTarget = false;
-        rectTransform.DOMove(pos, KEYWORD_FRAME_MOVE_TIME);
+        rectTransform.DOMove(pos, KEYWORD_FRAME_MOVE_TIME).OnComplete(() => KeywordManager.Instance.Interaction());
     }
 
     public void ResetKeyword() 
     {
+        if(gameObject == null) 
+        {
+            return;
+        }
         rectTransform.DOAnchorPos(startDragPoint, START_END_ANIM_TIME).OnComplete(() =>
         { 
             image.raycastTarget = true;
@@ -125,6 +143,12 @@ public  class KeywordController : MonoBehaviour, IDragHandler, IEndDragHandler,I
     public virtual bool HandleObjectKeyword(KeywordController objectKeywordController)
     {
         return false;
+    }
+    public void Remove()
+    {
+        ClearAnim();
+        rectTransform.DOScale(Vector3.zero, 0.2f).OnComplete(() => { Destroy(rectTransform.gameObject); });
+        
     }
 
 }

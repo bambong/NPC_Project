@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro.EditorUtilities;
 using UnityEngine;
-
-
+using UnityEngine.UI;
 
 public class KeywordManager : GameObjectSingleton<KeywordManager>, IInit
 {
@@ -13,6 +12,8 @@ public class KeywordManager : GameObjectSingleton<KeywordManager>, IInit
     [SerializeField]
     private KeywordFameController actionKeywordFrame;
 
+    [SerializeField]
+    private List<GridLayoutGroup> gridLayoutGroups;
     public void Init()
     {
     }
@@ -21,13 +22,11 @@ public class KeywordManager : GameObjectSingleton<KeywordManager>, IInit
     {
         if (objectKeywordFrame.SetKeyWord(keywordController)) 
         {
-            Interaction();    
             return;
         }
 
         if (actionKeywordFrame.SetKeyWord(keywordController)) 
         {
-            Interaction();    
             return;
         }
 
@@ -35,7 +34,7 @@ public class KeywordManager : GameObjectSingleton<KeywordManager>, IInit
         
     }
 
-    private void Interaction() 
+    public void Interaction() 
     {
         if(!objectKeywordFrame.HasKeyword || !actionKeywordFrame.HasKeyword) 
         {
@@ -44,9 +43,9 @@ public class KeywordManager : GameObjectSingleton<KeywordManager>, IInit
 
         if (!actionKeywordFrame.InteractionKeyword(objectKeywordFrame.KeywordController)) 
         {
+            ResetKeyword();
             ResetKeywordFrame();
         }
-        
 
     }
     public void ResetKeywordFrame() 
@@ -54,7 +53,18 @@ public class KeywordManager : GameObjectSingleton<KeywordManager>, IInit
         actionKeywordFrame.ResetKeywordFrame();
         objectKeywordFrame.ResetKeywordFrame();
     }
-
-
+    public void ResetKeyword() 
+    {
+        actionKeywordFrame.ResetKeyword();
+        objectKeywordFrame.ResetKeyword();
+    }
+    public void ResortKeywordArea() 
+    {
+        foreach(var grid in gridLayoutGroups) 
+        {
+            grid.enabled = true;
+            grid.enabled = false;
+        }
+    }
 
 }

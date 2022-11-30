@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class KeywordFameController : MonoBehaviour
 {
@@ -35,7 +36,11 @@ public class KeywordFameController : MonoBehaviour
     public void ResetKeywordFrame() 
     {
         hasKeyword = false;
-        keywordController.ResetKeyword();
         keywordController = null;
     }
+    public void ResetKeyword() 
+    {
+        keywordController.ResetKeyword();
+    }
+
 }
