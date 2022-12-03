@@ -35,16 +35,27 @@ public class PlayerController : MonoBehaviour
 
 
     #region OnStateEnter
-    public void SetAnimIdle() 
+    public void AnimIdleEnter() 
     {
         skeletonAnimation.AnimationState.SetAnimation(0,idleAnim,true);
     }
-    public void SetAnimRun()
+    public void AnimRunEnter()
     {
         skeletonAnimation.AnimationState.SetAnimation(0,runAnim,true);
     }
-    #endregion
+    public void InteractionEnter() 
+    {
+        interactionDetecter.InteractionUiDisable();
+    }
 
+    #endregion
+    #region OnStateExit
+    public void InteractionExit()
+    {
+        interactionDetecter.InteractionUiEnable();
+    }
+
+    #endregion
     #region OnStateUpdate
     public void DialogueStateInputCheck()
     {
@@ -99,7 +110,6 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.F))
         {
             interactionDetecter.Interaction();
-            playerStateController.ChangeState(PlayerInteraction.Instance);
             return true;
         }
         return false;

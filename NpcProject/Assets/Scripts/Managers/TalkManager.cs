@@ -15,8 +15,7 @@ public class Dialogue
 [Serializable]
 public class Speak
 {
-    public string speakerName;
-    public Sprite speakerImage;
+    public Speaker speaker;
     public List<Dialogue> dialogues;
 }
 
@@ -126,4 +125,6 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
             yield return INPUT_CHECK_WAIT;
         }
     }
+
+    
 }
