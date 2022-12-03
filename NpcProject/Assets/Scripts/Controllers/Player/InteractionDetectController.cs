@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class InteractionDetectController : MonoBehaviour
 {
     [SerializeField]
-    private InteractionUiController interactionUi; 
+    private InteractionUiController interactionUi;
+    [SerializeField]
+    private GlitchEffectController glitchEffect;
 
     public Interaction CurFocusingnIteraction { get => curFocusingnIteraction;}
 
@@ -20,6 +23,20 @@ public class InteractionDetectController : MonoBehaviour
         {
             curFocusingnIteraction.OnInteraction();
             GameSceneManager.Instacne.Player.SetStateInteraction();
+        }
+        else
+        {
+            if (SceneManager.GetActiveScene().name == "Test")
+            {
+                SceneManager.LoadScene("Debug");
+                //glitchEffect.OnGlitch();
+            }
+
+            if (SceneManager.GetActiveScene().name == "Debug")
+            {
+                //glitchEffect.OffGlitch();
+                SceneManager.LoadScene("Test");
+            }
         }
     }
     public void InteractionUiEnable() => interactionUi.Open();

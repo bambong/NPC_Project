@@ -97,4 +97,6 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
             yield return INPUT_CHECK_WAIT;
         }
     }
+
+    
 }
