@@ -33,7 +33,7 @@ public abstract class GameObjectSingleton<T> : MonoBehaviour where T : MonoBehav
                     var singletonObject = new GameObject();
                     instance = singletonObject.AddComponent<T>();
                     instance.Init();
-                    singletonObject.name = typeof(T).ToString() + " (Singleton)";
+                    singletonObject.name = "@"+typeof(T).ToString();
                     
                 }
                 DontDestroyOnLoad(instance.gameObject);
@@ -43,7 +43,7 @@ public abstract class GameObjectSingleton<T> : MonoBehaviour where T : MonoBehav
     }
 
     
-    private static T instance;
+    protected static T instance;
  
 
    
