@@ -60,7 +60,8 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
     private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.01f);
     public void Init()
     {
-        LoadTalkData();   
+        LoadTalkData();
+        talkPanel = Managers.UI.ShowPopupUI<TalkPanelController>("DialoguePanel");
     }
     private void LoadTalkData() 
     {

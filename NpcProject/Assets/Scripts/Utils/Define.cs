@@ -12,7 +12,10 @@ public class Define
     public enum WorldObject
     {
         Player
-
     }
-
+    public enum UIEvent
+    {
+        Click,
+        Drag,
+    }
 }

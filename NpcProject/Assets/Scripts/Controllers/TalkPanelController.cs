@@ -6,15 +6,21 @@ using TMPro;
 using System;
 using DG.Tweening;
 
-public class TalkPanelController : MonoBehaviour
+public class TalkPanelController : UI_Popup
 {
-    [SerializeField]
-    private Image speakImage;
+    enum Images
+    {
+        SpeakerImage
+    }
 
-    [SerializeField]
+    enum TextMeshs
+    {
+        SpeakerName,
+        DialogueText
+    }
+
+    private Image speakImage;
     private TextMeshProUGUI spekerName;
-    
-    [SerializeField]
     private TextMeshProUGUI dialogueText;
 
     private Speak curSpeak;
@@ -26,6 +32,16 @@ public class TalkPanelController : MonoBehaviour
     private bool isNext = false;
 
     private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.01f);
+
+    public override void Init()
+    {
+        Bind<TextMeshProUGUI>(typeof(TextMeshs));
+        Bind<TextMeshProUGUI>(typeof(Images));
+        spekerName = Get<TextMeshProUGUI>((int)TextMeshs.SpeakerName);
+        dialogueText = Get<TextMeshProUGUI>((int)TextMeshs.DialogueText);
+        speakImage = Get<Image>((int)Images.SpeakerImage);
+    }
+
     public void SetText(Speak speak) 
     {
         curSpeak = speak;
@@ -85,5 +101,6 @@ public class TalkPanelController : MonoBehaviour
             yield return INPUT_CHECK_WAIT;
         }
     }
-    
+
+   
 }

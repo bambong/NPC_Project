@@ -9,6 +9,8 @@ public class GameScene : BaseScene
 
     protected override void Init() 
     {
+       base.Init();
+
        var player  = Managers.Game.Spawn(Define.WorldObject.Player, "Player");
        player.transform.position = playerSpawnSpot;
        Camera.main.GetComponent<CameraController>().SetTarger(player.transform);

@@ -12,13 +12,13 @@ public class Managers : MonoBehaviour
     private ResourceManager resource = new ResourceManager();
     private SceneManagerEx scene = new SceneManagerEx();
     private GameManager game = new GameManager();
-    private UiManager ui = new UiManager();
+    private UIManager ui = new UIManager();
 
     public static PoolManager Pool { get => Instance.pool; }
     public static GameManager Game { get => Instance.game; }
     public static ResourceManager Resource { get => Instance.resource; }
     public static SceneManagerEx Scene { get => Instance.scene;  }
-    public static UiManager UI { get => instance.ui; }
+    public static UIManager UI { get => instance.ui; }
     #endregion
 
     void Start()
