@@ -9,5 +9,10 @@ public class Define
         Unknown,
         Game
     }
+    public enum WorldObject
+    {
+        Player
+
+    }
 
 }

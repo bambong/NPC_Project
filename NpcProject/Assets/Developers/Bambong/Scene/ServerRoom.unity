@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028376, g: 0.22571453, b: 0.30692196, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657648, g: 0.49641043, b: 0.5748187, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -406,6 +406,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   talkData: {fileID: 11400000, guid: 2dd22a8fd83217448874d7526d73a8e1, type: 2}
+  virCam: {fileID: 0}
 --- !u!1 &670218981
 GameObject:
   m_ObjectHideFlags: 0
@@ -744,7 +745,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 740975312}
   m_LocalRotation: {x: -0.010685124, y: -0.9235193, z: 0.38253427, w: -0.02579613}
-  m_LocalPosition: {x: -0.4699993, y: 49.2, z: 44.1}
+  m_LocalPosition: {x: -0.4699993, y: 50, z: 44.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1303,7 +1304,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ef253bdcf3430714dac650f02774eebc, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.72356975
+      value: 0.91566265
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ef253bdcf3430714dac650f02774eebc, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1311,7 +1312,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ef253bdcf3430714dac650f02774eebc, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.6902513
+      value: -0.40194777
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ef253bdcf3430714dac650f02774eebc, type: 3}
       propertyPath: m_LocalRotation.z
@@ -1323,7 +1324,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ef253bdcf3430714dac650f02774eebc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 87.3
+      value: -47.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ef253bdcf3430714dac650f02774eebc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -1653,6 +1654,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactionUi: {fileID: 1312966660}
+  glitchEffect: {fileID: 0}
 --- !u!1 &2025094226
 GameObject:
   m_ObjectHideFlags: 0

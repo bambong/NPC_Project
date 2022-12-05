@@ -67,7 +67,7 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
     }
     public void EnterTalk(Talk talk, CinemachineVirtualCamera virCam)
     {
-        GameManager.Instance.SetStateDialog();
+        Managers.Game.SetStateDialog();
         curTalkEvent = new TalkEvent(talk,talkPanel);
         talkPanel.gameObject.SetActive(true);
         CameraSet(virCam);
@@ -78,7 +78,7 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
     private void EndTalk() 
     {
         talkPanel.gameObject.SetActive(false);
-        GameManager.Instance.SetStateNormal();
+        Managers.Game.SetStateNormal();
         ExitCamera(talkVircam);
     }
 

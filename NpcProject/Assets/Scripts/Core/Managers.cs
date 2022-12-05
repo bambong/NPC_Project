@@ -11,10 +11,14 @@ public class Managers : MonoBehaviour
     private PoolManager pool = new PoolManager();
     private ResourceManager resource = new ResourceManager();
     private SceneManagerEx scene = new SceneManagerEx();
+    private GameManager game = new GameManager();
+    private UiManager ui = new UiManager();
 
     public static PoolManager Pool { get => Instance.pool; }
+    public static GameManager Game { get => Instance.game; }
     public static ResourceManager Resource { get => Instance.resource; }
     public static SceneManagerEx Scene { get => Instance.scene;  }
+    public static UiManager UI { get => instance.ui; }
     #endregion
 
     void Start()
@@ -35,13 +39,16 @@ public class Managers : MonoBehaviour
 
             DontDestroyOnLoad(go);
             instance = go.GetComponent<Managers>();
-           
+            
+            instance.game.Init();
             instance.pool.Init();
         }
     }
 
     public static void Clear()
     {
+        UI.Clear();
+        Scene.Clear();
         Pool.Clear();
     }
 }

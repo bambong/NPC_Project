@@ -22,7 +22,7 @@ public class InteractionDetectController : MonoBehaviour
         if(curFocusingnIteraction != null)
         {
             curFocusingnIteraction.OnInteraction();
-            GameSceneManager.Instacne.Player.SetStateInteraction();
+            Managers.Game.Player.SetStateInteraction();
         }
         else
         {
