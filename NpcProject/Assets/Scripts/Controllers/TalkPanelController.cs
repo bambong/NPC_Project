@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using DG.Tweening;
+using System.Linq;
 
 public class TalkPanelController : MonoBehaviour
 {
@@ -22,7 +23,9 @@ public class TalkPanelController : MonoBehaviour
     private float textSpeed = 0.05f;
     private float typingTime;    
     private float textTime;
-    private string textDialogue;
+    private string textDialogue = null;
+    private string textStore = null;
+    private System.Random random;
     private bool isNext = false;
 
     private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.01f);
@@ -42,12 +45,30 @@ public class TalkPanelController : MonoBehaviour
         {
             return false;
         }
+        Debug.Log(textDialogue);
 
-        DotweenTextani();
+
+        StartCoroutine(TransText());
+        // DotweenTextani();
 
         curIndex++;
         return true;
     }
+
+    IEnumerator TransText()
+    {
+        textStore = null;
+        textDialogue = curSpeak.dialogues[curIndex].text;
+        for(int i = 0; i < textDialogue.Length; i++)
+        {
+            textStore += textDialogue[i];
+            dialogueText.text = textStore + RandomText(textDialogue.Length - (i + 1));
+            yield return new WaitForSeconds(0.1f); 
+        }
+        isNext = true;
+    }
+
+
 
     private void DotweenTextani()
     {
@@ -59,10 +80,21 @@ public class TalkPanelController : MonoBehaviour
         dialogueText.DOText(textDialogue, typingTime).OnStart(()=>
         {
             StartCoroutine(SkipTextani());
+        }).OnUpdate(()=>
+        {
+            // dialogueText.text = RandomText(textDialogue.Length);
+
         }).OnComplete(()=>
         {
             isNext = true;
         });
+    }
+
+    private string RandomText(int length)
+    {
+        random = new System.Random();
+        string charcters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        return new string(Enumerable.Repeat(charcters, length).Select(s => s[random.Next(s.Length)]).ToArray());
     }
 
     public bool IsAni()
