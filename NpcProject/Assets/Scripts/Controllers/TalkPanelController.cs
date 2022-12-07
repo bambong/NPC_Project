@@ -27,6 +27,7 @@ public class TalkPanelController : MonoBehaviour
     private string textStore = null;
     private System.Random random;
     private bool isNext = false;
+    private bool isTrans = false;
 
     private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.01f);
     public void SetText(Speak speak) 
@@ -45,8 +46,6 @@ public class TalkPanelController : MonoBehaviour
         {
             return false;
         }
-        Debug.Log(textDialogue);
-
 
         StartCoroutine(TransText());
         // DotweenTextani();
@@ -55,15 +54,40 @@ public class TalkPanelController : MonoBehaviour
         return true;
     }
 
+
     IEnumerator TransText()
     {
         textStore = null;
-        textDialogue = curSpeak.dialogues[curIndex].text;
-        for(int i = 0; i < textDialogue.Length; i++)
+        textDialogue = null;
+        char [] sep = { '<', '>'};
+        string[] result = curSpeak.dialogues[curIndex].text.Split(sep);
+        foreach (var item in result)
         {
-            textStore += textDialogue[i];
-            dialogueText.text = textStore + RandomText(textDialogue.Length - (i + 1));
-            yield return new WaitForSeconds(0.1f); 
+            Debug.Log(item);
+            if(item == "dummy") 
+            {
+                isTrans = true;
+            }
+            else
+            {
+                textDialogue += item;
+            }
+        }
+        // textDialogue = curSpeak.dialogues[curIndex].text;
+        if(isTrans == true)
+        {
+            for (int i = 0; i < textDialogue.Length; i++)
+            {
+                textStore += textDialogue[i];
+                dialogueText.text = textStore + RandomText(textDialogue.Length - (i + 1));
+                yield return new WaitForSeconds(0.1f);
+            }
+            isTrans = false;
+        }
+        else
+        {
+            Debug.Log("dummy false");
+            DotweenTextani();
         }
         isNext = true;
     }
