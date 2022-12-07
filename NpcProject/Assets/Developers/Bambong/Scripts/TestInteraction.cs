@@ -12,6 +12,6 @@ public class TestInteraction : Interaction
 
     public override void OnInteraction()
     {
-        TalkManager.Instance.EnterTalk(talkData, virCam);
+        Managers.Talk.EnterTalk(talkData, virCam);
     }
 }

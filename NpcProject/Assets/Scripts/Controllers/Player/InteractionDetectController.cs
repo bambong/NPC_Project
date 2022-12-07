@@ -16,6 +16,11 @@ public class InteractionDetectController : MonoBehaviour
     private readonly string INTERACTION_TAG = "Interaction";
     private Interaction curFocusingnIteraction;
 
+    public void Init()
+    {
+        
+        interactionUi = Managers.UI.MakeWorldSpaceUI<InteractionUiController>(Managers.Scene.CurrentScene.transform,"InteractionUI");
+    }
 
     public void Interaction() 
     {
@@ -46,7 +51,7 @@ public class InteractionDetectController : MonoBehaviour
     {
         if(other.CompareTag(INTERACTION_TAG)) 
         {
-            interactionUi.Open(Camera.main.WorldToScreenPoint(other.transform.position));
+            interactionUi.Open(other.transform);
             curFocusingnIteraction = other.GetComponent<Interaction>();
         }
     }

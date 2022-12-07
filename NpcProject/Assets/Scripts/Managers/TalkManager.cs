@@ -51,7 +51,7 @@ public class TalkEvent
     }
 }
 
-public class TalkManager : GameObjectSingleton<TalkManager>, IInit
+public class TalkManager 
 {
     [SerializeField]
     private TalkPanelController talkPanel;
@@ -71,16 +71,16 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
         Managers.Game.SetStateDialog();
         curTalkEvent = new TalkEvent(talk,talkPanel);
         talkPanel.gameObject.SetActive(true);
-        CameraSet(virCam);
-        EnterCamera(talkVircam);
+       // CameraSet(virCam);
+       // EnterCamera(talkVircam);
 
-        StartCoroutine(ProgressTalk());
+       Managers.Scene.CurrentScene.StartCoroutine(ProgressTalk());
     }
     private void EndTalk() 
     {
         talkPanel.gameObject.SetActive(false);
         Managers.Game.SetStateNormal();
-        ExitCamera(talkVircam);
+       // ExitCamera(talkVircam);
     }
 
     private void CameraSet(CinemachineVirtualCamera virCam)
@@ -123,7 +123,7 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
                     break;
                 }
             }
-            yield return INPUT_CHECK_WAIT;
+            yield return null;
         }
     }
 

@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);
+        interactionDetecter.Init();
     }
 
     void Update()

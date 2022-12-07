@@ -35,8 +35,9 @@ public class TalkPanelController : UI_Popup
 
     public override void Init()
     {
+        base.Init();
         Bind<TextMeshProUGUI>(typeof(TextMeshs));
-        Bind<TextMeshProUGUI>(typeof(Images));
+        Bind<Image>(typeof(Images));
         spekerName = Get<TextMeshProUGUI>((int)TextMeshs.SpeakerName);
         dialogueText = Get<TextMeshProUGUI>((int)TextMeshs.DialogueText);
         speakImage = Get<Image>((int)Images.SpeakerImage);
@@ -88,7 +89,7 @@ public class TalkPanelController : UI_Popup
 
     IEnumerator SkipTextani()
     {
-        while(textTime < typingTime)
+        while(!isNext)
         {
             if (Input.GetKeyDown(KeyCode.X))
             {
@@ -97,8 +98,7 @@ public class TalkPanelController : UI_Popup
                 isNext = true;
                 break;
             }
-            textTime += 0.01f;
-            yield return INPUT_CHECK_WAIT;
+            yield return null;
         }
     }
 
