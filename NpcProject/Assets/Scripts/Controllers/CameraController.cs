@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour
     private Transform target;
     [SerializeField]
     private float dumpingAmount = 1f;
-
+    [SerializeField]
     private Vector3 diffPosToTarget;
 
 

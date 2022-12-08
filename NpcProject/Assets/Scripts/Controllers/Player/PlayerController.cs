@@ -75,21 +75,17 @@ public class PlayerController : MonoBehaviour
             playerStateController.ChangeState(PlayerIdle.Instance);
             return;
         }
-
-        if(hor < 0) 
+        if(hor != 0) 
         {
-            skeletonAnimation.skeleton.ScaleX = 1;
-        }
-        else if(hor > 0)
-        {
-            skeletonAnimation.skeleton.ScaleX = -1;
+            var dir = hor < 0 ? -1 : 1;
+            skeletonAnimation.skeleton.ScaleX = dir;
         }
 
         var moveVec = new Vector3(hor,0,ver).normalized;
         var pos = transform.position;
         var speed = moveSpeed * Time.deltaTime;
 
-        pos -= moveVec * speed;
+        pos += moveVec * speed;
         transform.position = pos;
     }
     public void PlayerInputCheck()
