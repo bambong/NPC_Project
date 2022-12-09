@@ -18,7 +18,6 @@ public class InteractionDetectController : MonoBehaviour
 
     public void Init()
     {
-        
         interactionUi = Managers.UI.MakeWorldSpaceUI<InteractionUiController>(Managers.Scene.CurrentScene.transform,"InteractionUI");
     }
 

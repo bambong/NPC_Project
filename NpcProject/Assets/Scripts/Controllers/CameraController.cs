@@ -11,11 +11,10 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private Vector3 diffPosToTarget;
 
-
     public void SetTarger(Transform target) 
     {
         this.target = target;
-        diffPosToTarget = transform.position - target.position;
+        //diffPosToTarget = transform.position - target.position;
     }
 
     private void LateUpdate()

@@ -75,6 +75,8 @@ public class PlayerController : MonoBehaviour
             playerStateController.ChangeState(PlayerIdle.Instance);
             return;
         }
+
+        
         if(hor != 0) 
         {
             var dir = hor < 0 ? -1 : 1;
