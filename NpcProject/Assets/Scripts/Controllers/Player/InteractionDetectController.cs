@@ -9,7 +9,7 @@ public class InteractionDetectController : MonoBehaviour
     [SerializeField]
     private InteractionUiController interactionUi;
     [SerializeField]
-    private GlitchEffectController glitchEffect;
+    private EffectController Effect;
 
     public Interaction CurFocusingnIteraction { get => curFocusingnIteraction;}
 
@@ -22,22 +22,23 @@ public class InteractionDetectController : MonoBehaviour
         if(curFocusingnIteraction != null)
         {
             curFocusingnIteraction.OnInteraction();
+            GameSceneManager.Instacne.Player.SetStateInteraction();
         }
         else
         {
             if (SceneManager.GetActiveScene().name == "Test")
             {
                 SceneManager.LoadScene("Debug");
-                //glitchEffect.OnGlitch();
             }
 
             if (SceneManager.GetActiveScene().name == "Debug")
             {
-                //glitchEffect.OffGlitch();
                 SceneManager.LoadScene("Test");
             }
         }
     }
+    public void InteractionUiEnable() => interactionUi.Open();
+    public void InteractionUiDisable() => interactionUi.Close();
 
     private void OnTriggerEnter(Collider other)
     {
@@ -47,6 +48,8 @@ public class InteractionDetectController : MonoBehaviour
             curFocusingnIteraction = other.GetComponent<Interaction>();
         }
     }
+
+
 
     private void OnTriggerExit(Collider other)
     {

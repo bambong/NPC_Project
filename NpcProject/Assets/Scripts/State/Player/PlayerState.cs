@@ -10,7 +10,7 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.SetAnimIdle();
+        stateController.AnimIdleEnter();
     }
 
     public void Exit(PlayerController stateController)
@@ -36,7 +36,7 @@ public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.SetAnimRun();
+        stateController.AnimRunEnter();
     }
 
     public void Exit(PlayerController stateController)
@@ -83,10 +83,12 @@ public class PlayerInteraction : Singleton<PlayerInteraction>, IState<PlayerCont
     }
     public void Enter(PlayerController stateController)
     {
+        stateController.InteractionEnter();
     }
 
     public void Exit(PlayerController stateController)
     {
+        stateController.InteractionExit();
     }
 
     public void FixedUpdateActive(PlayerController stateController)
