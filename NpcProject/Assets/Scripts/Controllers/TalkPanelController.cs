@@ -118,12 +118,17 @@ public class TalkPanelController : MonoBehaviour
                 textStore += textDialogue[i];
                 dialogueText.text = textStore + RandomText(textDialogue.Length - (i + 1));
                 yield return new WaitForSeconds(textSpeed);
-                StartCoroutine(SkipTextani());
+                if(i == 0)
+                {
+                    StartCoroutine(SkipTextani());
+                }                
                 if (isTrans == false)
                 {
                     yield break;
                 }
             }
+            isTrans = false;
+            isNext = true;
         }
         else
         {
