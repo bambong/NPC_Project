@@ -55,51 +55,6 @@ public class TalkPanelController : MonoBehaviour
     }
 
 
-    IEnumerator TransText()
-    {
-        textStore = null;
-        textDialogue = null;
-        char [] sep = { '<', '>'};
-        string[] result = curSpeak.dialogues[curIndex].text.Split(sep);
-        
-        foreach (var item in result)
-        {
-            Debug.Log(item);
-            if(item == "dummy") 
-            {
-                isTrans = true;
-            }
-            else
-            {
-                textDialogue += item;
-            }
-        }
-        
-        // textDialogue = curSpeak.dialogues[curIndex].text;
-        if(isTrans == true)
-        {
-            for (int i = 0; i < textDialogue.Length; i++)
-            {
-                textStore += textDialogue[i];
-                dialogueText.text = textStore + RandomText(textDialogue.Length - (i + 1));
-                yield return new WaitForSeconds(textSpeed);
-                StartCoroutine(SkipTextani());
-                if(isTrans == false)
-                {
-                    yield break;
-                }
-            }
-        }
-        else
-        {
-            DotweenTextani();
-        }
-
-
-    }
-
-
-
     private void DotweenTextani()
     {
         textDialogue = curSpeak.dialogues[curIndex].text;
@@ -134,29 +89,70 @@ public class TalkPanelController : MonoBehaviour
         return isNext;
     }
 
-    IEnumerator SkipTextani()
+    IEnumerator TransText()
     {
-        while (isTrans == true)
+        textStore = null;
+        textDialogue = null;
+        typingTime = curSpeak.dialogues[curIndex].text.Length * textSpeed;
+
+        char[] sep = { '<', '>' };
+        string[] result = curSpeak.dialogues[curIndex].text.Split(sep);
+
+        foreach (var item in result)
         {
-            if (Input.GetKeyDown(KeyCode.X))
+            if (item == "dummy")
             {
-                dialogueText.text = "";
-                dialogueText.text = curSpeak.dialogues[curIndex].text;
-                isTrans = false;
-                isNext = true;
-                yield break;
+                isTrans = true;
             }
-            yield return INPUT_CHECK_WAIT;
+            else
+            {
+                textDialogue += item;
+            }
         }
 
+        // textDialogue = curSpeak.dialogues[curIndex].text;
+        if (isTrans == true)
+        {
+            for (int i = 0; i < textDialogue.Length; i++)
+            {
+                textStore += textDialogue[i];
+                dialogueText.text = textStore + RandomText(textDialogue.Length - (i + 1));
+                yield return new WaitForSeconds(textSpeed);
+                StartCoroutine(SkipTextani());
+                if (isTrans == false)
+                {
+                    yield break;
+                }
+            }
+        }
+        else
+        {
+            DotweenTextani();
+        }
+    }
+
+    IEnumerator SkipTextani()
+    {
         while(textTime < typingTime)
         {
-            if (Input.GetKeyDown(KeyCode.X))
+
+            if(Input.GetKeyDown(KeyCode.X))
             {
-                dialogueText.DOKill();
-                dialogueText.text = textDialogue;
-                isNext = true;
-                break;
+                if(isTrans == false)
+                {
+                    dialogueText.DOKill();
+                    dialogueText.text = textDialogue;
+                    isNext = true;
+                    yield break;
+                }
+                if(isTrans == true)
+                {
+                    dialogueText.text = "";
+                    dialogueText.text = textDialogue;
+                    isNext = true;
+                    isTrans = false;
+                    yield break;
+                }
             }
             textTime += 0.01f;
             yield return INPUT_CHECK_WAIT;
