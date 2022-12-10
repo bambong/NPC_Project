@@ -61,6 +61,7 @@ public class TalkPanelController : MonoBehaviour
         textDialogue = null;
         char [] sep = { '<', '>'};
         string[] result = curSpeak.dialogues[curIndex].text.Split(sep);
+        
         foreach (var item in result)
         {
             Debug.Log(item);
@@ -73,6 +74,7 @@ public class TalkPanelController : MonoBehaviour
                 textDialogue += item;
             }
         }
+        
         // textDialogue = curSpeak.dialogues[curIndex].text;
         if(isTrans == true)
         {
@@ -80,16 +82,20 @@ public class TalkPanelController : MonoBehaviour
             {
                 textStore += textDialogue[i];
                 dialogueText.text = textStore + RandomText(textDialogue.Length - (i + 1));
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(textSpeed);
+                StartCoroutine(SkipTextani());
+                if(isTrans == false)
+                {
+                    yield break;
+                }
             }
-            isTrans = false;
         }
         else
         {
-            Debug.Log("dummy false");
             DotweenTextani();
         }
-        isNext = true;
+
+
     }
 
 
@@ -104,11 +110,13 @@ public class TalkPanelController : MonoBehaviour
         dialogueText.DOText(textDialogue, typingTime).OnStart(()=>
         {
             StartCoroutine(SkipTextani());
-        }).OnUpdate(()=>
-        {
-            // dialogueText.text = RandomText(textDialogue.Length);
+        })
+        // .OnUpdate(()=>
+        // {
+        //     // dialogueText.text = RandomText(textDialogue.Length);
 
-        }).OnComplete(()=>
+        // })
+        .OnComplete(()=>
         {
             isNext = true;
         });
@@ -128,6 +136,19 @@ public class TalkPanelController : MonoBehaviour
 
     IEnumerator SkipTextani()
     {
+        while (isTrans == true)
+        {
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                dialogueText.text = "";
+                dialogueText.text = curSpeak.dialogues[curIndex].text;
+                isTrans = false;
+                isNext = true;
+                yield break;
+            }
+            yield return INPUT_CHECK_WAIT;
+        }
+
         while(textTime < typingTime)
         {
             if (Input.GetKeyDown(KeyCode.X))

@@ -56,8 +56,9 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
 {
     [SerializeField]
     private TalkPanelController talkPanel;
+    [SerializeField]
+    private Image ioImage;
     private CinemachineVirtualCamera talkVircam = null;
-    private Image ioImage = null;
     private TalkEvent curTalkEvent;
     private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.01f);
     public void Init()
@@ -91,7 +92,6 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
 
     private void CutScene(Image ioImage)
     {
-        ioImage = GameObject.Find("Canvas").transform.Find("Camera Cut").GetComponent<Image>();
         ioImage.gameObject.SetActive(true);
         ioImage.DOFade(0, 0.5f).SetEase(Ease.InQuart).OnComplete(() =>
         {
@@ -146,6 +146,5 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
             yield return INPUT_CHECK_WAIT;
         }
     }
-
     
 }
