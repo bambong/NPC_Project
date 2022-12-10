@@ -10,6 +10,8 @@ public class EffectController : MonoBehaviour
     public GameObject glitch;
     public Image Fade;
 
+    [SerializeField]
+    private Animator transition;
     private float time = 0f;
     private float fadeDuration = 1f;
 
@@ -17,9 +19,19 @@ public class EffectController : MonoBehaviour
     private void Awake()
     {
         GlitchOn();
-        FadeEffect();
     }
 
+    public void LoadNextLevel()
+    {
+        StartCoroutine(FadeEffect());
+    }
+
+    IEnumerator FadeEffect()
+    {
+        transition.SetTrigger("Start");
+
+        yield return new WaitForSeconds(fadeDuration);
+    }
 
     //glitch effect
     #region
@@ -37,7 +49,8 @@ public class EffectController : MonoBehaviour
     #endregion
 
 
-
+    //trash
+    /*
     public void FadeEffect()
     {
         StartCoroutine(FadeOut());
@@ -92,4 +105,5 @@ public class EffectController : MonoBehaviour
         Fade.gameObject.SetActive(false);
         yield return null;
     }
+    */
 }

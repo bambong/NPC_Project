@@ -29,11 +29,13 @@ public class InteractionDetectController : MonoBehaviour
             if (SceneManager.GetActiveScene().name == "Test")
             {
                 SceneManager.LoadScene("Debug");
+                Effect.LoadNextLevel();
             }
 
             if (SceneManager.GetActiveScene().name == "Debug")
             {
                 SceneManager.LoadScene("Test");
+                Effect.LoadNextLevel();
             }
         }
     }
