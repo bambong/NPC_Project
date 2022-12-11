@@ -10,13 +10,11 @@ public class GameScene : BaseScene
     private CinemachineVirtualCamera vercam;
     protected override void Init() 
     {
-       base.Init();
+        base.Init();
 
-       var player  = Managers.Game.Spawn(Define.WorldObject.Player, "Player");
-       player.transform.position = playerSpawnSpot;
-        //Camera.main.GetComponent<CameraController>().SetTarger(player.transform);
-        vercam.m_LookAt = player.transform;
-        vercam.m_Follow = player.transform;
+        var player  = Managers.Game.Spawn(Define.WorldObject.Player, "Player");
+        player.transform.position = playerSpawnSpot;
+        Managers.Camera.InitCamera(vercam,player.transform);
     }
 
     public override void Clear()
