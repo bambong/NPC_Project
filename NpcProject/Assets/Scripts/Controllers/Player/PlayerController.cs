@@ -20,8 +20,11 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private InteractionDetectController interactionDetecter;
+    [SerializeField]
+    private Transform rotater;
+    [SerializeField]
+    private CharacterController characterController;
     private PlayerStateController playerStateController;
-
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);
@@ -30,11 +33,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        //transform.rotation = Camera.main.transform.rotation;
+        rotater.rotation = Camera.main.transform.rotation;
         playerStateController.Update();
     }
-
-
 
     #region OnStateEnter
     public void AnimIdleEnter() 
@@ -59,13 +60,7 @@ public class PlayerController : MonoBehaviour
 
     #endregion
     #region OnStateUpdate
-    public void DialogueStateInputCheck()
-    {
-        if(Input.GetKeyDown(KeyCode.KeypadEnter)) 
-        {
-            
-        }
-    }
+
     public void PlayerMoveUpdate()
     {
         var hor = Input.GetAxis("Horizontal");
@@ -76,7 +71,6 @@ public class PlayerController : MonoBehaviour
             playerStateController.ChangeState(PlayerIdle.Instance);
             return;
         }
-
         
         if(hor != 0) 
         {
@@ -88,8 +82,8 @@ public class PlayerController : MonoBehaviour
         var pos = transform.position;
         var speed = moveSpeed * Time.deltaTime;
 
-        pos += moveVec * speed;
-        transform.position = pos;
+        moveVec = Quaternion.Euler(new Vector3(0,rotater.rotation.eulerAngles.y,0)) * moveVec;
+        characterController.Move( moveVec * speed);
     }
     public void PlayerInputCheck()
     {
