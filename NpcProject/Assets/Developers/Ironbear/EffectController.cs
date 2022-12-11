@@ -7,13 +7,14 @@ using UnityEngine.UI;
 
 public class EffectController : MonoBehaviour
 {
-    public GameObject glitch;
-    public Image Fade;
+    [SerializeField]
+    private GameObject glitch;
+
+    [SerializeField]
+    private Image Fade;
 
     [SerializeField]
     private Animator transition;
-    private float time = 0f;
-    private float fadeDuration = 1f;
 
 
     private void Awake()
@@ -29,11 +30,9 @@ public class EffectController : MonoBehaviour
     IEnumerator FadeEffect()
     {
         transition.SetTrigger("Start");
-
-        yield return new WaitForSeconds(fadeDuration);
+        yield return null;
     }
 
-    //glitch effect
     #region
     public void GlitchOn()
     {
@@ -47,63 +46,4 @@ public class EffectController : MonoBehaviour
         Debug.Log("Glitch Off");
     }
     #endregion
-
-
-    //trash
-    /*
-    public void FadeEffect()
-    {
-        StartCoroutine(FadeOut());
-    }
-
-    IEnumerator FadeOut()
-    {
-        Debug.Log("Fade In and Out");
-
-        time = 0f;
-        Fade.gameObject.SetActive(true);
-        Color alpha = Fade.color;
-
-        while (alpha.a < 1f)
-        {
-            time += Time.deltaTime / fadeDuration;
-            alpha.a = Mathf.Lerp(0, 1, time);
-            Fade.color = alpha;
-            yield return null;
-        }
-
-        time = 0;
-        yield return new WaitForSeconds(1f);
-        while (alpha.a > 0f)
-        {
-            time += Time.deltaTime / fadeDuration;
-            alpha.a = Mathf.Lerp(1, 0, time);
-            Fade.color = alpha;
-            yield return null;
-        }
-
-        Fade.gameObject.SetActive(false);
-        yield return null;
-    }
-
-    //아직 미사용
-    IEnumerator FadeIn()
-    {
-        Debug.Log("Black FadeIn");
-
-        time = 0f;
-        Color alpha = Fade.color;
-
-        while (alpha.a > 0f)
-        {
-            time += Time.deltaTime / fadeDuration;
-            alpha.a = Mathf.Lerp(1, 0, time);
-            Fade.color = alpha;
-            yield return null;
-        }
-
-        Fade.gameObject.SetActive(false);
-        yield return null;
-    }
-    */
 }
