@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028376, g: 0.22571453, b: 0.30692196, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657648, g: 0.49641043, b: 0.5748187, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -990,50 +990,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &892788380
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 6226800987643577098, guid: 323585ec92d082e4cb15e93c53ab3d22, type: 3}
-  m_PrefabInstance: {fileID: 6226800986475805981}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 892788381}
-  - component: {fileID: 892788382}
-  m_Layer: 0
-  m_Name: cm
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &892788381
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 6226800987643577093, guid: 323585ec92d082e4cb15e93c53ab3d22, type: 3}
-  m_PrefabInstance: {fileID: 6226800986475805981}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 892788380}
-  m_LocalRotation: {x: -0.028237365, y: -0.9667641, z: 0.22291923, w: 0.121970765}
-  m_LocalPosition: {x: -7.8689475, y: -6.831805, z: -9.526903}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1159634850}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &892788382
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 6226800987643577092, guid: 323585ec92d082e4cb15e93c53ab3d22, type: 3}
-  m_PrefabInstance: {fileID: 6226800986475805981}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 892788380}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1021241491 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -584413233861867849, guid: ef253bdcf3430714dac650f02774eebc, type: 3}
@@ -1193,60 +1149,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1044205252}
   m_CullTransparentMesh: 1
---- !u!4 &1159634850
+--- !u!4 &1159634850 stripped
 Transform:
-  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 6226800987465556671, guid: 323585ec92d082e4cb15e93c53ab3d22, type: 3}
   m_PrefabInstance: {fileID: 6226800986475805981}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2144255482}
-  m_LocalRotation: {x: -0, y: -0.9961947, z: -0, w: -0.08715576}
-  m_LocalPosition: {x: 22.536034, y: -11.790453, z: -26.204945}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 892788381}
-  m_Father: {fileID: 341953070}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: -190, z: 0}
---- !u!114 &1159634851
+--- !u!114 &1159634851 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 6226800987465556670, guid: 323585ec92d082e4cb15e93c53ab3d22, type: 3}
   m_PrefabInstance: {fileID: 6226800986475805981}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2144255482}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ExcludedPropertiesInInspector:
-  - m_Script
-  m_LockStageInInspector: 
-  m_StreamingVersion: 20170927
-  m_Priority: 100
-  m_StandbyUpdate: 2
-  m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 0}
-  m_Lens:
-    FieldOfView: 16.1
-    OrthographicSize: 14
-    NearClipPlane: 0.3
-    FarClipPlane: 1000
-    Dutch: 0
-    ModeOverride: 0
-    LensShift: {x: 0, y: 0}
-    GateFit: 2
-    m_SensorSize: {x: 1, y: 1}
-  m_Transitions:
-    m_BlendHint: 0
-    m_InheritPosition: 0
-    m_OnCameraLive:
-      m_PersistentCalls:
-        m_Calls: []
-  m_LegacyBlendHint: 0
-  m_ComponentOwner: {fileID: 892788381}
 --- !u!1 &1312966654
 GameObject:
   m_ObjectHideFlags: 0
@@ -2286,23 +2204,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2094758914}
   m_CullTransparentMesh: 1
---- !u!1 &2144255482
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 6226800987465556668, guid: 323585ec92d082e4cb15e93c53ab3d22, type: 3}
-  m_PrefabInstance: {fileID: 6226800986475805981}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1159634850}
-  - component: {fileID: 1159634851}
-  m_Layer: 0
-  m_Name: TestInteraction VirCam
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
 --- !u!1001 &6226800986475805981
 PrefabInstance:
   m_ObjectHideFlags: 0
