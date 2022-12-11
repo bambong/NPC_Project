@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using Cinemachine;
-using DG.Tweening;
 
 [Serializable]
 public class Dialogue 
@@ -52,53 +51,36 @@ public class TalkEvent
     }
 }
 
-public class TalkManager : GameObjectSingleton<TalkManager>, IInit
+public class TalkManager 
 {
     [SerializeField]
     private TalkPanelController talkPanel;
-    [SerializeField]
-    private Image ioImage;
     private CinemachineVirtualCamera talkVircam = null;
     private TalkEvent curTalkEvent;
     private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.01f);
     public void Init()
     {
-        LoadTalkData();   
+        LoadTalkData();
+        talkPanel = Managers.UI.ShowPopupUI<TalkPanelController>("DialoguePanel");
     }
     private void LoadTalkData() 
     {
     }
     public void EnterTalk(Talk talk, CinemachineVirtualCamera virCam)
     {
-        GameManager.Instance.SetStateDialog();
-      
+        Managers.Game.SetStateDialog();
         curTalkEvent = new TalkEvent(talk,talkPanel);
-
         talkPanel.gameObject.SetActive(true);
-        CutScene(ioImage);
-        CameraSet(virCam);
-        EnterCamera(talkVircam);
+       // CameraSet(virCam);
+       // EnterCamera(talkVircam);
 
-        StartCoroutine(ProgressTalk());
+       Managers.Scene.CurrentScene.StartCoroutine(ProgressTalk());
     }
-
     private void EndTalk() 
     {
         talkPanel.gameObject.SetActive(false);
-        GameManager.Instance.SetStateNormal();
-        ExitCamera(talkVircam);
-        CutScene(ioImage);
-    }
-
-    private void CutScene(Image ioImage)
-    {
-        ioImage.gameObject.SetActive(true);
-        ioImage.DOFade(0, 0.5f).SetEase(Ease.InQuart).OnComplete(() =>
-        {
-            ioImage.gameObject.SetActive(false);
-            ioImage.DOFade(1, 0f);
-        }
-        );
+        Managers.Game.SetStateNormal();
+       // ExitCamera(talkVircam);
     }
 
     private void CameraSet(CinemachineVirtualCamera virCam)
@@ -111,8 +93,7 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
         if (virCam != null)
         {
             Camera.main.cullingMask = ~(1 << LayerMask.NameToLayer("Player"));
-            virCam.Priority = 100;
-            // virCam.gameObject.SetActive(true);
+            virCam.gameObject.SetActive(true);
         }
     }
 
@@ -120,8 +101,7 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
     {
         if (talkPanel.gameObject.activeSelf == false)
         {
-            virCam.Priority = 1;
-            // virCam.gameObject.SetActive(false);
+            virCam.gameObject.SetActive(false);
             Camera.main.cullingMask = -1;
         }
     }
@@ -143,8 +123,9 @@ public class TalkManager : GameObjectSingleton<TalkManager>, IInit
                     break;
                 }
             }
-            yield return INPUT_CHECK_WAIT;
+            yield return null;
         }
     }
+
     
 }

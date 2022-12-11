@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractionUiController : MonoBehaviour
+public class InteractionUiController : UI_Base
 {
     [SerializeField]
     private Animator animator;
@@ -10,6 +10,7 @@ public class InteractionUiController : MonoBehaviour
     private RectTransform rectTransform;
     
     private readonly float ON_OFF_ANIM_TIME = 0.3f;
+    private readonly float Y_POS_REVISION_AMOUNT = 1;
     private readonly string ON_STATE = "InteractionOn";
     private readonly string OFF_STATE = "InteractionOff";
     private readonly string IDLE_STATE = "InteractionIdle";
@@ -21,9 +22,13 @@ public class InteractionUiController : MonoBehaviour
         gameObject.SetActive(true);
         StartCoroutine(OpenInteractionUi());
     }
-    public void Open(Vector3 pos)
+    public void Open(Transform parent)
     {
-        rectTransform.position = pos;
+        //transform.parent = parent;
+        //transform.localScale = Vector3.one;
+        transform.position = parent.position + Vector3.up * ((parent.GetComponent<Collider>().bounds.size.y/2)+ Y_POS_REVISION_AMOUNT);
+        transform.rotation  = Camera.main.transform.rotation;
+       // rectTransform.position = pos;
         gameObject.SetActive(true);
         StartCoroutine(OpenInteractionUi());
     }
@@ -67,4 +72,9 @@ public class InteractionUiController : MonoBehaviour
         }
     }
 
+    public override void Init()
+    {
+        
+
+    }
 }

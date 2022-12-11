@@ -7,15 +7,21 @@ using System;
 using DG.Tweening;
 using System.Linq;
 
-public class TalkPanelController : MonoBehaviour
+public class TalkPanelController : UI_Popup
 {
-    [SerializeField]
-    private Image speakImage;
+    enum Images
+    {
+        SpeakerImage
+    }
 
-    [SerializeField]
+    enum TextMeshs
+    {
+        SpeakerName,
+        DialogueText
+    }
+
+    private Image speakImage;
     private TextMeshProUGUI spekerName;
-    
-    [SerializeField]
     private TextMeshProUGUI dialogueText;
 
     private Speak curSpeak;
@@ -30,6 +36,17 @@ public class TalkPanelController : MonoBehaviour
     private bool isTrans = false;
 
     private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.01f);
+
+    public override void Init()
+    {
+        base.Init();
+        Bind<TextMeshProUGUI>(typeof(TextMeshs));
+        Bind<Image>(typeof(Images));
+        spekerName = Get<TextMeshProUGUI>((int)TextMeshs.SpeakerName);
+        dialogueText = Get<TextMeshProUGUI>((int)TextMeshs.DialogueText);
+        speakImage = Get<Image>((int)Images.SpeakerImage);
+    }
+
     public void SetText(Speak speak) 
     {
         curSpeak = speak;
@@ -138,7 +155,7 @@ public class TalkPanelController : MonoBehaviour
 
     IEnumerator SkipTextani()
     {
-        while(textTime < typingTime)
+        while(!isNext)
         {
 
             if(Input.GetKeyDown(KeyCode.X))
@@ -159,9 +176,9 @@ public class TalkPanelController : MonoBehaviour
                     yield break;
                 }
             }
-            textTime += 0.01f;
-            yield return INPUT_CHECK_WAIT;
+            yield return null;
         }
     }
-    
+
+   
 }
