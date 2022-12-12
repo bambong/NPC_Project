@@ -21,7 +21,7 @@ public class TestColorKeywordController : KeywordController
                {
                     objectKeywordController.Remove();
                     Remove();
-                    KeywordManager.Instance.ResetKeywordFrame();
+                    Managers.Keyword.ResetKeywordFrame();
                    // KeywordManager.Instance.ResortKeywordArea();
                     return true;
                }

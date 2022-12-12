@@ -73,7 +73,7 @@ public  class KeywordController : MonoBehaviour, IDragHandler, IEndDragHandler,I
             {
                 if(raycasts[i].gameObject.CompareTag(KEYWORD_FRAME_TAG)) 
                 {
-                    KeywordManager.Instance.SetKeyWord(this);
+                    Managers.Keyword.SetKeyWord(this);
                     return;
                 }
             }
@@ -105,7 +105,7 @@ public  class KeywordController : MonoBehaviour, IDragHandler, IEndDragHandler,I
     public void SetToKeywordFrame(Vector3 pos) 
     {
         image.raycastTarget = false;
-        rectTransform.DOMove(pos, KEYWORD_FRAME_MOVE_TIME).OnComplete(() => KeywordManager.Instance.Interaction());
+        rectTransform.DOMove(pos, KEYWORD_FRAME_MOVE_TIME).OnComplete(() =>Managers.Keyword.Interaction());
     }
 
     public void ResetKeyword() 

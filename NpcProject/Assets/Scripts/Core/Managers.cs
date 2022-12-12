@@ -15,7 +15,9 @@ public class Managers : MonoBehaviour
     private UIManager ui = new UIManager();
     private TalkManager talk = new TalkManager();
     private CameraManager cam = new CameraManager();
+    private KeywordManager keyword = new KeywordManager();
 
+    public static KeywordManager Keyword { get => Instance.keyword; }
     public static CameraManager Camera { get => Instance.cam; }
     public static PoolManager Pool { get => Instance.pool; }
     public static GameManager Game { get => Instance.game; }

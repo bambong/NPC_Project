@@ -16,7 +16,6 @@ public class InteractionUiController : UI_Base
     private readonly string IDLE_STATE = "InteractionIdle";
     private bool isOpening = false;
 
-
     public void Open()
     {
         gameObject.SetActive(true);
@@ -24,11 +23,9 @@ public class InteractionUiController : UI_Base
     }
     public void Open(Transform parent)
     {
-        //transform.parent = parent;
-        //transform.localScale = Vector3.one;
         transform.position = parent.position + Vector3.up * ((parent.GetComponent<Collider>().bounds.size.y/2)+ Y_POS_REVISION_AMOUNT);
         transform.rotation  = Camera.main.transform.rotation;
-       // rectTransform.position = pos;
+       
         gameObject.SetActive(true);
         StartCoroutine(OpenInteractionUi());
     }

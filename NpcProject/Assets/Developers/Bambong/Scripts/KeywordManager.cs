@@ -4,7 +4,7 @@ using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class KeywordManager : GameObjectSingleton<KeywordManager>, IInit
+public class KeywordManager
 {
     [SerializeField]
     private KeywordFameController objectKeywordFrame;
@@ -14,6 +14,10 @@ public class KeywordManager : GameObjectSingleton<KeywordManager>, IInit
 
     [SerializeField]
     private List<GridLayoutGroup> gridLayoutGroups;
+
+    private Dictionary<string, KeywordEntity> keywords = new Dictionary<string, KeywordEntity>();
+
+
     public void Init()
     {
     }

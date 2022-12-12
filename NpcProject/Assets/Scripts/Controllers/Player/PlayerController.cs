@@ -91,6 +91,10 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
+        if (DebugModEnterInputCheck()) 
+        {
+            return;
+        }
 
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
@@ -108,8 +112,29 @@ public class PlayerController : MonoBehaviour
         }
         return false;
     }
+    public bool DebugModEnterInputCheck() 
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            if (Managers.Game.IsDebugMod) 
+            {
+                Debug.Log("SetState Normal");
+                Managers.Game.SetStateNormal();
+                interactionDetecter.SwitchDebugMod(false);
+            }
+            else 
+            {
+                Debug.Log("SetState Debug");
+                Managers.Game.SetStateDebugMod();
+                interactionDetecter.SwitchDebugMod(true);
+            }
+            return true;
+        }
+        return false;
+    }
+  
     #endregion
-   
+
     #region SetState
     public void SetStateInteraction() 
     {
