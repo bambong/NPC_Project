@@ -162,8 +162,10 @@ public class TalkPanelController : UI_Popup
             {
                 if(isTrans == false)
                 {
+                    Debug.Log("skipdialog");
                     dialogueText.DOKill();
                     dialogueText.text = textDialogue;
+                    yield return new WaitForSeconds(0.1f);
                     isNext = true;
                     yield break;
                 }
