@@ -24,11 +24,15 @@ public class PlayerController : MonoBehaviour
     private Transform rotater;
     [SerializeField]
     private CharacterController characterController;
+    
+    private GlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
+
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
+        glitchEffectController = Managers.UI.MakeSceneUI<GlitchEffectController>(null,"GlitchEffect");
     }
 
     void Update()
@@ -119,12 +123,14 @@ public class PlayerController : MonoBehaviour
             if (Managers.Game.IsDebugMod) 
             {
                 Debug.Log("SetState Normal");
+                glitchEffectController.OffGlitch();
                 Managers.Game.SetStateNormal();
                 interactionDetecter.SwitchDebugMod(false);
             }
             else 
             {
                 Debug.Log("SetState Debug");
+                glitchEffectController.OnGlitch();
                 Managers.Game.SetStateDebugMod();
                 interactionDetecter.SwitchDebugMod(true);
             }
