@@ -32,6 +32,7 @@ public class GameManager
     public void SetStateNormal() => gameStateController.ChangeState(GameNormalState.Instance);
     public void SetStateDialog() => gameStateController.ChangeState(GameDialogState.Instance);
     public void SetStateDebugMod() => gameStateController.ChangeState(GameDebugModState.Instance);
+    public void SetStateKeywordMod() => gameStateController.ChangeState(GameKeywordModState.Instance);
     #endregion
     public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
     {

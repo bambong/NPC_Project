@@ -138,7 +138,14 @@ public class PlayerController : MonoBehaviour
         }
         return false;
     }
-  
+    public void KeywordModInputCheck()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Managers.Keyword.ExitKeywordMod();
+        }
+
+    }
     #endregion
 
     #region SetState
@@ -150,7 +157,11 @@ public class PlayerController : MonoBehaviour
     {
         playerStateController.ChangeState(PlayerIdle.Instance);
     }
-    
+    public void SetStatekeywordMod()
+    {
+        playerStateController.ChangeState(PlayerKeywordMod.Instance);
+    }
+
     #endregion
 
 }

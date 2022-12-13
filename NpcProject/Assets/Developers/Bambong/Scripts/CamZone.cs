@@ -7,13 +7,13 @@ using Cinemachine;
 public class CamZone : MonoBehaviour
 {
     [SerializeField]
-    private CinemachineVirtualCamera verCamera;
+    private CinemachineVirtualCamera virCamera;
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Player")) 
         {
-            Managers.Camera.SwitchCamera(verCamera,other.transform);
+            Managers.Camera.SwitchCamera(virCamera,other.transform);
         }
     }
 }

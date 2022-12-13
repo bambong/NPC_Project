@@ -13,22 +13,23 @@ public class TestColorKeywordController : KeywordController
     public override bool HandleObjectKeyword(KeywordController objectKeywordController)
     {
 
-        switch (objectKeywordController.KeywordId) 
-        {
-            case "TestColorKeywordController":
-                TestColorKeywordController colorKeywordController = (TestColorKeywordController)objectKeywordController;
-               if(colorKeywordController.id == Id) 
-               {
-                    objectKeywordController.Remove();
-                    Remove();
-                    Managers.Keyword.ResetKeywordFrame();
-                   // KeywordManager.Instance.ResortKeywordArea();
-                    return true;
-               }
-               return false;
+        //switch (objectKeywordController.KeywordId) 
+        //{
+        //    case "TestColorKeywordController":
+        //        TestColorKeywordController colorKeywordController = (TestColorKeywordController)objectKeywordController;
+        //       if(colorKeywordController.id == Id) 
+        //       {
+        //            objectKeywordController.Remove();
+        //            Remove();
+        //            Managers.Keyword.ResetKeywordFrame();
+        //           // KeywordManager.Instance.ResortKeywordArea();
+        //            return true;
+        //       }
+        //       return false;
 
-            default:
-                return false;
-        }
+        //    default:
+        //        return false;
+        //}
+        return false;
     }
 }

@@ -45,11 +45,12 @@ public class Managers : MonoBehaviour
 
             DontDestroyOnLoad(go);
             instance = go.GetComponent<Managers>();
-           
+
             instance.talk.Init();
             instance.game.Init();
             instance.pool.Init();
             instance.cam.Init();
+            instance.keyword.Init();
         }
 
     }

@@ -42,17 +42,26 @@ public class InteractionDetectController : MonoBehaviour
                 SetInteraction(curKeywordIteraction.gameObject);
                 curKeywordIteraction = null;
             }  
-        
         }
-
     }
 
-    public void Interaction() 
+    public void Interaction()
     {
-        if(curIteraction != null)
+        if(Managers.Game.IsDebugMod)
         {
-            curIteraction.OnInteraction();
-            Managers.Game.Player.SetStateInteraction();
+            if(curKeywordIteraction != null)
+            {
+                curKeywordIteraction.OpenKeywordSlot();
+                Managers.Keyword.EnterKeywordMod(curKeywordIteraction); 
+            }
+        }
+        else 
+        {
+            if(curIteraction != null)
+            {
+                curIteraction.OnInteraction();
+                Managers.Game.Player.SetStateInteraction();
+            }
         }
 
     }

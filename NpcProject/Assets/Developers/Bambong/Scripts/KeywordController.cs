@@ -4,39 +4,26 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public enum E_KeywordType
-{
-    Action,
-    Object
-}
 
-public  class KeywordController : MonoBehaviour, IDragHandler, IEndDragHandler,IBeginDragHandler ,IPointerExitHandler ,IPointerEnterHandler
+public class KeywordController : UI_Base, IDragHandler, IEndDragHandler,IBeginDragHandler ,IPointerExitHandler ,IPointerEnterHandler
 {
     private readonly float START_END_ANIM_TIME = 0.2f;
     private readonly float FOCUSING_SCALE = 1.2f;
     private readonly float KEYWORD_FRAME_MOVE_TIME= 0.1f;
     private readonly string KEYWORD_FRAME_TAG = "KeywordFrame";
+    private readonly string KEYWORD_PLAYER_FRAME_TAG = "KeywordPlayerFrame";
 
     [SerializeField]
     private RectTransform rectTransform;
     [SerializeField]
     private Image image;
 
-    [SerializeField]
-    private E_KeywordType keywordType;
-
-    private string keywordId;
     private int prevSibilintIndex;
     private Coroutine curAnimCoroutine;
+    private Transform startParent; 
     private Vector3 startDragPoint;
-
-    public E_KeywordType KeywordType { get => keywordType; }
-    public string KeywordId { get => keywordId; }
-
-    private void Awake()
-    {
-        keywordId = GetType().ToString();
-    }
+    private KeywordFameController curFrame;
+ 
     public void OnBeginDrag(PointerEventData eventData)
     {
         if(eventData.button != PointerEventData.InputButton.Left) 
@@ -44,8 +31,11 @@ public  class KeywordController : MonoBehaviour, IDragHandler, IEndDragHandler,I
             return;
         }
         prevSibilintIndex = rectTransform.GetSiblingIndex();
+        startParent = transform.parent;
+        transform.parent = Managers.Keyword.PlayerKeywordPanel.transform;
+
         rectTransform.SetAsLastSibling();
-        startDragPoint = rectTransform.anchoredPosition;
+        startDragPoint = rectTransform.position;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -65,7 +55,7 @@ public  class KeywordController : MonoBehaviour, IDragHandler, IEndDragHandler,I
             return;
         }
 
-        var raycasts = GraphicRayCasterManager.Instacne.GetRaycastList(eventData);
+        var raycasts = Managers.Keyword.GetRaycastList(eventData);
 
         if(raycasts.Count > 0) 
         {
@@ -73,14 +63,35 @@ public  class KeywordController : MonoBehaviour, IDragHandler, IEndDragHandler,I
             {
                 if(raycasts[i].gameObject.CompareTag(KEYWORD_FRAME_TAG)) 
                 {
-                    Managers.Keyword.SetKeyWord(this);
+                    var keywordFrame = raycasts[i].gameObject.GetComponent<KeywordFameController>();
+                    if(keywordFrame.SetKeyWord(this)) 
+                    {
+                        Managers.Keyword.RemoveKeywordToPlayer(this);
+                        curFrame = keywordFrame;
+                        return;
+                    }
+                }
+                else if(raycasts[i].gameObject.CompareTag(KEYWORD_PLAYER_FRAME_TAG))
+                {
+                    if(!Managers.Keyword.AddKeywordToPlayer(this)) 
+                    {
+                        ResetKeyword();
+                    }
+                    ClearCurFrame();
                     return;
                 }
             }
         }
         ResetKeyword();
     }
-  
+ 
+    public void ClearCurFrame() 
+    {
+        if(curFrame != null) 
+        {
+            curFrame.ResetKeywordFrame();
+        }
+    }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -104,8 +115,9 @@ public  class KeywordController : MonoBehaviour, IDragHandler, IEndDragHandler,I
 
     public void SetToKeywordFrame(Vector3 pos) 
     {
-        image.raycastTarget = false;
-        rectTransform.DOMove(pos, KEYWORD_FRAME_MOVE_TIME).OnComplete(() =>Managers.Keyword.Interaction());
+        //image.raycastTarget = false;
+        rectTransform.position = pos;
+        //rectTransform.DOMove(pos, KEYWORD_FRAME_MOVE_TIME);
     }
 
     public void ResetKeyword() 
@@ -114,11 +126,15 @@ public  class KeywordController : MonoBehaviour, IDragHandler, IEndDragHandler,I
         {
             return;
         }
-        rectTransform.DOAnchorPos(startDragPoint, START_END_ANIM_TIME).OnComplete(() =>
-        { 
-            image.raycastTarget = true;
-            rectTransform.SetSiblingIndex(prevSibilintIndex);
-        }); 
+        transform.parent = startParent;
+        transform.SetSiblingIndex(prevSibilintIndex);
+        rectTransform.transform.position = startDragPoint;
+        //rectTransform.DOMove(startDragPoint,START_END_ANIM_TIME);
+        //rectTransform.DOAnchorPos(startDragPoint, START_END_ANIM_TIME).OnComplete(() =>
+        //{ 
+        //    image.raycastTarget = true;
+        //    rectTransform.SetSiblingIndex(prevSibilintIndex);
+        //}); 
     }
     public IEnumerator ChangeScaleLerpAnim(Vector3 desireScale, float time) 
     {
@@ -135,11 +151,6 @@ public  class KeywordController : MonoBehaviour, IDragHandler, IEndDragHandler,I
         rectTransform.localScale = desireScale;
     }
 
-    public bool CompareKeywordType(E_KeywordType type)
-    {
-        return type == keywordType;
-    }
-
     public virtual bool HandleObjectKeyword(KeywordController objectKeywordController)
     {
         return false;
@@ -150,5 +161,11 @@ public  class KeywordController : MonoBehaviour, IDragHandler, IEndDragHandler,I
         rectTransform.DOScale(Vector3.zero, 0.2f).OnComplete(() => { Destroy(rectTransform.gameObject); });
         
     }
+    public virtual void KeywordUpdateAction(KeywordEntity entity) 
+    {
+    }
 
+    public override void Init()
+    {
+    }
 }
