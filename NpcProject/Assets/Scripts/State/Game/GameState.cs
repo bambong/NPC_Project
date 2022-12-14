@@ -36,7 +36,7 @@ public class GameDialogState : Singleton<GameDialogState>, IState<GameManager>
 
     public void Exit(GameManager stateController)
     {
-        GameSceneManager.Instacne.Player.SetStateIdle();
+        Managers.Game.Player.SetStateIdle();
     }
 
     public void FixedUpdateActive(GameManager stateController)
