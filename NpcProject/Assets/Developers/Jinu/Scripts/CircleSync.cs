@@ -7,9 +7,12 @@ public class CircleSync : MonoBehaviour
     public static int PosID = Shader.PropertyToID("_Position");
     public static int SizeID = Shader.PropertyToID("_Size");
 
-    public Material WallMaterial;
-    public Camera Camera;
-    public LayerMask Mask;
+    [SerializeField]
+    private Material WallMaterial;
+    [SerializeField]
+    private Camera Camera;
+    [SerializeField]
+    private LayerMask Mask;
     
     void Start() 
     {
