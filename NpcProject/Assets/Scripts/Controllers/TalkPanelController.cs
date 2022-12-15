@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using DG.Tweening;
+using System.Linq;
 
 public class TalkPanelController : UI_Popup
 {
@@ -28,8 +29,11 @@ public class TalkPanelController : UI_Popup
     private float textSpeed = 0.05f;
     private float typingTime;    
     private float textTime;
-    private string textDialogue;
+    private string textDialogue = null;
+    private string textStore = null;
+    private System.Random random;
     private bool isNext = false;
+    private bool isTrans = false;
 
     private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.01f);
 
@@ -60,11 +64,13 @@ public class TalkPanelController : UI_Popup
             return false;
         }
 
-        DotweenTextani();
+        StartCoroutine(TransText());
+        // DotweenTextani();
 
         curIndex++;
         return true;
     }
+
 
     private void DotweenTextani()
     {
@@ -76,10 +82,23 @@ public class TalkPanelController : UI_Popup
         dialogueText.DOText(textDialogue, typingTime).OnStart(()=>
         {
             StartCoroutine(SkipTextani());
-        }).OnComplete(()=>
+        })
+        // .OnUpdate(()=>
+        // {
+        //     // dialogueText.text = RandomText(textDialogue.Length);
+
+        // })
+        .OnComplete(()=>
         {
             isNext = true;
         });
+    }
+
+    private string RandomText(int length)
+    {
+        random = new System.Random();
+        string charcters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        return new string(Enumerable.Repeat(charcters, length).Select(s => s[random.Next(s.Length)]).ToArray());
     }
 
     public bool IsAni()
@@ -87,16 +106,77 @@ public class TalkPanelController : UI_Popup
         return isNext;
     }
 
+    IEnumerator TransText()
+    {
+        textStore = null;
+        textDialogue = null;
+        typingTime = curSpeak.dialogues[curIndex].text.Length * textSpeed;
+
+        char[] sep = { '<', '>' };
+        string[] result = curSpeak.dialogues[curIndex].text.Split(sep);
+
+        foreach (var item in result)
+        {
+            if (item == "dummy")
+            {
+                isTrans = true;
+            }
+            else
+            {
+                textDialogue += item;
+            }
+        }
+
+        // textDialogue = curSpeak.dialogues[curIndex].text;
+        if (isTrans == true)
+        {
+            for (int i = 0; i < textDialogue.Length; i++)
+            {
+                textStore += textDialogue[i];
+                dialogueText.text = textStore + RandomText(textDialogue.Length - (i + 1));
+                yield return new WaitForSeconds(textSpeed);
+                if(i == 0)
+                {
+                    StartCoroutine(SkipTextani());
+                }                
+                if (isTrans == false)
+                {
+                    yield break;
+                }
+            }
+            isTrans = false;
+            isNext = true;
+        }
+        else
+        {
+            DotweenTextani();
+        }
+    }
+
     IEnumerator SkipTextani()
     {
         while(!isNext)
         {
-            if (Input.GetKeyDown(KeyCode.X))
+
+            if(Input.GetKeyDown(KeyCode.X))
             {
-                dialogueText.DOKill();
-                dialogueText.text = textDialogue;
-                isNext = true;
-                break;
+                if(isTrans == false)
+                {
+                    Debug.Log("skipdialog");
+                    dialogueText.DOKill();
+                    dialogueText.text = textDialogue;
+                    yield return new WaitForSeconds(0.1f);
+                    isNext = true;
+                    yield break;
+                }
+                if(isTrans == true)
+                {
+                    dialogueText.text = "";
+                    dialogueText.text = textDialogue;
+                    isNext = true;
+                    isTrans = false;
+                    yield break;
+                }
             }
             yield return null;
         }
