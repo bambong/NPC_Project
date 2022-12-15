@@ -10,8 +10,9 @@ public class KeywordManager
 
     private KeywordEntity curKeywordEntity;
     private PlayerKeywordPanelController playerKeywordPanel;
-    public Transform playerKeywordPanelLayout { get => playerKeywordPanel.Layout; }
+    public Transform playerKeywordPanelLayout { get => playerKeywordPanel.Layout.transform; }
     public PlayerKeywordPanelController PlayerKeywordPanel { get => playerKeywordPanel;}
+    public KeywordEntity CurKeywordEntity { get => curKeywordEntity; }
 
     private List<KeywordController> curPlayerKeywords = new List<KeywordController>();
     private GraphicRaycaster graphicRaycaster;
@@ -32,13 +33,17 @@ public class KeywordManager
         Managers.Game.SetStateKeywordMod();
         curKeywordEntity = keywordEntity;
         playerKeywordPanel.Open();
+        UpdateKeywordLayout();
         keywordEntity.OpenKeywordSlot();
     }
+  
     public void ExitKeywordMod()
     {
+        playerKeywordPanel.Layout.enabled = true;
         Managers.Game.SetStateDebugMod();
         playerKeywordPanel.Close();
         curKeywordEntity.CloseKeywordSlot();
+        curKeywordEntity.DecisionKeyword();
     }
     public bool AddKeywordToPlayer(KeywordController keywordController) 
     {
@@ -46,6 +51,7 @@ public class KeywordManager
         {
             return false;
         }
+        UpdateKeywordLayout();
         curPlayerKeywords.Add(keywordController);
         playerKeywordPanel.AddKeyword(keywordController);
         return true;
@@ -63,8 +69,15 @@ public class KeywordManager
     {
         keywordController.ResetKeyword();
     }
-    public void Interaction() 
+    public void UpdateKeywordLayout()
     {
-    
+        Managers.Scene.CurrentScene.StartCoroutine(UpdateKeywordLayoutco());
     }
+    IEnumerator UpdateKeywordLayoutco()
+    {
+        playerKeywordPanel.Layout.enabled = true;
+        yield return null;
+        playerKeywordPanel.Layout.enabled = false;
+    }
+
 }

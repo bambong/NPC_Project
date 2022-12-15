@@ -1,23 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
-public class XRotateKeyword : KeywordController
+
+public class MoveKeyword : KeywordController
 {
     [SerializeField]
-    private float rotateSpeed = 2f;
+    private float moveSpeed = 2f;
+    [SerializeField]
+    private Vector3 moveVector;
+    private int dir = 1;
+    private void Turn() 
+    {
+        dir *= -1;
+    }
     public override void KeywordUpdateAction(KeywordEntity entity)
     {
-        var rot = entity.transform.localEulerAngles;
-        rot.y += Time.deltaTime * rotateSpeed;
-        entity.transform.Rotate(new Vector3(0,Time.deltaTime * rotateSpeed,0));
+        if(!entity.ColisionCheckMove( moveVector *dir* moveSpeed)) 
+        {
+            Turn();
+        }
     }
     public override void EnterKeywordAction(KeywordEntity entity)
     {
+        dir = 1;
         //entity.transform.DORotate(new Vector3(0,360,0),2f).SetLoops(-1,LoopType.Incremental).SetEase(Ease.Linear);
     }
     public override void ExitKeywordAction(KeywordEntity entity)
     {
+        dir = 1;
         //entity.transform.DOKill();
     }
+    
 }

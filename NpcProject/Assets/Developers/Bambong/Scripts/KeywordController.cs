@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class KeywordController : UI_Base, IDragHandler, IEndDragHandler,IBeginDragHandler ,IPointerExitHandler ,IPointerEnterHandler
 {
     private readonly float START_END_ANIM_TIME = 0.2f;
-    private readonly float FOCUSING_SCALE = 1.2f;
+    private readonly float FOCUSING_SCALE = 1.05f;
     private readonly float KEYWORD_FRAME_MOVE_TIME= 0.1f;
     private readonly string KEYWORD_FRAME_TAG = "KeywordFrame";
     private readonly string KEYWORD_PLAYER_FRAME_TAG = "KeywordPlayerFrame";
@@ -19,7 +19,6 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler,IBeginDr
     private Image image;
 
     private int prevSibilintIndex;
-    private Coroutine curAnimCoroutine;
     private Transform startParent; 
     private Vector3 startDragPoint;
     private KeywordFameController curFrame;
@@ -95,29 +94,17 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler,IBeginDr
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        ClearAnim();
-        curAnimCoroutine = StartCoroutine(ChangeScaleLerpAnim(new Vector3(FOCUSING_SCALE, FOCUSING_SCALE, FOCUSING_SCALE), START_END_ANIM_TIME));
+        transform.DOScale(FOCUSING_SCALE,START_END_ANIM_TIME).SetUpdate(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        ClearAnim();
-        curAnimCoroutine = StartCoroutine(ChangeScaleLerpAnim(Vector3.one, START_END_ANIM_TIME));  
-    }
-
-    public void ClearAnim() 
-    {
-        if(curAnimCoroutine != null) 
-        {
-            StopCoroutine(curAnimCoroutine);
-        }
+        transform.DOScale(Vector3.one,START_END_ANIM_TIME).SetUpdate(true);
     }
 
     public void SetToKeywordFrame(Vector3 pos) 
     {
-        //image.raycastTarget = false;
-        rectTransform.position = pos;
-        //rectTransform.DOMove(pos, KEYWORD_FRAME_MOVE_TIME);
+        rectTransform.DOMove(pos, KEYWORD_FRAME_MOVE_TIME).SetUpdate(true);
     }
 
     public void ResetKeyword() 
@@ -128,43 +115,17 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler,IBeginDr
         }
         transform.parent = startParent;
         transform.SetSiblingIndex(prevSibilintIndex);
-        rectTransform.transform.position = startDragPoint;
-        //rectTransform.DOMove(startDragPoint,START_END_ANIM_TIME);
-        //rectTransform.DOAnchorPos(startDragPoint, START_END_ANIM_TIME).OnComplete(() =>
-        //{ 
-        //    image.raycastTarget = true;
-        //    rectTransform.SetSiblingIndex(prevSibilintIndex);
-        //}); 
-    }
-    public IEnumerator ChangeScaleLerpAnim(Vector3 desireScale, float time) 
-    {
-        float progress = 0f;
-        float revisionNum = 1 / time;
-        var startScale = rectTransform.localScale;
-
-        while (progress < 1) 
-        {
-            yield return null;
-            progress += Time.deltaTime * revisionNum;
-            rectTransform.localScale = Vector3.Lerp(startScale, desireScale, progress); 
-        }
-        rectTransform.localScale = desireScale;
-    }
-
-    public virtual bool HandleObjectKeyword(KeywordController objectKeywordController)
-    {
-        return false;
-    }
-    public void Remove()
-    {
-        ClearAnim();
-        rectTransform.DOScale(Vector3.zero, 0.2f).OnComplete(() => { Destroy(rectTransform.gameObject); });
-        
+        rectTransform.DOMove(startDragPoint,START_END_ANIM_TIME,true).SetUpdate(true);
     }
     public virtual void KeywordUpdateAction(KeywordEntity entity) 
     {
     }
-
+    public virtual void EnterKeywordAction(KeywordEntity entity)
+    {
+    }
+    public virtual void ExitKeywordAction(KeywordEntity entity)
+    {
+    }
     public override void Init()
     {
     }

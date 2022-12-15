@@ -12,20 +12,17 @@ public class KeywordEntity : MonoBehaviour
     [SerializeField]
     private int keywordSlot = 1;
 
-    private Action updateAction = null;
+    private Action<KeywordEntity> updateAction = null;
     private KeywordFameController keywordSlotUI;
-
+    private Collider col;
 
     private void Start()
     {
         keywordSlotUI = Managers.UI.MakeSubItem<KeywordFameController>(Managers.Keyword.PlayerKeywordPanel.transform,"KeywordSlotUI");
-        keywordSlotUI.transform.localScale = Vector3.one;
+        keywordSlotUI.SetScale(Vector3.one);
+        col = Util.GetOrAddComponent<Collider>(gameObject);
     }
-    public void SetKeyword(KeywordController keywordController)
-    {
-        keywordSlotUI.SetKeyWord(keywordController);
-    }
-
+  
     public void OpenKeywordSlot() 
     {
         keywordSlotUI.Open();
@@ -34,9 +31,19 @@ public class KeywordEntity : MonoBehaviour
     { 
         keywordSlotUI.Close();
     }
-    public void AddAction(Action action) 
+    public void AddAction(Action<KeywordEntity> action) 
     {
+        updateAction -= action;
         updateAction += action;
+    }
+    public void DecisionKeyword()
+    {
+        ClearAction();
+        if(keywordSlotUI.KeywordController == null) 
+        {
+            return;
+        }
+        AddAction(keywordSlotUI.KeywordController.KeywordUpdateAction);
     }
 
     public void ClearAction() 
@@ -45,9 +52,31 @@ public class KeywordEntity : MonoBehaviour
     }
     public void Update() 
     {
-        updateAction?.Invoke();
+        updateAction?.Invoke(this);
     }
 
+    public bool ColisionCheckMove(Vector3 vec)
+    {
+        var pos = transform.position;
+        
+        RaycastHit hit;
+        int layer = 1;
+        foreach(var name in Enum.GetNames(typeof(Define.ColiiderMask))) 
+        {
+            layer += (1 << (LayerMask.NameToLayer(name)));
+        }
+
+        Physics.BoxCast(pos,col.bounds.extents,vec.normalized,out hit ,Quaternion.identity, col.bounds.extents.magnitude/2,layer);
+        if(hit.collider != null && hit.collider != col) 
+        {
+            return false;
+        }
+
+        pos += vec*Time.deltaTime;
+        transform.position = pos;
+        return true;
+
+    }
     public void Init() 
     {
         

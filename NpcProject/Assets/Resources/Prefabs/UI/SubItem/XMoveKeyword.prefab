@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Y \uCD95\uD68C\uC804 "
+  m_text: "X\uCD95 \uC774\uB3D9"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 51c1b1192a21d754c84329400187ff02, type: 2}
   m_sharedMaterial: {fileID: -6426664433711297009, guid: 51c1b1192a21d754c84329400187ff02, type: 2}
@@ -146,9 +146,9 @@ GameObject:
   - component: {fileID: 9059506981520492945}
   - component: {fileID: 9059506981520493039}
   - component: {fileID: 9059506981520493038}
-  - component: {fileID: 915991238410566596}
+  - component: {fileID: -8021835758394633309}
   m_Layer: 5
-  m_Name: RotateKeyword
+  m_Name: XMoveKeyword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.30838376, g: 0.6603774, b: 0.6157455, a: 1}
+  m_Color: {r: 0.369057, g: 0.65882355, b: 0.30980393, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -213,7 +213,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &915991238410566596
+--- !u!114 &-8021835758394633309
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -222,9 +222,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 9059506981520492944}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25a0153ea898d3240a2294d71738690d, type: 3}
+  m_Script: {fileID: 11500000, guid: d4aa7e874ce29f044be85b3cd8e2cf47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 9059506981520492945}
   image: {fileID: 9059506981520493038}
-  rotateSpeed: 100
+  moveSpeed: 5
+  moveVector: {x: 1, y: 0, z: 0}
