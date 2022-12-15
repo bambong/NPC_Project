@@ -10,7 +10,7 @@ public class InteractionUiController : UI_Base
     private RectTransform rectTransform;
     
     private readonly float ON_OFF_ANIM_TIME = 0.3f;
-    private readonly float Y_POS_REVISION_AMOUNT = 1;
+    private readonly float Y_POS_REVISION_AMOUNT = 2;
     private readonly string ON_STATE = "InteractionOn";
     private readonly string OFF_STATE = "InteractionOff";
     private readonly string IDLE_STATE = "InteractionIdle";
@@ -25,9 +25,13 @@ public class InteractionUiController : UI_Base
     {
         transform.position = parent.position + Vector3.up * ((parent.GetComponent<Collider>().bounds.size.y/2)+ Y_POS_REVISION_AMOUNT);
         transform.rotation  = Camera.main.transform.rotation;
-       
+        transform.parent = parent;
         gameObject.SetActive(true);
         StartCoroutine(OpenInteractionUi());
+    }
+    private void Update()
+    {
+        transform.rotation = Camera.main.transform.rotation;
     }
     public void Close() 
     {

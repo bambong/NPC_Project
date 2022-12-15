@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 
 public class KeywordController : UI_Base, IDragHandler, IEndDragHandler,IBeginDragHandler ,IPointerExitHandler ,IPointerEnterHandler
@@ -17,12 +18,18 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler,IBeginDr
     private RectTransform rectTransform;
     [SerializeField]
     private Image image;
+    [SerializeField]
+    private TextMeshProUGUI keywordText;
+
 
     private int prevSibilintIndex;
     private Transform startParent; 
     private Vector3 startDragPoint;
     private KeywordFameController curFrame;
- 
+
+    public TextMeshProUGUI KeywordText { get => keywordText;}
+    public Image Image { get => image; }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         if(eventData.button != PointerEventData.InputButton.Left) 

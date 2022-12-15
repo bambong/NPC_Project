@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
     private GlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
 
+    public KeywordEntity CurKeywordInteraction { get => interactionDetecter.CurKeywordIteraction; }
+
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);

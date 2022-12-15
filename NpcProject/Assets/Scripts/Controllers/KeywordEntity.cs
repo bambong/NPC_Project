@@ -14,15 +14,24 @@ public class KeywordEntity : MonoBehaviour
 
     private Action<KeywordEntity> updateAction = null;
     private KeywordFameController keywordSlotUI;
+    private KeywordSlotUIWorldSpaceController keywordSlotWorldUI;
     private Collider col;
 
     private void Start()
     {
+        Managers.Keyword.AddSceneEntity(this);
+
         keywordSlotUI = Managers.UI.MakeSubItem<KeywordFameController>(Managers.Keyword.PlayerKeywordPanel.transform,"KeywordSlotUI");
         keywordSlotUI.SetScale(Vector3.one);
+
+        keywordSlotWorldUI = Managers.UI.MakeWorldSpaceUI<KeywordSlotUIWorldSpaceController>(transform,"KeywordSlotWorldSpace");
         col = Util.GetOrAddComponent<Collider>(gameObject);
     }
   
+
+    public void CloseWorldSlotUI() => keywordSlotWorldUI.Close();
+    public void OpenWorldSlotUI() => keywordSlotWorldUI.Open(transform);
+
     public void OpenKeywordSlot() 
     {
         keywordSlotUI.Open();
@@ -41,8 +50,11 @@ public class KeywordEntity : MonoBehaviour
         ClearAction();
         if(keywordSlotUI.KeywordController == null) 
         {
+            keywordSlotWorldUI.ResetSlotUI();
             return;
         }
+
+        keywordSlotWorldUI.SetSlotUI(keywordSlotUI.KeywordController.Image.color,keywordSlotUI.KeywordController.KeywordText.text);
         AddAction(keywordSlotUI.KeywordController.KeywordUpdateAction);
     }
 

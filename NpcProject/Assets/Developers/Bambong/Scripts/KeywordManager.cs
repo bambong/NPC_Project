@@ -15,6 +15,7 @@ public class KeywordManager
     public KeywordEntity CurKeywordEntity { get => curKeywordEntity; }
 
     private List<KeywordController> curPlayerKeywords = new List<KeywordController>();
+    private List<KeywordEntity> curSceneEntity = new List<KeywordEntity>();
     private GraphicRaycaster graphicRaycaster;
     public void Init()
     {
@@ -27,6 +28,22 @@ public class KeywordManager
         var raycastResults = new List<RaycastResult>();
         graphicRaycaster.Raycast(pointerEventData,raycastResults);
         return raycastResults;
+    }
+    public void AddSceneEntity(KeywordEntity entity) => curSceneEntity.Add(entity);
+
+    public void EnterDebugMod() 
+    {
+        foreach(var entity in curSceneEntity)
+        {
+            entity.OpenWorldSlotUI();
+        }
+    }
+    public void ExitDebugMod()
+    {
+        foreach(var entity in curSceneEntity)
+        {
+            entity.CloseWorldSlotUI();
+        }
     }
     public void EnterKeywordMod(KeywordEntity keywordEntity) 
     {
@@ -72,6 +89,11 @@ public class KeywordManager
     public void UpdateKeywordLayout()
     {
         Managers.Scene.CurrentScene.StartCoroutine(UpdateKeywordLayoutco());
+    }
+    public void Clear()
+    {
+        curPlayerKeywords.Clear();
+        curSceneEntity.Clear();
     }
     IEnumerator UpdateKeywordLayoutco()
     {
