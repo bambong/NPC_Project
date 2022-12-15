@@ -7,16 +7,17 @@ public class GameScene : BaseScene
     [SerializeField]
     private Vector3 playerSpawnSpot;
     [SerializeField]
-    private CinemachineVirtualCamera vercam;
+    private CinemachineVirtualCamera vircam;
     protected override void Init() 
     {
-       base.Init();
+        base.Init();
 
-       var player  = Managers.Game.Spawn(Define.WorldObject.Player, "Player");
-       player.transform.position = playerSpawnSpot;
-        //Camera.main.GetComponent<CameraController>().SetTarger(player.transform);
-        vercam.m_LookAt = player.transform;
-        vercam.m_Follow = player.transform;
+        var player  = Managers.Game.Spawn(Define.WorldObject.Player, "Player");
+        player.transform.position = playerSpawnSpot;
+        Managers.Camera.InitCamera(vircam,player.transform);
+        var rotatekeyword  = Managers.UI.MakeSubItem<KeywordController>(null,"RotateKeyword");
+        Managers.Keyword.AddKeywordToPlayer(rotatekeyword);
+        rotatekeyword.transform.localScale = Vector3.one;
     }
 
     public override void Clear()

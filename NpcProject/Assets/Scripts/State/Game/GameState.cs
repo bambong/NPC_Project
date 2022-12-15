@@ -23,6 +23,7 @@ public class GameNormalState : Singleton<GameNormalState>,IState<GameManager>
 
     public void UpdateActive(GameManager stateController)
     {
+        
     }
 }
 public class GameDialogState : Singleton<GameDialogState>, IState<GameManager>
@@ -37,6 +38,53 @@ public class GameDialogState : Singleton<GameDialogState>, IState<GameManager>
     public void Exit(GameManager stateController)
     {
         Managers.Game.Player.SetStateIdle();
+    }
+
+    public void FixedUpdateActive(GameManager stateController)
+    {
+    }
+
+    public void UpdateActive(GameManager stateController)
+    {
+    }
+}
+
+public class GameDebugModState : Singleton<GameDebugModState>, IState<GameManager>
+{
+    public void Init()
+    {
+    }
+    public void Enter(GameManager stateController)
+    {
+    }
+
+    public void Exit(GameManager stateController)
+    {
+    }
+
+    public void FixedUpdateActive(GameManager stateController)
+    {
+    }
+
+    public void UpdateActive(GameManager stateController)
+    {
+    }
+}
+public class GameKeywordModState : Singleton<GameKeywordModState>, IState<GameManager>
+{
+    public void Init()
+    {
+    }
+    public void Enter(GameManager stateController)
+    {
+        Time.timeScale = 0;
+        stateController.Player.SetStatekeywordMod();
+    }
+
+    public void Exit(GameManager stateController)
+    {
+        Time.timeScale = 1;
+        stateController.Player.SetStateIdle();
     }
 
     public void FixedUpdateActive(GameManager stateController)
