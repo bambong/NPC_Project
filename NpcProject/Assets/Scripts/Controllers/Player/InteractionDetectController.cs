@@ -6,69 +6,131 @@ using UnityEngine.SceneManagement;
 
 public class InteractionDetectController : MonoBehaviour
 {
-    [SerializeField]
     private InteractionUiController interactionUi;
-    [SerializeField]
-    private EffectController Effect;
+    private InteractionUiController keyworInteractionUi;
+    
+    private IInteraction curIteraction;
+    private KeywordEntity curKeywordIteraction;
 
-    public Interaction CurFocusingnIteraction { get => curFocusingnIteraction;}
-
+    public IInteraction CurIteraction { get => curIteraction; }
+    public KeywordEntity CurKeywordIteraction { get => curKeywordIteraction; }
+ 
     private readonly string INTERACTION_TAG = "Interaction";
-    private Interaction curFocusingnIteraction;
 
     public void Init()
     {
         interactionUi = Managers.UI.MakeWorldSpaceUI<InteractionUiController>(Managers.Scene.CurrentScene.transform,"InteractionUI");
+        keyworInteractionUi = Managers.UI.MakeWorldSpaceUI<InteractionUiController>(Managers.Scene.CurrentScene.transform, "KeywordInteractionUI");
+    }
+    public void SwitchDebugMod(bool isOn)
+    {
+
+        if (isOn) 
+        {
+            if(curIteraction != null) 
+            {
+                interactionUi.Close();
+                SetKeywordInteraction(curIteraction.Go);
+                curIteraction = null;
+            }
+        }
+        else 
+        {
+            if(curKeywordIteraction != null) 
+            {
+                keyworInteractionUi.Close();
+                SetInteraction(curKeywordIteraction.gameObject);
+                curKeywordIteraction = null;
+            }  
+        }
     }
 
-    public void Interaction() 
+    public void Interaction()
     {
-        if(curFocusingnIteraction != null)
+        if(Managers.Game.IsDebugMod)
         {
-            curFocusingnIteraction.OnInteraction();
-            Managers.Game.Player.SetStateInteraction();
-        }
-        else
-        {
-            if (SceneManager.GetActiveScene().name == "Test")
+            if(curKeywordIteraction != null)
             {
-                SceneManager.LoadScene("Debug");
-                Effect.LoadNextLevel();
+                curKeywordIteraction.OpenKeywordSlot();
+                Managers.Keyword.EnterKeywordMod(curKeywordIteraction); 
             }
+        }
+        else 
+        {
+            if(curIteraction != null)
+            {
+                curIteraction.OnInteraction();
+                Managers.Game.Player.SetStateInteraction();
+            }
+        }
 
-            if (SceneManager.GetActiveScene().name == "Debug")
-            {
-                SceneManager.LoadScene("Test");
-            }
-        }
     }
     public void InteractionUiEnable() => interactionUi.Open();
     public void InteractionUiDisable() => interactionUi.Close();
 
+    private void SetKeywordInteraction(GameObject go)
+    {
+        var keyword = go.GetComponent<KeywordEntity>();
+
+        if (keyword != null)
+        {
+            curKeywordIteraction = keyword;
+            keyworInteractionUi.Open(go.transform);
+        }
+
+    }
+    private void SetInteraction(GameObject go) 
+    {
+        var interaction = go.GetComponent<IInteraction>();
+
+        if (interaction != null)
+        {
+            interactionUi.Open(go.transform);
+            curIteraction = interaction;
+        }
+
+    }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag(INTERACTION_TAG)) 
+        if (Managers.Game.IsDebugMod) 
         {
-            interactionUi.Open(other.transform);
-            curFocusingnIteraction = other.GetComponent<Interaction>();
+            SetKeywordInteraction(other.gameObject);
+        }
+        else 
+        {
+            SetInteraction(other.gameObject);
         }
     }
-
-
+   
 
     private void OnTriggerExit(Collider other)
     {
-        if(CurFocusingnIteraction == null) 
+        if (Managers.Game.IsDebugMod)
         {
-            return;
-        }
+            if(CurKeywordIteraction == null) 
+            {
+                return;
+            }
+            var keyword = other.GetComponent<KeywordEntity>();
 
-        if(other.CompareTag(INTERACTION_TAG)) 
+            if (keyword != null&& keyword == CurKeywordIteraction)
+            {
+                keyworInteractionUi.Close();
+                curKeywordIteraction = null;
+            }
+        }
+        else
         {
-            if(CurFocusingnIteraction.gameObject == other.gameObject)
+            if (CurIteraction == null)
+            {
+                return;
+            }
+            var interaction = other.GetComponent<IInteraction>();
+
+            if (interaction != null && interaction == CurIteraction)
             {
                 interactionUi.Close();
-                curFocusingnIteraction = null;
+                curIteraction = null;
             }
         }
     }

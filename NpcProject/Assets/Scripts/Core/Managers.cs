@@ -14,13 +14,17 @@ public class Managers : MonoBehaviour
     private GameManager game = new GameManager();
     private UIManager ui = new UIManager();
     private TalkManager talk = new TalkManager();
+    private CameraManager cam = new CameraManager();
+    private KeywordManager keyword = new KeywordManager();
 
+    public static KeywordManager Keyword { get => Instance.keyword; }
+    public static CameraManager Camera { get => Instance.cam; }
     public static PoolManager Pool { get => Instance.pool; }
     public static GameManager Game { get => Instance.game; }
     public static ResourceManager Resource { get => Instance.resource; }
     public static SceneManagerEx Scene { get => Instance.scene;  }
-    public static UIManager UI { get => instance.ui; }
-    public static TalkManager Talk { get => instance.talk; }
+    public static UIManager UI { get => Instance.ui; }
+    public static TalkManager Talk { get => Instance.talk; }
     #endregion
 
     void Start()
@@ -41,10 +45,12 @@ public class Managers : MonoBehaviour
 
             DontDestroyOnLoad(go);
             instance = go.GetComponent<Managers>();
-           
+
             instance.talk.Init();
             instance.game.Init();
             instance.pool.Init();
+            instance.cam.Init();
+            instance.keyword.Init();
         }
 
     }

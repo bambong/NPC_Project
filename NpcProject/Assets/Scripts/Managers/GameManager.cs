@@ -20,7 +20,8 @@ public class GameManager
     private GameStateController gameStateController;
     private PlayerController player;
     public PlayerController Player { get => player; }
-
+    public IState<GameManager> CurState { get => gameStateController.CurState; }
+    public bool IsDebugMod { get => CurState == GameDebugModState.Instance; }
 
     public void Init()
     {
@@ -30,8 +31,9 @@ public class GameManager
     #region SetState
     public void SetStateNormal() => gameStateController.ChangeState(GameNormalState.Instance);
     public void SetStateDialog() => gameStateController.ChangeState(GameDialogState.Instance);
+    public void SetStateDebugMod() => gameStateController.ChangeState(GameDebugModState.Instance);
+    public void SetStateKeywordMod() => gameStateController.ChangeState(GameKeywordModState.Instance);
     #endregion
-    
     public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
     {
         GameObject go = Managers.Resource.Instantiate(path, parent);

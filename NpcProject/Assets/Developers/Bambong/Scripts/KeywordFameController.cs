@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class KeywordFameController : MonoBehaviour
+public class KeywordFameController : UI_Base
 {
-    [SerializeField]
-    private E_KeywordType keywordType;
-
     [SerializeField]
     private RectTransform rectTransform;
 
@@ -19,12 +16,14 @@ public class KeywordFameController : MonoBehaviour
 
     public bool SetKeyWord(KeywordController keywordController) 
     {
-        if (hasKeyword || !keywordController.CompareKeywordType(keywordType)) 
+        if (hasKeyword) 
         {
             return false;
         }
         hasKeyword = true;
+        keywordController.ClearCurFrame();
         this.keywordController = keywordController;
+        keywordController.transform.parent = transform;
         keywordController.SetToKeywordFrame(rectTransform.position);
         return true;
     }
@@ -38,9 +37,17 @@ public class KeywordFameController : MonoBehaviour
         hasKeyword = false;
         keywordController = null;
     }
-    public void ResetKeyword() 
+    public void Open() 
     {
-        keywordController.ResetKeyword();
+        gameObject.SetActive(true);
+    }
+    public void Close() 
+    {
+        gameObject.SetActive(false);
     }
 
+    public override void Init()
+    {
+        
+    }
 }

@@ -20,21 +20,26 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private InteractionDetectController interactionDetecter;
+    [SerializeField]
+    private Transform rotater;
+    [SerializeField]
+    private CharacterController characterController;
+    
+    private GlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
 
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
+        glitchEffectController = Managers.UI.MakeSceneUI<GlitchEffectController>(null,"GlitchEffect");
     }
 
     void Update()
     {
-        //transform.rotation = Camera.main.transform.rotation;
+        rotater.rotation = Camera.main.transform.rotation;
         playerStateController.Update();
     }
-
-
 
     #region OnStateEnter
     public void AnimIdleEnter() 
@@ -59,13 +64,7 @@ public class PlayerController : MonoBehaviour
 
     #endregion
     #region OnStateUpdate
-    public void DialogueStateInputCheck()
-    {
-        if(Input.GetKeyDown(KeyCode.KeypadEnter)) 
-        {
-            
-        }
-    }
+
     public void PlayerMoveUpdate()
     {
         var hor = Input.GetAxis("Horizontal");
@@ -76,7 +75,6 @@ public class PlayerController : MonoBehaviour
             playerStateController.ChangeState(PlayerIdle.Instance);
             return;
         }
-
         
         if(hor != 0) 
         {
@@ -88,12 +86,16 @@ public class PlayerController : MonoBehaviour
         var pos = transform.position;
         var speed = moveSpeed * Time.deltaTime;
 
-        pos += moveVec * speed;
-        transform.position = pos;
+        moveVec = Quaternion.Euler(new Vector3(0,rotater.rotation.eulerAngles.y,0)) * moveVec;
+        characterController.Move( moveVec * speed);
     }
     public void PlayerInputCheck()
     {
         if(InteractionInputCheck())
+        {
+            return;
+        }
+        if (DebugModEnterInputCheck()) 
         {
             return;
         }
@@ -114,8 +116,38 @@ public class PlayerController : MonoBehaviour
         }
         return false;
     }
+    public bool DebugModEnterInputCheck() 
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            if (Managers.Game.IsDebugMod) 
+            {
+                Debug.Log("SetState Normal");
+                glitchEffectController.OffGlitch();
+                Managers.Game.SetStateNormal();
+                interactionDetecter.SwitchDebugMod(false);
+            }
+            else 
+            {
+                Debug.Log("SetState Debug");
+                glitchEffectController.OnGlitch();
+                Managers.Game.SetStateDebugMod();
+                interactionDetecter.SwitchDebugMod(true);
+            }
+            return true;
+        }
+        return false;
+    }
+    public void KeywordModInputCheck()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Managers.Keyword.ExitKeywordMod();
+        }
+
+    }
     #endregion
-   
+
     #region SetState
     public void SetStateInteraction() 
     {
@@ -125,7 +157,11 @@ public class PlayerController : MonoBehaviour
     {
         playerStateController.ChangeState(PlayerIdle.Instance);
     }
-    
+    public void SetStatekeywordMod()
+    {
+        playerStateController.ChangeState(PlayerKeywordMod.Instance);
+    }
+
     #endregion
 
 }
