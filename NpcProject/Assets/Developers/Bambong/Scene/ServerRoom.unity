@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028376, g: 0.22571453, b: 0.30692196, a: 1}
+  m_IndirectSpecularColor: {r: 0.46169508, g: 0.51241684, b: 0.5899322, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -142,6 +142,27 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5791022955632541195, guid: da1c2630796dac240926ef89b79c4cf4, type: 3}
+--- !u!1 &12331525 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3006101286600563288, guid: 042419e2ce0232244b087972aebec870, type: 3}
+  m_PrefabInstance: {fileID: 1860051677}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &12331530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 12331525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38e797262a791084c89cb488af8861e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entityId: 
+  keywordSlot: 1
+  talkData: {fileID: 11400000, guid: 2dd22a8fd83217448874d7526d73a8e1, type: 2}
+  virCam: {fileID: 0}
 --- !u!1 &13368296 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3530180950497525756, guid: da1c2630796dac240926ef89b79c4cf4, type: 3}
@@ -6972,6 +6993,14 @@ PrefabInstance:
     - target: {fileID: 1774980776174938217, guid: 042419e2ce0232244b087972aebec870, type: 3}
       propertyPath: m_Name
       value: Serverrack (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006101286600563288, guid: 042419e2ce0232244b087972aebec870, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006101286600563288, guid: 042419e2ce0232244b087972aebec870, type: 3}
+      propertyPath: m_TagString
+      value: Interaction
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 042419e2ce0232244b087972aebec870, type: 3}
