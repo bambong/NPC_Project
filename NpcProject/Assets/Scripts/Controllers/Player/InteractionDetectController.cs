@@ -74,6 +74,10 @@ public class InteractionDetectController : MonoBehaviour
 
         if (keyword != null)
         {
+            if (curKeywordIteraction != null) 
+            {
+                curKeywordIteraction.OpenWorldSlotUI();
+            }
             curKeywordIteraction = keyword;
             keyword.CloseWorldSlotUI();
             keyworInteractionUi.Open(go.transform);

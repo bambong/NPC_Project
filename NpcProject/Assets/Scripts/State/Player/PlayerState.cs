@@ -51,6 +51,8 @@ public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
     public void UpdateActive(PlayerController stateController)
     {
         stateController.PlayerMoveUpdate();
+        stateController.DebugModEnterInputCheck();
+        stateController.InteractionInputCheck();
     }
 }
 
