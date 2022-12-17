@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4628420009190347041}
   - component: {fileID: 2161845918442560707}
-  - component: {fileID: 2161845918442560705}
   - component: {fileID: 5697973954198034221}
+  - component: {fileID: 3089408227748520517}
   m_Layer: 0
   m_Name: GlitchEffect
   m_TagString: Untagged
@@ -56,19 +56,6 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   sharedProfile: {fileID: 11400000, guid: 56a0eb7ca0c1d8143bd6eba71feaf381, type: 2}
---- !u!114 &2161845918442560705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2161845918442560706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ab5a713bd49b584da09132382e1caaa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  effect: {fileID: 2161845918442560706}
 --- !u!223 &5697973954198034221
 Canvas:
   m_ObjectHideFlags: 0
@@ -90,3 +77,16 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &3089408227748520517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2161845918442560706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25fc88bb9adfa6488760febfe2707b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effect: {fileID: 2161845918442560706}
