@@ -1,8 +1,8 @@
-/******************************************************************************
+﻿/******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated September 24, 2021. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2021, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -31,8 +31,8 @@
 #define NEW_PREFAB_SYSTEM
 #endif
 
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Spine.Unity.Examples {
 
@@ -42,7 +42,8 @@ namespace Spine.Unity.Examples {
 	[ExecuteInEditMode]
 #endif
 	[RequireComponent(typeof(MeshRenderer)), RequireComponent(typeof(MeshFilter))]
-	public class RenderExistingMesh : MonoBehaviour {
+	public class RenderExistingMesh : MonoBehaviour
+	{
 		public MeshRenderer referenceRenderer;
 
 		bool updateViaSkeletonCallback = false;
@@ -100,21 +101,21 @@ namespace Spine.Unity.Examples {
 			InitializeDict();
 		}
 
-#if UNITY_EDITOR
+		#if UNITY_EDITOR
 		private void Update () {
 			if (!Application.isPlaying) {
 				InitializeDict();
 			}
 		}
-#endif
+		#endif
 
 		void LateUpdate () {
-#if UNITY_EDITOR
+			#if UNITY_EDITOR
 			if (!Application.isPlaying) {
 				UpdateMaterials();
 				return;
 			}
-#endif
+			#endif
 
 			if (updateViaSkeletonCallback)
 				return;

@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
         
         if(hor != 0) 
         {
-            var dir = hor < 0 ? -1 : 1;
+            var dir = hor < 0 ? 1 : -1;
             skeletonAnimation.skeleton.ScaleX = dir;
         }
 
