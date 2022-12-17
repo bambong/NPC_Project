@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using Cinemachine;
+using DG.Tweening;
 
 [Serializable]
 public class Dialogue 
@@ -57,11 +58,13 @@ public class TalkManager
     private TalkPanelController talkPanel;
     private CinemachineVirtualCamera talkVircam = null;
     private TalkEvent curTalkEvent;
+    private Transform talkPanelinner;
     private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.01f);
     public void Init()
     {
         LoadTalkData();
         talkPanel = Managers.UI.ShowPopupUI<TalkPanelController>("DialoguePanel");
+        talkPanelinner = talkPanel.transform.Find("DialoguePanel_Inner");
     }
     private void LoadTalkData() 
     {
@@ -70,11 +73,19 @@ public class TalkManager
     {
         Managers.Game.SetStateDialog();
         curTalkEvent = new TalkEvent(talk,talkPanel);
-        talkPanel.gameObject.SetActive(true);
+        // talkPanel.gameObject.SetActive(true);
+        talkPanelinner.DOScale(new Vector3(0.0f, 0.0f, 0.0f), 0.0f).OnStart(()=>
+        {
+            talkPanel.gameObject.SetActive(true);
+            talkPanelinner.DOScale(new Vector3(1.0f, 1.0f, 1.0f), 0.5f).OnComplete(()=>
+            {
+                Managers.Scene.CurrentScene.StartCoroutine(ProgressTalk());
+            });
+        });
        // CameraSet(virCam);
        // EnterCamera(talkVircam);
 
-       Managers.Scene.CurrentScene.StartCoroutine(ProgressTalk());
+    //    Managers.Scene.CurrentScene.StartCoroutine(ProgressTalk());
     }
     private void EndTalk() 
     {
