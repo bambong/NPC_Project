@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3074541703899278083}
+  - component: {fileID: 1462570742856952790}
+  - component: {fileID: 6863070693821162920}
   m_Layer: 3
   m_Name: PlayerRotater
   m_TagString: Untagged
@@ -32,6 +34,33 @@ Transform:
   m_Father: {fileID: 5137152168051090499}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1462570742856952790
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3567413477781239731}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.57
+  m_Height: 6.75
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &6863070693821162920
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3567413477781239731}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 2.23, y: 6, z: 0.45}
+  m_Center: {x: 0, y: -0.51, z: 0}
 --- !u!1 &5129977245923148325
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,7 +123,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b286be9aa3bbadf4cad20c52e7ad89fc, type: 2}
+  - {fileID: 2100000, guid: 46065b5572348804a83fd15897d26467, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -128,7 +157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeletonDataAsset: {fileID: 11400000, guid: a59c26b81411c0d42a59e42366dba427, type: 2}
+  skeletonDataAsset: {fileID: 11400000, guid: 0f0ee6df986c6ad449ba43efc2e0c212, type: 2}
   initialSkinName: 
   initialFlipX: 0
   initialFlipY: 0
@@ -150,7 +179,7 @@ MonoBehaviour:
     materialsInsideMask: []
     materialsOutsideMask: []
   disableRenderingOnOverride: 1
-  _animationName: animation
+  _animationName: idle
   loop: 1
   timeScale: 1.5
 --- !u!1 &5137152168051090498
@@ -165,6 +194,7 @@ GameObject:
   - component: {fileID: 5137152168051090500}
   - component: {fileID: 6048600823587306908}
   - component: {fileID: 2254589720568749330}
+  - component: {fileID: 7689613559260098677}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -201,13 +231,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b160be91258e224196826593c3c5fd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 400
   skeletonAnimation: {fileID: 5344602853287239467}
-  idleAnim: animation
-  runAnim: animation
+  idleAnim: idle
+  runAnim: walk
   interactionDetecter: {fileID: 5137152168514951073}
   rotater: {fileID: 3074541703899278083}
   characterController: {fileID: 2254589720568749330}
+  rigid: {fileID: 6048600823587306908}
 --- !u!54 &6048600823587306908
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -222,7 +253,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 116
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!143 &2254589720568749330
 CharacterController:
@@ -233,7 +264,7 @@ CharacterController:
   m_GameObject: {fileID: 5137152168051090498}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Height: 6.54
   m_Radius: 1.28
@@ -241,6 +272,19 @@ CharacterController:
   m_StepOffset: 0
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &7689613559260098677
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5137152168051090498}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.15, y: 5.93, z: 1.73}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5137152168514951086
 GameObject:

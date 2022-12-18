@@ -45,12 +45,12 @@ public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
 
     public void FixedUpdateActive(PlayerController stateController)
     {
-
+        stateController.PlayerMoveUpdate();
     }
 
     public void UpdateActive(PlayerController stateController)
     {
-        stateController.PlayerMoveUpdate();
+       
         stateController.DebugModEnterInputCheck();
         stateController.InteractionInputCheck();
     }

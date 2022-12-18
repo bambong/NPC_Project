@@ -24,7 +24,10 @@ public class PlayerController : MonoBehaviour
     private Transform rotater;
     [SerializeField]
     private CharacterController characterController;
-    
+
+    [SerializeField]
+    private Rigidbody rigid;
+
     private GlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
 
@@ -41,6 +44,10 @@ public class PlayerController : MonoBehaviour
     {
         rotater.rotation = Camera.main.transform.rotation;
         playerStateController.Update();
+    }
+    private void FixedUpdate()
+    {
+        playerStateController.FixedUpdate();
     }
 
     #region OnStateEnter
@@ -75,6 +82,7 @@ public class PlayerController : MonoBehaviour
         if(Mathf.Abs(hor) <= 0.2f && Mathf.Abs(ver) <= 0.2f)
         {
             playerStateController.ChangeState(PlayerIdle.Instance);
+            rigid.velocity = Vector3.zero;
             return;
         }
         
@@ -86,10 +94,12 @@ public class PlayerController : MonoBehaviour
 
         var moveVec = new Vector3(hor,0,ver).normalized;
         var pos = transform.position;
-        var speed = moveSpeed * Time.deltaTime;
+        var speed = moveSpeed * Time.fixedDeltaTime;
 
         moveVec = Quaternion.Euler(new Vector3(0,rotater.rotation.eulerAngles.y,0)) * moveVec;
-        characterController.Move( moveVec * speed);
+
+        rigid.velocity = moveVec *speed;
+       // characterController.Move( moveVec * speed);
     }
     public void PlayerInputCheck()
     {
