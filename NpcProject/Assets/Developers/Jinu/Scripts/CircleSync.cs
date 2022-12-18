@@ -8,33 +8,46 @@ public class CircleSync : MonoBehaviour
     public static int SizeID = Shader.PropertyToID("_Size");
 
     [SerializeField]
-    private Material WallMaterial;
+    private Material[] wallMaterial;
     [SerializeField]
-    private Camera Camera;
+    private Camera matCamera;
     [SerializeField]
-    private LayerMask Mask;
+    private LayerMask mask;
+
+    private float matLength;
     
     void Start() 
     {
-        Camera = Camera.main;
+        matCamera = Camera.main;
+        matLength = wallMaterial.Length;        
     }
 
     void Update()
     {
-        var dir = Camera.transform.position - transform.position;
+        var dir = matCamera.transform.position - transform.position;
         var ray = new Ray(transform.position, dir.normalized);
 
         // Debug.DrawRay(transform.position, dir.normalized * 3000, Color.red);
-        if(Physics.Raycast(ray, 3000, Mask))
+        if(Physics.Raycast(ray, 3000, mask))
         {
-            WallMaterial.SetFloat(SizeID, 1);
+            for(int i = 0; i < matLength; i++)
+            {
+                wallMaterial[i].SetFloat(SizeID, 1);
+            }            
         }
         else
         {
-            WallMaterial.SetFloat(SizeID, 0);
+            for (int i = 0; i < matLength; i++)
+            {
+                wallMaterial[i].SetFloat(SizeID, 0);
+            }
         }
 
-        var view = Camera.WorldToViewportPoint(transform.position);
-        WallMaterial.SetVector(PosID, view + new Vector3(0, 0.1f));
+        var view = matCamera.WorldToViewportPoint(transform.position);
+        for (int i = 0; i < matLength; i++)
+        {
+            wallMaterial[i].SetVector(PosID, view + new Vector3(0, 0.1f));
+        }
+        // WallMaterial[0].SetVector(PosID, view + new Vector3(0, 0.1f));
     }
 }
