@@ -7,6 +7,7 @@ public class Define
     public enum Scene
     {
         Unknown,
+        Clear,
         Game
     }
     public enum WorldObject

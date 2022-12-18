@@ -56,7 +56,7 @@ public class GameDebugModState : Singleton<GameDebugModState>, IState<GameManage
     }
     public void Enter(GameManager stateController)
     {
-        Managers.Keyword.EnterDebugMod();
+       
         if (Managers.Game.Player.CurKeywordInteraction != null) 
         {
             Managers.Game.Player.CurKeywordInteraction.CloseWorldSlotUI();
@@ -64,7 +64,7 @@ public class GameDebugModState : Singleton<GameDebugModState>, IState<GameManage
     }
     public void Exit(GameManager stateController)
     {
-        Managers.Keyword.ExitDebugMod();
+        //Managers.Keyword.ExitDebugMod();
     }
 
     public void FixedUpdateActive(GameManager stateController)

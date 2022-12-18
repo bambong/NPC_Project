@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PuzzleMatchCheckController : MonoBehaviour
+public class PuzzleMatchCheckController : DebugModEffectController
 {
 
     private float CLEAR_DISTANCE = 1f;
@@ -13,11 +13,26 @@ public class PuzzleMatchCheckController : MonoBehaviour
     private Color originColor;
     private Renderer renderer;
 
-    private void Awake()
+
+
+    public override void EnterDebugMod()
     {
+        renderer.enabled = true;
+    }
+
+    public override void ExitDebugMod()
+    {
+        renderer.enabled = false;
+    }
+
+    public override void Init()
+    {
+        base.Init();
         renderer = GetComponent<Renderer>();
+        renderer.enabled = false;
         originColor = renderer.material.GetColor("_Main_Color");
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Interaction")) 

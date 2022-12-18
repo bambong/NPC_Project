@@ -16,6 +16,7 @@ public class KeywordManager
 
     private List<KeywordController> curPlayerKeywords = new List<KeywordController>();
     private List<KeywordEntity> curSceneEntity = new List<KeywordEntity>();
+    private List<DebugModEffectController> debugModEffectControllers = new List<DebugModEffectController>();
     private GraphicRaycaster graphicRaycaster;
     public void Init()
     {
@@ -35,14 +36,22 @@ public class KeywordManager
     {
         foreach(var entity in curSceneEntity)
         {
-            entity.OpenWorldSlotUI();
+            entity.EnterDebugMod();
+        }
+        foreach(var effect in debugModEffectControllers) 
+        {
+            effect.EnterDebugMod();
         }
     }
     public void ExitDebugMod()
     {
         foreach(var entity in curSceneEntity)
         {
-            entity.CloseWorldSlotUI();
+            entity.ExitDebugMod();
+        }
+        foreach (var effect in debugModEffectControllers)
+        {
+            effect.ExitDebugMod();
         }
     }
     public void EnterKeywordMod(KeywordEntity keywordEntity) 
@@ -61,6 +70,10 @@ public class KeywordManager
         playerKeywordPanel.Close();
         curKeywordEntity.CloseKeywordSlot();
         curKeywordEntity.DecisionKeyword();
+    }
+    public void AddDebugEffectController(DebugModEffectController debugModEffectController) 
+    {
+        debugModEffectControllers.Add(debugModEffectController);
     }
     public bool AddKeywordToPlayer(KeywordController keywordController) 
     {
@@ -92,6 +105,7 @@ public class KeywordManager
     }
     public void Clear()
     {
+        debugModEffectControllers.Clear();
         curPlayerKeywords.Clear();
         curSceneEntity.Clear();
     }

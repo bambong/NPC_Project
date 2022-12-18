@@ -6,25 +6,30 @@ public class OutlineEffect : MonoBehaviour
 {
     public Material mat;
     public float thickness = 1.03f;
+    
+    [ColorUsage(true, true)]
     public Color colorOutline;
 
-    [ColorUsage(true, true)]
-
+    [SerializeField]
+    private GameObject prepabGo;
+    
     private Renderer rend;
-
+    private GameObject outLineGo;
+    public GameObject OutLineGo { get => outLineGo; }
     void Start()
     {
-        GameObject outlineObject = Instantiate(this.gameObject,transform.position,transform.rotation,transform);
-
-        outlineObject.transform.localScale = new Vector3(1, 1, 1);
-        Renderer rend = outlineObject.GetComponent<Renderer>();
+        outLineGo = Instantiate(prepabGo, transform.position,transform.rotation,transform);
+        outLineGo.SetActive(false);
+        outLineGo.transform.localScale = new Vector3(1, 1, 1);
+        Renderer rend = outLineGo.GetComponent<Renderer>();
         rend.material = mat;
         rend.material.SetFloat("_Thickness", thickness);
         rend.material.SetColor("_OutlineColor", colorOutline);
         rend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         rend.enabled = true;
-        outlineObject.GetComponent<Collider>().enabled = false;
-        outlineObject.GetComponent<OutlineEffect>().enabled = false;
+        outLineGo.layer = 1;
+        outLineGo.GetComponent<Collider>().enabled = false;
+       // outLineGo.GetComponent<OutlineEffect>().enabled = false;
         this.rend = rend;
     }
 }

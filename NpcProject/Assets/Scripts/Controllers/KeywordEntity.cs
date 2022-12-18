@@ -27,7 +27,15 @@ public class KeywordEntity : MonoBehaviour
         keywordSlotWorldUI = Managers.UI.MakeWorldSpaceUI<KeywordSlotUIWorldSpaceController>(transform,"KeywordSlotWorldSpace");
         col = Util.GetOrAddComponent<Collider>(gameObject);
     }
-  
+
+    public virtual void EnterDebugMod()
+    {
+        OpenWorldSlotUI();
+    }
+    public virtual void ExitDebugMod() 
+    {
+        CloseWorldSlotUI();
+    }
 
     public void CloseWorldSlotUI() => keywordSlotWorldUI.Close();
     public void OpenWorldSlotUI() => keywordSlotWorldUI.Open(transform);

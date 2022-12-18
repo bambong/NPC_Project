@@ -19,8 +19,10 @@ public class ServerroomPuzzleController : MonoBehaviour ,IInteraction
     [SerializeField]
     private Texture serverrackOnTex; 
     [SerializeField]
-    private Texture serverrackOffTex; 
+    private Texture serverrackOffTex;
 
+    [SerializeField]
+    private GameObject potal;
 
     public GameObject Go => gameObject;
 
@@ -59,6 +61,7 @@ public class ServerroomPuzzleController : MonoBehaviour ,IInteraction
         DynamicGI.UpdateEnvironment();
 
         Managers.Talk.EnterTalk(clearTalk, null);
+        potal.gameObject.SetActive(true);
     }
 
    

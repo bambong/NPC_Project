@@ -7,6 +7,7 @@ public class Managers : MonoBehaviour
 
     static Managers instance; // 유일성이 보장된다
     static Managers Instance { get { Init(); return instance; } } // 유일한 매니저를 갖고온다
+    
     #region CoreManager
     private PoolManager pool = new PoolManager();
     private ResourceManager resource = new ResourceManager();
@@ -51,6 +52,7 @@ public class Managers : MonoBehaviour
             instance.pool.Init();
             instance.cam.Init();
             instance.keyword.Init();
+            instance.scene.Init();
         }
 
     }

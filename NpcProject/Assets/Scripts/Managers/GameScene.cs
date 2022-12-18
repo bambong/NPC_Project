@@ -8,6 +8,10 @@ public class GameScene : BaseScene
     private Vector3 playerSpawnSpot;
     [SerializeField]
     private CinemachineVirtualCamera vircam;
+
+    [SerializeField]
+    private Talk startTalk;
+
     protected override void Init() 
     {
         base.Init();
@@ -15,6 +19,8 @@ public class GameScene : BaseScene
         var player  = Managers.Game.Spawn(Define.WorldObject.Player, "Player");
         player.transform.position = playerSpawnSpot;
         Managers.Camera.InitCamera(vircam,player.transform);
+
+        Invoke("StartTalk", 2f);
 
         var rotatekeyword  = Managers.UI.MakeSubItem<KeywordController>(null,"RotateKeyword");
         Managers.Keyword.AddKeywordToPlayer(rotatekeyword);
@@ -27,6 +33,11 @@ public class GameScene : BaseScene
         var xmovekeyword = Managers.UI.MakeSubItem<KeywordController>(null,"XMoveKeyword");
         Managers.Keyword.AddKeywordToPlayer(xmovekeyword);
         xmovekeyword.transform.localScale = Vector3.one;
+    }
+    public void StartTalk() 
+    {
+        Managers.Talk.EnterTalk(startTalk, null);
+
     }
    
     public override void Clear()

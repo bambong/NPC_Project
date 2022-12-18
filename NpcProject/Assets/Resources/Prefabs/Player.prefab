@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3074541703899278083}
   - component: {fileID: 1462570742856952790}
-  - component: {fileID: 6863070693821162920}
   m_Layer: 3
   m_Name: PlayerRotater
   m_TagString: Untagged
@@ -45,22 +44,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.57
-  m_Height: 6.75
+  m_Height: 6.7
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &6863070693821162920
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3567413477781239731}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 2.23, y: 6, z: 0.45}
-  m_Center: {x: 0, y: -0.51, z: 0}
 --- !u!1 &5129977245923148325
 GameObject:
   m_ObjectHideFlags: 0
@@ -73,6 +59,7 @@ GameObject:
   - component: {fileID: 4712625420305481466}
   - component: {fileID: 2988737641356602252}
   - component: {fileID: 5344602853287239467}
+  - component: {fileID: 6435254784630315221}
   m_Layer: 0
   m_Name: Player_Spine
   m_TagString: Untagged
@@ -182,6 +169,24 @@ MonoBehaviour:
   _animationName: idle
   loop: 1
   timeScale: 1.5
+--- !u!114 &6435254784630315221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5129977245923148325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 227bacc7821f10d489015958fd3b06c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallMaterial:
+  - {fileID: 2100000, guid: 352878b02ced1e141a9b145f47f34eaa, type: 2}
+  matCamera: {fileID: 0}
+  mask:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!1 &5137152168051090498
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,9 +198,7 @@ GameObject:
   - component: {fileID: 5137152168051090499}
   - component: {fileID: 5137152168051090500}
   - component: {fileID: 6048600823587306908}
-  - component: {fileID: 2254589720568749330}
   - component: {fileID: 7689613559260098677}
-  - component: {fileID: 5953370134012488390}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -238,7 +241,7 @@ MonoBehaviour:
   runAnim: walk
   interactionDetecter: {fileID: 5137152168514951073}
   rotater: {fileID: 3074541703899278083}
-  characterController: {fileID: 2254589720568749330}
+  characterController: {fileID: 0}
   rigid: {fileID: 6048600823587306908}
 --- !u!54 &6048600823587306908
 Rigidbody:
@@ -256,24 +259,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!143 &2254589720568749330
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5137152168051090498}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Height: 6.54
-  m_Radius: 1.28
-  m_SlopeLimit: 0
-  m_StepOffset: 0
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &7689613559260098677
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -287,25 +272,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.15, y: 5.93, z: 1.73}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5953370134012488390
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5137152168051090498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 227bacc7821f10d489015958fd3b06c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wallMaterial:
-  - {fileID: 2100000, guid: 352878b02ced1e141a9b145f47f34eaa, type: 2}
-  - {fileID: 2100000, guid: 773ab22b09eb4984e89954a0fbe2d978, type: 2}
-  matCamera: {fileID: 0}
-  mask:
-    serializedVersion: 2
-    m_Bits: 1048576
 --- !u!1 &5137152168514951086
 GameObject:
   m_ObjectHideFlags: 0

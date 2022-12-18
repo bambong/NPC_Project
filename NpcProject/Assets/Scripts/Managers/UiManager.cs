@@ -52,11 +52,13 @@ public class UIManager
         GameObject go = Managers.Resource.Instantiate($"UI/{name}");
         if (parent != null)
             go.transform.SetParent(parent);
-
+        
         Canvas canvas = go.GetOrAddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-  
-        return Util.GetOrAddComponent<T>(go);
+
+        var temp = Util.GetOrAddComponent<T>(go);
+        temp.Init();
+        return temp;
     }
 
     public T MakeWorldSpaceUI<T>(Transform parent = null, string name = null) where T : UI_Base
@@ -85,10 +87,15 @@ public class UIManager
             go.transform.SetParent(parent);
 
         var result = Util.FindChild<T>(go);
-        if(result != null)
+        if(result != null) 
+        {
+            result.Init();
             return result;
+        }
+        var temp = Util.GetOrAddComponent<T>(go);
+        temp.Init();
 
-        return Util.GetOrAddComponent<T>(go);
+        return temp;
     }
 
     public T ShowPopupUI<T>(string name = null) where T : UI_Popup
