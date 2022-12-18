@@ -6,11 +6,12 @@ using UnityEngine.UI;
 public class KeywordFameController : UI_Base
 {
     [SerializeField]
+    private GameObject parentObj;
+    [SerializeField]
     private RectTransform rectTransform;
-
+   
     private bool hasKeyword =false;
     private KeywordController keywordController;
-   
     public bool HasKeyword { get => hasKeyword; }
     public KeywordController KeywordController { get => keywordController; }
 
@@ -21,29 +22,35 @@ public class KeywordFameController : UI_Base
             return false;
         }
         hasKeyword = true;
-        keywordController.ClearCurFrame();
         this.keywordController = keywordController;
+        keywordController.EnterKeywordAction(Managers.Keyword.CurKeywordEntity);
         keywordController.transform.parent = transform;
         keywordController.SetToKeywordFrame(rectTransform.position);
         return true;
     }
 
-    public bool InteractionKeyword(KeywordController keywordController)
-    {
-        return this.keywordController.HandleObjectKeyword(keywordController);
-    }
+ 
     public void ResetKeywordFrame() 
     {
+        if(keywordController == null) 
+        {
+            return;
+        }
+        keywordController.ExitKeywordAction(Managers.Keyword.CurKeywordEntity);
         hasKeyword = false;
         keywordController = null;
     }
     public void Open() 
     {
-        gameObject.SetActive(true);
+        parentObj.SetActive(true);
     }
     public void Close() 
     {
-        gameObject.SetActive(false);
+        parentObj.SetActive(false);
+    }
+    public void SetScale(Vector3 scale) 
+    {
+        parentObj.transform.localScale = scale;
     }
 
     public override void Init()

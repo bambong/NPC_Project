@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerKeywordPanelController : UI_Base
 {
     [SerializeReference]
-    private Transform layout;
+    private HorizontalLayoutGroup layout;
 
-    public Transform Layout { get => layout; }
+    public HorizontalLayoutGroup Layout { get => layout; }
 
     public override void Init()
     {

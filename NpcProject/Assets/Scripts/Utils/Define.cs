@@ -18,4 +18,9 @@ public class Define
         Click,
         Drag,
     }
+    public enum ColiiderMask 
+    {
+        Player,
+        Interaction
+    }
 }

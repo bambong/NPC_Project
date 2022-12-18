@@ -74,7 +74,12 @@ public class InteractionDetectController : MonoBehaviour
 
         if (keyword != null)
         {
+            if (curKeywordIteraction != null) 
+            {
+                curKeywordIteraction.OpenWorldSlotUI();
+            }
             curKeywordIteraction = keyword;
+            keyword.CloseWorldSlotUI();
             keyworInteractionUi.Open(go.transform);
         }
 
@@ -116,6 +121,10 @@ public class InteractionDetectController : MonoBehaviour
             if (keyword != null&& keyword == CurKeywordIteraction)
             {
                 keyworInteractionUi.Close();
+                if(Managers.Game.IsDebugMod) 
+                {
+                    keyword.OpenWorldSlotUI();
+                }
                 curKeywordIteraction = null;
             }
         }

@@ -10,10 +10,12 @@ public class KeywordManager
 
     private KeywordEntity curKeywordEntity;
     private PlayerKeywordPanelController playerKeywordPanel;
-    public Transform playerKeywordPanelLayout { get => playerKeywordPanel.Layout; }
+    public Transform playerKeywordPanelLayout { get => playerKeywordPanel.Layout.transform; }
     public PlayerKeywordPanelController PlayerKeywordPanel { get => playerKeywordPanel;}
+    public KeywordEntity CurKeywordEntity { get => curKeywordEntity; }
 
     private List<KeywordController> curPlayerKeywords = new List<KeywordController>();
+    private List<KeywordEntity> curSceneEntity = new List<KeywordEntity>();
     private GraphicRaycaster graphicRaycaster;
     public void Init()
     {
@@ -27,18 +29,38 @@ public class KeywordManager
         graphicRaycaster.Raycast(pointerEventData,raycastResults);
         return raycastResults;
     }
+    public void AddSceneEntity(KeywordEntity entity) => curSceneEntity.Add(entity);
+
+    public void EnterDebugMod() 
+    {
+        foreach(var entity in curSceneEntity)
+        {
+            entity.OpenWorldSlotUI();
+        }
+    }
+    public void ExitDebugMod()
+    {
+        foreach(var entity in curSceneEntity)
+        {
+            entity.CloseWorldSlotUI();
+        }
+    }
     public void EnterKeywordMod(KeywordEntity keywordEntity) 
     {
         Managers.Game.SetStateKeywordMod();
         curKeywordEntity = keywordEntity;
         playerKeywordPanel.Open();
+        UpdateKeywordLayout();
         keywordEntity.OpenKeywordSlot();
     }
+  
     public void ExitKeywordMod()
     {
+        playerKeywordPanel.Layout.enabled = true;
         Managers.Game.SetStateDebugMod();
         playerKeywordPanel.Close();
         curKeywordEntity.CloseKeywordSlot();
+        curKeywordEntity.DecisionKeyword();
     }
     public bool AddKeywordToPlayer(KeywordController keywordController) 
     {
@@ -46,6 +68,7 @@ public class KeywordManager
         {
             return false;
         }
+        UpdateKeywordLayout();
         curPlayerKeywords.Add(keywordController);
         playerKeywordPanel.AddKeyword(keywordController);
         return true;
@@ -63,8 +86,20 @@ public class KeywordManager
     {
         keywordController.ResetKeyword();
     }
-    public void Interaction() 
+    public void UpdateKeywordLayout()
     {
-    
+        Managers.Scene.CurrentScene.StartCoroutine(UpdateKeywordLayoutco());
     }
+    public void Clear()
+    {
+        curPlayerKeywords.Clear();
+        curSceneEntity.Clear();
+    }
+    IEnumerator UpdateKeywordLayoutco()
+    {
+        playerKeywordPanel.Layout.enabled = true;
+        yield return null;
+        playerKeywordPanel.Layout.enabled = false;
+    }
+
 }

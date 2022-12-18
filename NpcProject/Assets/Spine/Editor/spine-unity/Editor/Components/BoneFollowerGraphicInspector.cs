@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated September 24, 2021. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2021, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -27,8 +27,9 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-using UnityEditor;
 using UnityEngine;
+using UnityEditor;
+using Spine.Unity;
 
 namespace Spine.Unity.Editor {
 
@@ -39,12 +40,12 @@ namespace Spine.Unity.Editor {
 	public class BoneFollowerGraphicInspector : Editor {
 
 		SerializedProperty boneName, skeletonGraphic, followXYPosition, followZPosition, followBoneRotation,
-			followLocalScale, followParentWorldScale, followSkeletonFlip, maintainedAxisOrientation;
+			followLocalScale, followSkeletonFlip, maintainedAxisOrientation;
 		BoneFollowerGraphic targetBoneFollower;
 		bool needsReset;
 
 		#region Context Menu Item
-		[MenuItem("CONTEXT/SkeletonGraphic/Add BoneFollower GameObject")]
+		[MenuItem ("CONTEXT/SkeletonGraphic/Add BoneFollower GameObject")]
 		static void AddBoneFollowerGameObject (MenuCommand cmd) {
 			var skeletonGraphic = cmd.context as SkeletonGraphic;
 			var go = EditorInstantiation.NewGameObject("BoneFollower", true, typeof(RectTransform));
@@ -62,7 +63,7 @@ namespace Spine.Unity.Editor {
 		}
 
 		// Validate
-		[MenuItem("CONTEXT/SkeletonGraphic/Add BoneFollower GameObject", true)]
+		[MenuItem ("CONTEXT/SkeletonGraphic/Add BoneFollower GameObject", true)]
 		static bool ValidateAddBoneFollowerGameObject (MenuCommand cmd) {
 			var skeletonGraphic = cmd.context as SkeletonGraphic;
 			return skeletonGraphic.IsValid;
@@ -76,7 +77,6 @@ namespace Spine.Unity.Editor {
 			followXYPosition = serializedObject.FindProperty("followXYPosition");
 			followZPosition = serializedObject.FindProperty("followZPosition");
 			followLocalScale = serializedObject.FindProperty("followLocalScale");
-			followParentWorldScale = serializedObject.FindProperty("followParentWorldScale");
 			followSkeletonFlip = serializedObject.FindProperty("followSkeletonFlip");
 			maintainedAxisOrientation = serializedObject.FindProperty("maintainedAxisOrientation");
 
@@ -172,7 +172,6 @@ namespace Spine.Unity.Editor {
 				EditorGUILayout.PropertyField(followXYPosition);
 				EditorGUILayout.PropertyField(followZPosition);
 				EditorGUILayout.PropertyField(followLocalScale);
-				EditorGUILayout.PropertyField(followParentWorldScale);
 				EditorGUILayout.PropertyField(followSkeletonFlip);
 				if ((followSkeletonFlip.hasMultipleDifferentValues || followSkeletonFlip.boolValue == false) &&
 					(followBoneRotation.hasMultipleDifferentValues || followBoneRotation.boolValue == true)) {
@@ -192,7 +191,7 @@ namespace Spine.Unity.Editor {
 						EditorGUILayout.HelpBox("Assigned SkeletonGraphic does not have SkeletonData assigned to it.", MessageType.Warning);
 
 					if (!boneFollowerSkeletonGraphic.IsValid)
-						EditorGUILayout.HelpBox("Assigned SkeletonGraphic is invalid. Check target SkeletonGraphic, its SkeletonData asset or the console for other errors.", MessageType.Warning);
+						EditorGUILayout.HelpBox("Assigned SkeletonGraphic is invalid. Check target SkeletonGraphic, its SkeletonDataAsset or the console for other errors.", MessageType.Warning);
 				}
 			}
 

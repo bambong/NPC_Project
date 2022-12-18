@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated September 24, 2021. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2021, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -31,12 +31,8 @@
 #define NEW_PREFAB_SYSTEM
 #endif
 
-#if UNITY_2018_2_OR_NEWER
-#define HAS_CULL_TRANSPARENT_MESH
-#endif
-
-using UnityEditor;
 using UnityEngine;
+using UnityEditor;
 
 namespace Spine.Unity.Editor {
 	using Icons = SpineEditorUtilities.Icons;
@@ -47,25 +43,18 @@ namespace Spine.Unity.Editor {
 
 		const string SeparatorSlotNamesFieldName = "separatorSlotNames";
 		const string ReloadButtonString = "Reload";
-		protected GUIContent SkeletonDataAssetLabel, UpdateTimingLabel;
+		protected GUIContent SkeletonDataAssetLabel;
 		static GUILayoutOption reloadButtonWidth;
 		static GUILayoutOption ReloadButtonWidth { get { return reloadButtonWidth = reloadButtonWidth ?? GUILayout.Width(GUI.skin.label.CalcSize(new GUIContent(ReloadButtonString)).x + 20); } }
 		static GUIStyle ReloadButtonStyle { get { return EditorStyles.miniButton; } }
 
 		SerializedProperty material, color;
-		SerializedProperty additiveMaterial, multiplyMaterial, screenMaterial;
 		SerializedProperty skeletonDataAsset, initialSkinName;
-		SerializedProperty startingAnimation, startingLoop, timeScale, freeze,
-			updateTiming, updateWhenInvisible, unscaledTime, tintBlack;
+		SerializedProperty startingAnimation, startingLoop, timeScale, freeze, updateWhenInvisible, unscaledTime, tintBlack;
 		SerializedProperty initialFlipX, initialFlipY;
 		SerializedProperty meshGeneratorSettings;
 		SerializedProperty allowMultipleCanvasRenderers, separatorSlotNames, enableSeparatorSlots, updateSeparatorPartLocation;
-		SerializedProperty raycastTarget, maskable;
-
-		readonly GUIContent UnscaledTimeLabel = new GUIContent("Unscaled Time",
-			"If enabled, AnimationState uses unscaled game time (Time.unscaledDeltaTime), " +
-				"running animations independent of e.g. game pause (Time.timeScale). " +
-				"Instance SkeletonAnimation.timeScale will still be applied.");
+		SerializedProperty raycastTarget;
 
 		SkeletonGraphic thisSkeletonGraphic;
 		protected bool isInspectingPrefab;
@@ -81,7 +70,8 @@ namespace Spine.Unity.Editor {
 							return false;
 					}
 					return true;
-				} else {
+				}
+				else {
 					var component = (SkeletonGraphic)target;
 					return component.IsValid;
 				}
@@ -98,7 +88,6 @@ namespace Spine.Unity.Editor {
 
 			// Labels
 			SkeletonDataAssetLabel = new GUIContent("SkeletonData Asset", Icons.spine);
-			UpdateTimingLabel = new GUIContent("Animation Update", "Whether to update the animation in normal Update (the default), physics step FixedUpdate, or manually via a user call.");
 
 			var so = this.serializedObject;
 			thisSkeletonGraphic = target as SkeletonGraphic;
@@ -107,13 +96,8 @@ namespace Spine.Unity.Editor {
 			material = so.FindProperty("m_Material");
 			color = so.FindProperty("m_Color");
 			raycastTarget = so.FindProperty("m_RaycastTarget");
-			maskable = so.FindProperty("m_Maskable");
 
 			// SkeletonRenderer
-			additiveMaterial = so.FindProperty("additiveMaterial");
-			multiplyMaterial = so.FindProperty("multiplyMaterial");
-			screenMaterial = so.FindProperty("screenMaterial");
-
 			skeletonDataAsset = so.FindProperty("skeletonDataAsset");
 			initialSkinName = so.FindProperty("initialSkinName");
 
@@ -126,7 +110,6 @@ namespace Spine.Unity.Editor {
 			timeScale = so.FindProperty("timeScale");
 			unscaledTime = so.FindProperty("unscaledTime");
 			freeze = so.FindProperty("freeze");
-			updateTiming = so.FindProperty("updateTiming");
 			updateWhenInvisible = so.FindProperty("updateWhenInvisible");
 
 			meshGeneratorSettings = so.FindProperty("meshGenerator").FindPropertyRelative("settings");
@@ -148,7 +131,8 @@ namespace Spine.Unity.Editor {
 					foreach (var c in targets) {
 						SpineEditorUtilities.ReloadSkeletonDataAssetAndComponent(c as SkeletonGraphic);
 					}
-				} else {
+				}
+				else {
 					foreach (var c in targets) {
 						var component = c as SkeletonGraphic;
 						if (!component.IsValid) {
@@ -168,19 +152,15 @@ namespace Spine.Unity.Editor {
 					forceReloadQueued = true;
 			}
 
+			EditorGUILayout.PropertyField(material);
+			EditorGUILayout.PropertyField(color);
+
 			if (thisSkeletonGraphic.skeletonDataAsset == null) {
-				EditorGUILayout.HelpBox("You need to assign a SkeletonData asset first.", MessageType.Info);
+				EditorGUILayout.HelpBox("You need to assign a SkeletonDataAsset first.", MessageType.Info);
 				serializedObject.ApplyModifiedProperties();
 				serializedObject.Update();
 				return;
 			}
-			if (!SpineEditorUtilities.SkeletonDataAssetIsValid(thisSkeletonGraphic.skeletonDataAsset)) {
-				EditorGUILayout.HelpBox("SkeletonData asset error. Please check SkeletonData asset.", MessageType.Error);
-				return;
-			}
-
-			EditorGUILayout.PropertyField(material);
-			EditorGUILayout.PropertyField(color);
 
 			string errorMessage = null;
 			if (SpineEditorUtilities.Preferences.componentMaterialWarning &&
@@ -217,36 +197,6 @@ namespace Spine.Unity.Editor {
 						}
 						EditorGUILayout.EndHorizontal();
 
-						var blendModeMaterials = thisSkeletonGraphic.skeletonDataAsset.blendModeMaterials;
-						if (allowMultipleCanvasRenderers.boolValue == true && blendModeMaterials.RequiresBlendModeMaterials) {
-							using (new SpineInspectorUtility.IndentScope()) {
-								EditorGUILayout.BeginHorizontal();
-								EditorGUILayout.LabelField("Blend Mode Materials", EditorStyles.boldLabel);
-
-								if (GUILayout.Button(new GUIContent("Assign Default", "Assign default Blend Mode Materials."),
-									EditorStyles.miniButton, GUILayout.Width(100f))) {
-									AssignDefaultBlendModeMaterials();
-								}
-								EditorGUILayout.EndHorizontal();
-
-								bool usesAdditiveMaterial = blendModeMaterials.applyAdditiveMaterial;
-								bool pmaVertexColors = thisSkeletonGraphic.MeshGenerator.settings.pmaVertexColors;
-								if (pmaVertexColors)
-									using (new EditorGUI.DisabledGroupScope(true)) {
-										EditorGUILayout.LabelField("Additive Material - Unused with PMA Vertex Colors", EditorStyles.label);
-									}
-								else if (usesAdditiveMaterial)
-									EditorGUILayout.PropertyField(additiveMaterial, SpineInspectorUtility.TempContent("Additive Material", null, "SkeletonGraphic Material for 'Additive' blend mode slots. Unused when 'PMA Vertex Colors' is enabled."));
-								else
-									using (new EditorGUI.DisabledGroupScope(true)) {
-										EditorGUILayout.LabelField("No Additive Mat - 'Apply Additive Material' disabled at SkeletonDataAsset", EditorStyles.label);
-									}
-								EditorGUILayout.PropertyField(multiplyMaterial, SpineInspectorUtility.TempContent("Multiply Material", null, "SkeletonGraphic Material for 'Multiply' blend mode slots."));
-								EditorGUILayout.PropertyField(screenMaterial, SpineInspectorUtility.TempContent("Screen Material", null, "SkeletonGraphic Material for 'Screen' blend mode slots."));
-							}
-						}
-
-						EditorGUILayout.PropertyField(updateTiming, UpdateTimingLabel);
 						EditorGUILayout.PropertyField(updateWhenInvisible);
 
 						// warning box
@@ -255,13 +205,14 @@ namespace Spine.Unity.Editor {
 								meshGeneratorSettings.isExpanded = true;
 								EditorGUILayout.LabelField(SpineInspectorUtility.TempContent("'Multiple Canvas Renderers' must be enabled\nwhen 'Enable Separation' is enabled.", Icons.warning), GUILayout.Height(42), GUILayout.Width(340));
 							}
-						} else if (meshRendersIncorrectlyWithSingleRenderer) {
+						}
+						else if (meshRendersIncorrectlyWithSingleRenderer) {
 							using (new SpineInspectorUtility.BoxScope()) {
 								meshGeneratorSettings.isExpanded = true;
-								EditorGUILayout.LabelField(SpineInspectorUtility.TempContent("This mesh uses multiple atlas pages or blend modes.\n" +
-																							"You need to enable 'Multiple Canvas Renderers'\n" +
+								EditorGUILayout.LabelField(SpineInspectorUtility.TempContent("This mesh uses multiple atlas pages. You\n" +
+																							"need to enable 'Multiple Canvas Renderers'\n" +
 																							"for correct rendering. Consider packing\n" +
-																							"attachments to a single atlas page if possible.", Icons.warning), GUILayout.Height(60), GUILayout.Width(380));
+																							"attachments to a single atlas page if possible.", Icons.warning), GUILayout.Height(60), GUILayout.Width(340));
 							}
 						}
 					}
@@ -288,7 +239,7 @@ namespace Spine.Unity.Editor {
 			EditorGUILayout.PropertyField(startingAnimation);
 			EditorGUILayout.PropertyField(startingLoop);
 			EditorGUILayout.PropertyField(timeScale);
-			EditorGUILayout.PropertyField(unscaledTime, UnscaledTimeLabel);
+			EditorGUILayout.PropertyField(unscaledTime, SpineInspectorUtility.TempContent(unscaledTime.displayName, tooltip: "If checked, this will use Time.unscaledDeltaTime to make this update independent of game Time.timeScale. Instance SkeletonGraphic.timeScale will still be applied."));
 			EditorGUILayout.Space();
 			EditorGUILayout.PropertyField(freeze);
 			EditorGUILayout.Space();
@@ -296,7 +247,6 @@ namespace Spine.Unity.Editor {
 			EditorGUILayout.Space();
 			EditorGUILayout.LabelField("UI", EditorStyles.boldLabel);
 			EditorGUILayout.PropertyField(raycastTarget);
-			if (maskable != null) EditorGUILayout.PropertyField(maskable);
 
 			EditorGUILayout.BeginHorizontal(GUILayout.Height(EditorGUIUtility.singleLineHeight + 5));
 			EditorGUILayout.PrefixLabel("Match RectTransform with Mesh");
@@ -310,12 +260,12 @@ namespace Spine.Unity.Editor {
 			if (TargetIsValid && !isInspectingPrefab) {
 				EditorGUILayout.Space();
 				if (SpineInspectorUtility.CenteredButton(new GUIContent("Add Skeleton Utility", Icons.skeletonUtility), 21, true, 200f))
-					foreach (var t in targets) {
-						var component = t as Component;
-						if (component.GetComponent<SkeletonUtility>() == null) {
-							component.gameObject.AddComponent<SkeletonUtility>();
-						}
+				foreach (var t in targets) {
+					var component = t as Component;
+					if (component.GetComponent<SkeletonUtility>() == null) {
+						component.gameObject.AddComponent<SkeletonUtility>();
 					}
+				}
 			}
 
 			wasChanged |= EditorGUI.EndChangeCheck();
@@ -345,15 +295,6 @@ namespace Spine.Unity.Editor {
 			return false;
 		}
 
-		protected void AssignDefaultBlendModeMaterials () {
-			foreach (var target in targets) {
-				var skeletonGraphic = (SkeletonGraphic)target;
-				skeletonGraphic.additiveMaterial = DefaultSkeletonGraphicAdditiveMaterial;
-				skeletonGraphic.multiplyMaterial = DefaultSkeletonGraphicMultiplyMaterial;
-				skeletonGraphic.screenMaterial = DefaultSkeletonGraphicScreenMaterial;
-			}
-		}
-
 		public static void SetSeparatorSlotNames (SkeletonRenderer skeletonRenderer, string[] newSlotNames) {
 			var field = SpineInspectorUtility.GetNonPublicField(typeof(SkeletonRenderer), SeparatorSlotNamesFieldName);
 			field.SetValue(skeletonRenderer, newSlotNames);
@@ -375,9 +316,7 @@ namespace Spine.Unity.Editor {
 				int lastSlot = skeleton.Slots.Count - 1;
 				if (skeleton != null) {
 					for (int i = 0, n = separatorSlotNames.arraySize; i < n; i++) {
-						string slotName = separatorSlotNames.GetArrayElementAtIndex(i).stringValue;
-						SlotData slot = skeleton.Data.FindSlot(slotName);
-						int index = slot != null ? slot.Index : -1;
+						int index = skeleton.FindSlotIndex(separatorSlotNames.GetArrayElementAtIndex(i).stringValue);
 						if (index == 0 || index == lastSlot) {
 							hasTerminalSlot = true;
 							break;
@@ -398,11 +337,12 @@ namespace Spine.Unity.Editor {
 						separatorSlotNames.arraySize++;
 					}
 					GUILayout.EndHorizontal();
-				} else
+				}
+				else
 					EditorGUILayout.PropertyField(separatorSlotNames, new GUIContent(separatorSlotNames.displayName + string.Format("{0} [{1}]", terminalSlotWarning, separatorSlotNames.arraySize), SeparatorsDescription), true);
 
 				EditorGUILayout.PropertyField(enableSeparatorSlots, SpineInspectorUtility.TempContent("Enable Separation", tooltip: "Whether to enable separation at the above separator slots."));
-				EditorGUILayout.PropertyField(updateSeparatorPartLocation, SpineInspectorUtility.TempContent("Update Part Location", tooltip: "Update separator part GameObject location to match the position of the SkeletonGraphic. This can be helpful when re-parenting parts to a different GameObject."));
+				EditorGUILayout.PropertyField(updateSeparatorPartLocation, SpineInspectorUtility.TempContent("Update Part Location", tooltip:"Update separator part GameObject location to match the position of the SkeletonGraphic. This can be helpful when re-parenting parts to a different GameObject."));
 			}
 		}
 
@@ -475,42 +415,20 @@ namespace Spine.Unity.Editor {
 			var go = EditorInstantiation.NewGameObject(gameObjectName, true, typeof(RectTransform), typeof(CanvasRenderer), typeof(SkeletonGraphic));
 			var graphic = go.GetComponent<SkeletonGraphic>();
 			graphic.material = SkeletonGraphicInspector.DefaultSkeletonGraphicMaterial;
-			graphic.additiveMaterial = SkeletonGraphicInspector.DefaultSkeletonGraphicAdditiveMaterial;
-			graphic.multiplyMaterial = SkeletonGraphicInspector.DefaultSkeletonGraphicMultiplyMaterial;
-			graphic.screenMaterial = SkeletonGraphicInspector.DefaultSkeletonGraphicScreenMaterial;
-
-#if HAS_CULL_TRANSPARENT_MESH
-			var canvasRenderer = go.GetComponent<CanvasRenderer>();
-			canvasRenderer.cullTransparentMesh = false;
-#endif
 			return go;
 		}
 
 		public static Material DefaultSkeletonGraphicMaterial {
-			get { return FirstMaterialWithName("SkeletonGraphicDefault"); }
-		}
+			get {
+				var guids = AssetDatabase.FindAssets("SkeletonGraphicDefault t:material");
+				if (guids.Length <= 0) return null;
 
-		public static Material DefaultSkeletonGraphicAdditiveMaterial {
-			get { return FirstMaterialWithName("SkeletonGraphicAdditive"); }
-		}
+				var firstAssetPath = AssetDatabase.GUIDToAssetPath(guids[0]);
+				if (string.IsNullOrEmpty(firstAssetPath)) return null;
 
-		public static Material DefaultSkeletonGraphicMultiplyMaterial {
-			get { return FirstMaterialWithName("SkeletonGraphicMultiply"); }
-		}
-
-		public static Material DefaultSkeletonGraphicScreenMaterial {
-			get { return FirstMaterialWithName("SkeletonGraphicScreen"); }
-		}
-
-		protected static Material FirstMaterialWithName (string name) {
-			var guids = AssetDatabase.FindAssets(name + " t:material");
-			if (guids.Length <= 0) return null;
-
-			var firstAssetPath = AssetDatabase.GUIDToAssetPath(guids[0]);
-			if (string.IsNullOrEmpty(firstAssetPath)) return null;
-
-			var firstMaterial = AssetDatabase.LoadAssetAtPath<Material>(firstAssetPath);
-			return firstMaterial;
+				var firstMaterial = AssetDatabase.LoadAssetAtPath<Material>(firstAssetPath);
+				return firstMaterial;
+			}
 		}
 
 		#endregion

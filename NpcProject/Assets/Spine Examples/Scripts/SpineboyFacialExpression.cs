@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated September 24, 2021. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2021, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -39,7 +39,7 @@ namespace Spine.Unity.Examples {
 		[SpineSlot]
 		public string eyeSlotName, mouthSlotName;
 
-		[SpineAttachment(slotField: "eyeSlotName")]
+		[SpineAttachment(slotField:"eyeSlotName")]
 		public string shockEyeName, normalEyeName;
 
 		[SpineAttachment(slotField: "mouthSlotName")]
@@ -60,11 +60,11 @@ namespace Spine.Unity.Examples {
 			eyeSlot = skeleton.FindSlot(eyeSlotName);
 			mouthSlot = skeleton.FindSlot(mouthSlotName);
 
-			int eyeSlotIndex = skeleton.Data.FindSlot(eyeSlotName).Index;
+			int eyeSlotIndex = skeleton.FindSlotIndex(eyeSlotName);
 			shockEye = skeleton.GetAttachment(eyeSlotIndex, shockEyeName);
 			normalEye = skeleton.GetAttachment(eyeSlotIndex, normalEyeName);
 
-			int mouthSlotIndex = skeleton.Data.FindSlot(mouthSlotName).Index;
+			int mouthSlotIndex = skeleton.FindSlotIndex(mouthSlotName);
 			shockMouth = skeleton.GetAttachment(mouthSlotIndex, shockMouthName);
 			normalMouth = skeleton.GetAttachment(mouthSlotIndex, normalMouthName);
 		}

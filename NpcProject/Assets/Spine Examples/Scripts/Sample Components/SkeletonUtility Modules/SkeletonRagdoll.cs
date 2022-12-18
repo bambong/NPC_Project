@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated September 24, 2021. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2021, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -29,9 +29,9 @@
 
 // Contributed by: Mitch Thompson
 
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Spine.Unity.Examples {
 	[RequireComponent(typeof(SkeletonRenderer))]
@@ -68,22 +68,12 @@ namespace Spine.Unity.Examples {
 		public int colliderLayer = 0;
 		[Range(0, 1)]
 		public float mix = 1;
-		public bool oldRagdollBehaviour = false;
+		public bool oldRagdollBehaviour = true;
 		#endregion
 
 		ISkeletonAnimation targetSkeletonComponent;
 		Skeleton skeleton;
-		struct BoneFlipEntry {
-			public BoneFlipEntry (bool flipX, bool flipY) {
-				this.flipX = flipX;
-				this.flipY = flipY;
-			}
-
-			public bool flipX;
-			public bool flipY;
-		}
 		Dictionary<Bone, Transform> boneTable = new Dictionary<Bone, Transform>();
-		Dictionary<Bone, BoneFlipEntry> boneFlipTable = new Dictionary<Bone, BoneFlipEntry>();
 		Transform ragdollRoot;
 		public Rigidbody RootRigidbody { get; private set; }
 		public Bone StartingBone { get; private set; }
@@ -149,12 +139,12 @@ namespace Spine.Unity.Examples {
 				if (b == StartingBone) {
 					ragdollRoot = new GameObject("RagdollRoot").transform;
 					ragdollRoot.SetParent(transform, false);
-					if (b == skeleton.RootBone) { // RagdollRoot is skeleton root's parent, thus the skeleton's scale and position.
-						ragdollRoot.localPosition = new Vector3(skeleton.X, skeleton.Y, 0);
-						ragdollRoot.localRotation = (skeleton.ScaleX < 0) ? Quaternion.Euler(0, 0, 180.0f) : Quaternion.identity;
+					if (b == skeleton.RootBone) { // RagdollRoot is skeleton root.
+						ragdollRoot.localPosition = new Vector3(b.WorldX, b.WorldY, 0);
+						ragdollRoot.localRotation = Quaternion.Euler(0, 0, GetPropagatedRotation(b));
 					} else {
 						ragdollRoot.localPosition = new Vector3(b.Parent.WorldX, b.Parent.WorldY, 0);
-						ragdollRoot.localRotation = Quaternion.Euler(0, 0, b.Parent.WorldRotationX - b.Parent.ShearX);
+						ragdollRoot.localRotation = Quaternion.Euler(0, 0, GetPropagatedRotation(b.Parent));
 					}
 					parentTransform = ragdollRoot;
 					rootOffset = t.position - transform.position;
@@ -222,19 +212,16 @@ namespace Spine.Unity.Examples {
 			if (disableOtherConstraints) {
 				var transformConstraints = skeleton.TransformConstraints;
 				for (int i = 0, n = transformConstraints.Count; i < n; i++) {
-					transformConstraints.Items[i].MixRotate = 0;
-					transformConstraints.Items[i].MixScaleX = 0;
-					transformConstraints.Items[i].MixScaleY = 0;
-					transformConstraints.Items[i].MixShearY = 0;
-					transformConstraints.Items[i].MixX = 0;
-					transformConstraints.Items[i].MixY = 0;
+					transformConstraints.Items[i].RotateMix = 0;
+					transformConstraints.Items[i].ScaleMix = 0;
+					transformConstraints.Items[i].ShearMix = 0;
+					transformConstraints.Items[i].TranslateMix = 0;
 				}
 
 				var pathConstraints = skeleton.PathConstraints;
 				for (int i = 0, n = pathConstraints.Count; i < n; i++) {
-					pathConstraints.Items[i].MixRotate = 0;
-					pathConstraints.Items[i].MixX = 0;
-					pathConstraints.Items[i].MixY = 0;
+					pathConstraints.Items[i].RotateMix = 0;
+					pathConstraints.Items[i].TranslateMix = 0;
 				}
 			}
 
@@ -305,6 +292,7 @@ namespace Spine.Unity.Examples {
 			t.localRotation = Quaternion.Euler(0, 0, b.WorldRotationX - b.ShearX);
 			t.localScale = new Vector3(b.WorldScaleX, b.WorldScaleY, 1);
 
+			// MITCH: You left "todo: proper ragdoll branching"
 			var colliders = AttachBoundingBoxRagdollColliders(b);
 			if (colliders.Count == 0) {
 				float length = b.Data.Length;
@@ -325,38 +313,20 @@ namespace Spine.Unity.Examples {
 		}
 
 		void UpdateSpineSkeleton (ISkeletonAnimation skeletonRenderer) {
-			bool parentFlipX;
-			bool parentFlipY;
-			GetStartBoneParentFlipState(out parentFlipX, out parentFlipY);
+			bool flipX = skeleton.ScaleX < 0;
+			bool flipY = skeleton.ScaleY < 0;
+			bool flipXOR = flipX ^ flipY;
+			bool flipOR = flipX || flipY;
 
 			foreach (var pair in boneTable) {
 				var b = pair.Key;
 				var t = pair.Value;
 				bool isStartingBone = b == StartingBone;
-				var parentBone = b.Parent;
-				Transform parentTransform = isStartingBone ? ragdollRoot : boneTable[parentBone];
-				if (!isStartingBone) {
-					var parentBoneFlip = boneFlipTable[parentBone];
-					parentFlipX = parentBoneFlip.flipX;
-					parentFlipY = parentBoneFlip.flipY;
-				}
-				bool flipX = parentFlipX ^ (b.ScaleX < 0);
-				bool flipY = parentFlipY ^ (b.ScaleY < 0);
-
-				BoneFlipEntry boneFlip;
-				boneFlipTable.TryGetValue(b, out boneFlip);
-				boneFlip.flipX = flipX;
-				boneFlip.flipY = flipY;
-				boneFlipTable[b] = boneFlip;
-
-				bool flipXOR = flipX ^ flipY;
-				bool parentFlipXOR = parentFlipX ^ parentFlipY;
-
+				Transform parentTransform = isStartingBone ? ragdollRoot : boneTable[b.Parent];
 				if (!oldRagdollBehaviour && isStartingBone) {
 					if (b != skeleton.RootBone) { // RagdollRoot is not skeleton root.
-						ragdollRoot.localPosition = new Vector3(parentBone.WorldX, parentBone.WorldY, 0);
-						ragdollRoot.localRotation = Quaternion.Euler(0, 0, parentBone.WorldRotationX - parentBone.ShearX);
-						ragdollRoot.localScale = new Vector3(parentBone.WorldScaleX, parentBone.WorldScaleY, 1);
+						ragdollRoot.localPosition = new Vector3(b.Parent.WorldX, b.Parent.WorldY, 0);
+						ragdollRoot.localRotation = Quaternion.Euler(0, 0, GetPropagatedRotation(b.Parent));
 					}
 				}
 				Vector3 parentTransformWorldPosition = parentTransform.position;
@@ -366,42 +336,31 @@ namespace Spine.Unity.Examples {
 				parentSpaceHelper.rotation = parentTransformWorldRotation;
 				parentSpaceHelper.localScale = parentTransform.lossyScale;
 
-				if (oldRagdollBehaviour) {
-					if (isStartingBone && b != skeleton.RootBone) {
-						Vector3 localPosition = new Vector3(b.Parent.WorldX, b.Parent.WorldY, 0);
-						parentSpaceHelper.position = ragdollRoot.TransformPoint(localPosition);
-						parentSpaceHelper.localRotation = Quaternion.Euler(0, 0, parentBone.WorldRotationX - parentBone.ShearX);
-						parentSpaceHelper.localScale = new Vector3(parentBone.WorldScaleX, parentBone.WorldScaleY, 1);
-					}
-				}
-
 				Vector3 boneWorldPosition = t.position;
 				Vector3 right = parentSpaceHelper.InverseTransformDirection(t.right);
 
 				Vector3 boneLocalPosition = parentSpaceHelper.InverseTransformPoint(boneWorldPosition);
 				float boneLocalRotation = Mathf.Atan2(right.y, right.x) * Mathf.Rad2Deg;
 
-				if (flipXOR) boneLocalPosition.y *= -1f;
-				if (parentFlipXOR != flipXOR) boneLocalPosition.y *= -1f;
+				if (flipOR) {
+					if (isStartingBone) {
+						if (flipX) boneLocalPosition.x *= -1f;
+						if (flipY) boneLocalPosition.y *= -1f;
 
-				if (parentFlipXOR) boneLocalRotation *= -1f;
-				if (parentFlipX != flipX) boneLocalRotation += 180;
+						boneLocalRotation = boneLocalRotation * (flipXOR ? -1f : 1f);
+						if (flipX) boneLocalRotation += 180;
+					} else {
+						if (flipXOR) {
+							boneLocalRotation *= -1f;
+							boneLocalPosition.y *= -1f; // wtf??
+						}
+					}
+				}
 
 				b.X = Mathf.Lerp(b.X, boneLocalPosition.x, mix);
 				b.Y = Mathf.Lerp(b.Y, boneLocalPosition.y, mix);
 				b.Rotation = Mathf.Lerp(b.Rotation, boneLocalRotation, mix);
 				//b.AppliedRotation = Mathf.Lerp(b.AppliedRotation, boneLocalRotation, mix);
-			}
-		}
-
-		void GetStartBoneParentFlipState (out bool parentFlipX, out bool parentFlipY) {
-			parentFlipX = skeleton.ScaleX < 0;
-			parentFlipY = skeleton.ScaleY < 0;
-			var parent = this.StartingBone == null ? null : this.StartingBone.Parent;
-			while (parent != null) {
-				parentFlipX ^= parent.ScaleX < 0;
-				parentFlipY ^= parent.ScaleY < 0;
-				parent = parent.Parent;
 			}
 		}
 
@@ -437,7 +396,17 @@ namespace Spine.Unity.Examples {
 			return colliders;
 		}
 
-		public class LayerFieldAttribute : PropertyAttribute { }
+		static float GetPropagatedRotation (Bone b) {
+			Bone parent = b.Parent;
+			float a = b.AppliedRotation;
+			while (parent != null) {
+				a += parent.AppliedRotation;
+				parent = parent.Parent;
+			}
+			return a;
+		}
+
+		public class LayerFieldAttribute : PropertyAttribute {}
 	}
 
 }

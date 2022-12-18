@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated September 24, 2021. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2021, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -38,7 +38,7 @@ namespace Spine.Unity.Examples {
 		[Range(0, 100)]
 		public int count = 20;
 
-		[SpineAnimation(dataField: "skeletonDataAsset")]
+		[SpineAnimation(dataField:"skeletonDataAsset")]
 		public string startingAnimation;
 
 		IEnumerator Start () {
@@ -51,7 +51,7 @@ namespace Spine.Unity.Examples {
 				var sa = SkeletonAnimation.NewSkeletonAnimationGameObject(skeletonDataAsset); // Spawn a new SkeletonAnimation GameObject.
 				DoExtraStuff(sa, spineAnimation); // optional stuff for fun.
 				sa.gameObject.name = i.ToString();
-				yield return new WaitForSeconds(1f / 8f);
+				yield return new WaitForSeconds(1f/8f);
 			}
 
 		}

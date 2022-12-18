@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated September 24, 2021. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2021, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -48,11 +48,9 @@ namespace Spine.Unity.Prototyping {
 		IAnimationStateComponent animationStateComponent;
 
 		void Start () {
-			if (skeletonComponent == null)
-				skeletonComponent = GetComponent<ISkeletonComponent>();
+			skeletonComponent = skeletonComponent ?? GetComponent<ISkeletonComponent>();
 			if (skeletonComponent == null) return;
-			if (animationStateComponent == null)
-				animationStateComponent = skeletonComponent as IAnimationStateComponent;
+			animationStateComponent = animationStateComponent ?? skeletonComponent as IAnimationStateComponent;
 			if (animationStateComponent == null) return;
 			var skeleton = skeletonComponent.Skeleton;
 			if (skeleton == null) return;
@@ -62,14 +60,14 @@ namespace Spine.Unity.Prototyping {
 			var state = animationStateComponent.AnimationState;
 			foreach (var ep in events) {
 				var eventData = skeletonData.FindEvent(ep.spineEvent);
-				ep.eventDelegate = ep.eventDelegate ?? delegate (TrackEntry trackEntry, Event e) { if (e.Data == eventData) ep.unityHandler.Invoke(); };
+				ep.eventDelegate = ep.eventDelegate ?? delegate(TrackEntry trackEntry, Event e) { if (e.Data == eventData) ep.unityHandler.Invoke(); };
 				state.Event += ep.eventDelegate;
 			}
 		}
 
 		void OnDestroy () {
-			if (animationStateComponent == null) animationStateComponent = GetComponent<IAnimationStateComponent>();
-			if (animationStateComponent.IsNullOrDestroyed()) return;
+			animationStateComponent = animationStateComponent ?? GetComponent<IAnimationStateComponent>();
+			if (animationStateComponent == null) return;
 
 			var state = animationStateComponent.AnimationState;
 			foreach (var ep in events) {
