@@ -5,10 +5,19 @@ using UnityEngine;
 public class PuzzleMatchCheckController : MonoBehaviour
 {
 
-    private float CLEAR_DISTANCE = 0.5f;
-    private float CLEAR_ROTATE = 10f;
+    private float CLEAR_DISTANCE = 1f;
+    private float CLEAR_ROTATE = 20f;
     private Transform curTarget;
+    [SerializeField]
+    private Color clearColor;
+    private Color originColor;
+    private Renderer renderer;
 
+    private void Awake()
+    {
+        renderer = GetComponent<Renderer>();
+        originColor = renderer.material.GetColor("_Main_Color");
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Interaction")) 
@@ -16,10 +25,26 @@ public class PuzzleMatchCheckController : MonoBehaviour
             curTarget = other.transform;
         }   
     }
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.CompareTag("Interaction"))
+        {
+            curTarget = other.transform;
+            if(IsClear()) 
+            {
+                renderer.material.SetColor("_Main_Color",clearColor);
+            }
+            else 
+            {
+                renderer.material.SetColor("_Main_Color",originColor);
+            }
+        }
+    }
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Interaction") && other.transform == curTarget)
         {
+            renderer.material.SetColor("_Main_Color",originColor);
             curTarget = null;
         }
     }
