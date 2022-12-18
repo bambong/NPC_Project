@@ -53,6 +53,7 @@ public class TalkPanelController : UI_Popup
         curIndex = 0;
         speakImage.sprite = speak.speaker.sprite;
         spekerName.text = speak.speaker.name;
+        dialogueText.text = "";
     }
     public bool MoveNext()
     {
