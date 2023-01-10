@@ -24,6 +24,9 @@ public class ServerroomPuzzleController : MonoBehaviour ,IInteraction
     [SerializeField]
     private GameObject potal;
 
+    [SerializeField]
+    private AudioClip sfxfile;
+
     public GameObject Go => gameObject;
 
     private bool isClear = false;
@@ -61,6 +64,7 @@ public class ServerroomPuzzleController : MonoBehaviour ,IInteraction
         DynamicGI.UpdateEnvironment();
 
         Managers.Talk.EnterTalk(clearTalk, null);
+        Managers.Sound.SfxPlay("Serverroom clear", sfxfile);
         potal.gameObject.SetActive(true);
     }
 
