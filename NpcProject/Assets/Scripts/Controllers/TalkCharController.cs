@@ -5,10 +5,10 @@ using UnityEngine;
 public class TalkCharController : MonoBehaviour, IInteraction
 {
     [SerializeField]
-    private Talk talk;
+    private int talk;
 
     [SerializeField]
-    private Talk repeatTalk;
+    private int repeatTalk;
 
     public GameObject Go => gameObject;
 
@@ -21,11 +21,10 @@ public class TalkCharController : MonoBehaviour, IInteraction
         if (isPlay) 
         {
 
-            Managers.Talk.EnterTalk(repeatTalk, null);
+            Managers.Talk.EnterTalk(repeatTalk);
             return;
         }
         isPlay = true;
-        //Managers.Scene.LoadScene(Define.Scene.Clear);
-        Managers.Talk.EnterTalk(talk,null);   
+        Managers.Talk.EnterTalk(talk);   
     }
 }

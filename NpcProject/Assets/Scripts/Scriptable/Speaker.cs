@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Speaker",menuName = "Scriptable Event/Talk/Speaker",order = 0)]
 public class Speaker : ScriptableObject
 {
+    public int Id;
     public string name;
     public Sprite sprite;
 }

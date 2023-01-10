@@ -6,6 +6,6 @@ using UnityEngine;
 public class Talk : ScriptableObject
 {
     public int Id;
-    public List<Speak> speaks;
+    public List<Dialogue> speaks;
 }
 

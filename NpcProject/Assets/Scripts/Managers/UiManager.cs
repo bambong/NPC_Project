@@ -5,8 +5,6 @@ using UnityEngine;
 public class UIManager
 {
     int _order = 10;
-
-    Stack<UI_Popup> _popupStack = new Stack<UI_Popup>();
       
     private GameObject root;
 
@@ -98,54 +96,8 @@ public class UIManager
         return temp;
     }
 
-    public T ShowPopupUI<T>(string name = null) where T : UI_Popup
-    {
-        if (string.IsNullOrEmpty(name))
-            name = typeof(T).Name;
-
-        GameObject go = Managers.Resource.Instantiate($"UI/Popup/{name}");
-        T popup = Util.GetOrAddComponent<T>(go);
-        _popupStack.Push(popup);
-        popup.Init();
-
-        go.transform.SetParent(Root.transform);
-
-        return popup;
-    }
-
-    public void ClosePopupUI(UI_Popup popup)
-    {
-        if (_popupStack.Count == 0)
-            return;
-
-        if (_popupStack.Peek() != popup)
-        {
-            Debug.Log("Close Popup Failed!");
-            return;
-        }
-
-        ClosePopupUI();
-    }
-
-    public void ClosePopupUI()
-    {
-        if (_popupStack.Count == 0)
-            return;
-
-        UI_Popup popup = _popupStack.Pop();
-        Managers.Resource.Destroy(popup.gameObject);
-        popup = null;
-        _order--;
-    }
-
-    public void CloseAllPopupUI()
-    {
-        while (_popupStack.Count > 0)
-            ClosePopupUI();
-    }
-
     public void Clear()
     {
-        CloseAllPopupUI();
+
     }
 }
