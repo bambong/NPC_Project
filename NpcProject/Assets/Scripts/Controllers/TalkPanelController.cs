@@ -159,7 +159,7 @@ public class TalkPanelController : UI_Popup
         while(!isNext)
         {
 
-            if(Input.GetKeyDown(KeyCode.X))
+            if(Input.GetKeyDown(Managers.Game.Key.skipKey))
             {
                 if(isTrans == false)
                 {

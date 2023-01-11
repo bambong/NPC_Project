@@ -126,7 +126,7 @@ public class TalkManager
         }
         while(true) 
         {
-            if(Input.GetKeyDown(KeyCode.X) && talkPanel.IsAni() == true) 
+            if(Input.GetKeyDown(Managers.Game.Key.talkKey) && talkPanel.IsAni() == true) 
             {
                 if(!curTalkEvent.ProgressTalk())
                 {

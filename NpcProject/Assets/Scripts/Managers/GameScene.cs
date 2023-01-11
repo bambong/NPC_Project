@@ -20,7 +20,7 @@ public class GameScene : BaseScene
         player.transform.position = playerSpawnSpot;
         Managers.Camera.InitCamera(vircam,player.transform);
 
-        Invoke("StartTalk", 2f);
+        Invoke("StartTalk", 2f);    
 
         var rotatekeyword  = Managers.UI.MakeSubItem<KeywordController>(null,"RotateKeyword");
         Managers.Keyword.AddKeywordToPlayer(rotatekeyword);
