@@ -10,7 +10,7 @@ public class GlitchEffectController : UI_Base
 {
     public GameObject effect;
     [SerializeField]
-    URPGlitch.Runtime.DigitalGlitch.DigitalGlitchVolume glitch;
+    DigitalGlitchVolume glitch;
     Tonemapping tonemapping;
 
     private Volume volume;
@@ -20,14 +20,11 @@ public class GlitchEffectController : UI_Base
         volume.weight = 0;
         effect.SetActive(true);
         StartCoroutine(GlitchOnEffect());
-        Debug.Log("Glitch On");
     }
 
     public void OffGlitch()
     {
         StartCoroutine(GlitchOffEffect());
-      
-        Debug.Log("Glitch Off");
     }
 
     public override void Init()
@@ -48,7 +45,6 @@ public class GlitchEffectController : UI_Base
     IEnumerator GlitchOnEffect()
     {
         yield return null;
-        // volume.weight = 0;
         var intensity = glitch.intensity;
         intensity.value = 1;
         glitch.intensity = intensity;
@@ -57,8 +53,6 @@ public class GlitchEffectController : UI_Base
         {
             progress += Time.deltaTime;
             volume.weight = progress;
-            //intensity.value = progress;
-            //glitch.intensity = intensity;
             yield return null;
 
         }

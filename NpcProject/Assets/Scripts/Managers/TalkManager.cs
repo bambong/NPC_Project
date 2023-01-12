@@ -7,130 +7,150 @@ using System;
 using Cinemachine;
 using DG.Tweening;
 
+
 [Serializable]
-public class Dialogue 
+public class Dialogue
 {
+    public Speaker speaker;
     public string text;
 }
 
-[Serializable]
-public class Speak
+public class TalkEvent : GameEvent
 {
-    public Speaker speaker;
-    public List<Dialogue> dialogues;
-}
-
-public class TalkEvent 
-{
-    public Talk talk;
+    private List<Dialogue> dialogues = new List<Dialogue>();
     private int curIndex = 0;
-    private TalkPanelController talkPanel;
-    public TalkEvent(Talk talk ,TalkPanelController talkpanel) 
-    {
-        this.talk = talk;
-        talkPanel = talkpanel;
-        talkPanel.SetText(talk.speaks[0]);
-    }
-    public bool ProgressTalk() 
-    {
-        while(true) 
-        {
-            if(!talkPanel.MoveNext())
-            {
-                curIndex++;
 
-                if(talk.speaks.Count <= curIndex)
-                {
-                    return false;
-                }
-                talkPanel.SetText(talk.speaks[curIndex]);
-                continue;
-            }
-            break;
+    public TalkEvent() 
+    {
+        curIndex = 0;
+    }
+    public override void Play()
+    {
+        Managers.Talk.PlayTalk(this);
+    }
+    public void AddDialogue(Dialogue dialogue)
+    {
+        dialogues.Add(dialogue);
+    }
+    public Dialogue GetCurrentDialogue() => dialogues[curIndex];
+    public bool MoveNext() 
+    {
+        curIndex++;
+
+        if (dialogues.Count <= curIndex)
+        {
+            curIndex = 0;
+            Managers.Talk.EndTalk();
+            onComplete?.Invoke();
+            return false;
         }
+           
         return true;
     }
 }
 
-public class TalkManager 
+public class TalkManager
 {
     [SerializeField]
     private TalkPanelController talkPanel;
-    private CinemachineVirtualCamera talkVircam = null;
     private TalkEvent curTalkEvent;
-    private Transform talkPanelinner;
-    private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.01f);
+
+    private readonly float ENTER_ANIM_SPEED = 0.5f;
+
+    private Dictionary<int, TalkEvent> currentSceneTalkDatas = new Dictionary<int, TalkEvent>();
+    private Dictionary<int, Speaker> speakerDatas = new Dictionary<int, Speaker>();
+
     public void Init()
     {
-        LoadTalkData();
-        talkPanel = Managers.UI.ShowPopupUI<TalkPanelController>("DialoguePanel");
-        talkPanelinner = talkPanel.transform.Find("DialoguePanel_Inner");
+        talkPanel = Managers.UI.MakeSceneUI<TalkPanelController>(null, "DialoguePanel");
+        LoadSpeakerData();
     }
-    private void LoadTalkData() 
+    private void LoadSpeakerData() 
     {
+        var speakers =  Resources.LoadAll<Speaker>("Data/SpeakerData/");
+
+        for(int i =0; i< speakers.Length; ++i)
+        {
+            speakerDatas.Add(speakers[i].Id,speakers[i]);
+        }
     }
-    public void EnterTalk(Talk talk, CinemachineVirtualCamera virCam)
+    public void LoadTalkData(DialogueExcel dialogueExcel) 
+    {
+        currentSceneTalkDatas.Clear();
+
+        for(int i = 0; i < dialogueExcel.datas.Count; ++i) 
+        {
+            var data = dialogueExcel.datas[i];
+
+            TalkEvent talkEvent;
+            Dialogue dialogue = new Dialogue();
+            dialogue.text = data.text;
+            dialogue.speaker = speakerDatas[data.speaker];
+
+            if(!currentSceneTalkDatas.TryGetValue(data.eventID, out talkEvent))
+            {
+                talkEvent = new TalkEvent();
+                currentSceneTalkDatas.Add(data.eventID, talkEvent);
+            }
+      
+            talkEvent.AddDialogue(dialogue);
+
+        }
+    }
+    public void PlayDialogue(Dialogue dialogue) 
+    {
+        talkPanel.PlayDialogue(dialogue);
+    }
+    public TalkEvent GetTalkEvent(int talkEventId) 
+    {
+        return currentSceneTalkDatas[talkEventId];
+    }
+ 
+    public void PlayTalk(TalkEvent talk) 
     {
         Managers.Game.SetStateDialog();
-        curTalkEvent = new TalkEvent(talk,talkPanel);
-        // talkPanel.gameObject.SetActive(true);
-        talkPanelinner.DOScale(new Vector3(0.0f, 0.0f, 0.0f), 0.0f).OnStart(()=>
+        
+        curTalkEvent = talk;
+       
+        talkPanel.SetDialogue(curTalkEvent.GetCurrentDialogue());
+
+        talkPanel.TalkPanelInner.DOScale(Vector3.zero, 0).OnStart(() =>
         {
             talkPanel.gameObject.SetActive(true);
-            talkPanelinner.DOScale(new Vector3(1.0f, 1.0f, 1.0f), 0.5f).OnComplete(()=>
+            talkPanel.TalkPanelInner.DOScale(Vector3.one, ENTER_ANIM_SPEED).OnComplete(() =>
             {
                 Managers.Scene.CurrentScene.StartCoroutine(ProgressTalk());
             });
         });
-       // CameraSet(virCam);
-       // EnterCamera(talkVircam);
-
-    //    Managers.Scene.CurrentScene.StartCoroutine(ProgressTalk());
     }
-    private void EndTalk() 
+    public void PlayCurrentSceneTalk(int talkEventId)
+    {
+        PlayTalk(GetTalkEvent(talkEventId));
+    }
+    public void EndTalk() 
     {
         talkPanel.gameObject.SetActive(false);
         Managers.Game.SetStateNormal();
-       // ExitCamera(talkVircam);
     }
-
-    private void CameraSet(CinemachineVirtualCamera virCam)
+    public void Clear() 
     {
-        talkVircam = virCam;
+        currentSceneTalkDatas.Clear();
     }
-
-    private void EnterCamera(CinemachineVirtualCamera virCam)
-    {
-        if (virCam != null)
-        {
-            Camera.main.cullingMask = ~(1 << LayerMask.NameToLayer("Player"));
-            virCam.gameObject.SetActive(true);
-        }
-    }
-
-    private void ExitCamera(CinemachineVirtualCamera virCam)
-    {
-        if (talkPanel.gameObject.activeSelf == false)
-        {
-            virCam.gameObject.SetActive(false);
-            Camera.main.cullingMask = -1;
-        }
-    }
-
     IEnumerator ProgressTalk() 
     {
-        if(!curTalkEvent.ProgressTalk())
-        {
-            EndTalk();
-            yield break;
-        }
+
+        PlayDialogue(curTalkEvent.GetCurrentDialogue());
+        
         while(true) 
         {
-            if(Input.GetKeyDown(KeyCode.X) && talkPanel.IsAni() == true) 
+            if(Input.GetKeyDown(KeyCode.X) && talkPanel.IsNext == true) 
             {
-                if(!curTalkEvent.ProgressTalk())
+                if(curTalkEvent.MoveNext())
                 {
-                    EndTalk();
+                    PlayDialogue(curTalkEvent.GetCurrentDialogue());
+                }
+                else 
+                {
                     break;
                 }
             }

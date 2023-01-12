@@ -13,7 +13,7 @@ public class KeywordEntity : MonoBehaviour
     private int keywordSlot = 1;
 
     private Action<KeywordEntity> updateAction = null;
-    private KeywordFameController keywordSlotUI;
+    private KeywordFrameController keywordSlotUI;
     private KeywordSlotUIWorldSpaceController keywordSlotWorldUI;
     private Collider col;
 
@@ -21,7 +21,7 @@ public class KeywordEntity : MonoBehaviour
     {
         Managers.Keyword.AddSceneEntity(this);
 
-        keywordSlotUI = Managers.UI.MakeSubItem<KeywordFameController>(Managers.Keyword.PlayerKeywordPanel.transform,"KeywordSlotUI");
+        keywordSlotUI = Managers.UI.MakeSubItem<KeywordFrameController>(Managers.Keyword.PlayerKeywordPanel.transform,"KeywordSlotUI");
         keywordSlotUI.SetScale(Vector3.one);
 
         keywordSlotWorldUI = Managers.UI.MakeWorldSpaceUI<KeywordSlotUIWorldSpaceController>(transform,"KeywordSlotWorldSpace");

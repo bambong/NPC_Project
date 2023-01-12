@@ -10,7 +10,11 @@ public class GameScene : BaseScene
     private CinemachineVirtualCamera vircam;
 
     [SerializeField]
-    private Talk startTalk;
+    private DialogueExcel gamaSceneTalkData;
+
+
+    [SerializeField]
+    private int startTalk;
 
     protected override void Init() 
     {
@@ -21,7 +25,7 @@ public class GameScene : BaseScene
         Managers.Camera.InitCamera(vircam,player.transform);
 
         Invoke("StartTalk", 2f);
-
+        Managers.Talk.LoadTalkData(gamaSceneTalkData);
         var rotatekeyword  = Managers.UI.MakeSubItem<KeywordController>(null,"RotateKeyword");
         Managers.Keyword.AddKeywordToPlayer(rotatekeyword);
         rotatekeyword.transform.localScale = Vector3.one;
@@ -36,10 +40,9 @@ public class GameScene : BaseScene
     }
     public void StartTalk() 
     {
-        Managers.Talk.EnterTalk(startTalk, null);
-
+        Managers.Talk.PlayCurrentSceneTalk(startTalk);
     }
-   
+    
     public override void Clear()
     {
         
