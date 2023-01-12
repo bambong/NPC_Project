@@ -46,7 +46,7 @@ public class ServerroomPuzzleController : MonoBehaviour ,IInteraction
             {
 
  
-                Managers.Talk.EnterTalk(nonClearTalk);
+                Managers.Talk.PlayCurrentSceneTalk(nonClearTalk);
                 return;
             }
         }
@@ -60,7 +60,7 @@ public class ServerroomPuzzleController : MonoBehaviour ,IInteraction
         serverrackMaterial.EnableKeyword("_EMISSION");
         DynamicGI.UpdateEnvironment();
 
-        Managers.Talk.EnterTalk(clearTalk);
+        Managers.Talk.PlayCurrentSceneTalk(clearTalk);
         potal.gameObject.SetActive(true);
     }
 

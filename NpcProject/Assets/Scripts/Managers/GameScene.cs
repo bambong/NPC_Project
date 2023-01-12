@@ -40,9 +40,9 @@ public class GameScene : BaseScene
     }
     public void StartTalk() 
     {
-        Managers.Talk.EnterTalk(startTalk);
+        Managers.Talk.PlayCurrentSceneTalk(startTalk);
     }
-   
+    
     public override void Clear()
     {
         

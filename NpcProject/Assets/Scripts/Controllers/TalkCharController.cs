@@ -21,10 +21,10 @@ public class TalkCharController : MonoBehaviour, IInteraction
         if (isPlay) 
         {
 
-            Managers.Talk.EnterTalk(repeatTalk);
+            Managers.Talk.PlayCurrentSceneTalk(repeatTalk);
             return;
         }
         isPlay = true;
-        Managers.Talk.EnterTalk(talk);   
+        Managers.Talk.PlayCurrentSceneTalk(talk);   
     }
 }

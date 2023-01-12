@@ -18,7 +18,7 @@ public class TalkEventTriggerController : MonoBehaviour
 
         if (other.CompareTag("Player")) 
         {
-            Managers.Talk.EnterTalk(talk);
+            Managers.Talk.PlayCurrentSceneTalk(talk);
             isPlay = true;
         }
     }

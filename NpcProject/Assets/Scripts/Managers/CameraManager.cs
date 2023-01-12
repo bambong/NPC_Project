@@ -15,6 +15,7 @@ public class CameraManager
 
     public void Init() 
     {
+        
         brain = Util.GetOrAddComponent<CinemachineBrain>(Camera.main.gameObject);
     }
     public void InitCamera(CinemachineVirtualCamera cam,Transform target = null) 

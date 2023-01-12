@@ -15,7 +15,7 @@ public class Dialogue
     public string text;
 }
 
-public class TalkEvent 
+public class TalkEvent : GameEvent
 {
     private List<Dialogue> dialogues = new List<Dialogue>();
     private int curIndex = 0;
@@ -23,6 +23,10 @@ public class TalkEvent
     public TalkEvent() 
     {
         curIndex = 0;
+    }
+    public override void Play()
+    {
+        Managers.Talk.PlayTalk(this);
     }
     public void AddDialogue(Dialogue dialogue)
     {
@@ -36,6 +40,8 @@ public class TalkEvent
         if (dialogues.Count <= curIndex)
         {
             curIndex = 0;
+            Managers.Talk.EndTalk();
+            onComplete?.Invoke();
             return false;
         }
            
@@ -95,28 +101,33 @@ public class TalkManager
     {
         talkPanel.PlayDialogue(dialogue);
     }
-    private TalkEvent GetTalkEvent(int talkEventId) 
+    public TalkEvent GetTalkEvent(int talkEventId) 
     {
         return currentSceneTalkDatas[talkEventId];
     }
-  
-    public void EnterTalk(int talkEventId)
+ 
+    public void PlayTalk(TalkEvent talk) 
     {
         Managers.Game.SetStateDialog();
-        curTalkEvent = GetTalkEvent(talkEventId);
-
+        
+        curTalkEvent = talk;
+       
         talkPanel.SetDialogue(curTalkEvent.GetCurrentDialogue());
 
-        talkPanel.TalkPanelInner.DOScale(Vector3.zero,0).OnStart(()=>
+        talkPanel.TalkPanelInner.DOScale(Vector3.zero, 0).OnStart(() =>
         {
             talkPanel.gameObject.SetActive(true);
-            talkPanel.TalkPanelInner.DOScale(Vector3.one, ENTER_ANIM_SPEED).OnComplete(()=>
+            talkPanel.TalkPanelInner.DOScale(Vector3.one, ENTER_ANIM_SPEED).OnComplete(() =>
             {
                 Managers.Scene.CurrentScene.StartCoroutine(ProgressTalk());
             });
         });
     }
-    private void EndTalk() 
+    public void PlayCurrentSceneTalk(int talkEventId)
+    {
+        PlayTalk(GetTalkEvent(talkEventId));
+    }
+    public void EndTalk() 
     {
         talkPanel.gameObject.SetActive(false);
         Managers.Game.SetStateNormal();
@@ -138,9 +149,8 @@ public class TalkManager
                 {
                     PlayDialogue(curTalkEvent.GetCurrentDialogue());
                 }
-                else
+                else 
                 {
-                    EndTalk();
                     break;
                 }
             }
