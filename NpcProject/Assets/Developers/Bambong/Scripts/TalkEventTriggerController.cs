@@ -5,7 +5,7 @@ using UnityEngine;
 public class TalkEventTriggerController : MonoBehaviour
 {
     [SerializeField]
-    private Talk talk;
+    private int talk;
 
     private bool isPlay = false;
     
@@ -18,7 +18,7 @@ public class TalkEventTriggerController : MonoBehaviour
 
         if (other.CompareTag("Player")) 
         {
-            Managers.Talk.EnterTalk(talk, null);
+            Managers.Talk.PlayCurrentSceneTalk(talk);
             isPlay = true;
         }
     }

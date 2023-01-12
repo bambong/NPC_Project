@@ -7,76 +7,58 @@ using System;
 using DG.Tweening;
 using System.Linq;
 
-public class TalkPanelController : UI_Popup
-{
-    enum Images
-    {
-        SpeakerImage
-    }
-
-    enum TextMeshs
-    {
-        SpeakerName,
-        DialogueText
-    }
-
+public class TalkPanelController : UI_Base
+{ 
+    private readonly float TEXT_SPEED = 0.05f;
+    
+    [SerializeField]
     private Image speakImage;
+    [SerializeField]
     private TextMeshProUGUI spekerName;
+    [SerializeField]
     private TextMeshProUGUI dialogueText;
+    [SerializeField]
+    private Transform talkPanelInner;
 
-    private Speak curSpeak;
-    private int curIndex =0;
-    private float textSpeed = 0.05f;
+    public Transform TalkPanelInner { get => talkPanelInner; }
+    public bool IsNext { get => isNext;}
+
+    private Dialogue curDialogue;
+
     private float typingTime;    
-    private float textTime;
+    private System.Random random;
+    
     private string textDialogue = null;
     private string textStore = null;
-    private System.Random random;
+
     private bool isNext = false;
     private bool isTrans = false;
 
-    private readonly WaitForSeconds INPUT_CHECK_WAIT = new WaitForSeconds(0.01f);
-
     public override void Init()
     {
-        base.Init();
-        Bind<TextMeshProUGUI>(typeof(TextMeshs));
-        Bind<Image>(typeof(Images));
-        spekerName = Get<TextMeshProUGUI>((int)TextMeshs.SpeakerName);
-        dialogueText = Get<TextMeshProUGUI>((int)TextMeshs.DialogueText);
-        speakImage = Get<Image>((int)Images.SpeakerImage);
     }
 
-    public void SetText(Speak speak) 
+    public void SetDialogue(Dialogue dialogue)
     {
-        curSpeak = speak;
-        curIndex = 0;
-        speakImage.sprite = speak.speaker.sprite;
-        spekerName.text = speak.speaker.name;
+        speakImage.sprite = dialogue.speaker.sprite;
+        spekerName.text = dialogue.speaker.name;
         dialogueText.text = "";
     }
-    public bool MoveNext()
+    public void PlayDialogue(Dialogue dialogue) 
     {
-        textTime = 0.0f;
+        dialogueText.text = "";
         isNext = false;
-
-        if (curSpeak.dialogues.Count <= curIndex)
-        {
-            return false;
-        }
-
+        curDialogue = dialogue;
+        speakImage.sprite = dialogue.speaker.sprite;
+        spekerName.text = dialogue.speaker.name;
         StartCoroutine(TransText());
-        // DotweenTextani();
 
-        curIndex++;
-        return true;
     }
-
 
     private void DotweenTextani()
     {
-        textDialogue = curSpeak.dialogues[curIndex].text;
-        typingTime = textDialogue.Length * textSpeed;
+        textDialogue = curDialogue.text;
+        typingTime = textDialogue.Length * TEXT_SPEED;
 
         dialogueText.text = "";
         dialogueText.DOKill();
@@ -84,11 +66,7 @@ public class TalkPanelController : UI_Popup
         {
             StartCoroutine(SkipTextani());
         })
-        // .OnUpdate(()=>
-        // {
-        //     // dialogueText.text = RandomText(textDialogue.Length);
-
-        // })
+     
         .OnComplete(()=>
         {
             isNext = true;
@@ -102,19 +80,14 @@ public class TalkPanelController : UI_Popup
         return new string(Enumerable.Repeat(charcters, length).Select(s => s[random.Next(s.Length)]).ToArray());
     }
 
-    public bool IsAni()
-    {
-        return isNext;
-    }
-
     IEnumerator TransText()
     {
         textStore = null;
         textDialogue = null;
-        typingTime = curSpeak.dialogues[curIndex].text.Length * textSpeed;
+        typingTime = curDialogue.text.Length * TEXT_SPEED;
 
         char[] sep = { '<', '>' };
-        string[] result = curSpeak.dialogues[curIndex].text.Split(sep);
+        string[] result = curDialogue.text.Split(sep);
 
         foreach (var item in result)
         {
@@ -128,18 +101,17 @@ public class TalkPanelController : UI_Popup
             }
         }
 
-        // textDialogue = curSpeak.dialogues[curIndex].text;
         if (isTrans == true)
         {
+            StartCoroutine(SkipTextani());
+            
             for (int i = 0; i < textDialogue.Length; i++)
             {
                 textStore += textDialogue[i];
                 dialogueText.text = textStore + RandomText(textDialogue.Length - (i + 1));
-                yield return new WaitForSeconds(textSpeed);
-                if(i == 0)
-                {
-                    StartCoroutine(SkipTextani());
-                }                
+                yield return new WaitForSeconds(TEXT_SPEED);
+
+                              
                 if (isTrans == false)
                 {
                     yield break;

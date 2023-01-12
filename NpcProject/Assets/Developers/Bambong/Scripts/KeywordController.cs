@@ -25,7 +25,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler,IBeginDr
     private int prevSibilintIndex;
     private Transform startParent; 
     private Vector3 startDragPoint;
-    private KeywordFameController curFrame;
+    private KeywordFrameController curFrame;
 
     public TextMeshProUGUI KeywordText { get => keywordText;}
     public Image Image { get => image; }
@@ -69,7 +69,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler,IBeginDr
             {
                 if(raycasts[i].gameObject.CompareTag(KEYWORD_FRAME_TAG)) 
                 {
-                    var keywordFrame = raycasts[i].gameObject.GetComponent<KeywordFameController>();
+                    var keywordFrame = raycasts[i].gameObject.GetComponent<KeywordFrameController>();
                     if(keywordFrame.SetKeyWord(this)) 
                     {
                         Managers.Keyword.RemoveKeywordToPlayer(this);

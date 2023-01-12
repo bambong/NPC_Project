@@ -8,10 +8,10 @@ public class ServerroomPuzzleController : MonoBehaviour ,IInteraction
     private PuzzleMatchCheckController[] puzzleMatchChecks;
 
     [SerializeField]
-    private Talk clearTalk;
+    private int clearTalk;
 
     [SerializeField]
-    private Talk nonClearTalk;
+    private int nonClearTalk;
 
     [SerializeField]
     private Material serverrackMaterial;
@@ -46,7 +46,7 @@ public class ServerroomPuzzleController : MonoBehaviour ,IInteraction
             {
 
  
-                Managers.Talk.EnterTalk(nonClearTalk, null);
+                Managers.Talk.PlayCurrentSceneTalk(nonClearTalk);
                 return;
             }
         }
@@ -60,7 +60,7 @@ public class ServerroomPuzzleController : MonoBehaviour ,IInteraction
         serverrackMaterial.EnableKeyword("_EMISSION");
         DynamicGI.UpdateEnvironment();
 
-        Managers.Talk.EnterTalk(clearTalk, null);
+        Managers.Talk.PlayCurrentSceneTalk(clearTalk);
         potal.gameObject.SetActive(true);
     }
 
