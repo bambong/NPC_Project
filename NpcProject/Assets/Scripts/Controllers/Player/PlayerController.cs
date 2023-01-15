@@ -32,9 +32,11 @@ public class PlayerController : MonoBehaviour
     private PlayerStateController playerStateController;
 
     public KeywordEntity CurKeywordInteraction { get => interactionDetecter.CurKeywordIteraction; }
-
+    public Cinemachine.CinemachineBrain brain;
     private void Awake()
     {
+        brain = Camera.main.GetComponent<Cinemachine.CinemachineBrain>();
+
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
         glitchEffectController = Managers.UI.MakeSceneUI<GlitchEffectController>(null,"GlitchEffect");
@@ -42,6 +44,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        
         rotater.rotation = Camera.main.transform.rotation;
         playerStateController.Update();
     }

@@ -13,7 +13,9 @@ public class CamZone : MonoBehaviour
     {
         if(other.CompareTag("Player")) 
         {
-            Managers.Camera.SwitchCamera(virCamera,other.transform);
+            var camEvent =  new CameraSwitchEvent(virCamera,other.transform);
+            camEvent.OnComplete(Managers.Talk.GetTalkEvent(10001));
+            camEvent.Play();
         }
     }
 }

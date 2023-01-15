@@ -379,8 +379,8 @@ MonoBehaviour:
   puzzleMatchChecks:
   - {fileID: 1644685696}
   - {fileID: 879213715}
-  clearTalk: 0
-  nonClearTalk: 0
+  clearTalk: 10001
+  nonClearTalk: 10002
   serverrackMaterial: {fileID: 2100000, guid: ca0affa2d5242e3458dc1d72a03951fa, type: 2}
   serverrackOnTex: {fileID: 2800000, guid: fea32a3b0c3d23f48bc37bd74c7098e1, type: 3}
   serverrackOffTex: {fileID: 2800000, guid: 51ed618eb8e85974bb34546fea1be587, type: 3}
@@ -3426,7 +3426,7 @@ MonoBehaviour:
   m_UpdateMethod: 2
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
-    m_Style: 1
+    m_Style: 3
     m_Time: 2
     m_CustomCurve:
       serializedVersion: 2
@@ -5002,7 +5002,7 @@ MonoBehaviour:
   playerSpawnSpot: {x: -34.17, y: 3, z: -114}
   vircam: {fileID: 1384963559}
   gamaSceneTalkData: {fileID: 11400000, guid: 7d50e8233f93f1845b8c4519239f8d8d, type: 2}
-  startTalk: 10001
+  startTalk: 10002
 --- !u!114 &1180642754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8199,7 +8199,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7286357310051387966, guid: 8f7c7320a217d24468d109b7ee6fce02, type: 3}
       propertyPath: talk
-      value: 0
+      value: 10001
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f7c7320a217d24468d109b7ee6fce02, type: 3}
@@ -9745,7 +9745,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1677953215955034418, guid: 8f7c7320a217d24468d109b7ee6fce02, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 6.44
       objectReference: {fileID: 0}
     - target: {fileID: 1677953215955034418, guid: 8f7c7320a217d24468d109b7ee6fce02, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9780,12 +9780,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2413034961321867964, guid: 8f7c7320a217d24468d109b7ee6fce02, type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+    - target: {fileID: 2413034961321867964, guid: 8f7c7320a217d24468d109b7ee6fce02, type: 3}
       propertyPath: m_Name
       value: TalkEventTrigger
       objectReference: {fileID: 0}
     - target: {fileID: 7286357310051387966, guid: 8f7c7320a217d24468d109b7ee6fce02, type: 3}
       propertyPath: talk
-      value: 0
+      value: 10001
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f7c7320a217d24468d109b7ee6fce02, type: 3}

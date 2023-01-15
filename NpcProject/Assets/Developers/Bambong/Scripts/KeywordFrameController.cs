@@ -29,7 +29,6 @@ public class KeywordFrameController : UI_Base
         return true;
     }
 
- 
     public void ResetKeywordFrame() 
     {
         if(keywordController == null) 
@@ -40,6 +39,7 @@ public class KeywordFrameController : UI_Base
         hasKeyword = false;
         keywordController = null;
     }
+
     public void Open() 
     {
         parentObj.SetActive(true);
