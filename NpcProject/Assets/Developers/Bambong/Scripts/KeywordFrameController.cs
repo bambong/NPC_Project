@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,9 @@ public class KeywordFrameController : UI_Base
     private GameObject parentObj;
     [SerializeField]
     private RectTransform rectTransform;
-   
+
+    private Dictionary<string, Action<KeywordEntity>> keywrodOverrideTable= new Dictionary<string, Action<KeywordEntity>>();
+
     private bool hasKeyword =false;
     private KeywordController keywordController;
     public bool HasKeyword { get => hasKeyword; }

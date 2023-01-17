@@ -5,6 +5,19 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public class KeywordEvent : GameEvent
+{
+    public override void Play()
+    {
+        onStart?.Invoke();
+    }
+    
+    
+
+}
+
+
+
 public class KeywordManager
 {
 

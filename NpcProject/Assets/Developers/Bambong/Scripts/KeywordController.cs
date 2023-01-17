@@ -114,9 +114,9 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler,IBeginDr
         rectTransform.DOMove(pos, KEYWORD_FRAME_MOVE_TIME).SetUpdate(true);
     }
 
-    public void ResetKeyword() 
+    public void ResetKeyword()
     {
-        if(gameObject == null) 
+        if (gameObject == null)
         {
             return;
         }
