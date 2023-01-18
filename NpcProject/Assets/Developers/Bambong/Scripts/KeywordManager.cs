@@ -31,6 +31,7 @@ public class KeywordManager
     private List<KeywordEntity> curSceneEntity = new List<KeywordEntity>();
     private List<DebugModEffectController> debugModEffectControllers = new List<DebugModEffectController>();
     private GraphicRaycaster graphicRaycaster;
+    
     public void Init()
     {
         playerKeywordPanel = Managers.UI.MakeSceneUI<PlayerKeywordPanelController>(null,"PlayerKeywordPanel");

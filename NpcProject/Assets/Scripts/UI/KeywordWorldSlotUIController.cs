@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class KeywordSlotUIWorldSpaceController : UI_Base
+public class KeywordWorldSlotUIController : UI_Base
 {
     [SerializeField]
     private Transform parent;
@@ -15,6 +15,7 @@ public class KeywordSlotUIWorldSpaceController : UI_Base
 
     private readonly string DEFAULT_TEXT = "NULL";
     private readonly float Y_POS_REVISION_AMOUNT = 2f;
+    
     public override void Init()
     {
         

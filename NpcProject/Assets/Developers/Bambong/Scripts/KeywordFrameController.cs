@@ -11,7 +11,6 @@ public class KeywordFrameController : UI_Base
     [SerializeField]
     private RectTransform rectTransform;
 
-    private Dictionary<string, Action<KeywordEntity>> keywrodOverrideTable= new Dictionary<string, Action<KeywordEntity>>();
 
     private bool hasKeyword =false;
     private KeywordController keywordController;

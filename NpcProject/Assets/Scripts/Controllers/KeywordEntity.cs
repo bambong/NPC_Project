@@ -8,24 +8,34 @@ using UnityEngine.UI;
 public class KeywordEntity : MonoBehaviour
 {
     [SerializeField]
-    private string entityId;
-    [SerializeField]
     private int keywordSlot = 1;
+   
+    private Dictionary<string, Action<KeywordEntity>> keywrodOverrideTable = new Dictionary<string, Action<KeywordEntity>>();
+    private List<KeywordFrameController> keywordSlotUI = new List<KeywordFrameController>();
+    private List<KeywordWorldSlotUIController> keywordSlotWorldUI = new List<KeywordWorldSlotUIController>();
 
     private Action<KeywordEntity> updateAction = null;
-    private KeywordFrameController keywordSlotUI;
-    private KeywordSlotUIWorldSpaceController keywordSlotWorldUI;
     private Collider col;
 
     private void Start()
     {
         Managers.Keyword.AddSceneEntity(this);
 
-        keywordSlotUI = Managers.UI.MakeSubItem<KeywordFrameController>(Managers.Keyword.PlayerKeywordPanel.transform,"KeywordSlotUI");
-        keywordSlotUI.SetScale(Vector3.one);
+        CreateKeywordFrame();
+        CreateKeywordWorldSlotUI();
 
-        keywordSlotWorldUI = Managers.UI.MakeWorldSpaceUI<KeywordSlotUIWorldSpaceController>(transform,"KeywordSlotWorldSpace");
         col = Util.GetOrAddComponent<Collider>(gameObject);
+    }
+
+    private void CreateKeywordFrame() 
+    {
+        var slot = Managers.UI.MakeSubItem<KeywordFrameController>(Managers.Keyword.PlayerKeywordPanel.transform, "KeywordSlotUI");
+        keywordSlotUI.Add(slot);
+        slot.SetScale(Vector3.one);
+    }
+    private void CreateKeywordWorldSlotUI() 
+    {
+        keywordSlotWorldUI.Add(Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotUIController>(transform, "KeywordSlotWorldSpace"));
     }
 
     public virtual void EnterDebugMod()
@@ -37,17 +47,36 @@ public class KeywordEntity : MonoBehaviour
         CloseWorldSlotUI();
     }
 
-    public void CloseWorldSlotUI() => keywordSlotWorldUI.Close();
-    public void OpenWorldSlotUI() => keywordSlotWorldUI.Open(transform);
+    public void CloseWorldSlotUI() 
+    {
+        foreach(var slot in keywordSlotWorldUI) 
+        {
+            slot.Close();
+        }
+    }
+    public void OpenWorldSlotUI() 
+    {
+        foreach (var slot in keywordSlotWorldUI)
+        {
+            slot.Open(transform);
+        }
+    }
 
     public void OpenKeywordSlot() 
     {
-        keywordSlotUI.Open();
+        foreach (var slot in keywordSlotUI)
+        {
+            slot.Open();
+        }
     }
     public void CloseKeywordSlot()
-    { 
-        keywordSlotUI.Close();
+    {
+        foreach (var slot in keywordSlotUI)
+        {
+            slot.Close();
+        }
     }
+
     public void AddAction(Action<KeywordEntity> action) 
     {
         updateAction -= action;
@@ -56,14 +85,16 @@ public class KeywordEntity : MonoBehaviour
     public void DecisionKeyword()
     {
         ClearAction();
-        if(keywordSlotUI.KeywordController == null) 
+        for(int i = 0; i< keywordSlotUI.Count; ++i)
         {
-            keywordSlotWorldUI.ResetSlotUI();
-            return;
+            if (keywordSlotUI[i].KeywordController == null)
+            {
+                keywordSlotWorldUI[i].ResetSlotUI();
+                continue;
+            }
+            keywordSlotWorldUI[i].SetSlotUI(keywordSlotUI[i].KeywordController.Image.color, keywordSlotUI[i].KeywordController.KeywordText.text);
+            AddAction(keywordSlotUI[i].KeywordController.KeywordUpdateAction);
         }
-
-        keywordSlotWorldUI.SetSlotUI(keywordSlotUI.KeywordController.Image.color,keywordSlotUI.KeywordController.KeywordText.text);
-        AddAction(keywordSlotUI.KeywordController.KeywordUpdateAction);
     }
 
     public void ClearAction() 
