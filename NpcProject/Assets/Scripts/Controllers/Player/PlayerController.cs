@@ -121,7 +121,7 @@ public class PlayerController : MonoBehaviour
     }
     public bool InteractionInputCheck() 
     {
-        if(Input.GetKeyDown(Managers.Game.Key.interactionKey))
+        if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.INTERACTION_KEY)))
         {
             interactionDetecter.Interaction();
             return true;
@@ -130,7 +130,7 @@ public class PlayerController : MonoBehaviour
     }
     public bool DebugModEnterInputCheck() 
     {
-        if (Input.GetKeyDown(Managers.Game.Key.debugmodKey))
+        if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.DEBUGMOD_KEY)))
         {
             if (Managers.Game.IsDebugMod) 
             {
@@ -152,7 +152,7 @@ public class PlayerController : MonoBehaviour
     }
     public void KeywordModInputCheck()
     {
-        if(Input.GetKeyDown(Managers.Game.Key.exitKey))
+        if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.EXIT_KEY)))
         {
             Managers.Keyword.ExitKeywordMod();
         }
