@@ -13,7 +13,7 @@ public enum KEY_TYPE
     SKIP_KEY
 }
 
-public class KeyMappingController : MonoBehaviour
+public class KeyMappingController
 {
     private Dictionary<KEY_TYPE, KeyCode> keyMap = new Dictionary<KEY_TYPE, KeyCode>()
     {

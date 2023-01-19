@@ -85,6 +85,7 @@ public class PlayerInteraction : Singleton<PlayerInteraction>, IState<PlayerCont
     }
     public void Enter(PlayerController stateController)
     {
+        stateController.AnimIdleEnter();
         stateController.InteractionEnter();
     }
 
