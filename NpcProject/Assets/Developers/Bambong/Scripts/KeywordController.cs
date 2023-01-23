@@ -21,7 +21,6 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler,IBeginDr
     [SerializeField]
     private TextMeshProUGUI keywordText;
 
-
     private int prevSibilintIndex;
     private Transform startParent; 
     private Vector3 startDragPoint;

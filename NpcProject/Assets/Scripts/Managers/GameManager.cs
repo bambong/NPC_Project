@@ -24,7 +24,6 @@ public class GameManager
     public KeyMappingController Key { get => key;}
     public IState<GameManager> CurState { get => gameStateController.CurState; }
     public bool IsDebugMod { get => CurState == GameDebugModState.Instance; }
-
     public void Init()
     {
         gameStateController = new GameStateController(this);

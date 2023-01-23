@@ -25,7 +25,7 @@ public class InteractionUiController : UI_Base
     {
         transform.position = parent.position + Vector3.up * ((parent.GetComponent<Collider>().bounds.size.y/2)+ Y_POS_REVISION_AMOUNT);
         transform.rotation  = Camera.main.transform.rotation;
-        transform.parent = parent;
+        transform.SetParent(parent);
         gameObject.SetActive(true);
         StartCoroutine(OpenInteractionUi());
     }

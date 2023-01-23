@@ -3,18 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
+public struct CameraInfo
+{
+    public CinemachineVirtualCamera cam;
+    public Transform target;
+
+    public CameraInfo(CinemachineVirtualCamera cam,Transform target = null)
+    {
+        this.cam = cam;
+        this.target = target;
+    }
+}
+
 public class CameraSwitchEvent : GameEvent 
 {
-    private CinemachineVirtualCamera targetCam;
-    private Transform targetTrs;
+    private CameraInfo camInfo;
+    public CinemachineVirtualCamera TargetCam { get => camInfo.cam; }
+    public Transform TargetTrs { get => camInfo.target; }
+    public CameraInfo CamInfo { get => camInfo;  }
 
-    public CinemachineVirtualCamera TargetCam { get => targetCam; }
-    public Transform TargetTrs { get => targetTrs; }
-
-    public CameraSwitchEvent(CinemachineVirtualCamera targetCam,Transform targetTrs = null)
+    public CameraSwitchEvent(CameraInfo info)
     {
-        this.targetCam = targetCam;
-        this.targetTrs = targetTrs;
+        camInfo = info;
     }
 
     public override void Play()
@@ -34,8 +44,8 @@ public class CameraSwitchEvent : GameEvent
 public class CameraManager 
 {
     private CinemachineBrain brain;
-    private CinemachineVirtualCamera prevCam;
-    private CinemachineVirtualCamera curCam;
+    private CameraInfo prevCamInfo;
+    private CameraInfo curCamInfo;
     
     public ICinemachineCamera CurActiveCam 
     {
@@ -46,34 +56,38 @@ public class CameraManager
     {
         brain = Util.GetOrAddComponent<CinemachineBrain>(Camera.main.gameObject);
     }
-    public void InitCamera(CinemachineVirtualCamera cam,Transform target = null) 
+    public void SwitchPrevCamera() 
     {
-        curCam = cam;
-        if(target != null)
+        EnterSwitchCamera(new CameraSwitchEvent(prevCamInfo));
+    }
+    public void InitCamera(CameraInfo info) 
+    {
+        SetCurCamInfo(info);
+        curCamInfo.cam.gameObject.SetActive(true);
+
+    }
+    private void SetCurCamInfo(CameraInfo info) 
+    {
+        curCamInfo = info;
+        if(curCamInfo.target != null) 
         {
-            curCam.m_LookAt = target;
-            curCam.m_Follow = target;
+            curCamInfo.cam.Follow = curCamInfo.target;
+            curCamInfo.cam.LookAt = curCamInfo.target;
         }
-        curCam.gameObject.SetActive(true);
     }
     public bool EnterSwitchCamera(CameraSwitchEvent switchEvent) 
     {
-        if(switchEvent.TargetCam == curCam) 
+        if(switchEvent.TargetCam == curCamInfo.cam) 
         {
             return false;
         }
 
-        prevCam = curCam;
-        curCam.gameObject.SetActive(false);
-        curCam = switchEvent.TargetCam;
+        prevCamInfo = curCamInfo;
+        curCamInfo.cam.gameObject.SetActive(false);
+       
+        SetCurCamInfo(switchEvent.CamInfo);
 
-        if(switchEvent.TargetTrs != null)
-        {
-            curCam.m_LookAt = switchEvent.TargetTrs;
-            curCam.m_Follow = switchEvent.TargetTrs;
-        }
-
-        curCam.gameObject.SetActive(true);
+        curCamInfo.cam.gameObject.SetActive(true);
         brain.StartCoroutine(SwitchEventCompleteCheck(switchEvent));
         return true;
     }

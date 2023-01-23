@@ -102,7 +102,6 @@ public class PlayerController : MonoBehaviour
         moveVec = Quaternion.Euler(new Vector3(0,rotater.rotation.eulerAngles.y,0)) * moveVec;
 
         rigid.velocity = moveVec *speed;
-       // characterController.Move( moveVec * speed);
     }
     public void PlayerInputCheck()
     {
@@ -133,26 +132,46 @@ public class PlayerController : MonoBehaviour
     }
     public bool DebugModEnterInputCheck() 
     {
+        if(!Managers.Keyword.IsDebugZoneIn) 
+        {
+            return false;
+        }
+
         if (Input.GetKeyDown(Managers.Game.Key.debugmodKey))
         {
             if (Managers.Game.IsDebugMod) 
             {
-                Debug.Log("SetState Normal");
-                glitchEffectController.OffGlitch();
-                Managers.Game.SetStateNormal();
-                interactionDetecter.SwitchDebugMod(false);
+                ExitDebugMod();
             }
-            else 
+            else
             {
-                Debug.Log("SetState Debug");
-                glitchEffectController.OnGlitch();
-                Managers.Game.SetStateDebugMod();
-                interactionDetecter.SwitchDebugMod(true);
+                EnterDebugMod();
             }
-            return true;
+           return true;    
         }
         return false;
     }
+    public void EnterDebugMod() 
+    {
+        Debug.Log("SetState Debug");
+        glitchEffectController.OnGlitch();
+        playerStateController.ChangeState(PlayerDebugMod.Instance);
+        AnimIdleEnter();
+        rigid.velocity = Vector3.zero;
+        Managers.Game.SetStateDebugMod();
+        interactionDetecter.SwitchDebugMod(true);
+    }
+    public void ExitDebugMod() 
+    {
+        Debug.Log("SetState Normal");
+        glitchEffectController.OffGlitch();
+        SetStateIdle();
+        Managers.Game.SetStateNormal();
+        interactionDetecter.SwitchDebugMod(false);
+
+    }
+
+
     public void KeywordModInputCheck()
     {
         if(Input.GetKeyDown(Managers.Game.Key.exitKey))
