@@ -38,7 +38,7 @@ public class GameScene : BaseScene
         Managers.Keyword.AddKeywordToPlayer(xmovekeyword);
         xmovekeyword.transform.localScale = Vector3.one;
     }
-    public void StartTalk() 
+    public void StartTalk()
     {
         Managers.Talk.PlayCurrentSceneTalk(startTalk);
     }

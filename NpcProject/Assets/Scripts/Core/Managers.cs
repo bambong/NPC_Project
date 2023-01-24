@@ -17,6 +17,7 @@ public class Managers : MonoBehaviour
     private TalkManager talk = new TalkManager();
     private CameraManager cam = new CameraManager();
     private KeywordManager keyword = new KeywordManager();
+    private SoundManager sound = new SoundManager();
 
     public static KeywordManager Keyword { get => Instance.keyword; }
     public static CameraManager Camera { get => Instance.cam; }
@@ -26,6 +27,7 @@ public class Managers : MonoBehaviour
     public static SceneManagerEx Scene { get => Instance.scene;  }
     public static UIManager UI { get => Instance.ui; }
     public static TalkManager Talk { get => Instance.talk; }
+    public static SoundManager Sound { get => Instance.sound; }
     #endregion
 
     void Start()
@@ -53,6 +55,7 @@ public class Managers : MonoBehaviour
             instance.cam.Init();
             instance.keyword.Init();
             instance.scene.Init();
+            instance.sound.Init();
         }
 
     }

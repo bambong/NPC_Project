@@ -26,6 +26,7 @@ public class TalkEvent : GameEvent
     }
     public override void Play()
     {
+        base.Play();
         Managers.Talk.PlayTalk(this);
     }
     public void AddDialogue(Dialogue dialogue)
@@ -58,7 +59,7 @@ public class TalkManager
     private readonly float ENTER_ANIM_SPEED = 0.5f;
 
     private Dictionary<int, TalkEvent> currentSceneTalkDatas = new Dictionary<int, TalkEvent>();
-    private Dictionary<int, Speaker> speakerDatas = new Dictionary<int, Speaker>();
+    public Dictionary<int, Speaker> speakerDatas = new Dictionary<int, Speaker>();
 
     public void Init()
     {
@@ -125,7 +126,7 @@ public class TalkManager
     }
     public void PlayCurrentSceneTalk(int talkEventId)
     {
-        PlayTalk(GetTalkEvent(talkEventId));
+        GetTalkEvent(talkEventId).Play();
     }
     public void EndTalk() 
     {
