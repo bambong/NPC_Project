@@ -96,7 +96,10 @@ public class PlayerDebugMod : Singleton<PlayerDebugMod>, IState<PlayerController
 
     public void UpdateActive(PlayerController stateController)
     {
-        stateController.DebugModEnterInputCheck();
+        if(!stateController.DebugModEnterInputCheck()) 
+        {
+            stateController.DebugModeMouseInputCheck();
+        }
     }
 }
 
