@@ -133,7 +133,7 @@ public class PlayerController : MonoBehaviour
     }
     public bool DebugModEnterInputCheck() 
     {
-        if(!Managers.Keyword.IsDebugZoneIn) 
+        if(!Managers.Keyword.IsDebugZoneIn || glitchEffectController.IsPlaying) 
         {
             return false;
         }
@@ -182,8 +182,7 @@ public class PlayerController : MonoBehaviour
     public void EnterDebugMod() 
     {
         Debug.Log("SetState Debug");
-        AnimIdleEnter();
-        rigid.velocity = Vector3.zero;
+        ClearMoveAnim();
         Managers.Game.SetStateDebugMod();
         glitchEffectController.OnGlitch();
         interactionDetecter.SwitchDebugMod(true);
@@ -196,7 +195,11 @@ public class PlayerController : MonoBehaviour
         Managers.Game.SetStateNormal();
         interactionDetecter.SwitchDebugMod(false);
     }
-
+    public void ClearMoveAnim() 
+    {
+        AnimIdleEnter();
+        rigid.velocity = Vector3.zero;
+    }
 
     public void KeywordModInputCheck()
     {
@@ -224,6 +227,10 @@ public class PlayerController : MonoBehaviour
     public void SetStateDebugMod()
     {
         playerStateController.ChangeState(PlayerDebugMod.Instance);
+    }
+    public void SetstateStop() 
+    {
+        playerStateController.ChangeState(PlayerStop.Instance);
     }
     #endregion
 

@@ -16,26 +16,32 @@ public class KeywordEntity : MonoBehaviour
 
     private Action<KeywordEntity> updateAction = null;
     private Collider col;
-
+    private Transform keywordSlotLayout;
+    private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
     private void Start()
     {
         Managers.Keyword.AddSceneEntity(this);
-
-        CreateKeywordFrame();
-        CreateKeywordWorldSlotUI();
+        keywordSlotLayout = Managers.Resource.Instantiate("UI/KeywordSlotLayout",Managers.Keyword.PlayerKeywordPanel.transform).transform;
+        keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(transform,"KeywordWorldSlotLayout");
+        for(int i = 0; i < keywordSlot; ++i) 
+        {
+            CreateKeywordFrame();
+            CreateKeywordWorldSlotUI();
+        }
 
         col = Util.GetOrAddComponent<Collider>(gameObject);
+        keywordWorldSlotLayout.SortChild(2.1f);
     }
 
     private void CreateKeywordFrame() 
     {
-        var slot = Managers.UI.MakeSubItem<KeywordFrameController>(Managers.Keyword.PlayerKeywordPanel.transform, "KeywordSlotUI");
+        var slot = Managers.UI.MakeSubItem<KeywordFrameController>(keywordSlotLayout, "KeywordSlotUI");
         keywordSlotUI.Add(slot);
-        slot.SetScale(Vector3.one);
+       // slot.SetScale(Vector3.one);
     }
     private void CreateKeywordWorldSlotUI() 
     {
-        keywordSlotWorldUI.Add(Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotUIController>(transform, "KeywordSlotWorldSpace"));
+        keywordSlotWorldUI.Add(Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotUIController>(keywordWorldSlotLayout.Panel, "KeywordSlotWorldSpace"));
     }
 
     public virtual void EnterDebugMod()
@@ -58,7 +64,7 @@ public class KeywordEntity : MonoBehaviour
     {
         foreach (var slot in keywordSlotWorldUI)
         {
-            slot.Open(transform);
+            slot.Open();
         }
     }
 

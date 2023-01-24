@@ -41,7 +41,7 @@ public class GameScene : BaseScene
     public void StartTalk()
     {
         var talk = Managers.Talk.GetTalkEvent(startTalk);
-        talk.OnStart(() => Managers.Game.Player.SetStateInteraction());
+        talk.OnStart(() => Managers.Game.Player.SetstateStop());
         talk.OnComplete(() => Managers.Game.Player.SetStateIdle());
         Managers.Talk.PlayCurrentSceneTalk(startTalk);
     }

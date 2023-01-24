@@ -63,6 +63,7 @@ public class PlayerStop : Singleton<PlayerStop>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
+        stateController.ClearMoveAnim();
     }
 
     public void Exit(PlayerController stateController)
@@ -110,6 +111,7 @@ public class PlayerInteraction : Singleton<PlayerInteraction>, IState<PlayerCont
     }
     public void Enter(PlayerController stateController)
     {
+        stateController.ClearMoveAnim();
         stateController.InteractionEnter();
     }
 

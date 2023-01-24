@@ -18,7 +18,6 @@ public class DebugZone : MonoBehaviour
     {
         debugModCameraController.ExitDebugMod();
         Managers.Camera.SwitchPrevCamera();
-        Managers.Keyword.SetDebugZone(null);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -33,11 +32,6 @@ public class DebugZone : MonoBehaviour
     {
         if(other.CompareTag("Player"))
         {
-            if(Managers.Game.IsDebugMod) 
-            {
-                Managers.Game.Player.ExitDebugMod();
-                return;
-            }
             Managers.Keyword.SetDebugZone(null);
         }
     }
