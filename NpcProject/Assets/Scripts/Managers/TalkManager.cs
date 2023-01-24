@@ -143,7 +143,7 @@ public class TalkManager
         
         while(true) 
         {
-            if(Input.GetKeyDown(KeyCode.X) && talkPanel.IsNext == true) 
+            if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.TALK_KEY)) && talkPanel.IsNext == true) 
             {
                 if(curTalkEvent.MoveNext())
                 {
