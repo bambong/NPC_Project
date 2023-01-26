@@ -131,7 +131,7 @@ public class TalkPanelController : UI_Base
         while(!isNext)
         {
 
-            if(Input.GetKeyDown(KeyCode.X))
+            if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY)))
             {
                 if(isTrans == false)
                 {

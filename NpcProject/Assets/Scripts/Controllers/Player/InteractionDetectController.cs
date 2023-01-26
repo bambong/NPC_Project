@@ -51,7 +51,6 @@ public class InteractionDetectController : MonoBehaviour
         {
             if(curKeywordIteraction != null)
             {
-                curKeywordIteraction.OpenKeywordSlot();
                 Managers.Keyword.EnterKeywordMod(curKeywordIteraction); 
             }
         }

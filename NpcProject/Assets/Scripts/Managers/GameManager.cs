@@ -18,11 +18,12 @@ public class GameStateController : StateController<GameManager>
 public class GameManager
 {
     private GameStateController gameStateController;
+    private KeyMappingController key = new KeyMappingController();
     private PlayerController player;
     public PlayerController Player { get => player; }
+    public KeyMappingController Key { get => key;}
     public IState<GameManager> CurState { get => gameStateController.CurState; }
     public bool IsDebugMod { get => CurState == GameDebugModState.Instance; }
-
     public void Init()
     {
         gameStateController = new GameStateController(this);

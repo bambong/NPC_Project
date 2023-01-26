@@ -14,7 +14,10 @@ public class GlitchEffectController : UI_Base
     Tonemapping tonemapping;
 
     private Volume volume;
-            
+    private bool isPlaying = false;
+
+    public bool IsPlaying { get => isPlaying;}
+
     public void OnGlitch()
     {
         volume.weight = 0;
@@ -44,6 +47,7 @@ public class GlitchEffectController : UI_Base
     }
     IEnumerator GlitchOnEffect()
     {
+        isPlaying = true;
         yield return null;
         var intensity = glitch.intensity;
         intensity.value = 1;
@@ -70,10 +74,13 @@ public class GlitchEffectController : UI_Base
         }
         intensity.value = 0;
         glitch.intensity = intensity;
+        isPlaying = false;
+
     }
 
     IEnumerator GlitchOffEffect()
     {
+        isPlaying = true;
         var intensity = glitch.intensity;
         float progress = 0;
         while (progress < 1)
@@ -102,6 +109,7 @@ public class GlitchEffectController : UI_Base
         }
         volume.weight = 0;
         effect.SetActive(false);
+        isPlaying = false;
     }
 
 }

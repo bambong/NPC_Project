@@ -33,7 +33,7 @@ public class GameScene : BaseScene
 
         var player  = Managers.Game.Spawn(Define.WorldObject.Player, "Player");
         player.transform.position = playerSpawnSpot;
-        Managers.Camera.InitCamera(vircam,player.transform);
+        Managers.Camera.InitCamera(new CameraInfo(vircam,player.transform));
 
         StartBgm();
         Invoke("StartTalk", 2f);
@@ -50,8 +50,11 @@ public class GameScene : BaseScene
         Managers.Keyword.AddKeywordToPlayer(xmovekeyword);
         xmovekeyword.transform.localScale = Vector3.one;
     }
-    public void StartTalk() 
+    public void StartTalk()
     {
+        var talk = Managers.Talk.GetTalkEvent(startTalk);
+        talk.OnStart(() => Managers.Game.Player.SetstateStop());
+        talk.OnComplete(() => Managers.Game.Player.SetStateIdle());
         Managers.Talk.PlayCurrentSceneTalk(startTalk);
     }
     

@@ -26,6 +26,7 @@ public class TalkEvent : GameEvent
     }
     public override void Play()
     {
+        onStart?.Invoke();
         Managers.Talk.PlayTalk(this);
     }
     public void AddDialogue(Dialogue dialogue)
@@ -125,7 +126,7 @@ public class TalkManager
     }
     public void PlayCurrentSceneTalk(int talkEventId)
     {
-        PlayTalk(GetTalkEvent(talkEventId));
+        GetTalkEvent(talkEventId).Play();
     }
     public void EndTalk() 
     {
@@ -143,7 +144,7 @@ public class TalkManager
         
         while(true) 
         {
-            if(Input.GetKeyDown(KeyCode.X) && talkPanel.IsNext == true) 
+            if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.TALK_KEY)) && talkPanel.IsNext == true) 
             {
                 if(curTalkEvent.MoveNext())
                 {
