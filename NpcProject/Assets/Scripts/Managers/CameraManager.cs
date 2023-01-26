@@ -38,6 +38,7 @@ public class CameraManager
             curCam.m_LookAt = target;
             curCam.m_Follow = target;
         }
+        curCam.m_LookAt = null;
         curCam.gameObject.SetActive(true);
     }
 
