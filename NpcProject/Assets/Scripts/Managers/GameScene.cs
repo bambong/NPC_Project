@@ -35,6 +35,7 @@ public class GameScene : BaseScene
         player.transform.position = playerSpawnSpot;
         Managers.Camera.InitCamera(vircam,player.transform);
 
+        StartBgm();
         Invoke("StartTalk", 2f);
         Managers.Talk.LoadTalkData(gamaSceneTalkData);
         var rotatekeyword  = Managers.UI.MakeSubItem<KeywordController>(null,"RotateKeyword");
@@ -56,7 +57,7 @@ public class GameScene : BaseScene
     
     public void StartBgm()
     {
-        Managers.Sound.AskBgmPlay(bgm[0].file);
+        Managers.Sound.AskBgmPlay(bgm[0].file, bgm[0].volume);
     }
 
     public override void Clear()

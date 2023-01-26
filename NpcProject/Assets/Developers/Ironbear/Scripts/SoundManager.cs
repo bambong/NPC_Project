@@ -8,12 +8,14 @@ public class SoundManager
 
     public void Init()
     {
-        Managers.Resource.Instantiate("SoundSource").name = "@SoundSource";
+        var soundPrefab = Managers.Resource.Instantiate("SoundSource");
+        soundPrefab.name = "@SoundSource";
+        soundController = soundPrefab.GetComponent<SoundController>();
     }
     
-    public void AskBgmPlay(AudioClip bgmClip)
+    public void AskBgmPlay(AudioClip bgmClip, float volume)
     {
-        soundController.BgmPlay(bgmClip);
+        soundController.BgmPlay(bgmClip, volume);
     }
 
     public void AskSfxPlay(AudioClip sfxClip)
