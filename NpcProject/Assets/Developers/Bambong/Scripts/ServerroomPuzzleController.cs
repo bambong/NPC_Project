@@ -64,7 +64,7 @@ public class ServerroomPuzzleController : MonoBehaviour ,IInteraction
         DynamicGI.UpdateEnvironment();
 
         Managers.Talk.PlayCurrentSceneTalk(clearTalk);
-        Managers.Sound.SfxPlay(lightOnSound);
+        Managers.Sound.AskSfxPlay(lightOnSound);
         potal.gameObject.SetActive(true);
     }
 

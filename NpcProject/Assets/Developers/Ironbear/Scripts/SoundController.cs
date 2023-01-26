@@ -5,25 +5,29 @@ using UnityEngine;
 public class SoundController : MonoBehaviour
 {
     public GameObject Go => throw new System.NotImplementedException();
-    
-    [System.Serializable]
-    public struct BgmType
-    {
-        public string name;
-        public AudioClip file;
-        public float volume;
-    }
 
     [SerializeField]
-    private BgmType[] bgm;
-    [SerializeField]
-    private AudioSource bgmAudiosource;
+    private GameObject soundObject;
+
+    private AudioSource bgmSource;
+    private AudioSource sfxSource;
 
     private void Awake()
     {
-        if (bgm.Length > 0)
-        {
-            Managers.Sound.BgmPlay(bgmAudiosource, bgm[0].name, bgm[0].file, bgm[0].volume);
-        }
+        bgmSource = transform.Find("BgmSource").GetComponent<AudioSource>();
+        sfxSource = transform.Find("SfxSource").GetComponent<AudioSource>();
+    }
+
+    public void BgmPlay(AudioClip bgmClip = null)
+    {        
+        bgmSource.clip = bgmClip;
+        bgmSource.loop = true;
+        bgmSource.Play();
+    }
+
+    public void SfxPlay(AudioClip sfxClip = null)
+    {
+        sfxSource.clip = sfxClip;
+        sfxSource.PlayOneShot(sfxClip);
     }
 }

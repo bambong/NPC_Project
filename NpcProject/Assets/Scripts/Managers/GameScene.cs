@@ -4,6 +4,17 @@ using UnityEngine;
 using Cinemachine;
 public class GameScene : BaseScene
 {
+    [System.Serializable]
+    public struct BgmType
+    {
+        public string name;
+        public AudioClip file;
+        public float volume;
+    }
+
+    [SerializeField]
+    private BgmType[] bgm;
+
     [SerializeField]
     private Vector3 playerSpawnSpot;
     [SerializeField]
@@ -43,6 +54,11 @@ public class GameScene : BaseScene
         Managers.Talk.PlayCurrentSceneTalk(startTalk);
     }
     
+    public void StartBgm()
+    {
+        Managers.Sound.AskBgmPlay(bgm[0].file);
+    }
+
     public override void Clear()
     {
         

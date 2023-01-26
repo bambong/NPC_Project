@@ -4,38 +4,20 @@ using UnityEngine;
 
 public class SoundManager
 {
-    private GameObject go;
-    private string currentArea;
-    private string currentBgm = "";
+    private SoundController soundController;
 
     public void Init()
     {
-        Managers.Resource.Instantiate("Sound").name = "@Sound";
-        go = GameObject.Find("@Sound");
+        Managers.Resource.Instantiate("SoundSource").name = "@SoundSource";
     }
     
-    public void areaCheck(string name)
+    public void AskBgmPlay(AudioClip bgmClip)
     {
-        currentArea = name;
-        Debug.Log(name);
+        soundController.BgmPlay(bgmClip);
     }
 
-    public void BgmPlay(AudioSource bgmSource, string bgmName, AudioClip bgmFile, float volume)
+    public void AskSfxPlay(AudioClip sfxClip)
     {
-        if (currentBgm.Equals(bgmName))
-        {
-            return;
-        }
-        
-        bgmSource.clip = bgmFile;
-        bgmSource.loop = true;
-        bgmSource.volume = volume;
-        bgmSource.Play();
-    }
-
-    public void SfxPlay(AudioClip sfxfile = null)
-    {
-        AudioSource audioSource = go.AddComponent<AudioSource>();
-        audioSource.PlayOneShot(sfxfile);
+        soundController.SfxPlay(sfxClip);
     }
 }

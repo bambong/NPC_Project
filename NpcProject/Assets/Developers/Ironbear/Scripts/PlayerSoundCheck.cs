@@ -8,7 +8,7 @@ public class PlayerSoundCheck : MonoBehaviour
     {
         if (other.CompareTag("Zone"))
         {
-            Managers.Sound.areaCheck(other.gameObject.name);
+
         }
 
     }
