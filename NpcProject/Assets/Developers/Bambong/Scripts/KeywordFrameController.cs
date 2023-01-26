@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,8 @@ public class KeywordFrameController : UI_Base
     private GameObject parentObj;
     [SerializeField]
     private RectTransform rectTransform;
-   
+
+
     private bool hasKeyword =false;
     private KeywordController keywordController;
     public bool HasKeyword { get => hasKeyword; }
@@ -29,7 +31,6 @@ public class KeywordFrameController : UI_Base
         return true;
     }
 
- 
     public void ResetKeywordFrame() 
     {
         if(keywordController == null) 
@@ -40,6 +41,7 @@ public class KeywordFrameController : UI_Base
         hasKeyword = false;
         keywordController = null;
     }
+
     public void Open() 
     {
         parentObj.SetActive(true);

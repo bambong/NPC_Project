@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
 
         if(Mathf.Abs(hor) <= 0.2f && Mathf.Abs(ver) <= 0.2f)
         {
-            playerStateController.ChangeState(PlayerIdle.Instance);
+            SetStateIdle();
             rigid.velocity = Vector3.zero;
             return;
         }
@@ -99,7 +99,6 @@ public class PlayerController : MonoBehaviour
         moveVec = Quaternion.Euler(new Vector3(0,rotater.rotation.eulerAngles.y,0)) * moveVec;
 
         rigid.velocity = moveVec *speed;
-       // characterController.Move( moveVec * speed);
     }
     public void PlayerInputCheck()
     {
@@ -131,25 +130,46 @@ public class PlayerController : MonoBehaviour
     }
     public bool DebugModEnterInputCheck() 
     {
+        if(!Managers.Keyword.IsDebugZoneIn || glitchEffectController.IsPlaying) 
+        {
+            return false;
+        }
+
         if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.DEBUGMOD_KEY)))
         {
             if (Managers.Game.IsDebugMod) 
             {
-                Debug.Log("SetState Normal");
-                glitchEffectController.OffGlitch();
-                Managers.Game.SetStateNormal();
-                interactionDetecter.SwitchDebugMod(false);
+                ExitDebugMod();
             }
             else 
             {
-                Debug.Log("SetState Debug");
-                glitchEffectController.OnGlitch();
-                Managers.Game.SetStateDebugMod();
-                interactionDetecter.SwitchDebugMod(true);
+                EnterDebugMod();
             }
             return true;
         }
         return false;
+    }
+
+    public void EnterDebugMod()
+    {
+        Debug.Log("SetState Debug");
+        ClearMoveAnim();
+        Managers.Game.SetStateDebugMod();
+        glitchEffectController.OnGlitch();
+        interactionDetecter.SwitchDebugMod(true);
+    }
+    public void ExitDebugMod()
+    {
+        Debug.Log("SetState Normal");
+        SetStateIdle();
+        glitchEffectController.OffGlitch();
+        Managers.Game.SetStateNormal();
+        interactionDetecter.SwitchDebugMod(false);
+    }
+    public void ClearMoveAnim()
+    {
+        AnimIdleEnter();
+        rigid.velocity = Vector3.zero;
     }
     public void KeywordModInputCheck()
     {
@@ -157,7 +177,30 @@ public class PlayerController : MonoBehaviour
         {
             Managers.Keyword.ExitKeywordMod();
         }
+    }
+    public void DebugModeMouseInputCheck()
+    {
+        if(!Managers.Game.IsDebugMod)
+        {
+            return;
+        }
 
+        if(Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            int layer = LayerMask.GetMask("Interaction");
+            RaycastHit hit;
+            if(Physics.Raycast(ray,out hit,float.MaxValue,layer))
+            {
+                var entity = hit.collider.GetComponent<KeywordEntity>();
+
+                if(entity == null)
+                {
+                    return;
+                }
+                Managers.Keyword.EnterKeywordMod(entity);
+            }
+        }
     }
     #endregion
 
@@ -174,7 +217,14 @@ public class PlayerController : MonoBehaviour
     {
         playerStateController.ChangeState(PlayerKeywordMod.Instance);
     }
-
+    public void SetStateDebugMod()
+    {
+        playerStateController.ChangeState(PlayerDebugMod.Instance);
+    }
+    public void SetstateStop() 
+    {
+        playerStateController.ChangeState(PlayerStop.Instance);
+    }
     #endregion
 
 }

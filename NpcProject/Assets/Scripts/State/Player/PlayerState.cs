@@ -63,6 +63,7 @@ public class PlayerStop : Singleton<PlayerStop>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
+        stateController.ClearMoveAnim();
     }
 
     public void Exit(PlayerController stateController)
@@ -77,6 +78,31 @@ public class PlayerStop : Singleton<PlayerStop>, IState<PlayerController>
     {
     }
 }
+public class PlayerDebugMod : Singleton<PlayerDebugMod>, IState<PlayerController>
+{
+    public void Init()
+    {
+    }
+    public void Enter(PlayerController stateController)
+    {
+    }
+
+    public void Exit(PlayerController stateController)
+    {
+    }
+
+    public void FixedUpdateActive(PlayerController stateController)
+    {
+    }
+
+    public void UpdateActive(PlayerController stateController)
+    {
+        if(!stateController.DebugModEnterInputCheck()) 
+        {
+            stateController.DebugModeMouseInputCheck();
+        }
+    }
+}
 
 public class PlayerInteraction : Singleton<PlayerInteraction>, IState<PlayerController>
 {
@@ -85,7 +111,7 @@ public class PlayerInteraction : Singleton<PlayerInteraction>, IState<PlayerCont
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.AnimIdleEnter();
+        stateController.ClearMoveAnim();
         stateController.InteractionEnter();
     }
 

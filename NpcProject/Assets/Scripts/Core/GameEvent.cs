@@ -8,11 +8,9 @@ using UnityEngine.Events;
 public abstract class GameEvent 
 {
     protected Action onComplete;
-    private Action onStart;
-    public virtual void Play()
-    {
-        onStart?.Invoke();
-    }
+    protected Action onStart;
+    public abstract void Play();
+ 
     public void OnStart(Action action)
     {
         onStart += action;
@@ -51,8 +49,8 @@ public class GameSequence : GameEvent
     }
     public override void Play()
     {
+        onStart?.Invoke();
         firstEvent.Play();
-        base.Play();
     }
 
 

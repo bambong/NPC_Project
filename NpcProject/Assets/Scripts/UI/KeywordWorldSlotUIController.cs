@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class KeywordSlotUIWorldSpaceController : UI_Base
+public class KeywordWorldSlotUIController : UI_Base
 {
     [SerializeField]
     private Transform parent;
@@ -14,7 +14,7 @@ public class KeywordSlotUIWorldSpaceController : UI_Base
     private Image image;
 
     private readonly string DEFAULT_TEXT = "NULL";
-    private readonly float Y_POS_REVISION_AMOUNT = 2f;
+    
     public override void Init()
     {
         
@@ -24,16 +24,9 @@ public class KeywordSlotUIWorldSpaceController : UI_Base
         this.keywordText.text = text;
         image.color = color;
     }
-    private void Update()
-    {
-        transform.rotation = Camera.main.transform.rotation;
-    }
 
-    public void Open(Transform parent)
+    public void Open()
     {
-        transform.position = parent.position + Vector3.up * ((parent.GetComponent<Collider>().bounds.size.y / 2) + Y_POS_REVISION_AMOUNT);
-        transform.rotation = Camera.main.transform.rotation;
- 
         gameObject.SetActive(true);
     }
     public void Close() 

@@ -22,7 +22,7 @@ public class GameScene : BaseScene
 
         var player  = Managers.Game.Spawn(Define.WorldObject.Player, "Player");
         player.transform.position = playerSpawnSpot;
-        Managers.Camera.InitCamera(vircam,player.transform);
+        Managers.Camera.InitCamera(new CameraInfo(vircam,player.transform));
 
         Invoke("StartTalk", 2f);
         Managers.Talk.LoadTalkData(gamaSceneTalkData);
@@ -40,6 +40,9 @@ public class GameScene : BaseScene
     }
     public void StartTalk()
     {
+        var talk = Managers.Talk.GetTalkEvent(startTalk);
+        talk.OnStart(() => Managers.Game.Player.SetstateStop());
+        talk.OnComplete(() => Managers.Game.Player.SetStateIdle());
         Managers.Talk.PlayCurrentSceneTalk(startTalk);
     }
     

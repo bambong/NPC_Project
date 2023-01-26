@@ -2,11 +2,50 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+
+public struct CameraInfo
+{
+    public CinemachineVirtualCamera cam;
+    public Transform target;
+
+    public CameraInfo(CinemachineVirtualCamera cam,Transform target = null)
+    {
+        this.cam = cam;
+        this.target = target;
+    }
+}
+
+public class CameraSwitchEvent : GameEvent 
+{
+    private CameraInfo camInfo;
+    public CinemachineVirtualCamera TargetCam { get => camInfo.cam; }
+    public Transform TargetTrs { get => camInfo.target; }
+    public CameraInfo CamInfo { get => camInfo;  }
+
+    public CameraSwitchEvent(CameraInfo info)
+    {
+        camInfo = info;
+    }
+
+    public override void Play()
+    {
+        if (Managers.Camera.EnterSwitchCamera(this)) 
+        {
+            onStart?.Invoke();
+        }
+    }
+    public void Complete()
+    {
+        onComplete?.Invoke();
+    }
+
+}
+
 public class CameraManager 
 {
     private CinemachineBrain brain;
-    private CinemachineVirtualCamera prevCam;
-    private CinemachineVirtualCamera curCam;
+    private CameraInfo prevCamInfo;
+    private CameraInfo curCamInfo;
     
     public ICinemachineCamera CurActiveCam 
     {
@@ -15,31 +54,55 @@ public class CameraManager
 
     public void Init() 
     {
-        
         brain = Util.GetOrAddComponent<CinemachineBrain>(Camera.main.gameObject);
     }
-    public void InitCamera(CinemachineVirtualCamera cam,Transform target = null) 
+    public void SwitchPrevCamera() 
     {
-        curCam = cam;
-        if(target != null)
-        {
-            curCam.m_LookAt = target;
-            curCam.m_Follow = target;
-        }
-        curCam.gameObject.SetActive(true);
+        EnterSwitchCamera(new CameraSwitchEvent(prevCamInfo));
     }
-    public void SwitchCamera(CinemachineVirtualCamera cam, Transform target = null) 
+    public void InitCamera(CameraInfo info) 
     {
-        prevCam = curCam;
-        curCam.gameObject.SetActive(false);
-        curCam = cam;
-        if(target != null)
+        SetCurCamInfo(info);
+        curCamInfo.cam.gameObject.SetActive(true);
+
+    }
+    private void SetCurCamInfo(CameraInfo info) 
+    {
+        curCamInfo = info;
+        if(curCamInfo.target != null) 
         {
-            curCam.m_LookAt = target;
-            curCam.m_Follow = target;
+            curCamInfo.cam.Follow = curCamInfo.target;
+            curCamInfo.cam.LookAt = curCamInfo.target;
         }
-        curCam.m_LookAt = null;
-        curCam.gameObject.SetActive(true);
+    }
+    public bool EnterSwitchCamera(CameraSwitchEvent switchEvent) 
+    {
+        if(switchEvent.TargetCam == curCamInfo.cam) 
+        {
+            return false;
+        }
+
+        prevCamInfo = curCamInfo;
+        curCamInfo.cam.gameObject.SetActive(false);
+       
+        SetCurCamInfo(switchEvent.CamInfo);
+
+        curCamInfo.cam.gameObject.SetActive(true);
+        brain.StartCoroutine(SwitchEventCompleteCheck(switchEvent));
+        return true;
+    }
+    private IEnumerator SwitchEventCompleteCheck(CameraSwitchEvent switchEvent) 
+    {
+       yield return null;
+
+       while (brain.IsBlending)
+       {
+            yield return null;     
+       }
+       if(brain.IsLive(switchEvent.TargetCam))
+       {
+            switchEvent.Complete();
+       }
     }
 
 }

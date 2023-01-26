@@ -5,6 +5,19 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public class KeywordEvent : GameEvent
+{
+    public override void Play()
+    {
+        onStart?.Invoke();
+    }
+    
+    
+
+}
+
+
+
 public class KeywordManager
 {
 
@@ -13,11 +26,16 @@ public class KeywordManager
     public Transform playerKeywordPanelLayout { get => playerKeywordPanel.Layout.transform; }
     public PlayerKeywordPanelController PlayerKeywordPanel { get => playerKeywordPanel;}
     public KeywordEntity CurKeywordEntity { get => curKeywordEntity; }
+    public bool IsDebugZoneIn { get => curDebugZone != null; }
 
     private List<KeywordController> curPlayerKeywords = new List<KeywordController>();
     private List<KeywordEntity> curSceneEntity = new List<KeywordEntity>();
     private List<DebugModEffectController> debugModEffectControllers = new List<DebugModEffectController>();
     private GraphicRaycaster graphicRaycaster;
+
+    private DebugZone curDebugZone = null;
+
+
     public void Init()
     {
         playerKeywordPanel = Managers.UI.MakeSceneUI<PlayerKeywordPanelController>(null,"PlayerKeywordPanel");
@@ -34,6 +52,7 @@ public class KeywordManager
 
     public void EnterDebugMod() 
     {
+        curDebugZone.OnEnterDebugMod();
         foreach(var entity in curSceneEntity)
         {
             entity.EnterDebugMod();
@@ -43,8 +62,10 @@ public class KeywordManager
             effect.EnterDebugMod();
         }
     }
+    
     public void ExitDebugMod()
     {
+        curDebugZone.OnExitDebugMod();
         foreach(var entity in curSceneEntity)
         {
             entity.ExitDebugMod();
@@ -54,8 +75,13 @@ public class KeywordManager
             effect.ExitDebugMod();
         }
     }
+    public void SetDebugZone(DebugZone zone)
+    {
+        curDebugZone = zone;
+    }
     public void EnterKeywordMod(KeywordEntity keywordEntity) 
     {
+        keywordEntity.OpenKeywordSlot();
         Managers.Game.SetStateKeywordMod();
         curKeywordEntity = keywordEntity;
         playerKeywordPanel.Open();
@@ -71,6 +97,7 @@ public class KeywordManager
         curKeywordEntity.CloseKeywordSlot();
         curKeywordEntity.DecisionKeyword();
     }
+
     public void AddDebugEffectController(DebugModEffectController debugModEffectController) 
     {
         debugModEffectControllers.Add(debugModEffectController);
@@ -108,6 +135,7 @@ public class KeywordManager
         debugModEffectControllers.Clear();
         curPlayerKeywords.Clear();
         curSceneEntity.Clear();
+        curDebugZone = null;
     }
     IEnumerator UpdateKeywordLayoutco()
     {
