@@ -4,62 +4,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-
-public class KeyMappingController : MonoBehaviour
+public enum KEY_TYPE
 {
-    public KeyCode exitKey = KeyCode.Escape;
-    public KeyCode debugmodKey = KeyCode.G;
-    public KeyCode interactionKey = KeyCode.F;
-    public KeyCode talkKey = KeyCode.X;
-    public KeyCode skipKey = KeyCode.X;
-    
-    public void ChangeKey(KeyCode changeKey, KeyCode keyCode)
+    EXIT_KEY,
+    DEBUGMOD_KEY,
+    INTERACTION_KEY,
+    TALK_KEY,
+    SKIP_KEY
+}
+
+public class KeyMappingController
+{
+    private Dictionary<KEY_TYPE, KeyCode> keyMap = new Dictionary<KEY_TYPE, KeyCode>()
     {
-        if(changeKey == interactionKey)
-        {
-            ChangeInteractionKey(keyCode);
-        }
-        else if (changeKey == debugmodKey)
-        {
-            ChangeDebugmodKey(keyCode);
-        }
-        else if (changeKey == talkKey)
-        {
-            ChangeTalkKey(keyCode);
-        }
-        else if (changeKey == skipKey)
-        {
-            ChangeSkipKey(keyCode);   
-        }
-        else if (changeKey == exitKey)
-        {
-            ChangeExitKey(keyCode);
-        }
+        {KEY_TYPE.EXIT_KEY, KeyCode.Escape},
+        {KEY_TYPE.DEBUGMOD_KEY, KeyCode.G},
+        {KEY_TYPE.INTERACTION_KEY, KeyCode.F},
+        {KEY_TYPE.TALK_KEY, KeyCode.X},
+        {KEY_TYPE.SKIP_KEY, KeyCode.X},
+    };
+
+    public KeyCode ReturnKey(KEY_TYPE keyType)
+    {
+        return keyMap[keyType];
     }
 
-
-    public void ChangeInteractionKey(KeyCode keyCode)
+    public void ChangeKey(KEY_TYPE keyType, KeyCode keyCode)
     {
-        interactionKey = keyCode;
-    }
-
-    public void ChangeDebugmodKey(KeyCode keyCode)
-    {
-        debugmodKey = keyCode;
-    }
-
-    public void ChangeTalkKey(KeyCode keyCode)
-    {
-        talkKey = keyCode;
-    }
-
-    public void ChangeSkipKey(KeyCode keyCode)
-    {
-        skipKey = keyCode;
-    }
-
-    private void ChangeExitKey(KeyCode keyCode)
-    {
-        exitKey = keyCode;
+        keyMap[keyType] = keyCode;
     }
 }

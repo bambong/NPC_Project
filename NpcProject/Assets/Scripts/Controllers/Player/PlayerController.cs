@@ -32,11 +32,9 @@ public class PlayerController : MonoBehaviour
     private PlayerStateController playerStateController;
 
     public KeywordEntity CurKeywordInteraction { get => interactionDetecter.CurKeywordIteraction; }
-    public Cinemachine.CinemachineBrain brain;
+
     private void Awake()
     {
-        brain = Camera.main.GetComponent<Cinemachine.CinemachineBrain>();
-
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
         glitchEffectController = Managers.UI.MakeSceneUI<GlitchEffectController>(null,"GlitchEffect");
@@ -44,7 +42,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        
         rotater.rotation = Camera.main.transform.rotation;
         playerStateController.Update();
     }
@@ -118,13 +115,12 @@ public class PlayerController : MonoBehaviour
         var ver = Input.GetAxis("Vertical");
         if(hor != 0 || ver != 0)
         {
-            
             playerStateController.ChangeState(PlayerMove.Instance);
         }
     }
     public bool InteractionInputCheck() 
     {
-        if(Input.GetKeyDown(Managers.Game.Key.interactionKey))
+        if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.INTERACTION_KEY)))
         {
             interactionDetecter.Interaction();
             return true;
@@ -138,24 +134,52 @@ public class PlayerController : MonoBehaviour
             return false;
         }
 
-        if (Input.GetKeyDown(Managers.Game.Key.debugmodKey))
+        if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.DEBUGMOD_KEY)))
         {
             if (Managers.Game.IsDebugMod) 
             {
                 ExitDebugMod();
             }
-            else
+            else 
             {
                 EnterDebugMod();
             }
-           return true;    
+            return true;
         }
         return false;
     }
 
-    public void DebugModeMouseInputCheck() 
+    public void EnterDebugMod()
     {
-        if(!Managers.Game.IsDebugMod) 
+        Debug.Log("SetState Debug");
+        ClearMoveAnim();
+        Managers.Game.SetStateDebugMod();
+        glitchEffectController.OnGlitch();
+        interactionDetecter.SwitchDebugMod(true);
+    }
+    public void ExitDebugMod()
+    {
+        Debug.Log("SetState Normal");
+        SetStateIdle();
+        glitchEffectController.OffGlitch();
+        Managers.Game.SetStateNormal();
+        interactionDetecter.SwitchDebugMod(false);
+    }
+    public void ClearMoveAnim()
+    {
+        AnimIdleEnter();
+        rigid.velocity = Vector3.zero;
+    }
+    public void KeywordModInputCheck()
+    {
+        if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.EXIT_KEY)))
+        {
+            Managers.Keyword.ExitKeywordMod();
+        }
+    }
+    public void DebugModeMouseInputCheck()
+    {
+        if(!Managers.Game.IsDebugMod)
         {
             return;
         }
@@ -176,38 +200,6 @@ public class PlayerController : MonoBehaviour
                 Managers.Keyword.EnterKeywordMod(entity);
             }
         }
-    
-    }
-
-    public void EnterDebugMod() 
-    {
-        Debug.Log("SetState Debug");
-        ClearMoveAnim();
-        Managers.Game.SetStateDebugMod();
-        glitchEffectController.OnGlitch();
-        interactionDetecter.SwitchDebugMod(true);
-    }
-    public void ExitDebugMod() 
-    {
-        Debug.Log("SetState Normal");
-        SetStateIdle();
-        glitchEffectController.OffGlitch();
-        Managers.Game.SetStateNormal();
-        interactionDetecter.SwitchDebugMod(false);
-    }
-    public void ClearMoveAnim() 
-    {
-        AnimIdleEnter();
-        rigid.velocity = Vector3.zero;
-    }
-
-    public void KeywordModInputCheck()
-    {
-        if(Input.GetKeyDown(Managers.Game.Key.exitKey))
-        {
-            Managers.Keyword.ExitKeywordMod();
-        }
-
     }
     #endregion
 
