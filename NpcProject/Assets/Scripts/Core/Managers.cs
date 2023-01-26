@@ -5,8 +5,8 @@ using UnityEngine;
 public class Managers : MonoBehaviour
 {
 
-    static Managers instance; // À¯ÀÏ¼ºÀÌ º¸ÀåµÈ´Ù
-    static Managers Instance { get { Init(); return instance; } } // À¯ÀÏÇÑ ¸Å´ÏÀú¸¦ °®°í¿Â´Ù
+    static Managers instance; // ï¿½ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È´ï¿½
+    static Managers Instance { get { Init(); return instance; } } // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½
     
     #region CoreManager
     private PoolManager pool = new PoolManager();
@@ -18,6 +18,7 @@ public class Managers : MonoBehaviour
     private CameraManager cam = new CameraManager();
     private KeywordManager keyword = new KeywordManager();
     private SoundManager sound = new SoundManager();
+    private TimeManager time = new TimeManager();
 
     public static KeywordManager Keyword { get => Instance.keyword; }
     public static CameraManager Camera { get => Instance.cam; }
@@ -28,6 +29,7 @@ public class Managers : MonoBehaviour
     public static UIManager UI { get => Instance.ui; }
     public static TalkManager Talk { get => Instance.talk; }
     public static SoundManager Sound { get => Instance.sound; }
+    public static TimeManager Time { get => Instance.time; }
     #endregion
 
     void Start()

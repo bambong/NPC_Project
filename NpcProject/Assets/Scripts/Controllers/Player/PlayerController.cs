@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
 
         var moveVec = new Vector3(hor,0,ver).normalized;
         var pos = transform.position;
-        var speed = moveSpeed * Time.fixedDeltaTime;
+        var speed = moveSpeed * Time.fixedUnscaledDeltaTime;
 
         moveVec = Quaternion.Euler(new Vector3(0,rotater.rotation.eulerAngles.y,0)) * moveVec;
 
@@ -122,6 +122,7 @@ public class PlayerController : MonoBehaviour
     {
         if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.INTERACTION_KEY)))
         {
+            rigid.velocity = Vector3.zero;
             interactionDetecter.Interaction();
             return true;
         }
