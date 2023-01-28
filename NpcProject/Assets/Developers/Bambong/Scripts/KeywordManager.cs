@@ -74,6 +74,7 @@ public class KeywordManager
         {
             effect.ExitDebugMod();
         }
+        Managers.Game.SetStateNormal();
     }
     public void SetDebugZone(DebugZone zone)
     {

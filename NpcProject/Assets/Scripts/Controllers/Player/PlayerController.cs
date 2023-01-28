@@ -28,14 +28,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Rigidbody rigid;
 
-    private GlitchEffectController glitchEffectController;
+    private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
 
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
-        glitchEffectController = Managers.UI.MakeSceneUI<GlitchEffectController>(null,"GlitchEffect");
+        glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null,"GlitchEffect");
     }
 
     void Update()
@@ -150,19 +150,21 @@ public class PlayerController : MonoBehaviour
 
     public void EnterDebugMod()
     {
-        Debug.Log("SetState Debug");
-        ClearMoveAnim();
+        SetstateStop();
         Managers.Game.SetStateDebugMod();
-        glitchEffectController.OnGlitch();
+        glitchEffectController.EnterDebugMod(() => 
+        {
+            SetStateDebugMod();
+        });
         interactionDetecter.SwitchDebugMod(true);
     }
     public void ExitDebugMod()
     {
-        Debug.Log("SetState Normal");
-        SetStateIdle();
-        glitchEffectController.OffGlitch();
-        Managers.Game.SetStateNormal();
-        interactionDetecter.SwitchDebugMod(false);
+        SetstateStop();
+        glitchEffectController.ExitDebugMod(() => {
+            interactionDetecter.SwitchDebugMod(false);
+            SetStateIdle();
+        });
     }
     public void ClearMoveAnim()
     {

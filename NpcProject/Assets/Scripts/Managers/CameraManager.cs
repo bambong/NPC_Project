@@ -74,6 +74,7 @@ public class CameraManager
             curCamInfo.cam.Follow = curCamInfo.target;
             curCamInfo.cam.LookAt = curCamInfo.target;
         }
+        curCamInfo.cam.LookAt = null;
     }
     public bool EnterSwitchCamera(CameraSwitchEvent switchEvent) 
     {
