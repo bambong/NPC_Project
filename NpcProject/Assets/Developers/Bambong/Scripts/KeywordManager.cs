@@ -27,8 +27,8 @@ public class KeywordManager
     public PlayerKeywordPanelController PlayerKeywordPanel { get => playerKeywordPanel;}
     public KeywordEntity CurKeywordEntity { get => curKeywordEntity; }
     public bool IsDebugZoneIn { get => curDebugZone != null; }
+    public DebugZone CurDebugZone { get => curDebugZone;  }
 
-    private List<KeywordController> curPlayerKeywords = new List<KeywordController>();
     private List<KeywordEntity> curSceneEntity = new List<KeywordEntity>();
     private List<DebugModEffectController> debugModEffectControllers = new List<DebugModEffectController>();
     private GraphicRaycaster graphicRaycaster;
@@ -103,26 +103,19 @@ public class KeywordManager
     {
         debugModEffectControllers.Add(debugModEffectController);
     }
-    public bool AddKeywordToPlayer(KeywordController keywordController) 
+    public void MakeKeywordToDebugZone(DebugZone zone,string name) 
     {
-        if(curPlayerKeywords.Contains(keywordController)) 
-        {
-            return false;
-        }
+        var keyword = Managers.UI.MakeSubItem<KeywordController>(null,name);
+        Managers.Keyword.AddKeywordToDebugZone(zone,keyword);
+    }
+
+    public bool AddKeywordToDebugZone(DebugZone zone,KeywordController keywordController) 
+    {
+        playerKeywordPanel.AddKeyword(zone,keywordController);
         UpdateKeywordLayout();
-        curPlayerKeywords.Add(keywordController);
-        playerKeywordPanel.AddKeyword(keywordController);
         return true;
     }
-    public bool RemoveKeywordToPlayer(KeywordController keywordController) 
-    {
-        if(!curPlayerKeywords.Contains(keywordController))
-        {
-            return false;
-        }
-        curPlayerKeywords.Remove(keywordController);
-        return true;
-    }
+
     public void SetKeyWord(KeywordController keywordController)
     {
         keywordController.ResetKeyword();
@@ -131,10 +124,13 @@ public class KeywordManager
     {
         Managers.Scene.CurrentScene.StartCoroutine(UpdateKeywordLayoutco());
     }
+    public void RegisterDebugZone(DebugZone zone) 
+    {
+        playerKeywordPanel.RegisterDebugZone(zone);
+    }
     public void Clear()
     {
         debugModEffectControllers.Clear();
-        curPlayerKeywords.Clear();
         curSceneEntity.Clear();
         curDebugZone = null;
     }

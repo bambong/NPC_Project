@@ -5,16 +5,44 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public enum KeywordActionType 
+{
+    OnUpdate,
+    OneShot
+}
+
+public class KeywordAction 
+{
+    private Action<KeywordEntity> action;
+    private KeywordActionType actiontype;
+
+    public Action<KeywordEntity> Action { get => action; }
+    public KeywordActionType ActionType { get => actiontype;  }
+
+    public KeywordAction(Action<KeywordEntity> action,KeywordActionType actiontype) 
+    {
+        this.action = action;
+        this.actiontype = actiontype;
+    }
+
+}
+
+
+
 public class KeywordEntity : MonoBehaviour
 {
     [SerializeField]
     private int keywordSlot = 1;
-   
-    private Dictionary<string, Action<KeywordEntity>> keywrodOverrideTable = new Dictionary<string, Action<KeywordEntity>>();
+
+    [SerializeField]
+    private OutlineEffect outlineEffect;
+
+    private static Dictionary<string,KeywordAction> keywrodOverrideTable = new Dictionary<string,KeywordAction>();
     private List<KeywordFrameController> keywordSlotUI = new List<KeywordFrameController>();
     private List<KeywordWorldSlotUIController> keywordSlotWorldUI = new List<KeywordWorldSlotUIController>();
 
     private Action<KeywordEntity> updateAction = null;
+    private Action<KeywordEntity> oneShotAction = null;
     private Collider col;
     private Transform keywordSlotLayout;
     private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
@@ -37,7 +65,6 @@ public class KeywordEntity : MonoBehaviour
     {
         var slot = Managers.UI.MakeSubItem<KeywordFrameController>(keywordSlotLayout, "KeywordSlotUI");
         keywordSlotUI.Add(slot);
-       // slot.SetScale(Vector3.one);
     }
     private void CreateKeywordWorldSlotUI() 
     {
@@ -47,10 +74,12 @@ public class KeywordEntity : MonoBehaviour
     public virtual void EnterDebugMod()
     {
         OpenWorldSlotUI();
+        outlineEffect.OutLineGo.SetActive(true);
     }
     public virtual void ExitDebugMod() 
     {
         CloseWorldSlotUI();
+        outlineEffect.OutLineGo.SetActive(false);
     }
 
     public void CloseWorldSlotUI() 
@@ -82,11 +111,28 @@ public class KeywordEntity : MonoBehaviour
             slot.Close();
         }
     }
-
-    public void AddAction(Action<KeywordEntity> action) 
+    public void AddOverrideTable(string id,KeywordAction action) 
     {
-        updateAction -= action;
-        updateAction += action;
+        if(keywrodOverrideTable.ContainsKey(id)) 
+        {
+            return;
+        }
+        keywrodOverrideTable.Add(id,action);
+    }
+    public void AddAction(KeywordAction action) 
+    {
+        switch(action.ActionType) 
+        {
+            case KeywordActionType.OnUpdate:
+                updateAction -= action.Action;
+                updateAction += action.Action;
+                break;
+
+            case KeywordActionType.OneShot:
+                oneShotAction -= action.Action;
+                oneShotAction += action.Action;
+                break;
+        }
     }
     public void DecisionKeyword()
     {
@@ -99,12 +145,22 @@ public class KeywordEntity : MonoBehaviour
                 continue;
             }
             keywordSlotWorldUI[i].SetSlotUI(keywordSlotUI[i].KeywordController.Image.color, keywordSlotUI[i].KeywordController.KeywordText.text);
-            AddAction(keywordSlotUI[i].KeywordController.KeywordUpdateAction);
+
+            var keywordId = keywordSlotUI[i].KeywordController.KewordId;
+            KeywordAction keywordAciton;
+            if(!keywrodOverrideTable.TryGetValue(keywordId,out keywordAciton)) 
+            {
+                keywordAciton = new KeywordAction(keywordSlotUI[i].KeywordController.KeywordAction,keywordSlotUI[i].KeywordController.KeywordType);
+            }
+            
+            AddAction(keywordAciton);
         }
+        oneShotAction?.Invoke(this);
     }
 
     public void ClearAction() 
     {
+        oneShotAction = null;
         updateAction = null;
     }
     public void Update() 

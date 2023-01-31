@@ -5,26 +5,37 @@ using UnityEngine.UI;
 
 public class PlayerKeywordPanelController : UI_Base
 {
-    [SerializeReference]
-    private HorizontalLayoutGroup layout;
-
-    public HorizontalLayoutGroup Layout { get => layout; }
+    [SerializeField]
+    private Transform layoutParent;
+    private Dictionary<DebugZone,HorizontalLayoutGroup> debugZoneLayout = new Dictionary<DebugZone,HorizontalLayoutGroup>();
+    public HorizontalLayoutGroup Layout { get => debugZoneLayout[Managers.Keyword.CurDebugZone]; }
 
     public override void Init()
     {
         
     }
-    public void AddKeyword(KeywordController keywordController) 
+    public void RegisterDebugZone(DebugZone debugZone)
     {
-        keywordController.transform.parent = layout.transform;
+        if(!debugZoneLayout.ContainsKey(debugZone)) 
+        {
+            var layout = Managers.Resource.Instantiate("Layout",layoutParent);
+            debugZoneLayout.Add(debugZone,layout.GetComponent<HorizontalLayoutGroup>());
+        }
+    }
+
+    public void AddKeyword(DebugZone zone, KeywordController keywordController) 
+    {
+        keywordController.transform.parent = debugZoneLayout[zone].transform;
     }
 
     public void Open() 
     {
         gameObject.SetActive(true);
+        Layout.gameObject.SetActive(true);
     }
     public void Close() 
     {
         gameObject.SetActive(false);
+        Layout.gameObject.SetActive(false);
     }
 }

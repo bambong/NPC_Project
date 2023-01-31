@@ -25,7 +25,6 @@ public class KeywordFrameController : UI_Base
         }
         hasKeyword = true;
         this.keywordController = keywordController;
-        keywordController.EnterKeywordAction(Managers.Keyword.CurKeywordEntity);
         keywordController.transform.parent = transform;
         keywordController.SetToKeywordFrame(rectTransform.position);
         return true;
@@ -37,7 +36,6 @@ public class KeywordFrameController : UI_Base
         {
             return;
         }
-        keywordController.ExitKeywordAction(Managers.Keyword.CurKeywordEntity);
         hasKeyword = false;
         keywordController = null;
     }

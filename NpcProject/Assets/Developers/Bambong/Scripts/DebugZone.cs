@@ -10,6 +10,25 @@ public class DebugZone : MonoBehaviour
     [SerializeField]
     private DebugModCameraController debugModCameraController;
 
+    [SerializeField]
+    private GameObject[] keywords;
+
+
+    private void Awake()
+    {
+        Managers.Keyword.RegisterDebugZone(this);
+        MakeKeyword();
+    }
+
+    private void MakeKeyword() 
+    { 
+        for(int i = 0; i< keywords.Length; ++i) 
+        {
+            Managers.Keyword.MakeKeywordToDebugZone(this,keywords[i].name);
+        }
+    
+    }
+
     public void OnEnterDebugMod() 
     {
         debugModCameraController.EnterDebugMod();

@@ -38,17 +38,7 @@ public class GameScene : BaseScene
         StartBgm();
         Invoke("StartTalk", 2f);
         Managers.Talk.LoadTalkData(gamaSceneTalkData);
-        var rotatekeyword  = Managers.UI.MakeSubItem<KeywordController>(null,"RotateKeyword");
-        Managers.Keyword.AddKeywordToPlayer(rotatekeyword);
-        rotatekeyword.transform.localScale = Vector3.one;
 
-        var zmovekeyword = Managers.UI.MakeSubItem<KeywordController>(null,"ZMoveKeyword");
-        Managers.Keyword.AddKeywordToPlayer(zmovekeyword);
-        zmovekeyword.transform.localScale = Vector3.one;
-       
-        var xmovekeyword = Managers.UI.MakeSubItem<KeywordController>(null,"XMoveKeyword");
-        Managers.Keyword.AddKeywordToPlayer(xmovekeyword);
-        xmovekeyword.transform.localScale = Vector3.one;
     }
     public void StartTalk()
     {
