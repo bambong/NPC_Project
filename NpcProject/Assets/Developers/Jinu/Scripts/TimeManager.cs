@@ -3,28 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using Spine.Unity;
 
-public class TimeManager
+public enum TIME_TYPE
 {
-    public float CoroutineTimeScale()
+    PLAYER,
+    PROJECTILE
+}
+
+public class TimeManager
+{    
+    Dictionary<TIME_TYPE, float> timeScale = new Dictionary<TIME_TYPE, float>()
     {
-        return Time.timeScale;
-    }
+        {TIME_TYPE.PLAYER, 1.0f},
+        {TIME_TYPE.PROJECTILE, 1.0f}
+    };
 
     public void SetTimeScale(float timeScale)
     {
         Time.timeScale = timeScale;
     }
 
-    public float GetTimeScale(bool isChange)
+    public void SetTimeScale(TIME_TYPE type, float scale)
     {
-        if(isChange == true)
-        {
-            return Time.timeScale;
-        }
-        else
-        {
-            return Time.unscaledDeltaTime;
-        }
+        timeScale[type] = scale;
     }
 
+    public float GetDeltaTime(float scale)
+    {
+        return Time.deltaTime * scale;
+    }
+
+    public float GetDeltaTime(TIME_TYPE type)
+    {
+        return Time.deltaTime * timeScale[type];
+    }
 }
