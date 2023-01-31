@@ -5,6 +5,9 @@ using UnityEngine;
 public class SoundManager
 {
     private SoundController soundController;
+    private BgmZone currentBgmZone;
+
+    
 
     public void Init()
     {
@@ -12,14 +15,24 @@ public class SoundManager
         soundPrefab.name = "@SoundSource";
         soundController = soundPrefab.GetComponent<SoundController>();
     }
-    
-    public void AskBgmPlay(AudioClip bgmClip, float volume)
+
+    public void AskAreaName(string areaName)
     {
-        soundController.BgmPlay(bgmClip, volume);
+        soundController.GetAreaName(areaName);
+    }
+    
+    public void AskBgmPlay(GameScene.BgmType[] bgm)
+    {
+        soundController.BgmPlay(bgm); 
     }
 
     public void AskSfxPlay(AudioClip sfxClip)
     {
         soundController.SfxPlay(sfxClip);
+    }
+
+    public void CheckBgmZone(BgmZone zone)
+    {
+        currentBgmZone = zone;
     }
 }

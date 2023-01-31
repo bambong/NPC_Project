@@ -50,6 +50,7 @@ public class GameScene : BaseScene
         Managers.Keyword.AddKeywordToPlayer(xmovekeyword);
         xmovekeyword.transform.localScale = Vector3.one;
     }
+
     public void StartTalk()
     {
         var talk = Managers.Talk.GetTalkEvent(startTalk);
@@ -60,7 +61,7 @@ public class GameScene : BaseScene
     
     public void StartBgm()
     {
-        Managers.Sound.AskBgmPlay(bgm[0].file, bgm[0].volume);
+        Managers.Sound.AskBgmPlay(bgm);
     }
 
     public override void Clear()

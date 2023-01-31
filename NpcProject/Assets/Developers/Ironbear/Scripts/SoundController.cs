@@ -9,12 +9,32 @@ public class SoundController : MonoBehaviour
     [SerializeField]
     private AudioSource sfxSource;
 
-    public void BgmPlay(AudioClip bgmClip = null, float volume = 0)
-    {        
-        bgmSource.clip = bgmClip;
-        bgmSource.volume = volume;
-        bgmSource.loop = true;
-        bgmSource.Play();
+    private string currentBgmName = null;
+    private string area = null;
+
+    public void GetAreaName(string areaName)
+    {
+        area = areaName;
+    }
+
+    public void BgmPlay(GameScene.BgmType[] bgm)
+    {
+        if (currentBgmName.Equals(area))
+        {
+            return;
+        }
+
+        for (int i = 0; i < bgm.Length; i++)
+        {
+            if (bgm[i].name.Equals(area))
+            {
+                bgmSource.clip = bgm[0].file;
+                bgmSource.volume = bgm[0].volume;
+                bgmSource.loop = true;
+                bgmSource.Play();
+                currentBgmName = area;
+            }
+        }
     }
 
     public void SfxPlay(AudioClip sfxClip = null)
