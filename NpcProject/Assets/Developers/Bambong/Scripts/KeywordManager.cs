@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro.EditorUtilities;
+using UnityEditor.Scripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -86,7 +87,7 @@ public class KeywordManager
         Managers.Game.SetStateKeywordMod();
         curKeywordEntity = keywordEntity;
         playerKeywordPanel.Open();
-        UpdateKeywordLayout();
+        UpdateKeywordLayout(curDebugZone);
         keywordEntity.OpenKeywordSlot();
     }
   
@@ -112,7 +113,7 @@ public class KeywordManager
     public bool AddKeywordToDebugZone(DebugZone zone,KeywordController keywordController) 
     {
         playerKeywordPanel.AddKeyword(zone,keywordController);
-        UpdateKeywordLayout();
+        UpdateKeywordLayout(zone);
         return true;
     }
 
@@ -120,9 +121,9 @@ public class KeywordManager
     {
         keywordController.ResetKeyword();
     }
-    public void UpdateKeywordLayout()
+    public void UpdateKeywordLayout(DebugZone zone)
     {
-        Managers.Scene.CurrentScene.StartCoroutine(UpdateKeywordLayoutco());
+        Managers.Scene.CurrentScene.StartCoroutine(UpdateKeywordLayoutco(zone));
     }
     public void RegisterDebugZone(DebugZone zone) 
     {
@@ -134,11 +135,12 @@ public class KeywordManager
         curSceneEntity.Clear();
         curDebugZone = null;
     }
-    IEnumerator UpdateKeywordLayoutco()
+    IEnumerator UpdateKeywordLayoutco(DebugZone zone)
     {
-        playerKeywordPanel.Layout.enabled = true;
+        
+        playerKeywordPanel.GetDebugLayout(zone).enabled = true;
         yield return null;
-        playerKeywordPanel.Layout.enabled = false;
+        playerKeywordPanel.GetDebugLayout(zone).enabled = false;
     }
 
 }

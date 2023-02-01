@@ -9,11 +9,12 @@ public class PlayerKeywordPanelController : UI_Base
     private Transform layoutParent;
     private Dictionary<DebugZone,HorizontalLayoutGroup> debugZoneLayout = new Dictionary<DebugZone,HorizontalLayoutGroup>();
     public HorizontalLayoutGroup Layout { get => debugZoneLayout[Managers.Keyword.CurDebugZone]; }
-
+    
     public override void Init()
     {
         
     }
+   
     public void RegisterDebugZone(DebugZone debugZone)
     {
         if(!debugZoneLayout.ContainsKey(debugZone)) 
@@ -22,6 +23,8 @@ public class PlayerKeywordPanelController : UI_Base
             debugZoneLayout.Add(debugZone,layout.GetComponent<HorizontalLayoutGroup>());
         }
     }
+
+    public HorizontalLayoutGroup GetDebugLayout(DebugZone zone) => debugZoneLayout[zone];
 
     public void AddKeyword(DebugZone zone, KeywordController keywordController) 
     {
