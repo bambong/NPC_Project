@@ -14,6 +14,9 @@ public class DebugModCameraUiController : UI_Base
     [SerializeField]
     private Button downBtn;
 
+    [SerializeField]
+    private Sprite normalState;
+
     private bool isDebugMod = false;
 
 
@@ -40,11 +43,72 @@ public class DebugModCameraUiController : UI_Base
 
     public void ButtonPressdCheckUpdate(float hor, float ver)
     {
-        //colors.pressedColor 사용
+        if (hor > 0)
+        {
+            rightBtn.image.sprite = rightBtn.spriteState.pressedSprite;
+        }
+        if (hor < 0)
+        {
+            leftBtn.image.sprite = leftBtn.spriteState.pressedSprite;
+        }
+        if (ver > 0)
+        {
+            upBtn.image.sprite = upBtn.spriteState.pressedSprite;
+        }
+        if (ver < 0)
+        {
+            downBtn.image.sprite = downBtn.spriteState.pressedSprite;
+        }
+
+        if (hor == 0)
+        {
+            rightBtn.image.sprite = normalState;
+            leftBtn.image.sprite = normalState;
+        }
+        if (ver == 0)
+        {
+            upBtn.image.sprite = normalState;
+            downBtn.image.sprite = normalState;
+        }
     }
 
-    public void ButtonDisabledCheckUpdate(float hor, float ver)
+    public void ButtonDisabledCheckUpdate(Vector3 pos)
     {
-        //interactable=false 사용, clampX.x 어쩌고 값 사용~?
+        if (pos.x > 20)
+        {
+            rightBtn.interactable = false;
+        }
+        if (rightBtn.interactable == false && pos.x <= 20)
+        {
+            rightBtn.interactable = true;
+        }
+
+        if (pos.x < -14)
+        {
+            leftBtn.interactable = false;
+        }
+        if (leftBtn.interactable == false && pos.x >= -14)
+        {
+            leftBtn.interactable = true;
+        }
+
+        if (pos.y > 55)
+        {
+            upBtn.interactable = false;
+        }
+        if (upBtn.interactable == false && pos.y <= 55)
+        {
+            upBtn.interactable = true;
+        }
+
+        if (pos.y < 32.5)
+        {
+            downBtn.interactable = false;
+        }
+        if (downBtn.interactable == false && pos.y >= 32.5)
+        {
+            downBtn.interactable = true;
+        }
+
     }
 }

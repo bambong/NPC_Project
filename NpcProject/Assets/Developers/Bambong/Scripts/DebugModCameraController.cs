@@ -60,7 +60,7 @@ public class DebugModCameraController : MonoBehaviour
             transform.position = pos;
 
             debugModCameraUiController.ButtonPressdCheckUpdate(hor, ver);
-            debugModCameraUiController.ButtonDisabledCheckUpdate(hor, ver);
+            debugModCameraUiController.ButtonDisabledCheckUpdate(pos);
 
             yield return null;
         
