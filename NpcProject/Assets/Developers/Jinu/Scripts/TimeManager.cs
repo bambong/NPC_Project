@@ -36,4 +36,17 @@ public class TimeManager
     {
         return Time.deltaTime * timeScale[type];
     }
+
+    public float GetFixedDeltaTime(TIME_TYPE type)
+    {
+        return Time.fixedDeltaTime * timeScale[type];
+    }
+
+    public void TimeScaleClear(float scale)
+    {
+        foreach (var temp in timeScale) 
+        {
+            timeScale[temp.Key] = scale;
+        }
+    }
 }
