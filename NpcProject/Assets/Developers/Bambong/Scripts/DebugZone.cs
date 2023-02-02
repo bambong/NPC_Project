@@ -9,8 +9,6 @@ public class DebugZone : MonoBehaviour
 {
     [SerializeField]
     private DebugModCameraController debugModCameraController;
-    [SerializeField]
-    private DebugModCameraUiController debugModCameraUiController;
 
     [SerializeField]
     private GameObject[] keywords;
@@ -34,12 +32,10 @@ public class DebugZone : MonoBehaviour
     public void OnEnterDebugMod() 
     {
         debugModCameraController.EnterDebugMod();
-        debugModCameraUiController.EnterDebugMode();
     }
     public void OnExitDebugMod() 
     {
         debugModCameraController.ExitDebugMod();
-        debugModCameraUiController.ExitDebugMode();
         Managers.Camera.SwitchPrevCamera();
     }
 
