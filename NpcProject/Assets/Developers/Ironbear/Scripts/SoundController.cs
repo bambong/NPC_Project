@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class SoundController : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class SoundController : MonoBehaviour
     private AudioSource bgmSource;
     [SerializeField]
     private AudioSource sfxSource;
+    [SerializeField]
+    private AudioMixer audioMixer;
 
     private string currentBgmName = null;
     private string area = null;
@@ -19,26 +22,28 @@ public class SoundController : MonoBehaviour
 
     public void BgmPlay(GameScene.BgmType[] bgm)
     {
-        if (currentBgmName.Equals(area))
+        if (currentBgmName.Equals(name))
         {
             return;
         }
 
-        for (int i = 0; i < bgm.Length; i++)
+        for (int i = 0; i < bgm.Length; ++i)
         {
-            if (bgm[i].name.Equals(area))
+            if (bgm[i].name.Equals(name))
             {
-                bgmSource.clip = bgm[0].file;
-                bgmSource.volume = bgm[0].volume;
+                bgmSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Bgm")[0];
+                bgmSource.clip = bgm[i].file;
+                bgmSource.volume = bgm[i].volume;
                 bgmSource.loop = true;
                 bgmSource.Play();
-                currentBgmName = area;
+                currentBgmName = name;
             }
         }
     }
 
     public void SfxPlay(AudioClip sfxClip = null)
     {
+        sfxSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Sfx")[0];
         sfxSource.clip = sfxClip;
         sfxSource.PlayOneShot(sfxClip);
     }

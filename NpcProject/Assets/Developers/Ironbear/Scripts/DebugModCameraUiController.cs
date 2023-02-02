@@ -5,7 +5,17 @@ using UnityEngine.UI;
 
 public class DebugModCameraUiController : UI_Base
 {
+    [SerializeField]
+    private Button rightBtn;
+    [SerializeField]
+    private Button leftBtn;
+    [SerializeField]
+    private Button upBtn;
+    [SerializeField]
+    private Button downBtn;
+
     private bool isDebugMod = false;
+
 
     public override void Init()
     {
@@ -13,35 +23,28 @@ public class DebugModCameraUiController : UI_Base
 
     public bool EnterDebugMode()
     {
-        Managers.Game.SetStateDebugMod();
         if (isDebugMod)
         {
             return false;
         }
         isDebugMod = true;
-        Debug.Log("create UI");
-        CreateCameraUi();
+        gameObject.SetActive(true);
         return true;
-    }
-
-    private void CreateCameraUi()
-    {
-        
-        var arrowPrefab = Managers.Resource.Instantiate($"UI/ArrowsCanvas");
-        arrowPrefab.name = "@Arrows";
     }
 
     public void ExitDebugMode()
     {
         isDebugMod = false;
+        gameObject.SetActive(false);
     }
 
-    private IEnumerator MoveCheckUpdate()
+    public void ButtonPressdCheckUpdate(float hor, float ver)
     {
-        while (isDebugMod)
-        {
-            //이동 제한 및 ui 없애고 보여주는 기능
-        }
-        yield return null;
+        //colors.pressedColor 사용
+    }
+
+    public void ButtonDisabledCheckUpdate(float hor, float ver)
+    {
+        //interactable=false 사용, clampX.x 어쩌고 값 사용~?
     }
 }
