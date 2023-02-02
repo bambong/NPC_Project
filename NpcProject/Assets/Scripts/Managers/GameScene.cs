@@ -4,6 +4,17 @@ using UnityEngine;
 using Cinemachine;
 public class GameScene : BaseScene
 {
+    [System.Serializable]
+    public struct BgmType
+    {
+        public string name;
+        public AudioClip file;
+        public float volume;
+    }
+
+    [SerializeField]
+    private BgmType[] bgm;
+
     [SerializeField]
     private Vector3 playerSpawnSpot;
     [SerializeField]
@@ -24,19 +35,10 @@ public class GameScene : BaseScene
         player.transform.position = playerSpawnSpot;
         Managers.Camera.InitCamera(new CameraInfo(vircam,player.transform));
 
+        StartBgm();
         Invoke("StartTalk", 2f);
         Managers.Talk.LoadTalkData(gamaSceneTalkData);
-        var rotatekeyword  = Managers.UI.MakeSubItem<KeywordController>(null,"RotateKeyword");
-        Managers.Keyword.AddKeywordToPlayer(rotatekeyword);
-        rotatekeyword.transform.localScale = Vector3.one;
 
-        var zmovekeyword = Managers.UI.MakeSubItem<KeywordController>(null,"ZMoveKeyword");
-        Managers.Keyword.AddKeywordToPlayer(zmovekeyword);
-        zmovekeyword.transform.localScale = Vector3.one;
-       
-        var xmovekeyword = Managers.UI.MakeSubItem<KeywordController>(null,"XMoveKeyword");
-        Managers.Keyword.AddKeywordToPlayer(xmovekeyword);
-        xmovekeyword.transform.localScale = Vector3.one;
     }
     public void StartTalk()
     {
@@ -46,6 +48,11 @@ public class GameScene : BaseScene
         Managers.Talk.PlayCurrentSceneTalk(startTalk);
     }
     
+    public void StartBgm()
+    {
+        Managers.Sound.AskBgmPlay(bgm[0].file, bgm[0].volume);
+    }
+
     public override void Clear()
     {
         

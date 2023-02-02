@@ -4,16 +4,22 @@ using UnityEngine;
 
 public class SoundController : MonoBehaviour
 {
-    public GameObject Go => throw new System.NotImplementedException();
-
     [SerializeField]
-    private AudioClip[] bgmList;
+    private AudioSource bgmSource;
     [SerializeField]
-    private AudioSource bgmAudiosource;
+    private AudioSource sfxSource;
 
+    public void BgmPlay(AudioClip bgmClip = null, float volume = 0)
+    {        
+        bgmSource.clip = bgmClip;
+        bgmSource.volume = volume;
+        bgmSource.loop = true;
+        bgmSource.Play();
+    }
 
-    private void Awake()
+    public void SfxPlay(AudioClip sfxClip = null)
     {
-            Managers.Sound.BgmPlay(bgmAudiosource, bgmList[0]);   
+        sfxSource.clip = sfxClip;
+        sfxSource.PlayOneShot(sfxClip);
     }
 }

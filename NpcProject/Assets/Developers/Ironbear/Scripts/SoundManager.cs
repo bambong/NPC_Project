@@ -4,23 +4,22 @@ using UnityEngine;
 
 public class SoundManager
 {
+    private SoundController soundController;
+
     public void Init()
     {
+        var soundPrefab = Managers.Resource.Instantiate("SoundSource");
+        soundPrefab.name = "@SoundSource";
+        soundController = soundPrefab.GetComponent<SoundController>();
+    }
+    
+    public void AskBgmPlay(AudioClip bgmClip, float volume)
+    {
+        soundController.BgmPlay(bgmClip, volume);
     }
 
-    public void BgmPlay(AudioSource bgmSound, AudioClip bgmfile)
+    public void AskSfxPlay(AudioClip sfxClip)
     {
-        bgmSound.clip = bgmfile;
-        bgmSound.loop = true;
-        bgmSound.volume = 0.05f;
-        bgmSound.Play();
-    }
-
-    public void SfxPlay(string sfxName, AudioClip sfxfile = null)
-    {
-        GameObject go = new GameObject(sfxName + "Sound");
-        AudioSource audioSource = go.AddComponent<AudioSource>();
-        audioSource.clip = sfxfile;
-        audioSource.Play();
+        soundController.SfxPlay(sfxClip);
     }
 }

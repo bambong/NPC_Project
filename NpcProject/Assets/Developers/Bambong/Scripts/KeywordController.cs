@@ -6,11 +6,11 @@ using UnityEngine.UI;
 using TMPro;
 
 
-public class KeywordController : UI_Base, IDragHandler, IEndDragHandler,IBeginDragHandler ,IPointerExitHandler ,IPointerEnterHandler
+public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler, IPointerExitHandler, IPointerEnterHandler
 {
     private readonly float START_END_ANIM_TIME = 0.2f;
     private readonly float FOCUSING_SCALE = 1.05f;
-    private readonly float KEYWORD_FRAME_MOVE_TIME= 0.1f;
+    private readonly float KEYWORD_FRAME_MOVE_TIME = 0.1f;
     private readonly string KEYWORD_FRAME_TAG = "KeywordFrame";
     private readonly string KEYWORD_PLAYER_FRAME_TAG = "KeywordPlayerFrame";
 
@@ -21,13 +21,22 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler,IBeginDr
     [SerializeField]
     private TextMeshProUGUI keywordText;
 
+    [SerializeField]
+    private KeywordActionType keywordType;
+
     private int prevSibilintIndex;
-    private Transform startParent; 
+    private Transform startParent;
     private Vector3 startDragPoint;
     private KeywordFrameController curFrame;
-
     public TextMeshProUGUI KeywordText { get => keywordText;}
     public Image Image { get => image; }
+    public string KewordId { get; private set; }
+    public KeywordActionType KeywordType { get => keywordType; }
+
+    private void Awake()
+    {
+         KewordId = GetType().ToString();
+    }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -71,17 +80,13 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler,IBeginDr
                     var keywordFrame = raycasts[i].gameObject.GetComponent<KeywordFrameController>();
                     if(keywordFrame.SetKeyWord(this)) 
                     {
-                        Managers.Keyword.RemoveKeywordToPlayer(this);
                         curFrame = keywordFrame;
                         return;
                     }
                 }
                 else if(raycasts[i].gameObject.CompareTag(KEYWORD_PLAYER_FRAME_TAG))
                 {
-                    if(!Managers.Keyword.AddKeywordToPlayer(this)) 
-                    {
-                        ResetKeyword();
-                    }
+                    Managers.Keyword.AddKeywordToDebugZone(Managers.Keyword.CurDebugZone,this);
                     ClearCurFrame();
                     return;
                 }
@@ -123,15 +128,10 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler,IBeginDr
         transform.SetSiblingIndex(prevSibilintIndex);
         rectTransform.DOMove(startDragPoint,START_END_ANIM_TIME,true).SetUpdate(true);
     }
-    public virtual void KeywordUpdateAction(KeywordEntity entity) 
+    public virtual void KeywordAction(KeywordEntity entity) 
     {
     }
-    public virtual void EnterKeywordAction(KeywordEntity entity)
-    {
-    }
-    public virtual void ExitKeywordAction(KeywordEntity entity)
-    {
-    }
+
     public override void Init()
     {
     }
