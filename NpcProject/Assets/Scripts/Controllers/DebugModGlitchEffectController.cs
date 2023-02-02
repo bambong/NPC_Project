@@ -5,8 +5,9 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using URPGlitch.Runtime.DigitalGlitch;
 using UnityEngine.Rendering.Universal;
+using System;
 
-public class GlitchEffectController : UI_Base
+public class DebugModGlitchEffectController : UI_Base
 {
     public GameObject effect;
     [SerializeField]
@@ -18,16 +19,16 @@ public class GlitchEffectController : UI_Base
 
     public bool IsPlaying { get => isPlaying;}
 
-    public void OnGlitch()
+    public void EnterDebugMod(Action completeAction = null)
     {
         volume.weight = 0;
         effect.SetActive(true);
-        StartCoroutine(GlitchOnEffect());
+        StartCoroutine(GlitchOnEffect(completeAction));
     }
 
-    public void OffGlitch()
+    public void ExitDebugMod(Action completeAction = null)
     {
-        StartCoroutine(GlitchOffEffect());
+        StartCoroutine(GlitchOffEffect(completeAction));
     }
 
     public override void Init()
@@ -45,7 +46,7 @@ public class GlitchEffectController : UI_Base
         }
         Managers.UI.SetCanvas(gameObject);
     }
-    IEnumerator GlitchOnEffect()
+    IEnumerator GlitchOnEffect(Action completeAction)
     {
         isPlaying = true;
         yield return null;
@@ -75,10 +76,11 @@ public class GlitchEffectController : UI_Base
         intensity.value = 0;
         glitch.intensity = intensity;
         isPlaying = false;
+        completeAction?.Invoke();
 
     }
 
-    IEnumerator GlitchOffEffect()
+    IEnumerator GlitchOffEffect(Action completeAction)
     {
         isPlaying = true;
         var intensity = glitch.intensity;
@@ -110,6 +112,7 @@ public class GlitchEffectController : UI_Base
         volume.weight = 0;
         effect.SetActive(false);
         isPlaying = false;
+        completeAction?.Invoke();
     }
 
 }

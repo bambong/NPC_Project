@@ -4,18 +4,12 @@ using UnityEngine;
 
 public class ServerrackController : KeywordEntity
 {
-    [SerializeField]
-    private OutlineEffect outlineEffect;
-
-
-    public override void EnterDebugMod()
+    private void Awake()
     {
-        base.EnterDebugMod();
-        outlineEffect.OutLineGo.SetActive(true);
+        AddOverrideTable(typeof(XRotateKeyword).ToString(),new KeywordAction(XrotateKeywordAction,KeywordActionType.OneShot));
     }
-    public override void ExitDebugMod()
+    private void XrotateKeywordAction(KeywordEntity entity)
     {
-        base.ExitDebugMod();
-        outlineEffect.OutLineGo.SetActive(false);
+        Debug.Log("오버라이딩 성공");
     }
 }

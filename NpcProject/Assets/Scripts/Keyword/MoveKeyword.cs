@@ -13,22 +13,13 @@ public class MoveKeyword : KeywordController
     {
         dir *= -1;
     }
-    public override void KeywordUpdateAction(KeywordEntity entity)
+    public override void KeywordAction(KeywordEntity entity)
     {
         if(!entity.ColisionCheckMove( moveVector *dir* moveSpeed)) 
         {
             Turn();
         }
     }
-    public override void EnterKeywordAction(KeywordEntity entity)
-    {
-        dir = 1;
-        //entity.transform.DORotate(new Vector3(0,360,0),2f).SetLoops(-1,LoopType.Incremental).SetEase(Ease.Linear);
-    }
-    public override void ExitKeywordAction(KeywordEntity entity)
-    {
-        dir = 1;
-        //entity.transform.DOKill();
-    }
+
     
 }
