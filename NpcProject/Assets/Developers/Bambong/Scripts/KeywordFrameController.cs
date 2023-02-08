@@ -16,7 +16,6 @@ public class KeywordFrameController : UI_Base
     private KeywordController keywordController;
     public bool HasKeyword { get => hasKeyword; }
     public KeywordController KeywordController { get => keywordController; }
-
     public bool SetKeyWord(KeywordController keywordController) 
     {
         if (hasKeyword) 
@@ -32,11 +31,14 @@ public class KeywordFrameController : UI_Base
 
     public void ResetKeywordFrame() 
     {
-        if(keywordController == null) 
+        if(hasKeyword == false) 
         {
             return;
         }
         hasKeyword = false;
+    }
+    public void OnRemove()
+    {
         keywordController = null;
     }
 

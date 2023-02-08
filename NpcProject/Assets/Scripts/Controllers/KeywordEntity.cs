@@ -15,14 +15,20 @@ public class KeywordAction
 {
     private Action<KeywordEntity> action;
     private KeywordActionType actiontype;
-
+    private Action<KeywordEntity> onRemove;
     public Action<KeywordEntity> Action { get => action; }
+    public Action<KeywordEntity> OnRemove { get => onRemove; }
     public KeywordActionType ActionType { get => actiontype;  }
 
-    public KeywordAction(Action<KeywordEntity> action,KeywordActionType actiontype) 
+    public KeywordAction(Action<KeywordEntity> action,KeywordActionType actiontype,Action<KeywordEntity> onRemove = null) 
     {
         this.action = action;
         this.actiontype = actiontype;
+        this.onRemove = onRemove;
+    }
+    public void AddOnRemoveEvent(Action<KeywordEntity> onRemove) 
+    {
+        this.onRemove += onRemove;
     }
 
 }
@@ -38,11 +44,13 @@ public class KeywordEntity : MonoBehaviour
     private OutlineEffect outlineEffect;
 
     private static Dictionary<string,KeywordAction> keywrodOverrideTable = new Dictionary<string,KeywordAction>();
+    private Dictionary<KeywordController,Action<KeywordEntity>> currentRegisterKeyword = new Dictionary<KeywordController,Action<KeywordEntity>>();
     private List<KeywordFrameController> keywordSlotUI = new List<KeywordFrameController>();
     private List<KeywordWorldSlotUIController> keywordSlotWorldUI = new List<KeywordWorldSlotUIController>();
 
     private Action<KeywordEntity> updateAction = null;
     private Action<KeywordEntity> oneShotAction = null;
+    private Action<KeywordEntity> onRemove = null;
     private Collider col;
     private Transform keywordSlotLayout;
     private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
@@ -50,7 +58,9 @@ public class KeywordEntity : MonoBehaviour
     {
         Managers.Keyword.AddSceneEntity(this);
         keywordSlotLayout = Managers.Resource.Instantiate("UI/KeywordSlotLayout",Managers.Keyword.PlayerKeywordPanel.transform).transform;
-        keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(transform,"KeywordWorldSlotLayout");
+        keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null,"KeywordWorldSlotLayout");
+        keywordWorldSlotLayout.RegisterEntity(transform);
+        //keywordWorldSlotLayout.transform.SetParent(transform,false);
         for(int i = 0; i < keywordSlot; ++i) 
         {
             CreateKeywordFrame();
@@ -139,21 +149,45 @@ public class KeywordEntity : MonoBehaviour
         ClearAction();
         for(int i = 0; i< keywordSlotUI.Count; ++i)
         {
-            if (keywordSlotUI[i].KeywordController == null)
+            var keywordController = keywordSlotUI[i].KeywordController;
+            KeywordAction keywordAciton;
+            if(!keywordSlotUI[i].HasKeyword)
             {
                 keywordSlotWorldUI[i].ResetSlotUI();
+                
+                if(keywordController == null) 
+                {
+                    continue;
+                }
+
+                if(!keywrodOverrideTable.TryGetValue(keywordController.KewordId,out keywordAciton))
+                {
+                    keywordController?.OnRemove(this);
+                }
+                else 
+                {
+                    keywordAciton?.OnRemove(this);
+                }
+                
+                keywordSlotUI[i].OnRemove();
+                
                 continue;
             }
-            keywordSlotWorldUI[i].SetSlotUI(keywordSlotUI[i].KeywordController.Image.color, keywordSlotUI[i].KeywordController.KeywordText.text);
+           
+            keywordSlotWorldUI[i].SetSlotUI(keywordController.Image.color,keywordController.KeywordText.text);
 
-            var keywordId = keywordSlotUI[i].KeywordController.KewordId;
-            KeywordAction keywordAciton;
-            if(!keywrodOverrideTable.TryGetValue(keywordId,out keywordAciton)) 
-            {
-                keywordAciton = new KeywordAction(keywordSlotUI[i].KeywordController.KeywordAction,keywordSlotUI[i].KeywordController.KeywordType);
-            }
+            var keywordId = keywordController.KewordId;
             
-            AddAction(keywordAciton);
+            if(!keywrodOverrideTable.TryGetValue(keywordId,out keywordAciton))
+            {
+                keywordAciton = new KeywordAction(keywordController.KeywordAction,keywordController.KeywordType,keywordController.OnRemove);
+            }
+            if(keywordAciton.OnRemove == null) 
+            {
+                keywordAciton.AddOnRemoveEvent(keywordController.OnRemove);
+            }
+
+            AddAction(keywordAciton);         
         }
         oneShotAction?.Invoke(this);
     }

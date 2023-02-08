@@ -131,6 +131,9 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     public virtual void KeywordAction(KeywordEntity entity) 
     {
     }
+    public virtual void OnRemove(KeywordEntity entity)
+    { 
+    }
 
     public override void Init()
     {
