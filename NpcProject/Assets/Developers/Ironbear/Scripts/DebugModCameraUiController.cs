@@ -17,6 +17,11 @@ public class DebugModCameraUiController : UI_Base
     [SerializeField]
     private Sprite normalState;
 
+    [SerializeField]
+    private Vector2 clampX;
+    [SerializeField]
+    private Vector2 clampY;
+
     private bool isDebugMod = false;
 
 
@@ -74,7 +79,7 @@ public class DebugModCameraUiController : UI_Base
 
     public void ButtonDisabledCheckUpdate(Vector3 pos)
     {
-        if (pos.x > 20)
+        if (pos.x > clampX.y)
         {
             rightBtn.interactable = false;
         }
@@ -83,7 +88,7 @@ public class DebugModCameraUiController : UI_Base
             rightBtn.interactable = true;
         }
 
-        if (pos.x < -14)
+        if (pos.x < clampX.x)
         {
             leftBtn.interactable = false;
         }
@@ -92,7 +97,7 @@ public class DebugModCameraUiController : UI_Base
             leftBtn.interactable = true;
         }
 
-        if (pos.y > 55)
+        if (pos.y > clampY.y)
         {
             upBtn.interactable = false;
         }
@@ -101,7 +106,7 @@ public class DebugModCameraUiController : UI_Base
             upBtn.interactable = true;
         }
 
-        if (pos.y < 32.5)
+        if (pos.y < clampY.x)
         {
             downBtn.interactable = false;
         }
