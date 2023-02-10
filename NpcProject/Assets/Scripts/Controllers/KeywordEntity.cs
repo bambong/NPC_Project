@@ -43,8 +43,8 @@ public class KeywordEntity : MonoBehaviour
     [SerializeField]
     private OutlineEffect outlineEffect;
 
-    private static Dictionary<string,KeywordAction> keywrodOverrideTable = new Dictionary<string,KeywordAction>();
-    private Dictionary<KeywordController,Action<KeywordEntity>> currentRegisterKeyword = new Dictionary<KeywordController,Action<KeywordEntity>>();
+    private Dictionary<string,KeywordAction> keywrodOverrideTable = new Dictionary<string,KeywordAction>();
+    private Dictionary<KeywordController,KeywordAction> currentRegisterKeyword = new Dictionary<KeywordController,KeywordAction>();
     private List<KeywordFrameController> keywordSlotUI = new List<KeywordFrameController>();
     private List<KeywordWorldSlotUIController> keywordSlotWorldUI = new List<KeywordWorldSlotUIController>();
 
@@ -129,7 +129,7 @@ public class KeywordEntity : MonoBehaviour
         }
         keywrodOverrideTable.Add(id,action);
     }
-    public void AddAction(KeywordAction action) 
+    public void AddAction(KeywordController controller,KeywordAction action) 
     {
         switch(action.ActionType) 
         {
@@ -143,10 +143,10 @@ public class KeywordEntity : MonoBehaviour
                 oneShotAction += action.Action;
                 break;
         }
+        currentRegisterKeyword[controller] = action;
     }
     public void DecisionKeyword()
     {
-        ClearAction();
         for(int i = 0; i< keywordSlotUI.Count; ++i)
         {
             var keywordController = keywordSlotUI[i].KeywordController;
@@ -169,8 +169,13 @@ public class KeywordEntity : MonoBehaviour
                     keywordAciton?.OnRemove(this);
                 }
                 
+                currentRegisterKeyword.Remove(keywordController);
                 keywordSlotUI[i].OnRemove();
-                
+                continue;
+            }
+
+            if(currentRegisterKeyword.ContainsKey(keywordController)) 
+            {
                 continue;
             }
            
@@ -187,7 +192,7 @@ public class KeywordEntity : MonoBehaviour
                 keywordAciton.AddOnRemoveEvent(keywordController.OnRemove);
             }
 
-            AddAction(keywordAciton);         
+            AddAction(keywordController,keywordAciton);         
         }
         oneShotAction?.Invoke(this);
     }
