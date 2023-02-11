@@ -49,8 +49,7 @@ public class KeywordEntity : MonoBehaviour
     private List<KeywordWorldSlotUIController> keywordSlotWorldUI = new List<KeywordWorldSlotUIController>();
 
     private Action<KeywordEntity> updateAction = null;
-    private Action<KeywordEntity> oneShotAction = null;
-    private Action<KeywordEntity> onRemove = null;
+
     private Collider col;
     private Transform keywordSlotLayout;
     private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
@@ -141,7 +140,7 @@ public class KeywordEntity : MonoBehaviour
                 break;
 
             case KeywordActionType.OneShot:
-                oneShotAction += action.Action;
+                action.Action?.Invoke(this);
                 break;
         }
         currentRegisterKeyword[controller] = action;
@@ -153,6 +152,14 @@ public class KeywordEntity : MonoBehaviour
             Debug.LogError("포함되지않은 키워드 삭제 시도");
             return;
         }
+        // 다른 슬롯에 들어가 있는지 확인
+        for(int i = 0; i < keywordSlotUI.Count; ++i) 
+        {
+            if(keywordSlotUI[i].CurFrameInnerKeyword == keywordController)
+            {
+                return;
+            }
+        }
         var action = currentRegisterKeyword[keywordController];
 
         switch(action.ActionType)
@@ -162,9 +169,9 @@ public class KeywordEntity : MonoBehaviour
                 break;
 
             case KeywordActionType.OneShot:
-                oneShotAction -= action.Action;
                 break;
         }
+        currentRegisterKeyword[keywordController]?.OnRemove(this);
         currentRegisterKeyword.Remove(keywordController);
     }
     public void DecisionKeyword()
@@ -172,60 +179,56 @@ public class KeywordEntity : MonoBehaviour
         // 키워드 프레임을 순회
         for(int i = 0; i< keywordSlotUI.Count; ++i)  
         {
-            var keywordController = keywordSlotUI[i].KeywordController;
+            // 현재 프레임 안에 들어있는 키워드
+            var curFrameInnerKeyword = keywordSlotUI[i].CurFrameInnerKeyword;
+            // 기존 프레임에 등록되어 있던 키워드
+            var frameRegisterKeyword = keywordSlotUI[i].RegisterKeyword;
             KeywordAction keywordAciton;
-            // 비어있는 프레임이라면 
-            if(!keywordSlotUI[i].HasKeyword)
+            //기존 키워드가 제거 혹은 변경됬다면 
+            if(keywordSlotUI[i].IsKeywordRemoved)
             {
-                // 원래 들어있던 키워드가 없는 프레임이라면 다시 순회 
-                if(keywordController == null)
-                {
-                    continue;
-                }
+                //키워드 Remove 이벤트 발생 
+                //Entity 에 등록된 키워드 리스트에서 키워드 제거
+                RemoveAction(frameRegisterKeyword);
+            }
+            //현재 FrameInnerKeyword 를 프레임에 등록
+            keywordSlotUI[i].OnDecisionKeyword();
 
-                // 월드상에 보여주는 프레임도 리셋
+            // 프레임안에 키워드가 없다면 
+            if(curFrameInnerKeyword == null)
+            {
+                //월드 키워드 UI 를 리셋하고 다시 순회 
                 keywordSlotWorldUI[i].ResetSlotUI();
-                // 
-                if(!keywrodOverrideTable.TryGetValue(keywordController.KewordId,out keywordAciton))
-                {
-                    keywordController?.OnRemove(this);
-                }
-                else 
-                {
-                    keywordAciton?.OnRemove(this);
-                }
-                currentRegisterKeyword[keywordController]?.OnRemove(this);
-                RemoveAction(keywordController);
-                keywordSlotUI[i].OnRemove();
                 continue;
             }
+            //월드 키워드 UI 설정  
+            keywordSlotWorldUI[i].SetSlotUI(curFrameInnerKeyword.Image.color,curFrameInnerKeyword.KeywordText.text);
 
-            if(currentRegisterKeyword.ContainsKey(keywordController)) 
+            // 이미 등록된 키워드라면 다시 순회  
+            if(currentRegisterKeyword.ContainsKey(curFrameInnerKeyword)) 
             {
                 continue;
             }
-           
-            keywordSlotWorldUI[i].SetSlotUI(keywordController.Image.color,keywordController.KeywordText.text);
 
-            var keywordId = keywordController.KewordId;
-            
+            var keywordId = curFrameInnerKeyword.KewordId;
+            // 키워드가 오버라이딩 되어 있는지 확인하고 키워드 액션에 할당
             if(!keywrodOverrideTable.TryGetValue(keywordId,out keywordAciton))
             {
-                keywordAciton = new KeywordAction(keywordController.KeywordAction,keywordController.KeywordType,keywordController.OnRemove);
+                keywordAciton = new KeywordAction(curFrameInnerKeyword.KeywordAction,curFrameInnerKeyword.KeywordType,curFrameInnerKeyword.OnRemove);
             }
+            // Entity 가  OnRemove 이벤트 핸들러를 오버라이딩 안했다면 Default 핸들러를 넣어준다 
             if(keywordAciton.OnRemove == null) 
             {
-                keywordAciton.AddOnRemoveEvent(keywordController.OnRemove);
+                keywordAciton.AddOnRemoveEvent(curFrameInnerKeyword.OnRemove);
             }
-
-            AddAction(keywordController,keywordAciton);         
+            //OneShot Action 의 경우 실행 
+            //키워드 액션을 추가
+            AddAction(curFrameInnerKeyword,keywordAciton);         
         }
-        oneShotAction?.Invoke(this);
     }
 
     public void ClearAction() 
     {
-        oneShotAction = null;
         updateAction = null;
     }
     public void Update() 

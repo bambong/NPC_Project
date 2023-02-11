@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PairKeyword : KeywordController
 {
-    public static List<PairKeyword> PairKeywords;
+    public static List<PairKeyword> PairKeywords = new List<PairKeyword>();
 
     public KeywordEntity MasterEntity { get; protected set; }
 
@@ -20,7 +20,7 @@ public class PairKeyword : KeywordController
         }
         return null;
     }
-    private void Awake()
+    public override void Init()
     {
         PairKeywords.Add(this);
     }

@@ -38,6 +38,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
          KewordId = GetType().ToString();
     }
 
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         if(eventData.button != PointerEventData.InputButton.Left) 
@@ -80,7 +81,11 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
                     var keywordFrame = raycasts[i].gameObject.GetComponent<KeywordFrameController>();
                     if(keywordFrame.SetKeyWord(this)) 
                     {
-                        curFrame = keywordFrame;
+                        if(curFrame != keywordFrame)
+                        {
+                            ClearCurFrame();
+                            curFrame = keywordFrame;
+                        }
                         return;
                     }
                 }
@@ -88,6 +93,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
                 {
                     Managers.Keyword.AddKeywordToDebugZone(Managers.Keyword.CurDebugZone,this);
                     ClearCurFrame();
+                    curFrame = null;
                     return;
                 }
             }
