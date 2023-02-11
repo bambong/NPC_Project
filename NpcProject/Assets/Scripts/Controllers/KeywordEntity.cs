@@ -54,6 +54,9 @@ public class KeywordEntity : MonoBehaviour
     private Collider col;
     private Transform keywordSlotLayout;
     private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
+
+    public Dictionary<KeywordController,KeywordAction> CurrentRegisterKeyword { get => currentRegisterKeyword; }
+
     private void Start()
     {
         Managers.Keyword.AddSceneEntity(this);
