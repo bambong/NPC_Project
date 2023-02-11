@@ -134,32 +134,55 @@ public class KeywordEntity : MonoBehaviour
         switch(action.ActionType) 
         {
             case KeywordActionType.OnUpdate:
-                updateAction -= action.Action;
                 updateAction += action.Action;
                 break;
 
             case KeywordActionType.OneShot:
-                oneShotAction -= action.Action;
                 oneShotAction += action.Action;
                 break;
         }
         currentRegisterKeyword[controller] = action;
     }
+    public void RemoveAction(KeywordController keywordController)
+    {
+        if(!currentRegisterKeyword.ContainsKey(keywordController))
+        {
+            Debug.LogError("포함되지않은 키워드 삭제 시도");
+            return;
+        }
+        var action = currentRegisterKeyword[keywordController];
+
+        switch(action.ActionType)
+        {
+            case KeywordActionType.OnUpdate:
+                updateAction -= action.Action;
+                break;
+
+            case KeywordActionType.OneShot:
+                oneShotAction -= action.Action;
+                break;
+        }
+        currentRegisterKeyword.Remove(keywordController);
+    }
     public void DecisionKeyword()
     {
-        for(int i = 0; i< keywordSlotUI.Count; ++i)
+        // 키워드 프레임을 순회
+        for(int i = 0; i< keywordSlotUI.Count; ++i)  
         {
             var keywordController = keywordSlotUI[i].KeywordController;
             KeywordAction keywordAciton;
+            // 비어있는 프레임이라면 
             if(!keywordSlotUI[i].HasKeyword)
             {
-                keywordSlotWorldUI[i].ResetSlotUI();
-                
-                if(keywordController == null) 
+                // 원래 들어있던 키워드가 없는 프레임이라면 다시 순회 
+                if(keywordController == null)
                 {
                     continue;
                 }
 
+                // 월드상에 보여주는 프레임도 리셋
+                keywordSlotWorldUI[i].ResetSlotUI();
+                // 
                 if(!keywrodOverrideTable.TryGetValue(keywordController.KewordId,out keywordAciton))
                 {
                     keywordController?.OnRemove(this);
@@ -168,8 +191,8 @@ public class KeywordEntity : MonoBehaviour
                 {
                     keywordAciton?.OnRemove(this);
                 }
-                
-                currentRegisterKeyword.Remove(keywordController);
+                currentRegisterKeyword[keywordController]?.OnRemove(this);
+                RemoveAction(keywordController);
                 keywordSlotUI[i].OnRemove();
                 continue;
             }
