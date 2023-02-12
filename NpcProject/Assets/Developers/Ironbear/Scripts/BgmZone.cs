@@ -26,7 +26,7 @@ public class BgmZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Managers.Sound.CheckBgmZone(this);
-            Managers.Sound.AskAreaName(areaName);
+            //여기서?!!?!?
             //bgm 볼륨 서서히 키우기(?)
         }
     }

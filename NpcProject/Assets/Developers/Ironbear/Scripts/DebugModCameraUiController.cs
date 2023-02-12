@@ -6,21 +6,20 @@ using UnityEngine.UI;
 public class DebugModCameraUiController : UI_Base
 {
     [SerializeField]
-    private Button rightBtn;
+    private Image rightBtn;
     [SerializeField]
-    private Button leftBtn;
+    private Image leftBtn;
     [SerializeField]
-    private Button upBtn;
+    private Image upBtn;
     [SerializeField]
-    private Button downBtn;
+    private Image downBtn;
 
     [SerializeField]
-    private Sprite normalState;
-
+    private Sprite normal;
     [SerializeField]
-    private Vector2 clampX;
+    private Sprite Pressed;
     [SerializeField]
-    private Vector2 clampY;
+    private Sprite Disabled;
 
     private bool isDebugMod = false;
 
@@ -46,74 +45,75 @@ public class DebugModCameraUiController : UI_Base
         gameObject.SetActive(false);
     }
 
-    public void ButtonPressdCheckUpdate(float hor, float ver)
+
+    public void ButtonStateCheckUpdate(Vector3 pos, Vector2 clampX, Vector2 clampY, float hor, float ver)
     {
-        if (hor > 0)
+        if (pos.x >= clampX.y)
         {
-            rightBtn.image.sprite = rightBtn.spriteState.pressedSprite;
+            rightBtn.sprite = Disabled;
         }
-        if (hor < 0)
+        else
         {
-            leftBtn.image.sprite = leftBtn.spriteState.pressedSprite;
-        }
-        if (ver > 0)
-        {
-            upBtn.image.sprite = upBtn.spriteState.pressedSprite;
-        }
-        if (ver < 0)
-        {
-            downBtn.image.sprite = downBtn.spriteState.pressedSprite;
-        }
-
-        if (hor == 0)
-        {
-            rightBtn.image.sprite = normalState;
-            leftBtn.image.sprite = normalState;
-        }
-        if (ver == 0)
-        {
-            upBtn.image.sprite = normalState;
-            downBtn.image.sprite = normalState;
-        }
-    }
-
-    public void ButtonDisabledCheckUpdate(Vector3 pos)
-    {
-        if (pos.x > clampX.y)
-        {
-            rightBtn.interactable = false;
-        }
-        if (rightBtn.interactable == false && pos.x <= 20)
-        {
-            rightBtn.interactable = true;
+            rightBtn.sprite = normal;
+            if (hor > 0)
+            {
+                rightBtn.sprite = Pressed;
+            }
+            else if (hor == 0)
+            {
+                rightBtn.sprite = normal;
+            }
         }
 
-        if (pos.x < clampX.x)
+        if (pos.x <= clampX.x)
         {
-            leftBtn.interactable = false;
+            leftBtn.sprite = Disabled;
         }
-        if (leftBtn.interactable == false && pos.x >= -14)
+        else
         {
-            leftBtn.interactable = true;
-        }
-
-        if (pos.y > clampY.y)
-        {
-            upBtn.interactable = false;
-        }
-        if (upBtn.interactable == false && pos.y <= 55)
-        {
-            upBtn.interactable = true;
-        }
-
-        if (pos.y < clampY.x)
-        {
-            downBtn.interactable = false;
-        }
-        if (downBtn.interactable == false && pos.y >= 32.5)
-        {
-            downBtn.interactable = true;
+            leftBtn.sprite = normal;
+            if (hor < 0)
+            {
+                leftBtn.sprite = Pressed;
+            }
+            else if (hor == 0)
+            {
+                leftBtn.sprite = normal;
+            }
         }
 
+        if (pos.y >= clampY.y)
+        {
+            upBtn.sprite = Disabled;
+        }
+        else
+        {
+            upBtn.sprite = normal;
+            if (ver > 0)
+            {
+                upBtn.sprite = Pressed;
+            }
+            else if (ver == 0)
+            {
+                upBtn.sprite = normal;
+            }
+        }
+
+        if (pos.y <= clampY.x)
+        {
+            downBtn.sprite = Disabled;
+        }
+        else
+        {
+            downBtn.sprite = normal;
+            if (ver < 0)
+            {
+                downBtn.sprite = Pressed;
+            }
+            else if (ver == 0)
+            {
+                downBtn.sprite = normal;
+            }
+        }
     }
 }

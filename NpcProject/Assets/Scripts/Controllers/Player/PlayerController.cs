@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
 
+
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);

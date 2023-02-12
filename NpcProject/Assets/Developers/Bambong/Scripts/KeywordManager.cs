@@ -36,6 +36,9 @@ public class KeywordManager
 
     private DebugZone curDebugZone = null;
 
+    private DebugModCameraUiController debugModCameraUiController;
+
+
 
     public void Init()
     {
@@ -52,7 +55,7 @@ public class KeywordManager
     public void AddSceneEntity(KeywordEntity entity) => curSceneEntity.Add(entity);
 
     public void EnterDebugMod() 
-    {
+    {        
         curDebugZone.OnEnterDebugMod();
         foreach(var entity in curSceneEntity)
         {

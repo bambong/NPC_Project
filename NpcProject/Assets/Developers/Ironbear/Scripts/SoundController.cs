@@ -20,7 +20,7 @@ public class SoundController : MonoBehaviour
         area = areaName;
     }
 
-    public void BgmPlay(GameScene.BgmType[] bgm)
+    public void BgmPlay(BgmType[] bgm)
     {
         if (currentBgmName.Equals(name))
         {
