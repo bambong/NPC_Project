@@ -56,6 +56,10 @@ public class KeywordEntity : MonoBehaviour
 
     public Dictionary<KeywordController,KeywordAction> CurrentRegisterKeyword { get => currentRegisterKeyword; }
 
+    protected Transform transformTarget;
+
+    public Transform TransformTarget { get => transformTarget; }
+
     private void Start()
     {
         Managers.Keyword.AddSceneEntity(this);
@@ -246,14 +250,14 @@ public class KeywordEntity : MonoBehaviour
         {
             layer += (1 << (LayerMask.NameToLayer(name)));
         }
-
-        Physics.BoxCast(pos,col.bounds.extents,vec.normalized,out hit ,Quaternion.identity, col.bounds.extents.magnitude/2,layer);
+        var moveVec = vec * Time.deltaTime;
+        Physics.BoxCast(pos,col.bounds.extents,vec.normalized,out hit ,Quaternion.identity,moveVec.magnitude,layer);
         if(hit.collider != null && hit.collider != col) 
         {
             return false;
         }
 
-        pos += vec*Time.deltaTime;
+        pos += moveVec;
         transform.position = pos;
         return true;
 
