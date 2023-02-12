@@ -27,6 +27,18 @@ public class TimeManager
         timeScale[type] = scale;
     }
 
+    public float GetTime(bool isDelta)
+    {
+        if (isDelta == true)
+        {
+            return Time.deltaTime;
+        }
+        else
+        {
+            return Time.unscaledDeltaTime;
+        }
+    }
+
     public float GetDeltaTime(float scale)
     {
         return Time.deltaTime * scale;
