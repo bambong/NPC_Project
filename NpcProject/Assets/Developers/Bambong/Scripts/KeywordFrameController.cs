@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class KeywordFrameController : UI_Base
+public class KeywordFrameController : KeywordFrameBase
 {
     [SerializeField]
     private GameObject parentObj;
@@ -17,21 +17,22 @@ public class KeywordFrameController : UI_Base
     public bool IsKeywordRemoved { get { return (registerKeyword != null && curFrameInnerKeyword != registerKeyword); } }
 
     public KeywordController CurFrameInnerKeyword { get => curFrameInnerKeyword; }
-    public KeywordController RegisterKeyword { get => registerKeyword;  }
+    public KeywordController RegisterKeyword { get => registerKeyword; }
 
-    public bool SetKeyWord(KeywordController keywordController) 
+
+    public override bool IsAvailable{ get => curFrameInnerKeyword == null; }
+    public override void SetKeyWord(KeywordController keywordController) 
     {
-        this.curFrameInnerKeyword = keywordController;
+        curFrameInnerKeyword = keywordController;
         keywordController.transform.parent = transform;
         keywordController.SetToKeywordFrame(rectTransform.position);
-        return true;
     }
     public void OnDecisionKeyword() 
     {
         registerKeyword = curFrameInnerKeyword;
     }
 
-    public void ResetKeywordFrame() 
+    public override void ResetKeywordFrame() 
     {
         curFrameInnerKeyword = null;
     }

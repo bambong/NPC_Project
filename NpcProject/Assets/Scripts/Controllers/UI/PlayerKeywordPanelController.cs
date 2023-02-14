@@ -7,9 +7,13 @@ public class PlayerKeywordPanelController : UI_Base
 {
     [SerializeField]
     private Transform layoutParent;
+    [SerializeField]
+    private PlayerKeywordFrame playerKeywordFrame;
+
     private Dictionary<DebugZone,HorizontalLayoutGroup> debugZoneLayout = new Dictionary<DebugZone,HorizontalLayoutGroup>();
     public HorizontalLayoutGroup Layout { get => debugZoneLayout[Managers.Keyword.CurDebugZone]; }
-    
+    public PlayerKeywordFrame PlayerKeywordFrame { get => playerKeywordFrame;}
+
     public override void Init()
     {
         

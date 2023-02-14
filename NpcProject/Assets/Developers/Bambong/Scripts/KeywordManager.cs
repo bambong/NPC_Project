@@ -107,6 +107,7 @@ public class KeywordManager
     public void MakeKeywordToDebugZone(DebugZone zone,string name) 
     {
         var keyword = Managers.UI.MakeSubItem<KeywordController>(null,"KeywordPrefabs/" + name);
+        keyword.SetFrame(playerKeywordPanel.PlayerKeywordFrame);
         Managers.Keyword.AddKeywordToDebugZone(zone,keyword);
     }
 
