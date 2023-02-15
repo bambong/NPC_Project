@@ -249,14 +249,14 @@ public class KeywordEntity : MonoBehaviour
         {
             layer += (1 << (LayerMask.NameToLayer(name)));
         }
-        var moveVec = vec * Time.deltaTime;
-        Physics.BoxCast(pos,col.bounds.extents,vec.normalized,out hit ,Quaternion.identity,moveVec.magnitude,layer);
+      
+        Physics.BoxCast(pos,col.bounds.extents,vec.normalized,out hit ,Quaternion.identity, vec.magnitude,layer);
         if(hit.collider != null && hit.collider != col) 
         {
             return false;
         }
 
-        pos += moveVec;
+        pos += vec;
         KeywordTransformFactor.position = pos;
         return true;
 

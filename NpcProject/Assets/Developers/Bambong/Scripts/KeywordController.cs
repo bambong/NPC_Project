@@ -47,7 +47,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         }
         prevSibilintIndex = rectTransform.GetSiblingIndex();
         startParent = transform.parent;
-        transform.parent = Managers.Keyword.PlayerKeywordPanel.transform;
+        transform.SetParent(Managers.Keyword.PlayerKeywordPanel.transform);
 
         rectTransform.SetAsLastSibling();
         startDragPoint = rectTransform.position;
@@ -132,7 +132,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         {
             return;
         }
-        transform.parent = startParent;
+        transform.SetParent(startParent);
         transform.SetSiblingIndex(prevSibilintIndex);
         rectTransform.DOMove(startDragPoint,START_END_ANIM_TIME,true).SetUpdate(true);
     }

@@ -33,7 +33,7 @@ public class ApartKeyword : KeywordController
         var dir = entity.KeywordTransformFactor.position -target.KeywordTransformFactor.position;
         dir.y = 0;
 
-        entity.ColisionCheckMove(dir.normalized * speed);
+        entity.ColisionCheckMove(dir.normalized * speed * Managers.Time.GetDeltaTime(TIME_TYPE.PLAYER));
         
     }
     public override void OnRemove(KeywordEntity entity)

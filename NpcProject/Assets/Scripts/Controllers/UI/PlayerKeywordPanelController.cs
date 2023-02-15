@@ -32,7 +32,7 @@ public class PlayerKeywordPanelController : UI_Base
 
     public void AddKeyword(DebugZone zone, KeywordController keywordController) 
     {
-        keywordController.transform.parent = debugZoneLayout[zone].transform;
+        keywordController.transform.SetParent(debugZoneLayout[zone].transform);
     }
 
     public void Open() 

@@ -24,7 +24,7 @@ public class KeywordFrameController : KeywordFrameBase
     public override void SetKeyWord(KeywordController keywordController) 
     {
         curFrameInnerKeyword = keywordController;
-        keywordController.transform.parent = transform;
+        keywordController.transform.SetParent(transform);
         keywordController.SetToKeywordFrame(rectTransform.position);
     }
     public void OnDecisionKeyword() 

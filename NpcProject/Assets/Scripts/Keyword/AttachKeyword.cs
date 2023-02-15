@@ -38,7 +38,7 @@ public class AttachKeyword : KeywordController
         }
         else 
         {
-            entity.ColisionCheckMove(dir.normalized * speed);
+            entity.ColisionCheckMove(dir.normalized * speed * Managers.Time.GetDeltaTime(TIME_TYPE.PLAYER));
         }
     }
     public override void OnRemove(KeywordEntity entity)
