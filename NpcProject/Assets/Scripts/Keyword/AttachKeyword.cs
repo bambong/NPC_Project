@@ -8,7 +8,8 @@ public class AttachKeyword : KeywordController
     private float speed = 10f; 
     public override void KeywordAction(KeywordEntity entity)
     {
-
+        entity.ClearVelocity();
+        entity.SetGravity(false);
         PairKeyword pairKeyword = null;
         foreach(var keyword in entity.CurrentRegisterKeyword)
         {
@@ -29,11 +30,19 @@ public class AttachKeyword : KeywordController
         {
             return;
         }
-        var dir = target.transform.position - entity.transform.position;
-        entity.ColisionCheckMove(dir.normalized * speed);
+        var dir = target.KeywordTransformFactor.position - entity.KeywordTransformFactor.position;
+        dir.y = 0;
+        if(dir.magnitude < speed * Managers.Time.GetDeltaTime(TIME_TYPE.PLAYER)) 
+        {
+            entity.KeywordTransformFactor.position += dir;
+        }
+        else 
+        {
+            entity.ColisionCheckMove(dir.normalized * speed);
+        }
     }
     public override void OnRemove(KeywordEntity entity)
     {
-        
+        entity.SetGravity(true);
     }
 }

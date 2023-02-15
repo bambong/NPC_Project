@@ -4,16 +4,14 @@ using UnityEngine;
 using DG.Tweening;
 public class ScaleKeyword : KeywordController
 {
-    private Vector3 prevScale;
     public override void KeywordAction(KeywordEntity entity)
     {
-        var scale = entity.transform.localScale;
-        prevScale = scale;
+        var scale = entity.KeywordTransformFactor.localScale;
         scale *= 2;
-        entity.transform.localScale = scale;
+        entity.KeywordTransformFactor.DOScale(scale,1);
     }
     public override void OnRemove(KeywordEntity entity)
     {
-        entity.transform.DOScale(prevScale,1);
+        entity.KeywordTransformFactor.DOScale(Vector3.one,0.5f);
     }
 }

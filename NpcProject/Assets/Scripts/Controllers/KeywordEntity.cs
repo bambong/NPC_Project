@@ -49,16 +49,14 @@ public class KeywordEntity : MonoBehaviour
     private List<KeywordWorldSlotUIController> keywordSlotWorldUI = new List<KeywordWorldSlotUIController>();
 
     private Action<KeywordEntity> updateAction = null;
-
+    private Rigidbody rigidbody;
     private Collider col;
     private Transform keywordSlotLayout;
     private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
 
     public Dictionary<KeywordController,KeywordAction> CurrentRegisterKeyword { get => currentRegisterKeyword; }
 
-    protected Transform transformTarget;
-
-    public Transform TransformTarget { get => transformTarget; }
+    public virtual Transform KeywordTransformFactor { get => transform; }
 
     private void Start()
     {
@@ -74,9 +72,10 @@ public class KeywordEntity : MonoBehaviour
         }
 
         col = Util.GetOrAddComponent<Collider>(gameObject);
+        TryGetComponent<Rigidbody>(out rigidbody);
         keywordWorldSlotLayout.SortChild(2.1f);
     }
-
+   
     private void CreateKeywordFrame() 
     {
         var slot = Managers.UI.MakeSubItem<KeywordFrameController>(keywordSlotLayout, "KeywordSlotUI");
@@ -239,10 +238,10 @@ public class KeywordEntity : MonoBehaviour
     {
         updateAction?.Invoke(this);
     }
-
+    #region Keyword_Control
     public bool ColisionCheckMove(Vector3 vec)
     {
-        var pos = transform.position;
+        var pos = KeywordTransformFactor.position;
         
         RaycastHit hit;
         int layer = 1;
@@ -258,10 +257,20 @@ public class KeywordEntity : MonoBehaviour
         }
 
         pos += moveVec;
-        transform.position = pos;
+        KeywordTransformFactor.position = pos;
         return true;
 
     }
+    public void SetGravity(bool isOn) 
+    {
+        rigidbody.useGravity = isOn;
+    }
+    public void SetKinematic(bool isOn) 
+    {
+        rigidbody.isKinematic = isOn;
+    }
+    public void ClearVelocity()=> rigidbody.velocity = Vector3.zero;
+    #endregion
     public void Init() 
     {
         

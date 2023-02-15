@@ -15,21 +15,18 @@ public class MovePlatformController : KeywordEntity
     private MMFeedbacks onScaleFeedback;
 
     private Vector3 prevScale;
+    public override Transform KeywordTransformFactor => parent;
     private void Awake()
     {
         prevScale = parent.transform.localScale;
-        AddOverrideTable(typeof(ScaleKeyword).ToString(),new KeywordAction(OnScaleKeyword,KeywordActionType.OneShot,OnScaleKeywordRemove));
+        AddOverrideTable(typeof(ScaleKeyword).ToString(),new KeywordAction(OnScaleKeyword,KeywordActionType.OneShot,null));
     }
     public void OnScaleKeyword(KeywordEntity entity) 
     {
         onScaleFeedback.PlayFeedbacks();
         parent.DOScale(scaleDesire,1).SetEase(Ease.OutCirc);
     }
-    public void OnScaleKeywordRemove(KeywordEntity entity) 
-    {
-        parent.DOScale(prevScale,0.5f).SetEase(Ease.OutCirc);
 
-    }
 }
 
 
