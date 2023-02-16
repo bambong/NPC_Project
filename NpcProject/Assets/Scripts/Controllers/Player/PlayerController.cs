@@ -42,10 +42,16 @@ public class PlayerController : MonoBehaviour
 
     [Header("Player Step Climb")]
     [SerializeField]
-    private float stepHeight = 5.0f;
+    private float stepHeight = 1.0f;
     [SerializeField]
-    private float stepSmooth = 0.3f;
+    private float stepSmooth = 7f;
     private int stairLayer;
+    private bool isStepClimb;
+
+    [Header("Player Move")]
+    [SerializeField]
+    private bool isMove;
+    public bool IsMove {get { return isMove;}}
 
 
     private void Awake()
@@ -118,9 +124,13 @@ public class PlayerController : MonoBehaviour
         var pos = transform.position;
         var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
         var nextPos = pos + moveVec * (speed * 0.3f);
-
-        stepClimb();
         
+        if(stepClimb())
+        {
+            Debug.Log("응애");
+            return;
+        }
+
         if (isOnSlope)
         {
             moveVec = AdjustDirectionToSlope(moveVec);
@@ -133,16 +143,18 @@ public class PlayerController : MonoBehaviour
         }
 
         //
-        Debug.DrawRay(nextPos, Vector3.down * 4f, Color.red);
+        Debug.DrawRay(nextPos, Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red, 1.0f);
         //
-        if(Physics.Raycast(nextPos, Vector3.down, 15f))
+        if(!Physics.Raycast(nextPos, Vector3.down, box.size.y * 0.5f + stepHeight))
         {
-            rigid.velocity = moveVec * speed + gravity;
+            isMove = false;
+            SetStateIdle();
+            rigid.velocity = Vector3.zero;
         }
         else
         {
-            SetStateIdle();
-            rigid.velocity = Vector3.zero;
+            isMove = true;
+            rigid.velocity = moveVec * speed + gravity;
         }
     }
 
@@ -161,7 +173,6 @@ public class PlayerController : MonoBehaviour
         var ver = Input.GetAxis("Vertical");
         if(hor != 0 || ver != 0)
         {
-            // if(isOn)
             playerStateController.ChangeState(PlayerMove.Instance);
         }
     }
@@ -226,7 +237,6 @@ public class PlayerController : MonoBehaviour
             Managers.Keyword.ExitKeywordMod();
         }
     }
-
     public void DebugModeMouseInputCheck()
     {
         if(!Managers.Game.IsDebugMod)
@@ -271,17 +281,26 @@ public class PlayerController : MonoBehaviour
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
 
-    public void stepClimb()
+    public bool stepClimb()
     {
-        Debug.DrawRay(transform.position - new Vector3(0, box.size.y * 0.49f, 0), moveVec * 0.1f, Color.black);
-        if(Physics.Raycast(transform.position - new Vector3(0, box.size.y * 0.49f, 0), moveVec, 0.1f, stairLayer))
+        Debug.DrawRay(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f, 0), moveVec * 1.5f, Color.black);
+        if(Physics.Raycast(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f, 0), moveVec, 1.5f, stairLayer))
         {
-            Debug.DrawRay(transform.position - new Vector3(0, box.size.y * 0.49f + stepHeight, 0), moveVec * 5f, Color.black);
-            if(!Physics.Raycast(transform.position - new Vector3(0, box.size.y * 0.49f + stepHeight, 0), moveVec * 0.1f, stairLayer))
+            Debug.DrawRay(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f - stepHeight, 0), moveVec * 1.6f, Color.green);
+            if(!Physics.Raycast(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f - stepHeight, 0), moveVec, 1.6f, stairLayer))
             {
                 rigid.useGravity = false;
                 rigid.position -= new Vector3(0f, -stepSmooth * Time.fixedDeltaTime, 0f);
-            }   
+                return true;
+            }
+            else
+            {
+                return false;
+            } 
+        }
+        else
+        {
+            return false;
         }
     }
 
