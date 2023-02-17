@@ -71,22 +71,16 @@ public class KeywordEntity : MonoBehaviour
             CreateKeywordWorldSlotUI();
         }
 
-        Collider temp;
-        if(TryGetComponent<Collider>(out temp))
+        if(!TryGetComponent<BoxCollider>(out col))
         {
-            if(temp is BoxCollider) 
-            {
-                col = temp as BoxCollider;
-            }
-            else 
+            Collider temp;
+            if(TryGetComponent<Collider>(out temp))
             {
                 temp.enabled = false;
             }
-        }
-        if(col == null) 
-        {
             col = Util.GetOrAddComponent<BoxCollider>(gameObject);
         }
+   
 
         TryGetComponent<Rigidbody>(out rigidbody);
         keywordWorldSlotLayout.SortChild(2.1f);
@@ -301,10 +295,11 @@ public class KeywordEntity : MonoBehaviour
         {
             layer += (1 << (LayerMask.NameToLayer(name)));
         }
+        var boxSize = VectorMultipleScale(col.size / 2,transform.lossyScale);
 #if UNITY_EDITOR
-        ExtDebug.DrawBoxCastBox(pos,col.bounds.extents,KeywordTransformFactor.rotation,vec.normalized,vec.magnitude,Color.red);
+        ExtDebug.DrawBoxCastBox(pos,boxSize,KeywordTransformFactor.rotation,vec.normalized,vec.magnitude,Color.red);
 #endif
-        Physics.BoxCast(pos,col.bounds.extents,vec.normalized,out hit ,KeywordTransformFactor.rotation, vec.magnitude,layer);
+        Physics.BoxCast(pos,boxSize,vec.normalized,out hit ,KeywordTransformFactor.rotation, vec.magnitude,layer);
         if(hit.collider != null && hit.collider != col) 
         {
             return false;
