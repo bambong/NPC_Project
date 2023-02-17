@@ -6,7 +6,7 @@ public class ServerrackController : KeywordEntity
 {
     private void Awake()
     {
-        AddOverrideTable(typeof(XRotateKeyword).ToString(),new KeywordAction(XrotateKeywordAction,KeywordActionType.OneShot));
+        AddOverrideTable(typeof(RotateKeyword).ToString(),new KeywordAction(XrotateKeywordAction,KeywordActionType.OneShot));
     }
     private void XrotateKeywordAction(KeywordEntity entity)
     {

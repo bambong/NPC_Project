@@ -50,7 +50,7 @@ public class KeywordEntity : MonoBehaviour
 
     private Action<KeywordEntity> updateAction = null;
     private Rigidbody rigidbody;
-    private Collider col;
+    private BoxCollider col;
     private Transform keywordSlotLayout;
     private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
 
@@ -71,7 +71,23 @@ public class KeywordEntity : MonoBehaviour
             CreateKeywordWorldSlotUI();
         }
 
-        col = Util.GetOrAddComponent<Collider>(gameObject);
+        Collider temp;
+        if(TryGetComponent<Collider>(out temp))
+        {
+            if(temp is BoxCollider) 
+            {
+                col = temp as BoxCollider;
+            }
+            else 
+            {
+                temp.enabled = false;
+            }
+        }
+        if(col == null) 
+        {
+            col = Util.GetOrAddComponent<BoxCollider>(gameObject);
+        }
+
         TryGetComponent<Rigidbody>(out rigidbody);
         keywordWorldSlotLayout.SortChild(2.1f);
     }
@@ -239,9 +255,45 @@ public class KeywordEntity : MonoBehaviour
         updateAction?.Invoke(this);
     }
     #region Keyword_Control
+
+    private Vector3 VectorMultipleScale(Vector3 origin,Vector3 scale) 
+    {
+        origin.x *= scale.x;
+        origin.y *= scale.y;
+        origin.z *= scale.z;
+        return origin;
+    }
+    public bool ColisionCheckRotate(Vector3 vec)
+    {
+        var pos = col.transform.position;
+        RaycastHit hit;
+        int layer = 1;
+        foreach(var name in Enum.GetNames(typeof(Define.ColiiderMask)))
+        {
+            layer += (1 << (LayerMask.NameToLayer(name)));
+        }
+        var boxSize = VectorMultipleScale(col.size/2,transform.lossyScale);
+        var rot = KeywordTransformFactor.rotation * Quaternion.Euler(vec);
+        //ExtDebug.DrawBoxCastBox(pos,col.bounds.extents,rot,vec.normalized,0,Color.blue);
+#if UNITY_EDITOR
+        ExtDebug.DrawBox(pos,boxSize,rot,Color.blue);
+#endif
+
+        //Physics.BoxCast(pos,col.bounds.size / 2,Vector3.up,out hit,rot,1,layer);
+        var hits = Physics.OverlapBox(pos,boxSize,rot,layer);
+        if(hits.Length > 1)
+        //if(hit.collider != null && hit.collider != col)
+        {
+            return false;
+        }
+
+        KeywordTransformFactor.Rotate(vec);
+        return true;
+
+    }
     public bool ColisionCheckMove(Vector3 vec)
     {
-        var pos = KeywordTransformFactor.position;
+        var pos = col.transform.position;
         
         RaycastHit hit;
         int layer = 1;
@@ -249,8 +301,10 @@ public class KeywordEntity : MonoBehaviour
         {
             layer += (1 << (LayerMask.NameToLayer(name)));
         }
-      
-        Physics.BoxCast(pos,col.bounds.extents,vec.normalized,out hit ,Quaternion.identity, vec.magnitude,layer);
+#if UNITY_EDITOR
+        ExtDebug.DrawBoxCastBox(pos,col.bounds.extents,KeywordTransformFactor.rotation,vec.normalized,vec.magnitude,Color.red);
+#endif
+        Physics.BoxCast(pos,col.bounds.extents,vec.normalized,out hit ,KeywordTransformFactor.rotation, vec.magnitude,layer);
         if(hit.collider != null && hit.collider != col) 
         {
             return false;
