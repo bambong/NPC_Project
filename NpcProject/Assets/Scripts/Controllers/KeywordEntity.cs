@@ -305,8 +305,7 @@ public class KeywordEntity : MonoBehaviour
             return false;
         }
 
-        pos += vec;
-        KeywordTransformFactor.position = pos;
+        KeywordTransformFactor.position += vec;
         return true;
 
     }

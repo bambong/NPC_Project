@@ -34,7 +34,7 @@ public class AttachKeyword : KeywordController
         dir.y = 0;
         if(dir.magnitude < speed * Managers.Time.GetDeltaTime(TIME_TYPE.PLAYER)) 
         {
-            entity.KeywordTransformFactor.position += dir;
+            entity.ColisionCheckMove(dir);
         }
         else 
         {
