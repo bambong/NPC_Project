@@ -4,14 +4,6 @@ using UnityEngine;
 using Cinemachine;
 public class GameScene : BaseScene
 {
-    [System.Serializable]
-    public struct BgmType
-    {
-        public string name;
-        public AudioClip file;
-        public float volume;
-    }
-
     [SerializeField]
     private BgmType[] bgm;
 
@@ -35,10 +27,10 @@ public class GameScene : BaseScene
         player.transform.position = playerSpawnSpot;
         Managers.Camera.InitCamera(new CameraInfo(vircam,player.transform));
 
-        StartBgm();
+        //StartBgm();
         Invoke("StartTalk", 2f);
         Managers.Talk.LoadTalkData(gamaSceneTalkData);
-
+        Managers.Sound.LoadBgmDatas(bgm);
     }
 
     public void StartTalk()

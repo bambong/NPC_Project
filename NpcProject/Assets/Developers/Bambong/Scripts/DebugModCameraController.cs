@@ -59,8 +59,7 @@ public class DebugModCameraController : MonoBehaviour
             pos.y = Mathf.Clamp(pos.y,clampY.x,clampY.y);
             transform.position = pos;
 
-            debugModCameraUiController.ButtonPressdCheckUpdate(hor, ver);
-            debugModCameraUiController.ButtonDisabledCheckUpdate(hor, ver);
+            debugModCameraUiController.ButtonStateCheckUpdate(pos, clampX, clampY, hor, ver);
 
             yield return null;
         
