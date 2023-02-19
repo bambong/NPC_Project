@@ -42,7 +42,9 @@ public class KeywordEntity : MonoBehaviour
 
     [SerializeField]
     private OutlineEffect outlineEffect;
-
+    [SerializeField]
+    private float maxHeight = 3;
+    private float curHeight = 0;
     private Dictionary<string,KeywordAction> keywrodOverrideTable = new Dictionary<string,KeywordAction>();
     private Dictionary<KeywordController,KeywordAction> currentRegisterKeyword = new Dictionary<KeywordController,KeywordAction>();
     private List<KeywordFrameController> keywordSlotUI = new List<KeywordFrameController>();
@@ -308,6 +310,43 @@ public class KeywordEntity : MonoBehaviour
         KeywordTransformFactor.position += vec;
         return true;
 
+    }
+
+    public bool FloatMove(Vector3 vec)
+    {
+        var pos = col.transform.position;
+        RaycastHit hit;
+        int layer = 1;
+        foreach(var name in Enum.GetNames(typeof(Define.ColiiderMask)))
+        {
+            layer += (1 << (LayerMask.NameToLayer(name)));
+        }
+        var boxSize = VectorMultipleScale(col.size / 2,transform.lossyScale);
+        var rayDis = maxHeight + col.bounds.extents.y;
+#if UNITY_EDITOR
+        ExtDebug.DrawBoxCastBox(pos,boxSize,KeywordTransformFactor.rotation,Vector3.down,rayDis,Color.red);
+#endif
+        Physics.BoxCast(pos,boxSize,Vector3.down,out hit,KeywordTransformFactor.rotation,rayDis,layer);
+
+        if(hit.collider != null)
+        {
+            var realDis = hit.distance - col.bounds.extents.y;
+            if(realDis <= maxHeight) 
+            {
+                var remainDis = maxHeight - realDis;
+                if(remainDis < 0.1f)
+                {
+                    return true;
+                }
+                if(remainDis < vec.magnitude)
+                {
+                    vec = Vector3.up * remainDis;
+                }
+                KeywordTransformFactor.position += vec;
+                return true;
+            }
+        }
+        return false;
     }
     public void SetGravity(bool isOn) 
     {
