@@ -48,12 +48,6 @@ public class PlayerController : MonoBehaviour
     private int stairLayer;
     private bool isStepClimb;
 
-    [Header("Player Move")]
-    [SerializeField]
-    private bool isMove;
-    public bool IsMove {get { return isMove;}}
-
-
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);
@@ -125,9 +119,8 @@ public class PlayerController : MonoBehaviour
         var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
         var nextPos = pos + moveVec * (speed * 0.3f);
         
-        if(stepClimb())
+        if(StepClimb())
         {
-            Debug.Log("응애");
             return;
         }
 
@@ -147,13 +140,11 @@ public class PlayerController : MonoBehaviour
         //
         if(!Physics.Raycast(nextPos, Vector3.down, box.size.y * 0.5f + stepHeight))
         {
-            isMove = false;
             SetStateIdle();
             rigid.velocity = Vector3.zero;
         }
         else
         {
-            isMove = true;
             rigid.velocity = moveVec * speed + gravity;
         }
     }
@@ -171,9 +162,13 @@ public class PlayerController : MonoBehaviour
 
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
+
         if(hor != 0 || ver != 0)
         {
-            playerStateController.ChangeState(PlayerMove.Instance);
+            if (IsMove(transform.position, hor, ver))
+            {
+                playerStateController.ChangeState(PlayerMove.Instance);
+            }
         }
     }
     public bool InteractionInputCheck() 
@@ -281,7 +276,7 @@ public class PlayerController : MonoBehaviour
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
 
-    public bool stepClimb()
+    public bool StepClimb()
     {
         Debug.DrawRay(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f, 0), moveVec * 1.5f, Color.black);
         if(Physics.Raycast(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f, 0), moveVec, 1.5f, stairLayer))
@@ -297,6 +292,21 @@ public class PlayerController : MonoBehaviour
             {
                 return false;
             } 
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool IsMove(Vector3 pos, float hor, float ver)
+    {
+        var moveVec = new Vector3(hor, 0, ver).normalized;
+        moveVec = Quaternion.Euler(new Vector3(0, rotater.rotation.eulerAngles.y, 0)) * moveVec;
+        var nextPos = pos + moveVec * (moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER) * 0.3f);
+        if (Physics.Raycast(nextPos, Vector3.down, box.size.y * 0.5f + stepHeight))
+        {
+            return true;
         }
         else
         {
