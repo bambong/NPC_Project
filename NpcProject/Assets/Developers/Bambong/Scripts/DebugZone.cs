@@ -9,26 +9,61 @@ public class DebugZone : MonoBehaviour
 {
     [SerializeField]
     private DebugModCameraController debugModCameraController;
+    [SerializeField]
+    private int playerSlotCount =2;
 
     [SerializeField]
     private GameObject[] keywords;
 
+    public int PlayerSlotCount { get => playerSlotCount; }
+
+    private List<KeywordFrameController> playerFrames = new List<KeywordFrameController>();
+    private Transform playerLayout;
 
     private void Awake()
     {
-        Managers.Keyword.RegisterDebugZone(this);
+        MakeFrame();
         MakeKeyword();
     }
+    private void MakeFrame() 
+    {
+        playerLayout = Managers.Resource.Instantiate("Layout",Managers.Keyword.PlayerPanelLayout).transform;
 
+        for(int i = 0; i < playerSlotCount; ++i)
+        {
+            playerFrames.Add(Managers.UI.MakeSubItem<KeywordFrameController>(playerLayout,"KeywordPlayerSlotUI"));
+        }
+    }
     private void MakeKeyword() 
     { 
         for(int i = 0; i< keywords.Length; ++i) 
         {
-            Managers.Keyword.MakeKeywordToDebugZone(this,keywords[i].name);
-        }
-    
-    }
+            var keyword =Managers.UI.MakeSubItem<KeywordController>(null,"KeywordPrefabs/" + keywords[i].name);
 
+            if(!RegisterKeyword(keyword)) 
+            {
+                Debug.LogError($" DebugZone : {gameObject.name} 슬롯 갯수 이상의 키워드 생성");
+                return;
+            }
+        }
+    }
+    private bool RegisterKeyword(KeywordController keyword)
+    {
+        for(int i =0; i < playerFrames.Count; ++i) 
+        {
+            if(playerFrames[i].HasKeyword) 
+            {
+                continue;
+            }
+            playerFrames[i].SetKeyWord(keyword);
+            keyword.SetFrame(playerFrames[i]);
+            return true;
+        }
+
+        return false;
+    }
+    public void OpenPlayerLayout() => playerLayout.gameObject.SetActive(true);
+    public void ClosePlayerLayout() => playerLayout.gameObject.SetActive(false);
     public void OnEnterDebugMod() 
     {
         debugModCameraController.EnterDebugMod();
