@@ -135,18 +135,32 @@ public class PlayerController : MonoBehaviour
             rigid.useGravity = true;
         }
 
-        //
-        Debug.DrawRay(nextPos, Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red, 1.0f);
-        //
-        if(!Physics.Raycast(nextPos, Vector3.down, box.size.y * 0.5f + stepHeight))
-        {
-            SetStateIdle();
-            rigid.velocity = Vector3.zero;
-        }
-        else
+        var checkVecOne = Quaternion.Euler(new Vector3(0, 90.0f, 0)) * moveVec * 0.5f;
+        var checkVecTwo = Quaternion.Euler(new Vector3(0, -90.0f, 0)) * moveVec * 0.5f;
+        var checkOne = nextPos + checkVecOne;
+        var checkTwo = nextPos + checkVecTwo;
+
+        if ((Physics.Raycast(checkOne, Vector3.down, box.size.y * 0.5f + stepHeight) && Physics.Raycast(checkTwo, Vector3.down, box.size.y * 0.5f + stepHeight)))
         {
             rigid.velocity = moveVec * speed + gravity;
         }
+        else
+        {
+            rigid.velocity = Vector3.zero;
+            SetStateIdle();
+        }
+        
+        // Debug.DrawRay(nextPos, Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red, 1.0f);
+        
+        // if(!Physics.Raycast(nextPos, Vector3.down, box.size.y * 0.5f + stepHeight))
+        // {
+        //     SetStateIdle();
+        //     rigid.velocity = Vector3.zero;
+        // }
+        // else
+        // {
+        //     rigid.velocity = moveVec * speed + gravity;
+        // }
     }
 
     public void PlayerInputCheck()
@@ -304,7 +318,15 @@ public class PlayerController : MonoBehaviour
         var moveVec = new Vector3(hor, 0, ver).normalized;
         moveVec = Quaternion.Euler(new Vector3(0, rotater.rotation.eulerAngles.y, 0)) * moveVec;
         var nextPos = pos + moveVec * (moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER) * 0.3f);
-        if (Physics.Raycast(nextPos, Vector3.down, box.size.y * 0.5f + stepHeight))
+        
+        var checkVecOne = Quaternion.Euler(new Vector3(0, 90.0f, 0)) * moveVec * 0.5f;
+        var checkVecTwo = Quaternion.Euler(new Vector3(0, -90.0f, 0)) * moveVec * 0.5f;
+        var checkOne = nextPos + checkVecOne;
+        var checkTwo = nextPos + checkVecTwo;
+
+        Debug.DrawRay(checkOne, Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
+        Debug.DrawRay(checkTwo, Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
+        if (Physics.Raycast(checkOne, Vector3.down, box.size.y * 0.5f + stepHeight) && Physics.Raycast(checkTwo, Vector3.down, box.size.y * 0.5f + stepHeight))
         {
             return true;
         }
