@@ -44,6 +44,9 @@ public class KeywordEntity : MonoBehaviour
     private OutlineEffect outlineEffect;
     [SerializeField]
     private float maxHeight = 3;
+    [SerializeField]
+    private Vector3 maxScale = Vector3.one * 2;
+
     private float curHeight = 0;
     private Dictionary<string,KeywordAction> keywrodOverrideTable = new Dictionary<string,KeywordAction>();
     private Dictionary<KeywordController,KeywordAction> currentRegisterKeyword = new Dictionary<KeywordController,KeywordAction>();
@@ -59,9 +62,12 @@ public class KeywordEntity : MonoBehaviour
     public Dictionary<KeywordController,KeywordAction> CurrentRegisterKeyword { get => currentRegisterKeyword; }
 
     public virtual Transform KeywordTransformFactor { get => transform; }
+    public Vector3 OriginScale { get; private set; }
+    public Vector3 MaxScale { get => maxScale; }
 
     private void Start()
     {
+        OriginScale = transform.lossyScale;
         Managers.Keyword.AddSceneEntity(this);
         keywordSlotLayout = Managers.Resource.Instantiate("UI/KeywordSlotLayout",Managers.Keyword.PlayerKeywordPanel.transform).transform;
         keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null,"KeywordWorldSlotLayout");
@@ -270,15 +276,11 @@ public class KeywordEntity : MonoBehaviour
         }
         var boxSize = VectorMultipleScale(col.size/2,transform.lossyScale);
         var rot = KeywordTransformFactor.rotation * Quaternion.Euler(vec);
-        //ExtDebug.DrawBoxCastBox(pos,col.bounds.extents,rot,vec.normalized,0,Color.blue);
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos,boxSize,rot,Color.blue);
 #endif
-
-        //Physics.BoxCast(pos,col.bounds.size / 2,Vector3.up,out hit,rot,1,layer);
         var hits = Physics.OverlapBox(pos,boxSize,rot,layer);
         if(hits.Length > 1)
-        //if(hit.collider != null && hit.collider != col)
         {
             return false;
         }
@@ -289,20 +291,24 @@ public class KeywordEntity : MonoBehaviour
     }
     public bool ColisionCheckMove(Vector3 vec)
     {
-        var pos = col.transform.position;
-        
-        RaycastHit hit;
-        int layer = 1;
-        foreach(var name in Enum.GetNames(typeof(Define.ColiiderMask))) 
-        {
-            layer += (1 << (LayerMask.NameToLayer(name)));
-        }
-        var boxSize = VectorMultipleScale(col.size / 2,transform.lossyScale);
-#if UNITY_EDITOR
-        ExtDebug.DrawBoxCastBox(pos,boxSize,KeywordTransformFactor.rotation,vec.normalized,vec.magnitude,Color.red);
-#endif
-        Physics.BoxCast(pos,boxSize,vec.normalized,out hit ,KeywordTransformFactor.rotation, vec.magnitude,layer);
-        if(hit.collider != null) 
+        //var pos = col.transform.position;
+
+        //RaycastHit hit;
+        //int layer = 1;
+        //foreach (var name in Enum.GetNames(typeof(Define.ColiiderMask)))
+        //{
+        //    layer += (1 << (LayerMask.NameToLayer(name)));
+        //}
+        var boxSize = VectorMultipleScale(col.size / 2, transform.lossyScale);
+//#if UNITY_EDITOR
+//        ExtDebug.DrawBoxCastBox(pos, boxSize, KeywordTransformFactor.rotation, vec.normalized, vec.magnitude, Color.red);
+//#endif
+//        Physics.BoxCast(pos, boxSize, vec.normalized, out hit, KeywordTransformFactor.rotation, vec.magnitude, layer);
+//        if (hit.collider != null)
+//        {
+//            return false;
+//        }
+        if (ColisionCheckBox(vec, boxSize)) 
         {
             return false;
         }
@@ -321,12 +327,14 @@ public class KeywordEntity : MonoBehaviour
         {
             layer += (1 << (LayerMask.NameToLayer(name)));
         }
-        var boxSize = VectorMultipleScale(col.size / 2,transform.lossyScale);
+        //var boxSize = VectorMultipleScale(col.size / 2,transform.lossyScale);
+        var boxSize = col.bounds.extents;
+        boxSize.y = 0;
         var rayDis = maxHeight + col.bounds.extents.y;
 #if UNITY_EDITOR
-        ExtDebug.DrawBoxCastBox(pos,boxSize,KeywordTransformFactor.rotation,Vector3.down,rayDis,Color.red);
+        ExtDebug.DrawBoxCastBox(pos,boxSize,Quaternion.identity,Vector3.down,rayDis,Color.red);
 #endif
-        Physics.BoxCast(pos,boxSize,Vector3.down,out hit,KeywordTransformFactor.rotation,rayDis,layer);
+        Physics.BoxCast(pos,boxSize,Vector3.down,out hit,Quaternion.identity,rayDis,layer);
 
         if(hit.collider != null)
         {
@@ -347,6 +355,75 @@ public class KeywordEntity : MonoBehaviour
             }
         }
         return false;
+    }
+    public bool ColisionCheckScale(Vector3 desireScale, GameObject dummyParent) 
+    {
+        var desireBoxSize = VectorMultipleScale(col.size / 2, desireScale);
+        var curBoxSize = VectorMultipleScale(col.size / 2, transform.lossyScale);
+        var boxScaleDiff = (desireBoxSize - curBoxSize);
+
+        Vector3 parentPos = Vector3.zero;
+        Vector3 rayBox = curBoxSize * 0.99f;
+
+        if (CheckAxis(transform.right * desireBoxSize.x, new Vector3(0, rayBox.y, rayBox.z), boxScaleDiff.x, curBoxSize.x, ref parentPos)
+        || CheckAxis(transform.up * desireBoxSize.y, new Vector3(rayBox.x, 0, rayBox.z), boxScaleDiff.y, curBoxSize.y, ref parentPos)
+        || CheckAxis(transform.forward * desireBoxSize.z, new Vector3(rayBox.x, rayBox.y, 0), boxScaleDiff.z, curBoxSize.z, ref parentPos))
+        {
+            return false;
+        }
+
+        dummyParent.transform.localScale = transform.lossyScale;
+        dummyParent.transform.rotation = transform.rotation;
+        dummyParent.transform.position = transform.position + parentPos;
+        transform.SetParent(dummyParent.transform);
+        dummyParent.transform.localScale = desireScale;
+        transform.SetParent(null);
+        return true;
+    }
+    private bool CheckAxis(Vector3 rayDir, Vector3 rayBox, float boxScaleDiff, float parentPosFactor, ref Vector3 parentPos)
+    {
+        if (ColisionCheckBox(rayDir, rayBox))
+        {
+            if (ColisionCheckBox(AddDis(-rayDir, boxScaleDiff), rayBox))
+            {
+                return true;
+            }
+            parentPos += rayDir.normalized * parentPosFactor;
+        }
+        else if (ColisionCheckBox(-rayDir, rayBox))
+        {
+            if (ColisionCheckBox(AddDis(rayDir, boxScaleDiff), rayBox))
+            {
+                return true;
+            }
+            parentPos -= rayDir.normalized * parentPosFactor;
+        }
+        return false;
+    }
+    public bool ColisionCheckBox(Vector3 vec , Vector3 boxSize) 
+    {
+        var pos = col.transform.position;
+
+        RaycastHit hit;
+        int layer = 1;
+        foreach (var name in Enum.GetNames(typeof(Define.ColiiderMask)))
+        {
+            layer += (1 << (LayerMask.NameToLayer(name)));
+        }
+#if UNITY_EDITOR
+        ExtDebug.DrawBoxCastBox(pos, boxSize, transform.rotation, vec.normalized, vec.magnitude, Color.blue);
+#endif
+        Physics.BoxCast(pos, boxSize, vec.normalized, out hit, transform.rotation, vec.magnitude, layer);
+        if (hit.collider != null)
+        {
+            return true;
+        }
+
+        return false;
+    }
+    private Vector3 AddDis(Vector3 vec, float amount)
+    {
+        return vec + vec.normalized * amount;
     }
     public void SetGravity(bool isOn) 
     {

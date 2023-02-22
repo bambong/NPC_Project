@@ -63,79 +63,114 @@ public class ScaleTest : MonoBehaviour
 
   
             Vector3 parentPos = Vector3.zero;
+            Vector3 rayBox = curBoxSize * 0.99f;
+            if (CheckAxis(transform.right * desireBoxSize.x, new Vector3(0, rayBox.y, rayBox.z), boxScaleDiff.x, curBoxSize.x, ref parentPos))
             {
-                Vector3 rayDis = transform.up * desireBoxSize.y;
-                Vector3 rayBox = curBoxSize*0.99f;
-                rayBox.y = 0;
-                if(RayTest(rayDis,rayBox))
-                {
-                    if(RayTest(AddDis(-rayDis,boxScaleDiff.y),rayBox))
-                    {
-                        return;
-                    }
-                    parentPos += new Vector3(0,curBoxSize.y,0);
-                }
-                else if(RayTest(-rayDis,rayBox))
-                {
-                    if(RayTest(AddDis(rayDis,boxScaleDiff.y),rayBox))
-                    {
-                        return;
-                    }
-                    parentPos -= new Vector3(0,curBoxSize.y,0);
-                }
+                return;
             }
+            if (CheckAxis(transform.up * desireBoxSize.y, new Vector3(rayBox.x, 0, rayBox.z), boxScaleDiff.y, curBoxSize.y, ref parentPos)) 
             {
-                Vector3 rayDis = transform.right * desireBoxSize.x;
-                Vector3 rayBox = curBoxSize * 0.99f;
-                rayBox.x = 0;
-                if(RayTest(rayDis,rayBox))
-                {
-                    if(RayTest(AddDis(-rayDis,boxScaleDiff.x),rayBox))
-                    {
-                        return;
-                    }
-                    parentPos += new Vector3(curBoxSize.x,0,0);
-                }
-                else if(RayTest(-rayDis,rayBox))
-                {
-                    if(RayTest(AddDis(rayDis,boxScaleDiff.x),rayBox))
-                    {
-                        return;
-                    }
-                    parentPos -= new Vector3(curBoxSize.x,0,0);
-                } 
+                return;
             }
+            if (CheckAxis(transform.forward * desireBoxSize.z, new Vector3(rayBox.x, rayBox.y, 0), boxScaleDiff.z, curBoxSize.z, ref parentPos))
             {
-                Vector3 rayDis = transform.forward * desireBoxSize.z;
-                Vector3 rayBox = curBoxSize * 0.99f;
-                rayBox.z = 0;
-                if(RayTest(rayDis,rayBox))
-                {
-                    if(RayTest(AddDis(-rayDis,boxScaleDiff.z),rayBox))
-                    {
-                        return;
-                    }
-                    parentPos += new Vector3(0,0,curBoxSize.z);
-                }
-                else if(RayTest(-rayDis,rayBox))
-                {
-                    if(RayTest(AddDis(rayDis,boxScaleDiff.z),rayBox))
-                    {
-                        return;
-                    }
-                    parentPos -= new Vector3(0,0,curBoxSize.z);
-                }
+                return;
             }
-            var pos = transform.position;
+            //{
+            //    Vector3 rayDis = transform.up * desireBoxSize.y;
+            //    Vector3 rayBox = curBoxSize*0.99f;
+            //    rayBox.y = 0;
+            //    if(RayTest(rayDis,rayBox))
+            //    {
+            //        if(RayTest(AddDis(-rayDis,boxScaleDiff.y),rayBox))
+            //        {
+            //            return;
+            //        }
+            //        parentPos += new Vector3(0,curBoxSize.y,0);
+            //    }
+            //    else if(RayTest(-rayDis,rayBox))
+            //    {
+            //        if(RayTest(AddDis(rayDis,boxScaleDiff.y),rayBox))
+            //        {
+            //            return;
+            //        }
+            //        parentPos -= new Vector3(0,curBoxSize.y,0);
+            //    }
+            //}
+            //{
+            //    Vector3 rayDis = transform.right * desireBoxSize.x;
+            //    Vector3 rayBox = curBoxSize * 0.99f;
+            //    rayBox.x = 0;
+            //    if(RayTest(rayDis,rayBox))
+            //    {
+            //        if(RayTest(AddDis(-rayDis,boxScaleDiff.x),rayBox))
+            //        {
+            //            return;
+            //        }
+            //        parentPos += new Vector3(curBoxSize.x,0,0);
+            //    }
+            //    else if(RayTest(-rayDis,rayBox))
+            //    {
+            //        if(RayTest(AddDis(rayDis,boxScaleDiff.x),rayBox))
+            //        {
+            //            return;
+            //        }
+            //        parentPos -= new Vector3(curBoxSize.x,0,0);
+            //    } 
+            //}
+            //{
+            //    Vector3 rayDis = transform.forward * desireBoxSize.z;
+            //    Vector3 rayBox = curBoxSize * 0.99f;
+            //    rayBox.z = 0;
+            //    if(RayTest(rayDis,rayBox))
+            //    {
+            //        if(RayTest(AddDis(-rayDis,boxScaleDiff.z),rayBox))
+            //        {
+            //            return;
+            //        }
+            //        parentPos += new Vector3(0,0,curBoxSize.z);
+            //    }
+            //    else if(RayTest(-rayDis,rayBox))
+            //    {
+            //        if(RayTest(AddDis(rayDis,boxScaleDiff.z),rayBox))
+            //        {
+            //            return;
+            //        }
+            //        parentPos -= new Vector3(0,0,curBoxSize.z);
+            //    }
+            //}
+
+            //pos += parentPos.x * transform.right;
+            //pos += parentPos.y * transform.up;
+            //pos += parentPos.z * transform.forward;
+   
+            parentTemp.transform.localScale = transform.lossyScale;
             parentTemp.transform.rotation = transform.rotation;
-            pos += parentPos.x * transform.right;
-            pos += parentPos.y * transform.up;
-            pos += parentPos.z * transform.forward;
-            parentTemp.transform.position = pos;
+            parentTemp.transform.position = transform.position + parentPos;
             transform.SetParent(parentTemp.transform);
             parentTemp.transform.localScale = curFrameDesirScale;
             transform.SetParent(null);
         }
+    }
+    private bool CheckAxis(Vector3 rayDir ,Vector3 rayBox,float boxScaleDiff ,float parentPosFactor, ref Vector3 parentPos)
+    {
+        if (RayTest(rayDir, rayBox))
+        {
+            if (RayTest(AddDis(-rayDir, boxScaleDiff), rayBox))
+            {
+                return true;
+            }
+            parentPos += rayDir.normalized * parentPosFactor;
+        }
+        else if (RayTest(-rayDir, rayBox))
+        {
+            if (RayTest(AddDis(rayDir, boxScaleDiff), rayBox))
+            {
+                return true;
+            }
+            parentPos -= rayDir.normalized * parentPosFactor;
+        }
+        return false;
     }
     private Vector3 AddDis(Vector3 vec , float amount) 
     {

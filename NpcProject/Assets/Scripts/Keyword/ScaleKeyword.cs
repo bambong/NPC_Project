@@ -4,11 +4,26 @@ using UnityEngine;
 using DG.Tweening;
 public class ScaleKeyword : KeywordController
 {
+    [SerializeField]
+    private float speed =10;
+    private GameObject parentTemp;
+    public override void Init()
+    {
+        parentTemp = new GameObject();
+        parentTemp.hideFlags = HideFlags.HideInHierarchy;
+    }
+
     public override void KeywordAction(KeywordEntity entity)
     {
-        var scale = entity.KeywordTransformFactor.localScale;
-        scale *= 2;
-        entity.KeywordTransformFactor.DOScale(scale,1);
+        if (entity.transform.lossyScale.magnitude < entity.MaxScale.magnitude)
+        {
+            var curFrameDesirScale = entity.transform.lossyScale + (entity.OriginScale * Time.deltaTime * speed);
+            if (curFrameDesirScale.magnitude > entity.MaxScale.magnitude)
+            {
+                curFrameDesirScale = entity.MaxScale;
+            }
+            entity.ColisionCheckScale(curFrameDesirScale, parentTemp);
+        }
     }
     public override void OnRemove(KeywordEntity entity)
     {

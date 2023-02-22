@@ -9,12 +9,13 @@ public class FloatKeyword : KeywordController
     private Dictionary<KeywordEntity,Coroutine> removeDic = new Dictionary<KeywordEntity,Coroutine>();
     public override void KeywordAction(KeywordEntity entity)
     {
+        entity.SetGravity(false);
 
-        if(removeDic.ContainsKey(entity)) 
-        {
-            StopCoroutine(removeDic[entity]);
-            removeDic.Remove(entity);
-        }
+        //if(removeDic.ContainsKey(entity)) 
+        //{
+        //    StopCoroutine(removeDic[entity]);
+        //    removeDic.Remove(entity);
+        //}
 
         if(!entity.FloatMove(Vector3.up * Managers.Time.GetDeltaTime(TIME_TYPE.PLAYER)* speed)) 
         {
@@ -24,7 +25,8 @@ public class FloatKeyword : KeywordController
     }
     public override void OnRemove(KeywordEntity entity)
     {
-        removeDic.Add(entity,entity.StartCoroutine(FloatRemove(entity)));
+        entity.SetGravity(true);
+        //removeDic.Add(entity,entity.StartCoroutine(FloatRemove(entity)));
     }
     private bool MoveToGround(KeywordEntity entity) 
     {
