@@ -302,7 +302,7 @@ public class KeywordEntity : MonoBehaviour
         ExtDebug.DrawBoxCastBox(pos,boxSize,KeywordTransformFactor.rotation,vec.normalized,vec.magnitude,Color.red);
 #endif
         Physics.BoxCast(pos,boxSize,vec.normalized,out hit ,KeywordTransformFactor.rotation, vec.magnitude,layer);
-        if(hit.collider != null && hit.collider != col) 
+        if(hit.collider != null) 
         {
             return false;
         }
