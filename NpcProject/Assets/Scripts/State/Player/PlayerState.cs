@@ -152,3 +152,24 @@ public class PlayerKeywordMod : Singleton<PlayerKeywordMod>, IState<PlayerContro
         stateController.KeywordModInputCheck();
     }
 }
+public class PlayerDeath : Singleton<PlayerDeath>, IState<PlayerController>
+{
+    public void Init()
+    {
+    }
+    public void Enter(PlayerController stateController)
+    {
+    }
+
+    public void Exit(PlayerController stateController)
+    {
+    }
+
+    public void FixedUpdateActive(PlayerController stateController)
+    {
+    }
+
+    public void UpdateActive(PlayerController stateController)
+    {
+    }
+}

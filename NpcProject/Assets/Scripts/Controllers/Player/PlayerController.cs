@@ -359,6 +359,10 @@ public class PlayerController : MonoBehaviour
     {
         playerStateController.ChangeState(PlayerStop.Instance);
     }
+    public void SetstateDeath()
+    {
+        playerStateController.ChangeState(PlayerDeath.Instance);
+    }
     #endregion
 
 }
