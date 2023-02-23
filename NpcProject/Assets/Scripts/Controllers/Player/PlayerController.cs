@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveVec;
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
+    private HpController hpController;
 
     [Header("Player Slope Check")]
     [SerializeField]
@@ -48,13 +49,18 @@ public class PlayerController : MonoBehaviour
     private int stairLayer;
     private bool isStepClimb;
 
+    private int hp;
+    public int Hp { get => hp; }
+
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null,"GlitchEffect");
+        hpController = Managers.UI.MakeSceneUI<HpController>(null, "HpUI");
         groundLayer = 1 << LayerMask.NameToLayer("Ground");
         stairLayer = 1 << LayerMask.NameToLayer("Stair");
+        hp = 4;
     }
 
     void Update()
@@ -79,6 +85,7 @@ public class PlayerController : MonoBehaviour
     public void InteractionEnter() 
     {
         interactionDetecter.InteractionUiDisable();
+        hpController.Close();
     }
 
     #endregion
@@ -86,6 +93,7 @@ public class PlayerController : MonoBehaviour
     public void InteractionExit()
     {
         interactionDetecter.InteractionUiEnable();
+        hpController.Open();
     }
 
     #endregion
@@ -149,18 +157,6 @@ public class PlayerController : MonoBehaviour
             rigid.velocity = Vector3.zero;
             SetStateIdle();
         }
-        
-        // Debug.DrawRay(nextPos, Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red, 1.0f);
-        
-        // if(!Physics.Raycast(nextPos, Vector3.down, box.size.y * 0.5f + stepHeight))
-        // {
-        //     SetStateIdle();
-        //     rigid.velocity = Vector3.zero;
-        // }
-        // else
-        // {
-        //     rigid.velocity = moveVec * speed + gravity;
-        // }
     }
 
     public void PlayerInputCheck()
@@ -179,6 +175,12 @@ public class PlayerController : MonoBehaviour
 
         if(hor != 0 || ver != 0)
         {
+            if (hor != 0)
+            {
+                var dir = hor < 0 ? 1 : -1;
+                skeletonAnimation.skeleton.ScaleX = dir;
+            }
+            
             if (IsMove(transform.position, hor, ver))
             {
                 playerStateController.ChangeState(PlayerMove.Instance);
@@ -225,6 +227,7 @@ public class PlayerController : MonoBehaviour
             SetStateDebugMod();
         });
         interactionDetecter.SwitchDebugMod(true);
+        hpController.Close();
     }
     public void ExitDebugMod()
     {
@@ -232,6 +235,7 @@ public class PlayerController : MonoBehaviour
         glitchEffectController.ExitDebugMod(() => {
             interactionDetecter.SwitchDebugMod(false);
             SetStateIdle();
+            hpController.Open();
         });
     }
     public void ClearMoveAnim()
@@ -284,16 +288,15 @@ public class PlayerController : MonoBehaviour
         }
         return false;
     }
-
     public Vector3 AdjustDirectionToSlope(Vector3 direction)
     {
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
-
     public bool StepClimb()
     {
-        Debug.DrawRay(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f, 0), moveVec * 1.5f, Color.black);
-        if(Physics.Raycast(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f, 0), moveVec, 1.5f, stairLayer))
+        var position = Quaternion.Euler(0, rotater.rotation.eulerAngles.y + 90.0f, 0) * new Vector3(box.size.x * -0.5f, box.size.y * 0.5f, 0);
+        Debug.DrawRay(transform.position - position, moveVec * 1.5f, Color.green);
+        if(Physics.Raycast(transform.position - position, moveVec, 1.5f, stairLayer))
         {
             Debug.DrawRay(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f - stepHeight, 0), moveVec * 1.6f, Color.green);
             if(!Physics.Raycast(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f - stepHeight, 0), moveVec, 1.6f, stairLayer))
@@ -312,7 +315,6 @@ public class PlayerController : MonoBehaviour
             return false;
         }
     }
-
     public bool IsMove(Vector3 pos, float hor, float ver)
     {
         var moveVec = new Vector3(hor, 0, ver).normalized;
@@ -335,7 +337,23 @@ public class PlayerController : MonoBehaviour
             return false;
         }
     }
-
+    public void GetDamage()
+    {
+        if(hp > 0)
+        {
+            hp = hp - 1;
+            hpController.GetDamage();
+        }
+    }
+    public void GetHp()
+    {
+        if(hp < 4)
+        {
+            hp = hp + 1;
+            hpController.GetHp();
+        }
+    }
+    
     #endregion
 
     #region SetState
