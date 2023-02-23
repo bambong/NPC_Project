@@ -6,11 +6,11 @@ public class ScaleKeyword : KeywordController
 {
     [SerializeField]
     private float speed =10;
-    private GameObject parentTemp;
+    private GameObject dummyParent;
     public override void Init()
     {
-        parentTemp = new GameObject();
-        parentTemp.hideFlags = HideFlags.HideInHierarchy;
+        dummyParent = new GameObject();
+        dummyParent.hideFlags = HideFlags.HideInHierarchy;
     }
 
     public override void KeywordAction(KeywordEntity entity)
@@ -22,7 +22,7 @@ public class ScaleKeyword : KeywordController
             {
                 curFrameDesirScale = entity.MaxScale;
             }
-            entity.ColisionCheckScale(curFrameDesirScale, parentTemp);
+            entity.ColisionCheckScale(curFrameDesirScale, dummyParent);
         }
     }
     public override void OnRemove(KeywordEntity entity)

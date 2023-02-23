@@ -300,6 +300,7 @@ public class KeywordEntity : MonoBehaviour
         //    layer += (1 << (LayerMask.NameToLayer(name)));
         //}
         var boxSize = VectorMultipleScale(col.size / 2, transform.lossyScale);
+        boxSize *= 0.99f;
 //#if UNITY_EDITOR
 //        ExtDebug.DrawBoxCastBox(pos, boxSize, KeywordTransformFactor.rotation, vec.normalized, vec.magnitude, Color.red);
 //#endif
@@ -431,6 +432,15 @@ public class KeywordEntity : MonoBehaviour
     }
     public void SetKinematic(bool isOn) 
     {
+        //if(isOn)
+        //{
+        //    rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+        //}
+        //else 
+        //{
+        //    rigidbody.constraints = RigidbodyConstraints.FreezeAll^RigidbodyConstraints.FreezePositionY;
+        //}
+
         rigidbody.isKinematic = isOn;
     }
     public void ClearVelocity()=> rigidbody.velocity = Vector3.zero;
