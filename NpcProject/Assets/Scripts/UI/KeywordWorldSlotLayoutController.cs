@@ -9,19 +9,21 @@ public class KeywordWorldSlotLayoutController : UI_Base
 
     private readonly float Y_POS_REVISION_AMOUNT = 2f;
     public Transform Panel { get => panel; }
+    private Collider entityColider;
     public override void Init()
     {
 
     }
 
-
+    public void RegisterEntity(Transform entity) 
+    {
+        entityColider = entity.GetComponent<Collider>();
+    }
     public void SortChild(float width) 
     {
-        var parent = transform.parent;
-        panel.position = parent.position + Vector3.up * ((parent.GetComponent<Collider>().bounds.size.y / 2) + Y_POS_REVISION_AMOUNT);
         panel.rotation = Camera.main.transform.rotation;
 
-        float startPos = ((panel.childCount/2)-0.5f) * width * -1;
+        float startPos = ((panel.childCount/2f)-0.5f) * width * -1;
 
         for(int i = 0; i < panel.childCount; ++i)
         {
@@ -36,6 +38,7 @@ public class KeywordWorldSlotLayoutController : UI_Base
 
     private void Update()
     {
+        panel.position = entityColider.transform.position + Vector3.up * ((entityColider.bounds.size.y / 2) + Y_POS_REVISION_AMOUNT);
         panel.rotation = Camera.main.transform.rotation;
     }
 

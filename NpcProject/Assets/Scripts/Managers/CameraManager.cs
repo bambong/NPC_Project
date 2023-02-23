@@ -64,7 +64,6 @@ public class CameraManager
     {
         SetCurCamInfo(info);
         curCamInfo.cam.gameObject.SetActive(true);
-
     }
     private void SetCurCamInfo(CameraInfo info) 
     {
@@ -74,7 +73,13 @@ public class CameraManager
             curCamInfo.cam.Follow = curCamInfo.target;
             curCamInfo.cam.LookAt = curCamInfo.target;
         }
+        Managers.Scene.CurrentScene.StartCoroutine(LookClear());
+    }
+    IEnumerator LookClear() 
+    {
+        yield return null;
         curCamInfo.cam.LookAt = null;
+
     }
     public bool EnterSwitchCamera(CameraSwitchEvent switchEvent) 
     {

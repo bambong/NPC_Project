@@ -16,8 +16,14 @@ public class DebugModCameraController : MonoBehaviour
 
 
 
+    private DebugModCameraUiController debugModCameraUiController;
     private bool isDebugMod = false;
- 
+
+    private void Awake()
+    {
+        debugModCameraUiController = Managers.UI.MakeSceneUI<DebugModCameraUiController>(null, "ArrowsCanvas");
+    }
+
     public bool EnterDebugMod() 
     {
         if(isDebugMod) 
@@ -27,6 +33,7 @@ public class DebugModCameraController : MonoBehaviour
         isDebugMod = true;
         var camEvent = new CameraSwitchEvent(new CameraInfo(cam));
         camEvent.OnComplete(() => {
+            debugModCameraUiController.EnterDebugMode();
             StartCoroutine(MoveUpdate());
             });
         camEvent.Play();
@@ -34,6 +41,7 @@ public class DebugModCameraController : MonoBehaviour
     }
     public void ExitDebugMod() 
     {
+        debugModCameraUiController.ExitDebugMode();
         isDebugMod = false;
     }
     private IEnumerator MoveUpdate()
@@ -43,7 +51,6 @@ public class DebugModCameraController : MonoBehaviour
             var hor = Input.GetAxis("Horizontal");
             var ver = Input.GetAxis("Vertical");
 
-
             var moveVec = new Vector3(hor,ver,0).normalized;
             var pos = transform.position;
             var speed = moveSpeed * Time.deltaTime;
@@ -51,6 +58,8 @@ public class DebugModCameraController : MonoBehaviour
             pos.x = Mathf.Clamp(pos.x,clampX.x,clampX.y);
             pos.y = Mathf.Clamp(pos.y,clampY.x,clampY.y);
             transform.position = pos;
+
+            debugModCameraUiController.ButtonStateCheckUpdate(pos, clampX, clampY, hor, ver);
 
             yield return null;
         

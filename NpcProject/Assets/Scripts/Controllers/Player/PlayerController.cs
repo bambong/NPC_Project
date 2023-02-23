@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour
     private int hp;
     public int Hp { get => hp; }
 
+
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);

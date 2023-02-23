@@ -2,9 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundManager
+[System.Serializable]
+public struct BgmType
 {
+    public string name;
+    public AudioClip file;
+    public float volume;
+}
+
+
+public class SoundManager
+{    
+
     private SoundController soundController;
+    private BgmZone currentBgmZone;
+
+    private Dictionary<string, BgmType> bgmDatas = new Dictionary<string, BgmType>();
+    
 
     public void Init()
     {
@@ -12,14 +26,33 @@ public class SoundManager
         soundPrefab.name = "@SoundSource";
         soundController = soundPrefab.GetComponent<SoundController>();
     }
-    
-    public void AskBgmPlay(AudioClip bgmClip, float volume)
+
+    public void LoadBgmDatas(BgmType[] bgmTypes)
     {
-        soundController.BgmPlay(bgmClip, volume);
+       for(int i = 0; i < bgmTypes.Length; ++i)
+        {
+            bgmDatas.Add(bgmTypes[i].name, bgmTypes[i]);
+        }
+    }
+
+    
+    public void AskBgmPlay(BgmType[] bgm)
+    {
+        soundController.BgmPlay(bgm); 
     }
 
     public void AskSfxPlay(AudioClip sfxClip)
     {
         soundController.SfxPlay(sfxClip);
+    }
+
+    public void CheckBgmZone(BgmZone zone)
+    {
+        currentBgmZone = zone;
+    }
+
+    public void Clear()
+    {
+        bgmDatas.Clear();
     }
 }

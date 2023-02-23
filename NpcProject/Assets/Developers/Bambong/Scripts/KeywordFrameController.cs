@@ -4,42 +4,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class KeywordFrameController : UI_Base
+public class KeywordFrameController : KeywordFrameBase
 {
     [SerializeField]
     private GameObject parentObj;
     [SerializeField]
     private RectTransform rectTransform;
 
+    private KeywordController registerKeyword;
+    private KeywordController curFrameInnerKeyword;
+    public bool HasKeyword { get => CurFrameInnerKeyword != null; }
+    public bool IsKeywordRemoved { get { return (registerKeyword != null && curFrameInnerKeyword != registerKeyword); } }
 
-    private bool hasKeyword =false;
-    private KeywordController keywordController;
-    public bool HasKeyword { get => hasKeyword; }
-    public KeywordController KeywordController { get => keywordController; }
+    public KeywordController CurFrameInnerKeyword { get => curFrameInnerKeyword; }
+    public KeywordController RegisterKeyword { get => registerKeyword; }
 
-    public bool SetKeyWord(KeywordController keywordController) 
+
+    public override bool IsAvailable{ get => curFrameInnerKeyword == null; }
+    public override void SetKeyWord(KeywordController keywordController) 
     {
-        if (hasKeyword) 
-        {
-            return false;
-        }
-        hasKeyword = true;
-        this.keywordController = keywordController;
-        keywordController.transform.parent = transform;
+        curFrameInnerKeyword = keywordController;
+        keywordController.transform.SetParent(transform);
         keywordController.SetToKeywordFrame(rectTransform.position);
-        return true;
     }
-
-    public void ResetKeywordFrame() 
+    public void OnDecisionKeyword() 
     {
-        if(keywordController == null) 
-        {
-            return;
-        }
-        hasKeyword = false;
-        keywordController = null;
+        registerKeyword = curFrameInnerKeyword;
     }
 
+    public override void ResetKeywordFrame() 
+    {
+        curFrameInnerKeyword = null;
+    }
+ 
     public void Open() 
     {
         parentObj.SetActive(true);
