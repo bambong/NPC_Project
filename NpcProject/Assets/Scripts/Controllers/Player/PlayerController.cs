@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
         interactionDetecter.Init();
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null,"GlitchEffect");
         hpController = Managers.UI.MakeSceneUI<HpController>(null, "HpUI");
-        groundLayer = 1 << LayerMask.NameToLayer("Ground");
+        groundLayer = (1 << LayerMask.NameToLayer("Ground"));
         stairLayer = 1 << LayerMask.NameToLayer("Stair");
         hp = 4;
     }
@@ -316,7 +316,11 @@ public class PlayerController : MonoBehaviour
         if(Physics.Raycast(ray, out slopeHit, transform.position.y, groundLayer))
         {
             var angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            return angle != 0f && angle < maxSlopeAngle;
+            if(angle != 0 &&angle < maxSlopeAngle) 
+            {
+                return true;   
+            }
+            return false;
         }
         return false;
     }

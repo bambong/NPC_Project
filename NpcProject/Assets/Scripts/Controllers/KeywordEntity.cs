@@ -53,7 +53,7 @@ public class KeywordEntity : MonoBehaviour
     private List<KeywordFrameController> keywordSlotUI = new List<KeywordFrameController>();
     private List<KeywordWorldSlotUIController> keywordSlotWorldUI = new List<KeywordWorldSlotUIController>();
 
-    private Action<KeywordEntity> updateAction = null;
+    private Action<KeywordEntity> fixedUpdateAction = null;
     private Rigidbody rigidbody;
     private BoxCollider col;
     private Transform keywordSlotLayout;
@@ -157,7 +157,7 @@ public class KeywordEntity : MonoBehaviour
         switch(action.ActionType) 
         {
             case KeywordActionType.OnUpdate:
-                updateAction += action.Action;
+                fixedUpdateAction += action.Action;
                 break;
 
             case KeywordActionType.OneShot:
@@ -186,7 +186,7 @@ public class KeywordEntity : MonoBehaviour
         switch(action.ActionType)
         {
             case KeywordActionType.OnUpdate:
-                updateAction -= action.Action;
+                fixedUpdateAction -= action.Action;
                 break;
 
             case KeywordActionType.OneShot:
@@ -250,11 +250,11 @@ public class KeywordEntity : MonoBehaviour
 
     public void ClearAction() 
     {
-        updateAction = null;
+        fixedUpdateAction = null;
     }
-    public void Update() 
+    public void FixedUpdate() 
     {
-        updateAction?.Invoke(this);
+        fixedUpdateAction?.Invoke(this);
     }
     #region Keyword_Control
 
