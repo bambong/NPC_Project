@@ -99,34 +99,58 @@ public class PlayerController : MonoBehaviour
 
     #endregion
     #region OnStateUpdate
+    public bool IsMove(Vector3 pos,float hor,float ver)
+    {
+        var moveVec = new Vector3(hor,0,ver).normalized;
+        moveVec = Quaternion.Euler(new Vector3(0,rotater.rotation.eulerAngles.y,0)) * moveVec;
+        var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
+        var nextPos = pos + moveVec * speed * Managers.Time.GetDeltaTime(TIME_TYPE.PLAYER) + (moveVec.normalized * box.size.x / 2);
 
+        var checkVecOne = Quaternion.Euler(new Vector3(0,90.0f,0)) * moveVec * 0.5f;
+        var checkVecTwo = Quaternion.Euler(new Vector3(0,-90.0f,0)) * moveVec * 0.5f;
+        var checkOne = nextPos + checkVecOne;
+        var checkTwo = nextPos + checkVecTwo;
+
+        Debug.DrawRay(checkOne,Vector3.down * (box.size.y * 0.5f + stepHeight),Color.red);
+        Debug.DrawRay(checkTwo,Vector3.down * (box.size.y * 0.5f + stepHeight),Color.red);
+        if(Physics.Raycast(checkOne,Vector3.down,box.size.y * 0.5f + stepHeight) && Physics.Raycast(checkTwo,Vector3.down,box.size.y * 0.5f + stepHeight))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     public void PlayerMoveUpdate()
     {
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
 
         isOnSlope = IsOnSlope();
-
-        if(Mathf.Abs(hor) <= 0.2f && Mathf.Abs(ver) <= 0.2f)
+       
+        if(new Vector3(hor,0,ver).magnitude <= 0.1f)
         {
             SetStateIdle();
             rigid.velocity = Vector3.zero;
             return;
         }
-        
+
+        moveVec = new Vector3(hor,0,ver);
+
+      
         if(hor != 0) 
         {
             var dir = hor < 0 ? 1 : -1;
             skeletonAnimation.skeleton.ScaleX = dir;
         }
 
-        moveVec = new Vector3(hor, 0, ver).normalized;
-        moveVec = Quaternion.Euler(new Vector3(0, rotater.rotation.eulerAngles.y, 0)) * moveVec;
+        moveVec = Quaternion.Euler(new Vector3(0, rotater.rotation.eulerAngles.y, 0)) * moveVec.normalized;
         Vector3 gravity = Vector3.down * Mathf.Abs(rigid.velocity.y);
 
         var pos = transform.position;
         var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
-        var nextPos = pos + moveVec * (speed * 0.3f);
+        var nextPos = pos + moveVec * speed * Managers.Time.GetDeltaTime(TIME_TYPE.PLAYER) + (moveVec.normalized * box.size.x/2);
         
         if(StepClimb())
         {
@@ -149,9 +173,12 @@ public class PlayerController : MonoBehaviour
         var checkOne = nextPos + checkVecOne;
         var checkTwo = nextPos + checkVecTwo;
 
+        Debug.DrawRay(checkOne,Vector3.down * (box.size.y * 0.5f + stepHeight),Color.red);
+        Debug.DrawRay(checkTwo,Vector3.down * (box.size.y * 0.5f + stepHeight),Color.red);
         if ((Physics.Raycast(checkOne, Vector3.down, box.size.y * 0.5f + stepHeight) && Physics.Raycast(checkTwo, Vector3.down, box.size.y * 0.5f + stepHeight)))
         {
-            rigid.velocity = moveVec * speed + gravity;
+            var moveVelocity = moveVec * speed;
+            rigid.velocity = moveVelocity + gravity;
         }
         else
         {
@@ -173,20 +200,24 @@ public class PlayerController : MonoBehaviour
 
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
+        
 
-        if(hor != 0 || ver != 0)
+        if(hor == 0 && ver == 0)
         {
-            if (hor != 0)
-            {
-                var dir = hor < 0 ? 1 : -1;
-                skeletonAnimation.skeleton.ScaleX = dir;
-            }
-            
-            if (IsMove(transform.position, hor, ver))
-            {
-                playerStateController.ChangeState(PlayerMove.Instance);
-            }
+            return;
         }
+        
+        if(hor != 0)
+        {
+            var dir = hor < 0 ? 1 : -1;
+            skeletonAnimation.skeleton.ScaleX = dir;
+        }
+
+        if(IsMove(transform.position,hor,ver))
+        {
+            playerStateController.ChangeState(PlayerMove.Instance);
+        }
+
     }
     public bool InteractionInputCheck() 
     {
@@ -296,10 +327,10 @@ public class PlayerController : MonoBehaviour
     public bool StepClimb()
     {
         var position = Quaternion.Euler(0, rotater.rotation.eulerAngles.y + 90.0f, 0) * new Vector3(box.size.x * -0.5f, box.size.y * 0.5f, 0);
-        Debug.DrawRay(transform.position - position, moveVec * 1.5f, Color.green);
+       // Debug.DrawRay(transform.position - position, moveVec * 1.5f, Color.green);
         if(Physics.Raycast(transform.position - position, moveVec, 1.5f, stairLayer))
         {
-            Debug.DrawRay(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f - stepHeight, 0), moveVec * 1.6f, Color.green);
+         //   Debug.DrawRay(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f - stepHeight, 0), moveVec * 1.6f, Color.green);
             if(!Physics.Raycast(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f - stepHeight, 0), moveVec, 1.6f, stairLayer))
             {
                 rigid.useGravity = false;
@@ -316,28 +347,7 @@ public class PlayerController : MonoBehaviour
             return false;
         }
     }
-    public bool IsMove(Vector3 pos, float hor, float ver)
-    {
-        var moveVec = new Vector3(hor, 0, ver).normalized;
-        moveVec = Quaternion.Euler(new Vector3(0, rotater.rotation.eulerAngles.y, 0)) * moveVec;
-        var nextPos = pos + moveVec * (moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER) * 0.3f);
-        
-        var checkVecOne = Quaternion.Euler(new Vector3(0, 90.0f, 0)) * moveVec * 0.5f;
-        var checkVecTwo = Quaternion.Euler(new Vector3(0, -90.0f, 0)) * moveVec * 0.5f;
-        var checkOne = nextPos + checkVecOne;
-        var checkTwo = nextPos + checkVecTwo;
 
-        Debug.DrawRay(checkOne, Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
-        Debug.DrawRay(checkTwo, Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
-        if (Physics.Raycast(checkOne, Vector3.down, box.size.y * 0.5f + stepHeight) && Physics.Raycast(checkTwo, Vector3.down, box.size.y * 0.5f + stepHeight))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
     public void GetDamage()
     {
         if(hp > 0)

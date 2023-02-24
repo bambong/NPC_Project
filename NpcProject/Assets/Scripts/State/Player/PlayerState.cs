@@ -19,13 +19,14 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
 
     public void FixedUpdateActive(PlayerController stateController)
     {
+        stateController.PlayerInputCheck();
     }
 
     
 
     public void UpdateActive(PlayerController stateController)
     {
-        stateController.PlayerInputCheck();
+        
     }
 }
 
