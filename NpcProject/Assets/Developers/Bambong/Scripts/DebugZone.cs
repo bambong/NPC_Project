@@ -44,7 +44,6 @@ public class DebugZone : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             Managers.Keyword.SetDebugZone(this);
-            Managers.Game.Player.isDebugButton();
         }
     }
 
@@ -53,7 +52,6 @@ public class DebugZone : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             Managers.Keyword.SetDebugZone(null);
-            Managers.Game.Player.isDebugButton();
         }
     }
 }
