@@ -32,7 +32,10 @@ public class ApartKeyword : KeywordController
         }
         var dir = entity.KeywordTransformFactor.position -target.KeywordTransformFactor.position;
         dir.y = 0;
-
+        if(new Vector3(dir.x,0,dir.z).magnitude <= 0) 
+        {
+            dir = Vector3.right;
+        }
         entity.ColisionCheckMove(dir.normalized * speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER));
         
     }

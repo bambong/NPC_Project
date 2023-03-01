@@ -2,6 +2,9 @@ using System.Collections;using System.Collections.Generic;
 using UnityEngine;
 using Spine;
 using Spine.Unity;
+using UnityEditor.ShaderGraph.Internal;
+using static UnityEditor.PlayerSettings;
+
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
@@ -24,8 +27,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private Rigidbody rigid;
-
-    private Vector3 moveVec;
+    [SerializeField]
+    private float moveEnableDis = 0.5f;
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
     private HpController hpController;
@@ -46,10 +49,11 @@ public class PlayerController : MonoBehaviour
     private float stepSmooth = 7f;
     private int stairLayer;
     private bool isStepClimb;
-
+    
     private int hp;
     public int Hp { get => hp; }
 
+    private readonly float CHECK_RAY_WIDTH = 0.3f;
 
     private void Awake()
     {
@@ -64,7 +68,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        rotater.rotation = Camera.main.transform.rotation;
+        //rotater.rotation = Camera.main.transform.rotation;
         playerStateController.Update();
 
     }
@@ -108,41 +112,14 @@ public class PlayerController : MonoBehaviour
         var angle = -1 * Vector3.Angle(Vector3.forward, forward);
         moveVec = Quaternion.AngleAxis(angle, Vector3.up) * moveVec;
         var boxHalfSize = box.size.x * 0.5f;
-        var checkWidth = box.size.x * 0.4f;
-        isOnSlope = IsOnSlope();
-        if (isOnSlope)
+        var checkWidth = box.size.x * CHECK_RAY_WIDTH;
+        var isSlope = IsOnSlope();
+        if (isSlope)
         {
             moveVec = AdjustDirectionToSlope(moveVec);
 
         }
-        if (Mathf.Abs(moveVec.x) > 0)
-        {
-            var dir = (moveVec.x > 0 ? 1 : -1) * boxHalfSize * Vector3.right + new Vector3(0, moveVec.y, 0);
-            Debug.DrawRay(pos + dir + new Vector3(0, 0, checkWidth), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
-            Debug.DrawRay(pos + dir - new Vector3(0, 0, checkWidth), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
-            if (!Physics.Raycast(pos + dir - new Vector3(0, 0, checkWidth), Vector3.down, box.size.y * 0.5f + stepHeight))
-            {
-                moveVec.x = 0;
-            }
-            else if (!Physics.Raycast(pos + dir + new Vector3(0, 0, checkWidth), Vector3.down, box.size.y * 0.5f + stepHeight ))
-            {
-                moveVec.x = 0;
-            }
-        }
-        if (Mathf.Abs(moveVec.z) > 0)
-        {
-            var dir = (moveVec.z > 0 ? 1 : -1) * boxHalfSize * Vector3.forward + new Vector3(0,moveVec.y,0);
-            Debug.DrawRay(pos + dir - new Vector3(checkWidth, 0, 0), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
-            Debug.DrawRay(pos + dir + new Vector3(checkWidth, 0, 0), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
-            if (!Physics.Raycast(pos + dir - new Vector3(checkWidth, 0, 0), Vector3.down, box.size.y * 0.5f + stepHeight ))
-            {
-                moveVec.z = 0;
-            }
-            else if (!Physics.Raycast(pos + dir + new Vector3(checkWidth, 0, 0), Vector3.down, box.size.y * 0.5f + stepHeight))
-            {
-                moveVec.z = 0;
-            }
-        }
+        moveVec = MoveRayCheck(moveVec, isSlope);
 
 
         if (new Vector3(moveVec.x, 0, moveVec.z).magnitude > 0.02f)
@@ -154,12 +131,52 @@ public class PlayerController : MonoBehaviour
             return false;
         }
     }
+    private Vector3 MoveRayCheck(Vector3 moveVec, bool isSlope )
+    {
+        var pos = transform.position + (Vector3.down* box.size.y * 0.5f) + (Vector3.down*stepHeight* 0.5f);
+        var boxHalfSize = box.size.x * 0.5f;
+        var checkWidth = box.size.x * CHECK_RAY_WIDTH;
+        float moveEnableWidth = box.size.x * 0.25f;
+        float boxHeight = (stepHeight/2) + (isSlope? stepHeight/2:0);
+        int layer = (-1) - (1 << LayerMask.NameToLayer("Player"));
+        if (Mathf.Abs(moveVec.x) > 0)
+        {
+            var dir = (moveVec.x > 0 ? 1 : -1) * (boxHalfSize + moveEnableDis/2) * Vector3.right;
+            var boxSize = new Vector3(moveEnableDis / 2, boxHeight, moveEnableWidth);
+            ExtDebug.DrawBox(pos + dir + new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, Color.red);
+            ExtDebug.DrawBox(pos + dir - new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, Color.red);
+            if (!Physics.CheckBox(pos + dir - new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            {
+                moveVec.x = 0;
+            }
+            else if (!Physics.CheckBox(pos + dir + new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            {
+                moveVec.x = 0;
+            }
+        }
+        if (Mathf.Abs(moveVec.z) > 0)
+        {
+            var dir = (moveVec.z > 0 ? 1 : -1) * (boxHalfSize + moveEnableDis / 2) * Vector3.forward ;
+            var boxSize = new Vector3(moveEnableWidth, boxHeight, moveEnableDis / 2);
+            ExtDebug.DrawBox(pos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
+            ExtDebug.DrawBox(pos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
+            if (!Physics.CheckBox(pos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer ,QueryTriggerInteraction.Ignore))
+            {
+                moveVec.z = 0;
+            }
+            else if (!Physics.CheckBox(pos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            {
+                moveVec.z = 0;
+            }
+        }
+        return moveVec;
+
+    }
     public void PlayerMoveUpdate()
     {
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
 
-        isOnSlope = IsOnSlope();
 
         if (new Vector3(hor, 0, ver).magnitude <= 0.1f)
         {
@@ -168,7 +185,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        moveVec = new Vector3(hor, 0, ver).normalized;
+        var moveVec = new Vector3(hor, 0, ver).normalized;
 
         var forward = Camera.main.transform.forward;
         forward.y = 0;
@@ -179,15 +196,21 @@ public class PlayerController : MonoBehaviour
         var pos = transform.position;
         var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
         var boxHalfSize = box.size.x * 0.5f;
-        var checkWidth = box.size.x * 0.4f;
+        var checkWidth = box.size.x * CHECK_RAY_WIDTH;
 
 
-        if (StepClimb())
+        if (StepClimb(moveVec))
         {
             return;
         }
 
-        if (isOnSlope)
+        if (moveVec.x != 0)
+        {
+            var dir = moveVec.x < 0 ? 1 : -1;
+            skeletonAnimation.skeleton.ScaleX = dir;
+        }
+        var isSlope = IsOnSlope();
+        if (isSlope)
         {
             moveVec = AdjustDirectionToSlope(moveVec);
             gravity = Vector3.zero;
@@ -198,41 +221,12 @@ public class PlayerController : MonoBehaviour
         {
            rigid.useGravity = true;
         }
-       
 
-        if (moveVec.x != 0)
-        {
-            var dir = moveVec.x < 0 ? 1 : -1;
-            skeletonAnimation.skeleton.ScaleX = dir;
-        }
-        if (Mathf.Abs(moveVec.x) > 0)
-        {
-            var dir = (moveVec.x > 0 ? 1 : -1) * boxHalfSize * Vector3.right + new Vector3(0, moveVec.y, 0);
-            Debug.DrawRay(pos + dir + new Vector3(0, 0, checkWidth), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
-            Debug.DrawRay(pos + dir - new Vector3(0, 0, checkWidth), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
-            if (!Physics.Raycast(pos + dir - new Vector3(0, 0, checkWidth), Vector3.down, box.size.y * 0.5f + stepHeight ))
-            {
-                moveVec.x = 0;
-            }
-            else if (!Physics.Raycast(pos + dir + new Vector3(0, 0, checkWidth), Vector3.down, box.size.y * 0.5f + stepHeight))
-            {
-                moveVec.x = 0;
-            }
-        }
-        if (Mathf.Abs(moveVec.z) > 0)
-        {
-            var dir = (moveVec.z > 0 ? 1 : -1) * boxHalfSize * Vector3.forward + new Vector3(0, moveVec.y, 0);
-            Debug.DrawRay(pos + dir - new Vector3(checkWidth, 0, 0), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
-            Debug.DrawRay(pos + dir + new Vector3(checkWidth, 0, 0), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
-            if (!Physics.Raycast(pos + dir - new Vector3(checkWidth, 0, 0), Vector3.down, box.size.y * 0.5f + stepHeight  ))
-            {
-                moveVec.z = 0;
-            }
-            else if (!Physics.Raycast(pos + dir + new Vector3(checkWidth, 0,0), Vector3.down, box.size.y * 0.5f + stepHeight ))
-            {
-                moveVec.z = 0;
-            }
-        }
+       
+        //var rayPos = pos + Vector3.down * box.size.y * 0.5f;
+
+        moveVec = MoveRayCheck(moveVec, isSlope);
+
         if (new Vector3(moveVec.x,0,moveVec.z).magnitude > 0.02f)
         {
              rigid.velocity = moveVec.normalized * speed + gravity;
@@ -366,14 +360,12 @@ public class PlayerController : MonoBehaviour
 
     public bool IsOnSlope()
     {
-        Vector3 boxVec = new Vector3(box.size.x, 0, 0) * 0.5f;
-        boxVec = Quaternion.Euler(new Vector3(0, rotater.rotation.eulerAngles.y + 90f, 0)) * boxVec;
-        Ray ray = new Ray(transform.position , Vector3.down);
+        Ray ray = new Ray(transform.position  , Vector3.down);
         Debug.DrawRay(transform.position, Vector3.down * transform.position.y, Color.blue);
         if(Physics.Raycast(ray, out slopeHit, transform.position.y, groundLayer))
         {
             var angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            if(angle != 0 &&angle < maxSlopeAngle) 
+            if(angle < maxSlopeAngle) 
             {
                 return true;   
             }
@@ -385,9 +377,9 @@ public class PlayerController : MonoBehaviour
     {
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
-    public bool StepClimb()
+    public bool StepClimb(Vector3 moveVec)
     {
-        var position = Quaternion.Euler(0, rotater.rotation.eulerAngles.y + 90.0f, 0) * new Vector3(box.size.x * -0.5f, box.size.y * 0.5f, 0);
+        var position = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y + 90.0f, 0) * new Vector3(box.size.x * -0.5f, box.size.y * 0.5f, 0);
        // Debug.DrawRay(transform.position - position, moveVec * 1.5f, Color.green);
         if(Physics.Raycast(transform.position - position, moveVec, 1.5f, stairLayer))
         {
