@@ -18,7 +18,7 @@ public class FloatKeyword : KeywordController
         //    removeDic.Remove(entity);
         //}
 
-        if(!entity.FloatMove(Vector3.up * Managers.Time.GetDeltaTime(TIME_TYPE.PLAYER)* speed)) 
+        if(!entity.FloatMove(Vector3.up * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER)* speed)) 
         {
             MoveToGround(entity);
         }

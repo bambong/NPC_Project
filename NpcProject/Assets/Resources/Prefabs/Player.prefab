@@ -42,7 +42,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 3567413477781239731}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.57
   m_Height: 6.7
   m_Direction: 1
@@ -197,8 +197,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5137152168051090499}
   - component: {fileID: 5137152168051090500}
-  - component: {fileID: 6048600823587306908}
   - component: {fileID: 7689613559260098677}
+  - component: {fileID: -2748945565535478403}
+  - component: {fileID: -3214319884165166903}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -235,19 +236,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b160be91258e224196826593c3c5fd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 400
+  moveSpeed: 600
   skeletonAnimation: {fileID: 5344602853287239467}
   idleAnim: idle
   runAnim: walk
   interactionDetecter: {fileID: 5137152168514951073}
   rotater: {fileID: 3074541703899278083}
   characterController: {fileID: 0}
-  rigid: {fileID: 6048600823587306908}
+  rigid: {fileID: -3214319884165166903}
   maxSlopeAngle: 40
   box: {fileID: 7689613559260098677}
   stepHeight: 1
   stepSmooth: 7
---- !u!54 &6048600823587306908
+--- !u!65 &7689613559260098677
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5137152168051090498}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.15, y: 6.4, z: 1.73}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!136 &-2748945565535478403
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5137152168051090498}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1.06
+  m_Height: 6.79
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &-3214319884165166903
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -263,19 +291,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!65 &7689613559260098677
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5137152168051090498}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2.15, y: 5.93, z: 1.73}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5137152168514951086
 GameObject:
   m_ObjectHideFlags: 0

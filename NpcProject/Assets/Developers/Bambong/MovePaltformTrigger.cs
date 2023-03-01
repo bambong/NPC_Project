@@ -8,7 +8,7 @@ public class MovePaltformTrigger : MonoBehaviour
     [SerializeField]
     private Transform invariableArea;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player")) 
         {

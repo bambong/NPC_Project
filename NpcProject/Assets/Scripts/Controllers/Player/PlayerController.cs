@@ -2,8 +2,6 @@ using System.Collections;using System.Collections.Generic;
 using UnityEngine;
 using Spine;
 using Spine.Unity;
-
-
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
@@ -68,11 +66,13 @@ public class PlayerController : MonoBehaviour
     {
         rotater.rotation = Camera.main.transform.rotation;
         playerStateController.Update();
+
     }
     private void FixedUpdate()
     {
         playerStateController.FixedUpdate();
     }
+ 
 
     #region OnStateEnter
     public void AnimIdleEnter() 
@@ -101,19 +101,51 @@ public class PlayerController : MonoBehaviour
     #region OnStateUpdate
     public bool IsMove(Vector3 pos,float hor,float ver)
     {
-        var moveVec = new Vector3(hor,0,ver).normalized;
-        moveVec = Quaternion.Euler(new Vector3(0,rotater.rotation.eulerAngles.y,0)) * moveVec;
-        var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
-        var nextPos = pos + moveVec * speed * Managers.Time.GetDeltaTime(TIME_TYPE.PLAYER) + (moveVec.normalized * box.size.x / 2);
+   
+        var moveVec = new Vector3(hor, 0, ver).normalized;
+        var forward = Camera.main.transform.forward;
+        forward.y = 0;
+        var angle = -1 * Vector3.Angle(Vector3.forward, forward);
+        moveVec = Quaternion.AngleAxis(angle, Vector3.up) * moveVec;
+        var boxHalfSize = box.size.x * 0.5f;
+        var checkWidth = box.size.x * 0.4f;
+        isOnSlope = IsOnSlope();
+        if (isOnSlope)
+        {
+            moveVec = AdjustDirectionToSlope(moveVec);
 
-        var checkVecOne = Quaternion.Euler(new Vector3(0,90.0f,0)) * moveVec * 0.5f;
-        var checkVecTwo = Quaternion.Euler(new Vector3(0,-90.0f,0)) * moveVec * 0.5f;
-        var checkOne = nextPos + checkVecOne;
-        var checkTwo = nextPos + checkVecTwo;
+        }
+        if (Mathf.Abs(moveVec.x) > 0)
+        {
+            var dir = (moveVec.x > 0 ? 1 : -1) * boxHalfSize * Vector3.right + new Vector3(0, moveVec.y, 0);
+            Debug.DrawRay(pos + dir + new Vector3(0, 0, checkWidth), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
+            Debug.DrawRay(pos + dir - new Vector3(0, 0, checkWidth), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
+            if (!Physics.Raycast(pos + dir - new Vector3(0, 0, checkWidth), Vector3.down, box.size.y * 0.5f + stepHeight))
+            {
+                moveVec.x = 0;
+            }
+            else if (!Physics.Raycast(pos + dir + new Vector3(0, 0, checkWidth), Vector3.down, box.size.y * 0.5f + stepHeight ))
+            {
+                moveVec.x = 0;
+            }
+        }
+        if (Mathf.Abs(moveVec.z) > 0)
+        {
+            var dir = (moveVec.z > 0 ? 1 : -1) * boxHalfSize * Vector3.forward + new Vector3(0,moveVec.y,0);
+            Debug.DrawRay(pos + dir - new Vector3(checkWidth, 0, 0), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
+            Debug.DrawRay(pos + dir + new Vector3(checkWidth, 0, 0), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
+            if (!Physics.Raycast(pos + dir - new Vector3(checkWidth, 0, 0), Vector3.down, box.size.y * 0.5f + stepHeight ))
+            {
+                moveVec.z = 0;
+            }
+            else if (!Physics.Raycast(pos + dir + new Vector3(checkWidth, 0, 0), Vector3.down, box.size.y * 0.5f + stepHeight))
+            {
+                moveVec.z = 0;
+            }
+        }
 
-        Debug.DrawRay(checkOne,Vector3.down * (box.size.y * 0.5f + stepHeight),Color.red);
-        Debug.DrawRay(checkTwo,Vector3.down * (box.size.y * 0.5f + stepHeight),Color.red);
-        if(Physics.Raycast(checkOne,Vector3.down,box.size.y * 0.5f + stepHeight) && Physics.Raycast(checkTwo,Vector3.down,box.size.y * 0.5f + stepHeight))
+
+        if (new Vector3(moveVec.x, 0, moveVec.z).magnitude > 0.02f)
         {
             return true;
         }
@@ -128,31 +160,29 @@ public class PlayerController : MonoBehaviour
         var ver = Input.GetAxis("Vertical");
 
         isOnSlope = IsOnSlope();
-       
-        if(new Vector3(hor,0,ver).magnitude <= 0.1f)
+
+        if (new Vector3(hor, 0, ver).magnitude <= 0.1f)
         {
             SetStateIdle();
             rigid.velocity = Vector3.zero;
             return;
         }
 
-        moveVec = new Vector3(hor,0,ver);
+        moveVec = new Vector3(hor, 0, ver).normalized;
 
-      
-        if(hor != 0) 
-        {
-            var dir = hor < 0 ? 1 : -1;
-            skeletonAnimation.skeleton.ScaleX = dir;
-        }
-
-        moveVec = Quaternion.Euler(new Vector3(0, rotater.rotation.eulerAngles.y, 0)) * moveVec.normalized;
+        var forward = Camera.main.transform.forward;
+        forward.y = 0;
+        var angle = -1*Vector3.Angle(Vector3.forward, forward);
+        moveVec = Quaternion.AngleAxis(angle,Vector3.up) * moveVec.normalized;
         Vector3 gravity = Vector3.down * Mathf.Abs(rigid.velocity.y);
 
         var pos = transform.position;
         var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
-        var nextPos = pos + moveVec * speed * Managers.Time.GetDeltaTime(TIME_TYPE.PLAYER) + (moveVec.normalized * box.size.x/2);
-        
-        if(StepClimb())
+        var boxHalfSize = box.size.x * 0.5f;
+        var checkWidth = box.size.x * 0.4f;
+
+
+        if (StepClimb())
         {
             return;
         }
@@ -162,23 +192,50 @@ public class PlayerController : MonoBehaviour
             moveVec = AdjustDirectionToSlope(moveVec);
             gravity = Vector3.zero;
             rigid.useGravity = false;
+            Debug.DrawRay(pos, moveVec * 10, Color.blue);
         }
         else
         {
-            rigid.useGravity = true;
+           rigid.useGravity = true;
         }
+       
 
-        var checkVecOne = Quaternion.Euler(new Vector3(0, 90.0f, 0)) * moveVec * 0.5f;
-        var checkVecTwo = Quaternion.Euler(new Vector3(0, -90.0f, 0)) * moveVec * 0.5f;
-        var checkOne = nextPos + checkVecOne;
-        var checkTwo = nextPos + checkVecTwo;
-
-        Debug.DrawRay(checkOne,Vector3.down * (box.size.y * 0.5f + stepHeight),Color.red);
-        Debug.DrawRay(checkTwo,Vector3.down * (box.size.y * 0.5f + stepHeight),Color.red);
-        if ((Physics.Raycast(checkOne, Vector3.down, box.size.y * 0.5f + stepHeight) && Physics.Raycast(checkTwo, Vector3.down, box.size.y * 0.5f + stepHeight)))
+        if (moveVec.x != 0)
         {
-            var moveVelocity = moveVec * speed;
-            rigid.velocity = moveVelocity + gravity;
+            var dir = moveVec.x < 0 ? 1 : -1;
+            skeletonAnimation.skeleton.ScaleX = dir;
+        }
+        if (Mathf.Abs(moveVec.x) > 0)
+        {
+            var dir = (moveVec.x > 0 ? 1 : -1) * boxHalfSize * Vector3.right + new Vector3(0, moveVec.y, 0);
+            Debug.DrawRay(pos + dir + new Vector3(0, 0, checkWidth), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
+            Debug.DrawRay(pos + dir - new Vector3(0, 0, checkWidth), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
+            if (!Physics.Raycast(pos + dir - new Vector3(0, 0, checkWidth), Vector3.down, box.size.y * 0.5f + stepHeight ))
+            {
+                moveVec.x = 0;
+            }
+            else if (!Physics.Raycast(pos + dir + new Vector3(0, 0, checkWidth), Vector3.down, box.size.y * 0.5f + stepHeight))
+            {
+                moveVec.x = 0;
+            }
+        }
+        if (Mathf.Abs(moveVec.z) > 0)
+        {
+            var dir = (moveVec.z > 0 ? 1 : -1) * boxHalfSize * Vector3.forward + new Vector3(0, moveVec.y, 0);
+            Debug.DrawRay(pos + dir - new Vector3(checkWidth, 0, 0), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
+            Debug.DrawRay(pos + dir + new Vector3(checkWidth, 0, 0), Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
+            if (!Physics.Raycast(pos + dir - new Vector3(checkWidth, 0, 0), Vector3.down, box.size.y * 0.5f + stepHeight  ))
+            {
+                moveVec.z = 0;
+            }
+            else if (!Physics.Raycast(pos + dir + new Vector3(checkWidth, 0,0), Vector3.down, box.size.y * 0.5f + stepHeight ))
+            {
+                moveVec.z = 0;
+            }
+        }
+        if (new Vector3(moveVec.x,0,moveVec.z).magnitude > 0.02f)
+        {
+             rigid.velocity = moveVec.normalized * speed + gravity;
         }
         else
         {
@@ -311,8 +368,8 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 boxVec = new Vector3(box.size.x, 0, 0) * 0.5f;
         boxVec = Quaternion.Euler(new Vector3(0, rotater.rotation.eulerAngles.y + 90f, 0)) * boxVec;
-        Ray ray = new Ray(transform.position + boxVec, Vector3.down);
-        Debug.DrawRay(transform.position + boxVec, Vector3.down * transform.position.y, Color.blue);
+        Ray ray = new Ray(transform.position , Vector3.down);
+        Debug.DrawRay(transform.position, Vector3.down * transform.position.y, Color.blue);
         if(Physics.Raycast(ray, out slopeHit, transform.position.y, groundLayer))
         {
             var angle = Vector3.Angle(Vector3.up, slopeHit.normal);

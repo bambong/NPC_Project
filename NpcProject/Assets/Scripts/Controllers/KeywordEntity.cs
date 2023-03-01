@@ -274,7 +274,7 @@ public class KeywordEntity : MonoBehaviour
         {
             layer += (1 << (LayerMask.NameToLayer(name)));
         }
-        var boxSize = VectorMultipleScale(col.size/2,transform.lossyScale);
+        var boxSize = VectorMultipleScale(col.size/2,transform.lossyScale)* 0.99f;
         var rot = KeywordTransformFactor.rotation * Quaternion.Euler(vec);
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos,boxSize,rot,Color.blue);
@@ -309,7 +309,7 @@ public class KeywordEntity : MonoBehaviour
 //        {
 //            return false;
 //        }
-        if (ColisionCheckBox(vec, boxSize)) 
+        if (ColisionCheckBox(vec, boxSize))
         {
             return false;
         }
@@ -412,9 +412,9 @@ public class KeywordEntity : MonoBehaviour
             layer += (1 << (LayerMask.NameToLayer(name)));
         }
 #if UNITY_EDITOR
-        ExtDebug.DrawBoxCastBox(pos, boxSize, transform.rotation, vec.normalized, vec.magnitude, Color.blue);
+        ExtDebug.DrawBoxCastBox(pos, boxSize, KeywordTransformFactor.rotation, vec.normalized, vec.magnitude, Color.blue);
 #endif
-        Physics.BoxCast(pos, boxSize, vec.normalized, out hit, transform.rotation, vec.magnitude, layer);
+        Physics.BoxCast(pos, boxSize, vec.normalized, out hit, KeywordTransformFactor.rotation, vec.magnitude, layer);
         if (hit.collider != null)
         {
             return true;
