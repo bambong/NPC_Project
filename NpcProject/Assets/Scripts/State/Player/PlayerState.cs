@@ -37,7 +37,6 @@ public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.AnimRunEnter();
     }
 
     public void Exit(PlayerController stateController)

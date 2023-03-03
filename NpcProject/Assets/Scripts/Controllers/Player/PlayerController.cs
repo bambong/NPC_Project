@@ -5,26 +5,20 @@ using Spine.Unity;
 using UnityEditor.ShaderGraph.Internal;
 using static UnityEditor.PlayerSettings;
 using UnityEditor.Animations;
+using UnityEditor.Rendering.Utilities;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     private float moveSpeed = 10f;
-    [SerializeField]
-    private SkeletonAnimation skeletonAnimation;
-    [SpineAnimation]
-    [SerializeField]
-    private string idleAnim;
-    [SpineAnimation]
-    [SerializeField]
-    private string runAnim;
 
+    [SerializeField]
+    private PlayerAnimationController animationController;
     [SerializeField]
     private InteractionDetectController interactionDetecter;
     [SerializeField]
     private Transform rotater;
-    [SerializeField]
-    private CharacterController characterController;
 
     [SerializeField]
     private Rigidbody rigid;
@@ -43,18 +37,10 @@ public class PlayerController : MonoBehaviour
     private RaycastHit slopeHit;
     private int groundLayer;
 
-    [Header("Player Step Climb")]
     [SerializeField]
     private float stepHeight = 1.0f;
-    [SerializeField]
-    private float stepSmooth = 7f;
 
-    [SerializeField]
-    private Animator animator;
-
-    private int stairLayer;
-    private bool isStepClimb;
-    
+    private PlayerAnimationController.AnimDir curDir = PlayerAnimationController.AnimDir.Front;
     private int hp;
     public int Hp { get => hp; }
 
@@ -67,13 +53,14 @@ public class PlayerController : MonoBehaviour
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null,"GlitchEffect");
         hpController = Managers.UI.MakeSceneUI<HpController>(null, "HpUI");
         groundLayer = (1 << LayerMask.NameToLayer("Ground"));
-        stairLayer = 1 << LayerMask.NameToLayer("Stair");
         hp = 4;
     }
 
     void Update()
     {
-        //rotater.rotation = Camera.main.transform.rotation;
+        var rot = Camera.main.transform.rotation.eulerAngles;
+        rot.x = 0;
+        rotater.rotation = Quaternion.Euler(rot);
         playerStateController.Update();
 
     }
@@ -82,32 +69,13 @@ public class PlayerController : MonoBehaviour
         playerStateController.FixedUpdate();
     }
  
-    private void FrameAnimOn(bool isFront) 
-    {
-        skeletonAnimation.gameObject.SetActive(false);
-        animator.gameObject.SetActive(true);
-        animator.SetBool("IsFront", isFront);
-    }
-    #region OnStateEnter
-    public void AnimIdleEnter() 
-    {
-        animator.gameObject.SetActive(false);
-        skeletonAnimation.gameObject.SetActive(true);
-        skeletonAnimation.AnimationState.SetAnimation(0,idleAnim,true);
-    }
-    public void AnimRunEnter()
-    {
-        animator.gameObject.SetActive(false);
-        skeletonAnimation.gameObject.SetActive(true);
-        skeletonAnimation.AnimationState.SetAnimation(0,runAnim,true);
-    }
     public void InteractionEnter() 
     {
         interactionDetecter.InteractionUiDisable();
         hpController.Close();
     }
 
-    #endregion
+
     #region OnStateExit
     public void InteractionExit()
     {
@@ -121,10 +89,10 @@ public class PlayerController : MonoBehaviour
     {
    
         var moveVec = new Vector3(hor, 0, ver).normalized;
-        var forward = Camera.main.transform.forward;
-        forward.y = 0;
-        var angle = -1 * Vector3.Angle(Vector3.forward, forward);
-        moveVec = Quaternion.AngleAxis(angle, Vector3.up) * moveVec;
+        //var forward = Camera.main.transform.forward;
+        //forward.y = 0;
+        //var angle = -1 * Vector3.Angle(Vector3.forward, forward);
+        moveVec =rotater.transform.TransformDirection(moveVec);
         var boxHalfSize = box.size.x * 0.5f;
         var checkWidth = box.size.x * CHECK_RAY_WIDTH;
         var isSlope = IsOnSlope();
@@ -186,6 +154,33 @@ public class PlayerController : MonoBehaviour
         return moveVec;
 
     }
+    private void CurrentAnimDirUpdtae(Vector3 moveVec) 
+    {
+        var moveDotVer = Vector3.Dot(rotater.transform.forward.normalized, moveVec.normalized);
+        if (Mathf.Abs(moveDotVer) > 0.71f)
+        {
+            if (moveDotVer < 0)
+            {
+                curDir = PlayerAnimationController.AnimDir.Front;
+            }
+            else
+            {
+                curDir = PlayerAnimationController.AnimDir.Back;
+            }
+        }
+        else
+        {
+            var moveDotHor = Vector3.Dot(rotater.transform.right.normalized, moveVec.normalized);
+            if (moveDotHor < 0)
+            {
+                curDir = PlayerAnimationController.AnimDir.Left;
+            }
+            else
+            {
+                curDir = PlayerAnimationController.AnimDir.Right;
+            }
+        }
+    }
     public void PlayerMoveUpdate()
     {
         var hor = Input.GetAxis("Horizontal");
@@ -201,25 +196,16 @@ public class PlayerController : MonoBehaviour
 
         var moveVec = new Vector3(hor, 0, ver).normalized;
 
-        var forward = Camera.main.transform.forward;
-        forward.y = 0;
-        var angle = -1*Vector3.Angle(Vector3.forward, forward);
-        moveVec = Quaternion.AngleAxis(angle,Vector3.up) * moveVec.normalized;
+        //var forward = Camera.main.transform.forward;
+        //forward.y = 0;
+        //var angle = -1*Vector3.Angle(Vector3.forward, forward);
+        moveVec = rotater.transform.TransformDirection(moveVec);
         Vector3 gravity = Vector3.down * Mathf.Abs(rigid.velocity.y);
 
         var pos = transform.position;
         var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
 
-        if (StepClimb(moveVec))
-        {
-            return;
-        }
 
-        if (moveVec.x != 0)
-        {
-            var dir = moveVec.x < 0 ? 1 : -1;
-            skeletonAnimation.skeleton.ScaleX = dir;
-        }
         var isSlope = IsOnSlope();
         if (isSlope)
         {
@@ -238,18 +224,13 @@ public class PlayerController : MonoBehaviour
 
         moveVec = MoveRayCheck(moveVec, isSlope);
 
-        if(Mathf.Abs(hor) < Mathf.Abs(ver)) 
-        {
-            FrameAnimOn(ver <= 0);
-        }
-        else if(animator.gameObject.activeSelf)
-        {
-            AnimRunEnter();
-        }
+     
 
         if (new Vector3(moveVec.x,0,moveVec.z).magnitude > 0.02f)
         {
-             rigid.velocity = moveVec.normalized * speed + gravity;
+            CurrentAnimDirUpdtae(moveVec);
+            animationController.SetMoveAnim(curDir);
+            rigid.velocity = moveVec.normalized * speed + gravity;
         }
         else
         {
@@ -278,11 +259,11 @@ public class PlayerController : MonoBehaviour
             return;
         }
         
-        if(hor != 0)
-        {
-            var dir = hor < 0 ? 1 : -1;
-            skeletonAnimation.skeleton.ScaleX = dir;
-        }
+        //if(hor != 0)
+        //{
+        //    var dir = hor < 0 ? 1 : -1;
+        //    skeletonAnimation.skeleton.ScaleX = dir;
+        //}
 
         if(IsMove(transform.position,hor,ver))
         {
@@ -341,6 +322,14 @@ public class PlayerController : MonoBehaviour
             hpController.Open();
         });
     }
+    public void AnimIdleEnter()
+    {
+        animationController.SetIdleAnim(curDir);
+    }
+    public void AnimMoveEnter()
+    {
+        animationController.SetMoveAnim(curDir);
+    }
     public void ClearMoveAnim()
     {
         AnimIdleEnter();
@@ -397,30 +386,6 @@ public class PlayerController : MonoBehaviour
     {
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
-    public bool StepClimb(Vector3 moveVec)
-    {
-        var position = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y + 90.0f, 0) * new Vector3(box.size.x * -0.5f, box.size.y * 0.5f, 0);
-       // Debug.DrawRay(transform.position - position, moveVec * 1.5f, Color.green);
-        if(Physics.Raycast(transform.position - position, moveVec, 1.5f, stairLayer))
-        {
-         //   Debug.DrawRay(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f - stepHeight, 0), moveVec * 1.6f, Color.green);
-            if(!Physics.Raycast(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f - stepHeight, 0), moveVec, 1.6f, stairLayer))
-            {
-                rigid.useGravity = false;
-                rigid.position -= new Vector3(0f, -stepSmooth * Time.fixedDeltaTime, 0f);
-                return true;
-            }
-            else
-            {
-                return false;
-            } 
-        }
-        else
-        {
-            return false;
-        }
-    }
-
     public void GetDamage()
     {
         if(hp > 0)
@@ -437,7 +402,7 @@ public class PlayerController : MonoBehaviour
             hpController.GetHp();
         }
     }
-    
+  
     #endregion
 
     #region SetState
