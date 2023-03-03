@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class PlayerUIController : UI_Base
 {
     [SerializeField]
-    private Image HpUI;
+    private Image hpUI;
     [SerializeField]
-    private Image DebugUI;
+    private Image debugUI;
 
     public override void Init()
     {
@@ -23,7 +23,7 @@ public class PlayerUIController : UI_Base
             if(Managers.Game.Player.Hp >= 0)
             {
                 float hp = (float)Managers.Game.Player.Hp / Managers.Game.Player.MaxHp;
-                HpUI.fillAmount = hp;
+                hpUI.fillAmount = hp;
             }
         }
     }
@@ -32,27 +32,25 @@ public class PlayerUIController : UI_Base
     {
         if(Managers.Keyword.CurDebugZone == null)
         {
-            DebugUI.gameObject.SetActive(false);
+            debugUI.gameObject.SetActive(false);
         }
         else
         {
-            DebugUI.gameObject.SetActive(true);
+            debugUI.gameObject.SetActive(true);
         }
     }
-
     public void OnPlayerUI()
     {
         this.gameObject.SetActive(true);
         if(Managers.Keyword.CurDebugZone == null)
         {
-            DebugUI.gameObject.SetActive(false);
+            debugUI.gameObject.SetActive(false);
         }
         else
         {
-            DebugUI.gameObject.SetActive(true);
+            debugUI.gameObject.SetActive(true);
         }
     }
-
     public void OffPlayerUI()
     {
         this.gameObject.SetActive(false);

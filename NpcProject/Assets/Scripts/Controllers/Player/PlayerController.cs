@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
     private PlayerUIController playerUIController;
+    private DeathUIController deathUIController;
 
     [Header("Player Slope Check")]
     [SerializeField]
@@ -57,12 +58,14 @@ public class PlayerController : MonoBehaviour
     private int hp;
     public int Hp { get => hp; }
 
+
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null,"GlitchEffect");
         playerUIController = Managers.UI.MakeSceneUI<PlayerUIController>(null, "PlayerUI");
+        deathUIController = Managers.UI.MakeSceneUI<DeathUIController>(null, "DeathUI");
         groundLayer = 1 << LayerMask.NameToLayer("Ground");
         stairLayer = 1 << LayerMask.NameToLayer("Stair");
     }
@@ -341,8 +344,11 @@ public class PlayerController : MonoBehaviour
     public void GetDamage(int damage)
     {
         hp = hp - damage;
-        Debug.Log(hp);
         playerUIController.SetHp();
+        if(hp == 0)
+        {
+            SetstateDeath();
+        }
     }
 
     public void OpenPlayerUI()
@@ -356,6 +362,14 @@ public class PlayerController : MonoBehaviour
     public void isDebugButton()
     {
         playerUIController.DebugButtom();
+    }
+    public void OpenDeathUI()
+    {
+        deathUIController.DeathUIOpen();
+    }
+    public void CloseDeathUI()
+    {
+        deathUIController.DeathUIClose();
     }
     
     #endregion

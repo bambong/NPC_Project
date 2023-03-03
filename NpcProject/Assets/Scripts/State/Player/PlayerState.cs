@@ -163,6 +163,7 @@ public class PlayerDeath : Singleton<PlayerDeath>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
+        stateController.OpenDeathUI();
     }
 
     public void Exit(PlayerController stateController)
