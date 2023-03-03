@@ -28,7 +28,7 @@ public class DebugZone : MonoBehaviour
     private void MakeFrame() 
     {
         playerLayout = Managers.Resource.Instantiate("Layout",Managers.Keyword.PlayerPanelLayout).transform;
-
+        ClosePlayerLayout();
         for(int i = 0; i < playerSlotCount; ++i)
         {
             playerFrames.Add(Managers.UI.MakeSubItem<KeywordFrameController>(playerLayout,"KeywordPlayerSlotUI"));

@@ -279,7 +279,7 @@ public class KeywordEntity : MonoBehaviour
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos,boxSize,rot,Color.blue);
 #endif
-        var hits = Physics.OverlapBox(pos,boxSize,rot,layer);
+        var hits = Physics.OverlapBox(pos,boxSize,rot,layer,QueryTriggerInteraction.Ignore);
         if(hits.Length > 1)
         {
             return false;
@@ -291,29 +291,25 @@ public class KeywordEntity : MonoBehaviour
     }
     public bool ColisionCheckMove(Vector3 vec)
     {
-        //var pos = col.transform.position;
+        var pos = col.transform.position;
 
-        //RaycastHit hit;
-        //int layer = 1;
-        //foreach (var name in Enum.GetNames(typeof(Define.ColiiderMask)))
-        //{
-        //    layer += (1 << (LayerMask.NameToLayer(name)));
-        //}
+        RaycastHit hit;
+        int layer = 1;
+        foreach (var name in Enum.GetNames(typeof(Define.ColiiderMask)))
+        {
+            layer += (1 << (LayerMask.NameToLayer(name)));
+        }
         var boxSize = VectorMultipleScale(col.size / 2, transform.lossyScale);
         boxSize *= 0.99f;
-//#if UNITY_EDITOR
-//        ExtDebug.DrawBoxCastBox(pos, boxSize, KeywordTransformFactor.rotation, vec.normalized, vec.magnitude, Color.red);
-//#endif
-//        Physics.BoxCast(pos, boxSize, vec.normalized, out hit, KeywordTransformFactor.rotation, vec.magnitude, layer);
-//        if (hit.collider != null)
-//        {
-//            return false;
-//        }
-        if (ColisionCheckBox(vec, boxSize))
+#if UNITY_EDITOR
+        ExtDebug.DrawBoxCastBox(pos, boxSize, KeywordTransformFactor.rotation, vec.normalized, vec.magnitude, Color.red);
+#endif
+        Physics.BoxCast(pos, boxSize, vec.normalized, out hit, KeywordTransformFactor.rotation, vec.magnitude, layer);
+        if (hit.collider != null)
         {
             return false;
         }
-
+      
         KeywordTransformFactor.position += vec;
         return true;
 

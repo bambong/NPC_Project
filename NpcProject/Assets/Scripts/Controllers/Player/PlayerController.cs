@@ -4,6 +4,7 @@ using Spine;
 using Spine.Unity;
 using UnityEditor.ShaderGraph.Internal;
 using static UnityEditor.PlayerSettings;
+using UnityEditor.Animations;
 
 public class PlayerController : MonoBehaviour
 {
@@ -47,6 +48,10 @@ public class PlayerController : MonoBehaviour
     private float stepHeight = 1.0f;
     [SerializeField]
     private float stepSmooth = 7f;
+
+    [SerializeField]
+    private Animator animator;
+
     private int stairLayer;
     private bool isStepClimb;
     
@@ -77,14 +82,23 @@ public class PlayerController : MonoBehaviour
         playerStateController.FixedUpdate();
     }
  
-
+    private void FrameAnimOn(bool isFront) 
+    {
+        skeletonAnimation.gameObject.SetActive(false);
+        animator.gameObject.SetActive(true);
+        animator.SetBool("IsFront", isFront);
+    }
     #region OnStateEnter
     public void AnimIdleEnter() 
     {
+        animator.gameObject.SetActive(false);
+        skeletonAnimation.gameObject.SetActive(true);
         skeletonAnimation.AnimationState.SetAnimation(0,idleAnim,true);
     }
     public void AnimRunEnter()
     {
+        animator.gameObject.SetActive(false);
+        skeletonAnimation.gameObject.SetActive(true);
         skeletonAnimation.AnimationState.SetAnimation(0,runAnim,true);
     }
     public void InteractionEnter() 
@@ -195,9 +209,6 @@ public class PlayerController : MonoBehaviour
 
         var pos = transform.position;
         var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
-        var boxHalfSize = box.size.x * 0.5f;
-        var checkWidth = box.size.x * CHECK_RAY_WIDTH;
-
 
         if (StepClimb(moveVec))
         {
@@ -226,6 +237,15 @@ public class PlayerController : MonoBehaviour
         //var rayPos = pos + Vector3.down * box.size.y * 0.5f;
 
         moveVec = MoveRayCheck(moveVec, isSlope);
+
+        if(Mathf.Abs(hor) < Mathf.Abs(ver)) 
+        {
+            FrameAnimOn(ver <= 0);
+        }
+        else if(animator.gameObject.activeSelf)
+        {
+            AnimRunEnter();
+        }
 
         if (new Vector3(moveVec.x,0,moveVec.z).magnitude > 0.02f)
         {
