@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public enum KeywordActionType 
 {
@@ -302,14 +303,17 @@ public class KeywordEntity : MonoBehaviour
         var boxSize = VectorMultipleScale(col.size / 2, transform.lossyScale);
         boxSize *= 0.99f;
 #if UNITY_EDITOR
-        ExtDebug.DrawBoxCastBox(pos, boxSize, KeywordTransformFactor.rotation, vec.normalized, vec.magnitude, Color.red);
+        ExtDebug.DrawBox(pos + vec, boxSize, KeywordTransformFactor.rotation, Color.blue);
 #endif
-        Physics.BoxCast(pos, boxSize, vec.normalized, out hit, KeywordTransformFactor.rotation, vec.magnitude, layer);
-        if (hit.collider != null)
+        var hits = Physics.OverlapBox(pos+vec, boxSize, KeywordTransformFactor.rotation, layer, QueryTriggerInteraction.Ignore);
+        
+        for(int i = 0; i< hits.Length; ++i) 
         {
-            return false;
+            if(hits[i] != col) 
+            {
+                return false;
+            }
         }
-      
         KeywordTransformFactor.position += vec;
         return true;
 
@@ -408,14 +412,17 @@ public class KeywordEntity : MonoBehaviour
             layer += (1 << (LayerMask.NameToLayer(name)));
         }
 #if UNITY_EDITOR
-        ExtDebug.DrawBoxCastBox(pos, boxSize, KeywordTransformFactor.rotation, vec.normalized, vec.magnitude, Color.blue);
+        ExtDebug.DrawBox(pos + vec, boxSize, KeywordTransformFactor.rotation, Color.blue);
 #endif
-        Physics.BoxCast(pos, boxSize, vec.normalized, out hit, KeywordTransformFactor.rotation, vec.magnitude, layer);
-        if (hit.collider != null)
-        {
-            return true;
-        }
+        var hits = Physics.OverlapBox(pos + vec, boxSize, KeywordTransformFactor.rotation, layer, QueryTriggerInteraction.Ignore);
 
+        for (int i = 0; i < hits.Length; ++i)
+        {
+            if (hits[i] != col)
+            {
+                return true;
+            }
+        }
         return false;
     }
     private Vector3 AddDis(Vector3 vec, float amount)
