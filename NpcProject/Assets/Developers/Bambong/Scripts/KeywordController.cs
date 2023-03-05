@@ -28,6 +28,8 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     private Transform startParent;
     private Vector3 startDragPoint;
     private KeywordFrameBase curFrame;
+    protected DebugZone parentDebugZone;
+    
     public TextMeshProUGUI KeywordText { get => keywordText;}
     public Image Image { get => image; }
     public string KewordId { get; private set; }
@@ -38,7 +40,8 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
          KewordId = GetType().ToString();
     }
     public void SetFrame(KeywordFrameBase frame) => curFrame = frame;
-
+    public virtual void SetDebugZone(DebugZone zone) => parentDebugZone = zone;
+    
     public void OnBeginDrag(PointerEventData eventData)
     {
         if(eventData.button != PointerEventData.InputButton.Left) 

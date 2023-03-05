@@ -48,9 +48,13 @@ public class KeywordEntity : MonoBehaviour
     [SerializeField]
     private Vector3 maxScale = Vector3.one * 2;
 
-    private float curHeight = 0;
+    [Header("Make Keyword")]
+    [SerializeField]
+    private GameObject[] keywords;
+
     private Dictionary<string,KeywordAction> keywrodOverrideTable = new Dictionary<string,KeywordAction>();
     private Dictionary<KeywordController,KeywordAction> currentRegisterKeyword = new Dictionary<KeywordController,KeywordAction>();
+   
     private List<KeywordFrameController> keywordSlotUI = new List<KeywordFrameController>();
     private List<KeywordWorldSlotUIController> keywordSlotWorldUI = new List<KeywordWorldSlotUIController>();
 
@@ -61,11 +65,11 @@ public class KeywordEntity : MonoBehaviour
     private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
 
     public Dictionary<KeywordController,KeywordAction> CurrentRegisterKeyword { get => currentRegisterKeyword; }
-
+    private DebugZone parentDebugZone;
     public virtual Transform KeywordTransformFactor { get => transform; }
     public Vector3 OriginScale { get; private set; }
     public Vector3 MaxScale { get => maxScale; }
-
+    public bool IsAvailable { get => parentDebugZone == Managers.Keyword.CurDebugZone; }
     private void Start()
     {
         OriginScale = transform.lossyScale;
@@ -93,8 +97,40 @@ public class KeywordEntity : MonoBehaviour
 
         TryGetComponent<Rigidbody>(out rigidbody);
         keywordWorldSlotLayout.SortChild(2.1f);
+        MakeKeyword();
+        DecisionKeyword();
     }
-   
+
+    private void MakeKeyword()
+    {
+        for (int i = 0; i < keywords.Length; ++i)
+        {
+            var keyword = Managers.UI.MakeSubItem<KeywordController>(null, "KeywordPrefabs/" + keywords[i].name);
+
+            if (!RegisterKeyword(keyword))
+            {
+                Debug.LogError($" DebugZone : {gameObject.name} 슬롯 갯수 이상의 키워드 생성");
+                return;
+            }
+        }
+    }
+    private bool RegisterKeyword(KeywordController keyword)
+    {
+        for (int i = 0; i < keywordSlotUI.Count; ++i)
+        {
+            if (keywordSlotUI[i].HasKeyword)
+            {
+                continue;
+            }
+            keywordSlotUI[i].SetKeyWord(keyword);
+            keyword.SetFrame(keywordSlotUI[i]);
+            keyword.SetDebugZone(parentDebugZone);
+            return true;
+        }
+
+        return false;
+    }
+    public void SetDebugZone(DebugZone zone) => parentDebugZone = zone;
     private void CreateKeywordFrame() 
     {
         var slot = Managers.UI.MakeSubItem<KeywordFrameController>(keywordSlotLayout, "KeywordSlotUI");
@@ -259,13 +295,6 @@ public class KeywordEntity : MonoBehaviour
     }
     #region Keyword_Control
 
-    private Vector3 VectorMultipleScale(Vector3 origin,Vector3 scale) 
-    {
-        origin.x *= scale.x;
-        origin.y *= scale.y;
-        origin.z *= scale.z;
-        return origin;
-    }
     public bool ColisionCheckRotate(Vector3 vec)
     {
         var pos = col.transform.position;
@@ -275,7 +304,7 @@ public class KeywordEntity : MonoBehaviour
         {
             layer += (1 << (LayerMask.NameToLayer(name)));
         }
-        var boxSize = VectorMultipleScale(col.size/2,transform.lossyScale)* 0.99f;
+        var boxSize = Util.VectorMultipleScale(col.size/2,transform.lossyScale)* 0.99f;
         var rot = KeywordTransformFactor.rotation * Quaternion.Euler(vec);
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos,boxSize,rot,Color.blue);
@@ -300,7 +329,7 @@ public class KeywordEntity : MonoBehaviour
         {
             layer += (1 << (LayerMask.NameToLayer(name)));
         }
-        var boxSize = VectorMultipleScale(col.size / 2, transform.lossyScale);
+        var boxSize = Util.VectorMultipleScale(col.size / 2, transform.lossyScale);
         boxSize *= 0.99f;
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos + vec, boxSize, KeywordTransformFactor.rotation, Color.blue);
@@ -359,8 +388,8 @@ public class KeywordEntity : MonoBehaviour
     }
     public bool ColisionCheckScale(Vector3 desireScale, GameObject dummyParent) 
     {
-        var desireBoxSize = VectorMultipleScale(col.size / 2, desireScale);
-        var curBoxSize = VectorMultipleScale(col.size / 2, transform.lossyScale);
+        var desireBoxSize = Util.VectorMultipleScale(col.size / 2, desireScale);
+        var curBoxSize = Util.VectorMultipleScale(col.size / 2, transform.lossyScale);
         var boxScaleDiff = (desireBoxSize - curBoxSize);
 
         Vector3 parentPos = Vector3.zero;

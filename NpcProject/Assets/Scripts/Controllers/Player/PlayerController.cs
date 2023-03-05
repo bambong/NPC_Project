@@ -71,13 +71,19 @@ public class PlayerController : MonoBehaviour
         rot.x = 0;
         rotater.rotation = Quaternion.Euler(rot);
         playerStateController.Update();
+        if (transform.lossyScale != Vector3.one)
+        {
+            var factor = 1 / transform.lossyScale.x;
+            transform.localScale *= factor;
+        }
 
     }
     private void FixedUpdate()
     {
         playerStateController.FixedUpdate();
+     
     }
- 
+    
     public void InteractionEnter() 
     {
         interactionDetecter.InteractionUiDisable();
@@ -374,9 +380,8 @@ public class PlayerController : MonoBehaviour
 
     public bool IsOnSlope()
     {
-        Ray ray = new Ray(transform.position  , Vector3.down);
-        Debug.DrawRay(transform.position, Vector3.down * transform.position.y, Color.blue);
-        if(Physics.Raycast(ray, out slopeHit, transform.position.y, groundLayer))
+        Debug.DrawRay(transform.position, Vector3.down * transform.position.y, Color.blue);  
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, transform.position.y , groundLayer))
         {
             var angle = Vector3.Angle(Vector3.up, slopeHit.normal);
             if(angle < maxSlopeAngle) 

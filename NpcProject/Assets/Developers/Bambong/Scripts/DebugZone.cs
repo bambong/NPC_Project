@@ -13,7 +13,11 @@ public class DebugZone : MonoBehaviour
     private int playerSlotCount =2;
 
     [SerializeField]
+    private List<KeywordEntity> childEntitys = new List<KeywordEntity>(); 
+
+    [SerializeField]
     private GameObject[] keywords;
+
 
     public int PlayerSlotCount { get => playerSlotCount; }
 
@@ -24,6 +28,11 @@ public class DebugZone : MonoBehaviour
     {
         MakeFrame();
         MakeKeyword();
+        for(int i = 0; i< childEntitys.Count; ++i) 
+        {
+            childEntitys[i].SetDebugZone(this);
+        } 
+
     }
     private void MakeFrame() 
     {
@@ -57,6 +66,7 @@ public class DebugZone : MonoBehaviour
             }
             playerFrames[i].SetKeyWord(keyword);
             keyword.SetFrame(playerFrames[i]);
+            keyword.SetDebugZone(this);
             return true;
         }
 

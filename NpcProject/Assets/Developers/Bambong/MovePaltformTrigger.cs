@@ -8,7 +8,7 @@ public class MovePaltformTrigger : MonoBehaviour
     [SerializeField]
     private Transform invariableArea;
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player")) 
         {
@@ -17,9 +17,10 @@ public class MovePaltformTrigger : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        if(other.transform.parent == invariableArea) 
+        if(other.CompareTag("Player") && other.transform.parent == invariableArea) 
         {
             other.transform.SetParent(null);
+            other.transform.localScale = Vector3.one;
         }
     }
 }
