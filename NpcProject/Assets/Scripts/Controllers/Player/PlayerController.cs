@@ -26,7 +26,8 @@ public class PlayerController : MonoBehaviour
     private float moveEnableDis = 0.5f;
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
-    private HpController hpController;
+    private PlayerUIController playerUIController;
+    private DeathUIController deathUIController;
 
     [Header("Player Slope Check")]
     [SerializeField]
@@ -40,7 +41,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float stepHeight = 1.0f;
 
+
     private PlayerAnimationController.AnimDir curDir = PlayerAnimationController.AnimDir.Front;
+
+    [Header("Player HP")]
+    [SerializeField]
+    private int maxHp;
+    public int MaxHp { get => maxHp; }
+    [SerializeField]
     private int hp;
     public int Hp { get => hp; }
 
@@ -50,10 +58,11 @@ public class PlayerController : MonoBehaviour
     {
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
+        hp = maxHp;
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null,"GlitchEffect");
-        hpController = Managers.UI.MakeSceneUI<HpController>(null, "HpUI");
         groundLayer = (1 << LayerMask.NameToLayer("Ground"));
-        hp = 4;
+        playerUIController = Managers.UI.MakeSceneUI<PlayerUIController>(null, "PlayerUI");
+        deathUIController = Managers.UI.MakeSceneUI<DeathUIController>(null, "DeathUI");
     }
 
     void Update()
@@ -72,7 +81,6 @@ public class PlayerController : MonoBehaviour
     public void InteractionEnter() 
     {
         interactionDetecter.InteractionUiDisable();
-        hpController.Close();
     }
 
 
@@ -80,7 +88,6 @@ public class PlayerController : MonoBehaviour
     public void InteractionExit()
     {
         interactionDetecter.InteractionUiEnable();
-        hpController.Open();
     }
 
     #endregion
@@ -311,7 +318,6 @@ public class PlayerController : MonoBehaviour
             SetStateDebugMod();
         });
         interactionDetecter.SwitchDebugMod(true);
-        hpController.Close();
     }
     public void ExitDebugMod()
     {
@@ -319,7 +325,6 @@ public class PlayerController : MonoBehaviour
         glitchEffectController.ExitDebugMod(() => {
             interactionDetecter.SwitchDebugMod(false);
             SetStateIdle();
-            hpController.Open();
         });
     }
     public void AnimIdleEnter()
@@ -386,21 +391,36 @@ public class PlayerController : MonoBehaviour
     {
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
-    public void GetDamage()
+
+    public void GetDamage(int damage)
     {
-        if(hp > 0)
+        hp = hp - damage;
+        playerUIController.SetHp();
+        if(hp == 0)
         {
-            hp = hp - 1;
-            hpController.GetDamage();
+            SetstateDeath();
         }
     }
-    public void GetHp()
+
+    public void OpenPlayerUI()
     {
-        if(hp < 4)
-        {
-            hp = hp + 1;
-            hpController.GetHp();
-        }
+        playerUIController.OnPlayerUI();
+    }
+    public void ClosePlayerUI()
+    {
+        playerUIController.OffPlayerUI();
+    }
+    public void isDebugButton()
+    {
+        playerUIController.DebugButtom();
+    }
+    public void OpenDeathUI()
+    {
+        deathUIController.DeathUIOpen();
+    }
+    public void CloseDeathUI()
+    {
+        deathUIController.DeathUIClose();
     }
   
     #endregion
