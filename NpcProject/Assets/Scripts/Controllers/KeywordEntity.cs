@@ -388,7 +388,7 @@ public class KeywordEntity : MonoBehaviour
                     speed =  remainDis;
                 }
                 var upVec = Vector3.up * speed;
-                KeywordTransformFactor.position += upVec;
+                ColisionCheckMove(upVec);
                 return true;
             }
             else 

@@ -8,8 +8,8 @@ public class ApartKeyword : KeywordController
     private float speed = 10f; 
     public override void KeywordAction(KeywordEntity entity)
     {
-        entity.ClearVelocity();
-        entity.SetKinematic(true);
+        //entity.ClearVelocity();
+       // entity.SetKinematic(true);
         PairKeyword pairKeyword = null;
         foreach(var keyword in entity.CurrentRegisterKeyword)
         {
@@ -41,6 +41,6 @@ public class ApartKeyword : KeywordController
     }
     public override void OnRemove(KeywordEntity entity)
     {
-       entity.SetKinematic(false);
+      // entity.SetKinematic(false);
     }
 }
