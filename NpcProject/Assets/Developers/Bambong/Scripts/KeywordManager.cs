@@ -82,6 +82,10 @@ public class KeywordManager
     }
     public void EnterKeywordMod(KeywordEntity keywordEntity) 
     {
+        if (!keywordEntity.IsAvailable) 
+        {
+            return;
+        }
         keywordEntity.OpenKeywordSlot();
         Managers.Game.SetStateKeywordMod();
         curKeywordEntity = keywordEntity;

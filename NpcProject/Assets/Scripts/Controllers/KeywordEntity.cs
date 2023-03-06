@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -34,13 +35,15 @@ public class KeywordAction
 
 }
 
-
+[Serializable]
+class CreateKeywordOption 
+{
+    public bool isLock = false;
+    public GameObject keywordGo;
+}
 
 public class KeywordEntity : MonoBehaviour
 {
-    [SerializeField]
-    private int keywordSlot = 1;
-
     [SerializeField]
     private OutlineEffect outlineEffect;
     [SerializeField]
@@ -50,13 +53,13 @@ public class KeywordEntity : MonoBehaviour
 
     [Header("Make Keyword")]
     [SerializeField]
-    private GameObject[] keywords;
+    private CreateKeywordOption[] keywords;
 
     private Dictionary<string,KeywordAction> keywrodOverrideTable = new Dictionary<string,KeywordAction>();
     private Dictionary<KeywordController,KeywordAction> currentRegisterKeyword = new Dictionary<KeywordController,KeywordAction>();
    
-    private List<KeywordFrameController> keywordSlotUI = new List<KeywordFrameController>();
-    private List<KeywordWorldSlotUIController> keywordSlotWorldUI = new List<KeywordWorldSlotUIController>();
+    private List<KeywordFrameController> keywordFrames = new List<KeywordFrameController>();
+    private List<KeywordWorldSlotUIController> keywordtWorldFrames = new List<KeywordWorldSlotUIController>();
 
     private Action<KeywordEntity> fixedUpdateAction = null;
     private Rigidbody rigidbody;
@@ -70,6 +73,7 @@ public class KeywordEntity : MonoBehaviour
     public Vector3 OriginScale { get; private set; }
     public Vector3 MaxScale { get => maxScale; }
     public bool IsAvailable { get => parentDebugZone == Managers.Keyword.CurDebugZone; }
+
     private void Start()
     {
         OriginScale = transform.lossyScale;
@@ -77,14 +81,10 @@ public class KeywordEntity : MonoBehaviour
         keywordSlotLayout = Managers.Resource.Instantiate("UI/KeywordSlotLayout",Managers.Keyword.PlayerKeywordPanel.transform).transform;
         keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null,"KeywordWorldSlotLayout");
         keywordWorldSlotLayout.RegisterEntity(transform);
-        //keywordWorldSlotLayout.transform.SetParent(transform,false);
-        for(int i = 0; i < keywordSlot; ++i) 
-        {
-            CreateKeywordFrame();
-            CreateKeywordWorldSlotUI();
-        }
 
-        if(!TryGetComponent<BoxCollider>(out col))
+        InitCrateKeywordOption();
+
+        if (!TryGetComponent<BoxCollider>(out col))
         {
             Collider temp;
             if(TryGetComponent<Collider>(out temp))
@@ -93,52 +93,60 @@ public class KeywordEntity : MonoBehaviour
             }
             col = Util.GetOrAddComponent<BoxCollider>(gameObject);
         }
-   
-
         TryGetComponent<Rigidbody>(out rigidbody);
         keywordWorldSlotLayout.SortChild(2.1f);
-        MakeKeyword();
         DecisionKeyword();
     }
-
-    private void MakeKeyword()
+   
+    private void InitCrateKeywordOption()
     {
         for (int i = 0; i < keywords.Length; ++i)
         {
-            var keyword = Managers.UI.MakeSubItem<KeywordController>(null, "KeywordPrefabs/" + keywords[i].name);
-
-            if (!RegisterKeyword(keyword))
-            {
-                Debug.LogError($" DebugZone : {gameObject.name} 슬롯 갯수 이상의 키워드 생성");
-                return;
-            }
-        }
-    }
-    private bool RegisterKeyword(KeywordController keyword)
-    {
-        for (int i = 0; i < keywordSlotUI.Count; ++i)
-        {
-            if (keywordSlotUI[i].HasKeyword)
+            var frame =  CreateKeywordFrame();
+            CreateKeywordWorldSlotUI();
+            if (keywords[i].keywordGo == null) 
             {
                 continue;
             }
-            keywordSlotUI[i].SetKeyWord(keyword);
-            keyword.SetFrame(keywordSlotUI[i]);
-            keyword.SetDebugZone(parentDebugZone);
-            return true;
-        }
 
-        return false;
+            var keyword = Managers.UI.MakeSubItem<KeywordController>(null, "KeywordPrefabs/" + keywords[i].keywordGo.name);
+
+            frame.SetKeyWord(keyword);
+            keyword.SetFrame(frame);
+            keyword.SetDebugZone(parentDebugZone);
+            if (keywords[i].isLock) 
+            {
+                frame.SetLockFrame(true);
+            }
+
+        }
     }
+    //private bool RegisterKeyword(KeywordController keyword)
+    //{
+    //    for (int i = 0; i < keywordSlotUI.Count; ++i)
+    //    {
+    //        if (keywordSlotUI[i].HasKeyword)
+    //        {
+    //            continue;
+    //        }
+    //        keywordSlotUI[i].SetKeyWord(keyword);
+    //        keyword.SetFrame(keywordSlotUI[i]);
+    //        keyword.SetDebugZone(parentDebugZone);
+    //        return true;
+    //    }
+
+    //    return false;
+    //}
     public void SetDebugZone(DebugZone zone) => parentDebugZone = zone;
-    private void CreateKeywordFrame() 
+    private KeywordFrameController CreateKeywordFrame() 
     {
-        var slot = Managers.UI.MakeSubItem<KeywordFrameController>(keywordSlotLayout, "KeywordSlotUI");
-        keywordSlotUI.Add(slot);
+        var frame = Managers.UI.MakeSubItem<KeywordFrameController>(keywordSlotLayout, "KeywordSlotUI");
+        keywordFrames.Add(frame);
+        return frame;
     }
     private void CreateKeywordWorldSlotUI() 
     {
-        keywordSlotWorldUI.Add(Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotUIController>(keywordWorldSlotLayout.Panel, "KeywordSlotWorldSpace"));
+        keywordtWorldFrames.Add(Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotUIController>(keywordWorldSlotLayout.Panel, "KeywordSlotWorldSpace"));
     }
 
     public virtual void EnterDebugMod()
@@ -154,14 +162,14 @@ public class KeywordEntity : MonoBehaviour
 
     public void CloseWorldSlotUI() 
     {
-        foreach(var slot in keywordSlotWorldUI) 
+        foreach(var slot in keywordtWorldFrames) 
         {
             slot.Close();
         }
     }
     public void OpenWorldSlotUI() 
     {
-        foreach (var slot in keywordSlotWorldUI)
+        foreach (var slot in keywordtWorldFrames)
         {
             slot.Open();
         }
@@ -169,14 +177,14 @@ public class KeywordEntity : MonoBehaviour
 
     public void OpenKeywordSlot() 
     {
-        foreach (var slot in keywordSlotUI)
+        foreach (var slot in keywordFrames)
         {
             slot.Open();
         }
     }
     public void CloseKeywordSlot()
     {
-        foreach (var slot in keywordSlotUI)
+        foreach (var slot in keywordFrames)
         {
             slot.Close();
         }
@@ -211,9 +219,9 @@ public class KeywordEntity : MonoBehaviour
             return;
         }
         // 다른 슬롯에 들어가 있는지 확인
-        for(int i = 0; i < keywordSlotUI.Count; ++i) 
+        for(int i = 0; i < keywordFrames.Count; ++i) 
         {
-            if(keywordSlotUI[i].CurFrameInnerKeyword == keywordController)
+            if(keywordFrames[i].CurFrameInnerKeyword == keywordController)
             {
                 return;
             }
@@ -235,32 +243,32 @@ public class KeywordEntity : MonoBehaviour
     public void DecisionKeyword()
     {
         // 키워드 프레임을 순회
-        for(int i = 0; i< keywordSlotUI.Count; ++i)  
+        for(int i = 0; i< keywordFrames.Count; ++i)  
         {
             // 현재 프레임 안에 들어있는 키워드
-            var curFrameInnerKeyword = keywordSlotUI[i].CurFrameInnerKeyword;
+            var curFrameInnerKeyword = keywordFrames[i].CurFrameInnerKeyword;
             // 기존 프레임에 등록되어 있던 키워드
-            var frameRegisterKeyword = keywordSlotUI[i].RegisterKeyword;
+            var frameRegisterKeyword = keywordFrames[i].RegisterKeyword;
             KeywordAction keywordAciton;
             //기존 키워드가 제거 혹은 변경됬다면 
-            if(keywordSlotUI[i].IsKeywordRemoved)
+            if(keywordFrames[i].IsKeywordRemoved)
             {
                 //키워드 Remove 이벤트 발생 
                 //Entity 에 등록된 키워드 리스트에서 키워드 제거
                 RemoveAction(frameRegisterKeyword);
             }
             //현재 FrameInnerKeyword 를 프레임에 등록
-            keywordSlotUI[i].OnDecisionKeyword();
+            keywordFrames[i].OnDecisionKeyword();
 
             // 프레임안에 키워드가 없다면 
             if(curFrameInnerKeyword == null)
             {
                 //월드 키워드 UI 를 리셋하고 다시 순회 
-                keywordSlotWorldUI[i].ResetSlotUI();
+                keywordtWorldFrames[i].ResetSlotUI();
                 continue;
             }
             //월드 키워드 UI 설정  
-            keywordSlotWorldUI[i].SetSlotUI(curFrameInnerKeyword.Image.color,curFrameInnerKeyword.KeywordText.text);
+            keywordtWorldFrames[i].SetSlotUI(curFrameInnerKeyword.Image.color,curFrameInnerKeyword.KeywordText.text);
 
             // 이미 등록된 키워드라면 다시 순회  
             if(currentRegisterKeyword.ContainsKey(curFrameInnerKeyword)) 
@@ -348,7 +356,7 @@ public class KeywordEntity : MonoBehaviour
 
     }
 
-    public bool FloatMove(Vector3 vec)
+    public bool FloatMove(float speed)
     {
         var pos = col.transform.position;
         RaycastHit hit;
@@ -357,16 +365,15 @@ public class KeywordEntity : MonoBehaviour
         {
             layer += (1 << (LayerMask.NameToLayer(name)));
         }
-        //var boxSize = VectorMultipleScale(col.size / 2,transform.lossyScale);
-        var boxSize = col.bounds.extents;
+        var boxSize = Util.VectorMultipleScale(col.size / 2,transform.lossyScale);
+        boxSize *= 0.99f;
         boxSize.y = 0;
-        var rayDis = maxHeight + col.bounds.extents.y;
+        var rayDis = maxHeight + col.bounds.size.y;
 #if UNITY_EDITOR
-        ExtDebug.DrawBoxCastBox(pos,boxSize,Quaternion.identity,Vector3.down,rayDis,Color.red);
+        ExtDebug.DrawBoxCastBox(pos,boxSize,KeywordTransformFactor.rotation, Vector3.down,rayDis,Color.red);
 #endif
-        Physics.BoxCast(pos,boxSize,Vector3.down,out hit,Quaternion.identity,rayDis,layer);
-
-        if(hit.collider != null)
+        Physics.BoxCast(pos,boxSize,Vector3.down,out hit,KeywordTransformFactor.rotation,rayDis,layer);
+        if (hit.collider != null)
         {
             var realDis = hit.distance - col.bounds.extents.y;
             if(realDis <= maxHeight) 
@@ -376,14 +383,32 @@ public class KeywordEntity : MonoBehaviour
                 {
                     return true;
                 }
-                if(remainDis < vec.magnitude)
+                if(remainDis < speed)
                 {
-                    vec = Vector3.up * remainDis;
+                    speed =  remainDis;
                 }
-                KeywordTransformFactor.position += vec;
+                var upVec = Vector3.up * speed;
+                KeywordTransformFactor.position += upVec;
                 return true;
             }
+            else 
+            {
+                var remainDis = realDis - maxHeight;
+                if (remainDis < 0.1f)
+                {
+                    return true;
+                }
+                if (remainDis < speed)
+                {
+                    speed = remainDis;
+                }
+                var downVec = Vector3.down * speed;
+                KeywordTransformFactor.position += downVec;
+                return true;
+            }
+           
         }
+        KeywordTransformFactor.position += Vector3.down * speed;
         return false;
     }
     public bool ColisionCheckScale(Vector3 desireScale, GameObject dummyParent) 
