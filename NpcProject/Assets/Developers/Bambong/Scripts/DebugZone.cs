@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
-
+using DG.Tweening;
 
 [RequireComponent(typeof(Collider))]
 public class DebugZone : MonoBehaviour
@@ -17,13 +17,12 @@ public class DebugZone : MonoBehaviour
 
     [SerializeField]
     private GameObject[] keywords;
-
-
     public int PlayerSlotCount { get => playerSlotCount; }
 
     private List<KeywordFrameController> playerFrames = new List<KeywordFrameController>();
     private Transform playerLayout;
 
+    private Vector3 boxSize;
     private void Awake()
     {
         MakeFrame();
@@ -31,8 +30,8 @@ public class DebugZone : MonoBehaviour
         for(int i = 0; i< childEntitys.Count; ++i) 
         {
             childEntitys[i].SetDebugZone(this);
-        } 
-
+        }
+        boxSize = GetComponent<BoxCollider>().bounds.size;
     }
     private void MakeFrame() 
     {
@@ -77,11 +76,13 @@ public class DebugZone : MonoBehaviour
     public void OnEnterDebugMod() 
     {
         debugModCameraController.EnterDebugMod();
+        Managers.Game.Player.OpenWireEffect(boxSize *2);
     }
     public void OnExitDebugMod() 
     {
         debugModCameraController.ExitDebugMod();
         Managers.Camera.SwitchPrevCamera();
+        Managers.Game.Player.CloseWireEffect();
     }
 
     private void OnTriggerEnter(Collider other)

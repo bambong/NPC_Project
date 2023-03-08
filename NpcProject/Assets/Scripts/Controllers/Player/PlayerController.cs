@@ -7,53 +7,64 @@ using static UnityEditor.PlayerSettings;
 using UnityEditor.Animations;
 using UnityEditor.Rendering.Utilities;
 using System;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    private float moveSpeed = 10f;
 
+ 
+    [Header("Player Element")]
+    [Space(1)]
     [SerializeField]
     private PlayerAnimationController animationController;
     [SerializeField]
     private InteractionDetectController interactionDetecter;
     [SerializeField]
     private Transform rotater;
-
+    [SerializeField]
+    private BoxCollider box;
     [SerializeField]
     private Rigidbody rigid;
+ 
+    [Space(1)]
+    [Header("Player Move Option")]
+    [Space(1)]
+    [SerializeField]
+    private float moveSpeed = 10f;
+    [SerializeField]
+    private int maxSlopeAngle = 40;
     [SerializeField]
     private float moveEnableDis = 0.5f;
+    [SerializeField]
+    private float stepHeight = 1.0f;
+    
+    [Space(1)]
+    [Header("Player HP")]
+    [Space(1)]
+    [SerializeField]
+    private int maxHp;
+    [SerializeField]
+    private int hp;
+    
+    [Space(1)]
+    [Header("WireEffect")]
+    [SerializeField]
+    private GameObject wireEffectGo;
+
+    private PlayerAnimationController.AnimDir curDir = PlayerAnimationController.AnimDir.Front;
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
     private PlayerUIController playerUIController;
     private DeathUIController deathUIController;
 
-    [Header("Player Slope Check")]
-    [SerializeField]
-    private int maxSlopeAngle = 40;
-    [SerializeField]
-    private BoxCollider box;
-    private bool isOnSlope;
     private RaycastHit slopeHit;
     private int groundLayer;
-
-    [SerializeField]
-    private float stepHeight = 1.0f;
-
-
-    private PlayerAnimationController.AnimDir curDir = PlayerAnimationController.AnimDir.Front;
-
-    [Header("Player HP")]
-    [SerializeField]
-    private int maxHp;
-    public int MaxHp { get => maxHp; }
-    [SerializeField]
-    private int hp;
     public int Hp { get => hp; }
+    public int MaxHp { get => maxHp; }
 
     private readonly float CHECK_RAY_WIDTH = 0.3f;
-
+    private readonly float WIRE_EFFECT_OPEN_TIME = 3f;
+    private readonly float WIRE_EFFECT_CLOSE_TIME = 1f;
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);
@@ -455,6 +466,20 @@ public class PlayerController : MonoBehaviour
     {
         playerStateController.ChangeState(PlayerDeath.Instance);
     }
+    #endregion
+    #region WireEffect
+    public void OpenWireEffect(Vector3 size) 
+    {
+        wireEffectGo.transform.localScale = Vector3.zero;
+        wireEffectGo.transform.DOKill();
+        wireEffectGo.transform.DOScale(size, WIRE_EFFECT_OPEN_TIME);
+    }
+    public void CloseWireEffect()
+    {
+        wireEffectGo.transform.DOKill();
+        wireEffectGo.transform.DOScale(Vector3.zero, WIRE_EFFECT_CLOSE_TIME);
+    }
+
     #endregion
 
 }
