@@ -21,9 +21,6 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     [SerializeField]
     private Image image;
     [SerializeField]
-    private TextMeshProUGUI keywordText;
-
-    [SerializeField]
     private KeywordActionType keywordType;
 
     private int prevSibilintIndex;
@@ -31,8 +28,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     private Vector3 startDragPoint;
     private KeywordFrameBase curFrame;
     protected DebugZone parentDebugZone;
-    
-    public TextMeshProUGUI KeywordText { get => keywordText;}
+   
     public Image Image { get => image; }
     public string KewordId { get; private set; }
     public KeywordActionType KeywordType { get => keywordType; }

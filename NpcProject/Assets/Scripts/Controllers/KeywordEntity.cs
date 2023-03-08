@@ -268,7 +268,7 @@ public class KeywordEntity : MonoBehaviour
                 continue;
             }
             //월드 키워드 UI 설정  
-            keywordtWorldFrames[i].SetSlotUI(curFrameInnerKeyword.Image.color,curFrameInnerKeyword.KeywordText.text);
+            keywordtWorldFrames[i].SetSlotUI(curFrameInnerKeyword.Image);
 
             // 이미 등록된 키워드라면 다시 순회  
             if(currentRegisterKeyword.ContainsKey(curFrameInnerKeyword)) 
