@@ -14,8 +14,28 @@ public class CursorController : MonoBehaviour
     {
         Cursor.SetCursor(cursor, Vector2.zero, CursorMode.Auto);
         Cursor.lockState = CursorLockMode.Confined;
+        Camera.main.ScreenPointToRay(Input.mousePosition);
     }
 
+    private void Update()
+    {
+        Ray();
+    }
+
+    private void Ray()
+    {
+        Ray currentRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hitInfo;
+
+        if (Physics.Raycast(currentRay, out hitInfo, Mathf.Infinity, 1 << 8))
+        {
+            OnMouseEnter();
+        }
+        else
+        {
+            OnMouseExit();
+        }
+    }
 
     private void OnMouseEnter()
     {
