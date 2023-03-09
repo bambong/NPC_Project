@@ -15,7 +15,7 @@ public class MoveKeyword : KeywordController
     }
     public override void KeywordAction(KeywordEntity entity)
     {
-        if(!entity.ColisionCheckMove( moveVector *dir* moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER))) 
+        if(!entity.ColisionCheckMove( moveVector *dir* moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER))) 
         {
             Turn();
         }

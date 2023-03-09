@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
     public int MaxHp { get => maxHp; }
 
     private readonly float CHECK_RAY_WIDTH = 0.3f;
-    private readonly float WIRE_EFFECT_OPEN_TIME = 3f;
+    private readonly float WIRE_EFFECT_OPEN_TIME = 2f;
     private readonly float WIRE_EFFECT_CLOSE_TIME = 1f;
     private void Awake()
     {

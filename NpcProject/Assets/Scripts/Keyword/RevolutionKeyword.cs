@@ -40,7 +40,7 @@ public class RevolutionKeyword : KeywordController
         var dir = entity.KeywordTransformFactor.position - _orbitCenter;
 
         // var _radius = dir.magnitude * Vector3.Normalize(dir);
-        var _newRotation = Quaternion.AngleAxis(Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER) * speed,_worldRotationAxis);
+        var _newRotation = Quaternion.AngleAxis(Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER) * speed,_worldRotationAxis);
         var _desiredOrbitPosition = _orbitCenter + _newRotation * dir;
         entity.ColisionCheckMove((_desiredOrbitPosition - entity.KeywordTransformFactor.position));
 

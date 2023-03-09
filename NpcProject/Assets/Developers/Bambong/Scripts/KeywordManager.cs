@@ -36,6 +36,8 @@ public class KeywordManager
     private DebugZone curDebugZone = null;
     public Transform PlayerPanelLayout { get => playerKeywordPanel.LayoutParent; }
 
+    private Vector3 prevGravity;
+    private float DEBUG_TIME_SCALE = 0.2f;
     public void Init()
     {
         playerKeywordPanel = Managers.UI.MakeSceneUI<PlayerKeywordPanelController>(null,"PlayerKeywordPanel");
@@ -61,6 +63,9 @@ public class KeywordManager
         {
             effect.EnterDebugMod();
         }
+        Managers.Time.SetTimeScale(TIME_TYPE.NONE_PLAYER, DEBUG_TIME_SCALE);
+        prevGravity = Physics.gravity;
+        Physics.gravity = prevGravity * DEBUG_TIME_SCALE;
     }
     
     public void ExitDebugMod()
@@ -74,6 +79,8 @@ public class KeywordManager
         {
             effect.ExitDebugMod();
         }
+        Physics.gravity = prevGravity; 
+        Managers.Time.SetTimeScale(TIME_TYPE.NONE_PLAYER,1);
         Managers.Game.SetStateNormal();
     }
     public void SetDebugZone(DebugZone zone)

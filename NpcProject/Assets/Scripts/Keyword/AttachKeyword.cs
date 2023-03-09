@@ -5,7 +5,7 @@ using UnityEngine;
 public class AttachKeyword : KeywordController
 {
     [SerializeField]
-    private float speed = 10f; 
+    public static float Speed = 10f; 
     public override void KeywordAction(KeywordEntity entity)
     {
         //entity.ClearVelocity();
@@ -32,13 +32,13 @@ public class AttachKeyword : KeywordController
         }
         var dir = target.KeywordTransformFactor.position - entity.KeywordTransformFactor.position;
         dir.y = 0;
-        if(dir.magnitude <= speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER)) 
+        if(dir.magnitude <= Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER)) 
         {
             entity.ColisionCheckMove(dir);
         }
         else 
         {
-            entity.ColisionCheckMove(dir.normalized * speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER));
+            entity.ColisionCheckMove(dir.normalized * Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER));
         }
     }
     public override void OnRemove(KeywordEntity entity)

@@ -11,7 +11,7 @@ public class FloatKeyword : KeywordController
         entity.SetGravity(false);
         entity.SetKinematic(true);
 
-        entity.FloatMove(Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER) * speed);
+        entity.FloatMove(Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER) * speed);
     
 
     }

@@ -17,7 +17,7 @@ public class ScaleKeyword : KeywordController
     {
         if (entity.transform.lossyScale.magnitude < entity.MaxScale.magnitude)
         {
-            var curFrameDesirScale = entity.transform.lossyScale + (entity.OriginScale * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER) * speed);
+            var curFrameDesirScale = entity.transform.lossyScale + (entity.OriginScale * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER) * speed);
             if (curFrameDesirScale.magnitude > entity.MaxScale.magnitude)
             {
                 curFrameDesirScale = entity.MaxScale;

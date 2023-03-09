@@ -335,7 +335,20 @@ public class KeywordEntity : MonoBehaviour
             layer += (1 << (LayerMask.NameToLayer(name)));
         }
         var boxSize = Util.VectorMultipleScale(col.size / 2, transform.lossyScale);
-        boxSize *= 0.99f;
+        boxSize.y = boxSize.y * 0.99f;
+        var vecXSize = Mathf.Abs(vec.x);
+        var vecZSize = Mathf.Abs(vec.z);
+        var boxXdiff = boxSize.x * 0.01f;
+        var boxZdiff = boxSize.z * 0.01f;
+
+        if (vecXSize == 0 || vecXSize >= boxXdiff)
+        { 
+            boxSize.x *= 0.99f;
+        }
+        if(vecZSize == 0 || vecZSize >= boxZdiff)
+        { 
+            boxSize.z *= 0.99f;
+        }
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos + vec, boxSize, KeywordTransformFactor.rotation, Color.blue);
 #endif
