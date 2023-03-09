@@ -27,7 +27,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     private int prevSibilintIndex;
     private Transform startParent;
     private Vector3 startDragPoint;
-    private KeywordFrameController curFrame;
+    private KeywordFrameBase curFrame;
     public TextMeshProUGUI KeywordText { get => keywordText;}
     public Image Image { get => image; }
     public string KewordId { get; private set; }
@@ -37,6 +37,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     {
          KewordId = GetType().ToString();
     }
+    public void SetFrame(KeywordFrameBase frame) => curFrame = frame;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -46,7 +47,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         }
         prevSibilintIndex = rectTransform.GetSiblingIndex();
         startParent = transform.parent;
-        transform.parent = Managers.Keyword.PlayerKeywordPanel.transform;
+        transform.SetParent(Managers.Keyword.PlayerKeywordPanel.transform);
 
         rectTransform.SetAsLastSibling();
         startDragPoint = rectTransform.position;
@@ -77,32 +78,39 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
             {
                 if(raycasts[i].gameObject.CompareTag(KEYWORD_FRAME_TAG)) 
                 {
-                    var keywordFrame = raycasts[i].gameObject.GetComponent<KeywordFrameController>();
-                    if(keywordFrame.SetKeyWord(this)) 
+                    var keywordFrame = raycasts[i].gameObject.GetComponent<KeywordFrameBase>();
+                    if(curFrame == keywordFrame)
                     {
+                        continue;
+                    }
+
+                    if(keywordFrame.IsAvailable)
+                    {
+                        keywordFrame.SetKeyWord(this);
+                        curFrame?.ResetKeywordFrame();
                         curFrame = keywordFrame;
                         return;
                     }
+                    else
+                    {
+                        SwapKeywordFrame(keywordFrame as KeywordFrameController);
+                        return;
+                    }
                 }
-                else if(raycasts[i].gameObject.CompareTag(KEYWORD_PLAYER_FRAME_TAG))
-                {
-                    Managers.Keyword.AddKeywordToDebugZone(Managers.Keyword.CurDebugZone,this);
-                    ClearCurFrame();
-                    return;
-                }
+
             }
         }
         ResetKeyword();
     }
  
-    public void ClearCurFrame() 
+    public void SwapKeywordFrame(KeywordFrameController other) 
     {
-        if(curFrame != null) 
-        {
-            curFrame.ResetKeywordFrame();
-        }
+        var innerKeyword = other.CurFrameInnerKeyword;
+        curFrame.SetKeyWord(innerKeyword);
+        innerKeyword.curFrame = curFrame;
+        other.SetKeyWord(this);
+        curFrame = other;
     }
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         transform.DOScale(FOCUSING_SCALE,START_END_ANIM_TIME).SetUpdate(true);
@@ -113,9 +121,9 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         transform.DOScale(Vector3.one,START_END_ANIM_TIME).SetUpdate(true);
     }
 
-    public void SetToKeywordFrame(Vector3 pos) 
+    public DG.Tweening.Core.TweenerCore<Vector3,Vector3,DG.Tweening.Plugins.Options.VectorOptions> SetToKeywordFrame(Vector3 pos) 
     {
-        rectTransform.DOMove(pos, KEYWORD_FRAME_MOVE_TIME).SetUpdate(true);
+        return rectTransform.DOMove(pos, KEYWORD_FRAME_MOVE_TIME).SetUpdate(true);
     }
 
     public void ResetKeyword()
@@ -124,12 +132,15 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         {
             return;
         }
-        transform.parent = startParent;
+        transform.SetParent(startParent);
         transform.SetSiblingIndex(prevSibilintIndex);
         rectTransform.DOMove(startDragPoint,START_END_ANIM_TIME,true).SetUpdate(true);
     }
     public virtual void KeywordAction(KeywordEntity entity) 
     {
+    }
+    public virtual void OnRemove(KeywordEntity entity)
+    { 
     }
 
     public override void Init()

@@ -24,7 +24,6 @@ public class KeywordManager
 
     private KeywordEntity curKeywordEntity;
     private PlayerKeywordPanelController playerKeywordPanel;
-    public Transform playerKeywordPanelLayout { get => playerKeywordPanel.Layout.transform; }
     public PlayerKeywordPanelController PlayerKeywordPanel { get => playerKeywordPanel;}
     public KeywordEntity CurKeywordEntity { get => curKeywordEntity; }
     public bool IsDebugZoneIn { get => curDebugZone != null; }
@@ -35,10 +34,7 @@ public class KeywordManager
     private GraphicRaycaster graphicRaycaster;
 
     private DebugZone curDebugZone = null;
-
-    private DebugModCameraUiController debugModCameraUiController;
-
-
+    public Transform PlayerPanelLayout { get => playerKeywordPanel.LayoutParent; }
 
     public void Init()
     {
@@ -90,13 +86,11 @@ public class KeywordManager
         Managers.Game.SetStateKeywordMod();
         curKeywordEntity = keywordEntity;
         playerKeywordPanel.Open();
-        UpdateKeywordLayout(curDebugZone);
         keywordEntity.OpenKeywordSlot();
     }
   
     public void ExitKeywordMod()
     {
-        playerKeywordPanel.Layout.enabled = true;
         Managers.Game.SetStateDebugMod();
         playerKeywordPanel.Close();
         curKeywordEntity.CloseKeywordSlot();
@@ -107,43 +101,12 @@ public class KeywordManager
     {
         debugModEffectControllers.Add(debugModEffectController);
     }
-    public void MakeKeywordToDebugZone(DebugZone zone,string name) 
-    {
-        var keyword = Managers.UI.MakeSubItem<KeywordController>(null,name);
-        Managers.Keyword.AddKeywordToDebugZone(zone,keyword);
-    }
 
-    public bool AddKeywordToDebugZone(DebugZone zone,KeywordController keywordController) 
-    {
-        playerKeywordPanel.AddKeyword(zone,keywordController);
-        UpdateKeywordLayout(zone);
-        return true;
-    }
-
-    public void SetKeyWord(KeywordController keywordController)
-    {
-        keywordController.ResetKeyword();
-    }
-    public void UpdateKeywordLayout(DebugZone zone)
-    {
-        Managers.Scene.CurrentScene.StartCoroutine(UpdateKeywordLayoutco(zone));
-    }
-    public void RegisterDebugZone(DebugZone zone) 
-    {
-        playerKeywordPanel.RegisterDebugZone(zone);
-    }
     public void Clear()
     {
         debugModEffectControllers.Clear();
         curSceneEntity.Clear();
         curDebugZone = null;
-    }
-    IEnumerator UpdateKeywordLayoutco(DebugZone zone)
-    {
-        
-        playerKeywordPanel.GetDebugLayout(zone).enabled = true;
-        yield return null;
-        playerKeywordPanel.GetDebugLayout(zone).enabled = false;
     }
 
 }

@@ -33,6 +33,7 @@ public class TalkPanelController : UI_Base
 
     private bool isNext = false;
     private bool isTrans = false;
+    private bool inputKey = false;
 
     public override void Init()
     {
@@ -82,6 +83,7 @@ public class TalkPanelController : UI_Base
 
     IEnumerator TransText()
     {
+        inputKey = false;
         textStore = null;
         textDialogue = null;
         typingTime = curDialogue.text.Length * TEXT_SPEED;
@@ -94,7 +96,7 @@ public class TalkPanelController : UI_Base
             if (item == "dummy")
             {
                 isTrans = true;
-            }
+            }            
             else
             {
                 textDialogue += item;
@@ -114,8 +116,10 @@ public class TalkPanelController : UI_Base
                               
                 if (isTrans == false)
                 {
+                    dialogueText.text = textDialogue;
                     yield break;
                 }
+                inputKey = true;
             }
             isTrans = false;
             isNext = true;
@@ -123,6 +127,7 @@ public class TalkPanelController : UI_Base
         else
         {
             DotweenTextani();
+            inputKey = true;
         }
     }
 
@@ -133,21 +138,24 @@ public class TalkPanelController : UI_Base
 
             if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY)))
             {
-                if(isTrans == false)
+                if(isTrans == false && inputKey == true)
                 {
                     Debug.Log("skipdialog");
                     dialogueText.DOKill();
                     dialogueText.text = textDialogue;
                     yield return new WaitForSeconds(0.1f);
                     isNext = true;
+                    inputKey = false;
                     yield break;
                 }
-                if(isTrans == true)
+                if(isTrans == true && inputKey == true)
                 {
                     dialogueText.text = "";
                     dialogueText.text = textDialogue;
+                    yield return new WaitForSeconds(0.1f);
                     isNext = true;
                     isTrans = false;
+                    inputKey = false;
                     yield break;
                 }
             }

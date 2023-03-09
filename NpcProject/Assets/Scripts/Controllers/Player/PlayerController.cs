@@ -1,69 +1,89 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Collections;using System.Collections.Generic;
 using UnityEngine;
 using Spine;
 using Spine.Unity;
-
+using UnityEditor.ShaderGraph.Internal;
+using static UnityEditor.PlayerSettings;
+using UnityEditor.Animations;
+using UnityEditor.Rendering.Utilities;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
     private float moveSpeed = 10f;
-    [SerializeField]
-    private SkeletonAnimation skeletonAnimation;
-    [SpineAnimation]
-    [SerializeField]
-    private string idleAnim;
-    [SpineAnimation]
-    [SerializeField]
-    private string runAnim;
 
+    [SerializeField]
+    private PlayerAnimationController animationController;
     [SerializeField]
     private InteractionDetectController interactionDetecter;
     [SerializeField]
     private Transform rotater;
-    [SerializeField]
-    private CharacterController characterController;
 
     [SerializeField]
     private Rigidbody rigid;
-
+    [SerializeField]
+    private float moveEnableDis = 0.5f;
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
+    private PlayerUIController playerUIController;
+    private DeathUIController deathUIController;
 
+    [Header("Player Slope Check")]
+    [SerializeField]
+    private int maxSlopeAngle = 40;
+    [SerializeField]
+    private BoxCollider box;
+    private bool isOnSlope;
+    private RaycastHit slopeHit;
+    private int groundLayer;
+
+    [SerializeField]
+    private float stepHeight = 1.0f;
+
+
+    private PlayerAnimationController.AnimDir curDir = PlayerAnimationController.AnimDir.Front;
+
+    [Header("Player HP")]
+    [SerializeField]
+    private int maxHp;
+    public int MaxHp { get => maxHp; }
+    [SerializeField]
+    private int hp;
+    public int Hp { get => hp; }
+
+    private readonly float CHECK_RAY_WIDTH = 0.3f;
 
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
+        hp = maxHp;
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null,"GlitchEffect");
+        groundLayer = (1 << LayerMask.NameToLayer("Ground"));
+        playerUIController = Managers.UI.MakeSceneUI<PlayerUIController>(null, "PlayerUI");
+        deathUIController = Managers.UI.MakeSceneUI<DeathUIController>(null, "DeathUI");
     }
 
     void Update()
     {
-        rotater.rotation = Camera.main.transform.rotation;
+        var rot = Camera.main.transform.rotation.eulerAngles;
+        rot.x = 0;
+        rotater.rotation = Quaternion.Euler(rot);
         playerStateController.Update();
+
     }
     private void FixedUpdate()
     {
         playerStateController.FixedUpdate();
     }
-
-    #region OnStateEnter
-    public void AnimIdleEnter() 
-    {
-        skeletonAnimation.AnimationState.SetAnimation(0,idleAnim,true);
-    }
-    public void AnimRunEnter()
-    {
-        skeletonAnimation.AnimationState.SetAnimation(0,runAnim,true);
-    }
+ 
     public void InteractionEnter() 
     {
         interactionDetecter.InteractionUiDisable();
     }
 
-    #endregion
+
     #region OnStateExit
     public void InteractionExit()
     {
@@ -72,33 +92,160 @@ public class PlayerController : MonoBehaviour
 
     #endregion
     #region OnStateUpdate
+    public bool IsMove(Vector3 pos,float hor,float ver)
+    {
+   
+        var moveVec = new Vector3(hor, 0, ver).normalized;
+        //var forward = Camera.main.transform.forward;
+        //forward.y = 0;
+        //var angle = -1 * Vector3.Angle(Vector3.forward, forward);
+        moveVec =rotater.transform.TransformDirection(moveVec);
+        var boxHalfSize = box.size.x * 0.5f;
+        var checkWidth = box.size.x * CHECK_RAY_WIDTH;
+        var isSlope = IsOnSlope();
+        if (isSlope)
+        {
+            moveVec = AdjustDirectionToSlope(moveVec);
 
+        }
+        moveVec = MoveRayCheck(moveVec, isSlope);
+
+
+        if (new Vector3(moveVec.x, 0, moveVec.z).magnitude > 0.02f)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    private Vector3 MoveRayCheck(Vector3 moveVec, bool isSlope )
+    {
+        var pos = transform.position + (Vector3.down* box.size.y * 0.5f) + (Vector3.down*stepHeight* 0.5f);
+        var boxHalfSize = box.size.x * 0.5f;
+        var checkWidth = box.size.x * CHECK_RAY_WIDTH;
+        float moveEnableWidth = box.size.x * 0.25f;
+        float boxHeight = (stepHeight/2) + (isSlope? stepHeight/2:0);
+        int layer = (-1) - (1 << LayerMask.NameToLayer("Player"));
+        if (Mathf.Abs(moveVec.x) > 0)
+        {
+            var dir = (moveVec.x > 0 ? 1 : -1) * (boxHalfSize + moveEnableDis/2) * Vector3.right;
+            var boxSize = new Vector3(moveEnableDis / 2, boxHeight, moveEnableWidth);
+            ExtDebug.DrawBox(pos + dir + new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, Color.red);
+            ExtDebug.DrawBox(pos + dir - new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, Color.red);
+            if (!Physics.CheckBox(pos + dir - new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            {
+                moveVec.x = 0;
+            }
+            else if (!Physics.CheckBox(pos + dir + new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            {
+                moveVec.x = 0;
+            }
+        }
+        if (Mathf.Abs(moveVec.z) > 0)
+        {
+            var dir = (moveVec.z > 0 ? 1 : -1) * (boxHalfSize + moveEnableDis / 2) * Vector3.forward ;
+            var boxSize = new Vector3(moveEnableWidth, boxHeight, moveEnableDis / 2);
+            ExtDebug.DrawBox(pos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
+            ExtDebug.DrawBox(pos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
+            if (!Physics.CheckBox(pos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer ,QueryTriggerInteraction.Ignore))
+            {
+                moveVec.z = 0;
+            }
+            else if (!Physics.CheckBox(pos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            {
+                moveVec.z = 0;
+            }
+        }
+        return moveVec;
+
+    }
+    private void CurrentAnimDirUpdtae(Vector3 moveVec) 
+    {
+        var moveDotVer = Vector3.Dot(rotater.transform.forward.normalized, moveVec.normalized);
+        if (Mathf.Abs(moveDotVer) > 0.71f)
+        {
+            if (moveDotVer < 0)
+            {
+                curDir = PlayerAnimationController.AnimDir.Front;
+            }
+            else
+            {
+                curDir = PlayerAnimationController.AnimDir.Back;
+            }
+        }
+        else
+        {
+            var moveDotHor = Vector3.Dot(rotater.transform.right.normalized, moveVec.normalized);
+            if (moveDotHor < 0)
+            {
+                curDir = PlayerAnimationController.AnimDir.Left;
+            }
+            else
+            {
+                curDir = PlayerAnimationController.AnimDir.Right;
+            }
+        }
+    }
     public void PlayerMoveUpdate()
     {
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
 
-        if(Mathf.Abs(hor) <= 0.2f && Mathf.Abs(ver) <= 0.2f)
+
+        if (new Vector3(hor, 0, ver).magnitude <= 0.1f)
         {
             SetStateIdle();
             rigid.velocity = Vector3.zero;
             return;
         }
-        
-        if(hor != 0) 
+
+        var moveVec = new Vector3(hor, 0, ver).normalized;
+
+        //var forward = Camera.main.transform.forward;
+        //forward.y = 0;
+        //var angle = -1*Vector3.Angle(Vector3.forward, forward);
+        moveVec = rotater.transform.TransformDirection(moveVec);
+        Vector3 gravity = Vector3.down * Mathf.Abs(rigid.velocity.y);
+
+        var pos = transform.position;
+        var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
+
+
+        var isSlope = IsOnSlope();
+        if (isSlope)
         {
-            var dir = hor < 0 ? 1 : -1;
-            skeletonAnimation.skeleton.ScaleX = dir;
+            moveVec = AdjustDirectionToSlope(moveVec);
+            gravity = Vector3.zero;
+            rigid.useGravity = false;
+            Debug.DrawRay(pos, moveVec * 10, Color.blue);
+        }
+        else
+        {
+           rigid.useGravity = true;
         }
 
-        var moveVec = new Vector3(hor,0,ver).normalized;
-        var pos = transform.position;
-        var speed = moveSpeed * Time.fixedUnscaledDeltaTime;
+       
+        //var rayPos = pos + Vector3.down * box.size.y * 0.5f;
 
-        moveVec = Quaternion.Euler(new Vector3(0,rotater.rotation.eulerAngles.y,0)) * moveVec;
+        moveVec = MoveRayCheck(moveVec, isSlope);
 
-        rigid.velocity = moveVec *speed;
+     
+
+        if (new Vector3(moveVec.x,0,moveVec.z).magnitude > 0.02f)
+        {
+            CurrentAnimDirUpdtae(moveVec);
+            animationController.SetMoveAnim(curDir);
+            rigid.velocity = moveVec.normalized * speed + gravity;
+        }
+        else
+        {
+            rigid.velocity = Vector3.zero;
+            SetStateIdle();
+        }
     }
+
     public void PlayerInputCheck()
     {
         if(InteractionInputCheck())
@@ -112,10 +259,24 @@ public class PlayerController : MonoBehaviour
 
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
-        if(hor != 0 || ver != 0)
+        
+
+        if(hor == 0 && ver == 0)
+        {
+            return;
+        }
+        
+        //if(hor != 0)
+        //{
+        //    var dir = hor < 0 ? 1 : -1;
+        //    skeletonAnimation.skeleton.ScaleX = dir;
+        //}
+
+        if(IsMove(transform.position,hor,ver))
         {
             playerStateController.ChangeState(PlayerMove.Instance);
         }
+
     }
     public bool InteractionInputCheck() 
     {
@@ -148,7 +309,6 @@ public class PlayerController : MonoBehaviour
         }
         return false;
     }
-
     public void EnterDebugMod()
     {
         SetstateStop();
@@ -166,6 +326,14 @@ public class PlayerController : MonoBehaviour
             interactionDetecter.SwitchDebugMod(false);
             SetStateIdle();
         });
+    }
+    public void AnimIdleEnter()
+    {
+        animationController.SetIdleAnim(curDir);
+    }
+    public void AnimMoveEnter()
+    {
+        animationController.SetMoveAnim(curDir);
     }
     public void ClearMoveAnim()
     {
@@ -203,6 +371,58 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    public bool IsOnSlope()
+    {
+        Ray ray = new Ray(transform.position  , Vector3.down);
+        Debug.DrawRay(transform.position, Vector3.down * transform.position.y, Color.blue);
+        if(Physics.Raycast(ray, out slopeHit, transform.position.y, groundLayer))
+        {
+            var angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            if(angle < maxSlopeAngle) 
+            {
+                return true;   
+            }
+            return false;
+        }
+        return false;
+    }
+    public Vector3 AdjustDirectionToSlope(Vector3 direction)
+    {
+        return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
+    }
+
+    public void GetDamage(int damage)
+    {
+        hp = hp - damage;
+        playerUIController.SetHp();
+        if(hp == 0)
+        {
+            SetstateDeath();
+        }
+    }
+
+    public void OpenPlayerUI()
+    {
+        playerUIController.OnPlayerUI();
+    }
+    public void ClosePlayerUI()
+    {
+        playerUIController.OffPlayerUI();
+    }
+    public void isDebugButton()
+    {
+        playerUIController.DebugButtom();
+    }
+    public void OpenDeathUI()
+    {
+        deathUIController.DeathUIOpen();
+    }
+    public void CloseDeathUI()
+    {
+        deathUIController.DeathUIClose();
+    }
+  
     #endregion
 
     #region SetState
@@ -225,6 +445,10 @@ public class PlayerController : MonoBehaviour
     public void SetstateStop() 
     {
         playerStateController.ChangeState(PlayerStop.Instance);
+    }
+    public void SetstateDeath()
+    {
+        playerStateController.ChangeState(PlayerDeath.Instance);
     }
     #endregion
 

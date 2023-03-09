@@ -44,8 +44,8 @@ public class InteractionDetectController : MonoBehaviour
 
         if(curIteraction != null)
         {
-            curIteraction.OnInteraction();
             Managers.Game.Player.SetStateInteraction();
+            curIteraction.OnInteraction();
         }
 
     }

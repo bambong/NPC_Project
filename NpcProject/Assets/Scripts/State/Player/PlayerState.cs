@@ -10,6 +10,7 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
+        stateController.OpenPlayerUI();
         stateController.AnimIdleEnter();
     }
 
@@ -19,6 +20,7 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
 
     public void FixedUpdateActive(PlayerController stateController)
     {
+       
     }
 
     
@@ -36,7 +38,6 @@ public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.AnimRunEnter();
     }
 
     public void Exit(PlayerController stateController)
@@ -50,7 +51,7 @@ public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
 
     public void UpdateActive(PlayerController stateController)
     {
-       
+        //stateController.PlayerMoveUpdate();
         stateController.DebugModEnterInputCheck();
         stateController.InteractionInputCheck();
     }
@@ -63,7 +64,8 @@ public class PlayerStop : Singleton<PlayerStop>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.ClearMoveAnim();
+        stateController.ClosePlayerUI();
+        stateController.ClearMoveAnim();        
     }
 
     public void Exit(PlayerController stateController)
@@ -85,6 +87,7 @@ public class PlayerDebugMod : Singleton<PlayerDebugMod>, IState<PlayerController
     }
     public void Enter(PlayerController stateController)
     {
+        stateController.ClosePlayerUI();
     }
 
     public void Exit(PlayerController stateController)
@@ -113,6 +116,7 @@ public class PlayerInteraction : Singleton<PlayerInteraction>, IState<PlayerCont
     {
         stateController.ClearMoveAnim();
         stateController.InteractionEnter();
+        stateController.ClosePlayerUI();
     }
 
     public void Exit(PlayerController stateController)
@@ -150,5 +154,27 @@ public class PlayerKeywordMod : Singleton<PlayerKeywordMod>, IState<PlayerContro
     public void UpdateActive(PlayerController stateController)
     {
         stateController.KeywordModInputCheck();
+    }
+}
+public class PlayerDeath : Singleton<PlayerDeath>, IState<PlayerController>
+{
+    public void Init()
+    {
+    }
+    public void Enter(PlayerController stateController)
+    {
+        stateController.OpenDeathUI();
+    }
+
+    public void Exit(PlayerController stateController)
+    {
+    }
+
+    public void FixedUpdateActive(PlayerController stateController)
+    {
+    }
+
+    public void UpdateActive(PlayerController stateController)
+    {
     }
 }

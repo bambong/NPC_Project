@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PotalScript : MonoBehaviour, IInteraction
 {
-    public GameObject Go => throw new System.NotImplementedException();
+    public GameObject Go => gameObject;
 
     public void OnInteraction()
     {
