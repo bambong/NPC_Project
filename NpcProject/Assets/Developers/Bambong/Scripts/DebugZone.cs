@@ -17,7 +17,13 @@ public class DebugZone : MonoBehaviour
 
     [SerializeField]
     private GameObject[] keywords;
+
+    [Header("Wrie Material list")]
+    [SerializeField]
+    private Material[] wireMaterials;
+
     public int PlayerSlotCount { get => playerSlotCount; }
+    public Material[] WireMaterials { get => wireMaterials; }
 
     private List<KeywordFrameController> playerFrames = new List<KeywordFrameController>();
     private Transform playerLayout;
@@ -76,7 +82,7 @@ public class DebugZone : MonoBehaviour
     public void OnEnterDebugMod() 
     {
         debugModCameraController.EnterDebugMod();
-        Managers.Game.Player.OpenWireEffect(boxSize *2);
+        Managers.Game.Player.OpenWireEffect(boxSize *2, wireMaterials);
     }
     public void OnExitDebugMod() 
     {

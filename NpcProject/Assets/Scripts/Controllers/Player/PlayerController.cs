@@ -8,6 +8,7 @@ using UnityEditor.Animations;
 using UnityEditor.Rendering.Utilities;
 using System;
 using DG.Tweening;
+using AmazingAssets.WireframeShader;
 
 public class PlayerController : MonoBehaviour
 {
@@ -50,6 +51,8 @@ public class PlayerController : MonoBehaviour
     [Header("WireEffect")]
     [SerializeField]
     private GameObject wireEffectGo;
+    [SerializeField]
+    private WireframeMaskController wireframeMaskController;
 
     private PlayerAnimationController.AnimDir curDir = PlayerAnimationController.AnimDir.Front;
     private DebugModGlitchEffectController glitchEffectController;
@@ -468,8 +471,9 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
     #region WireEffect
-    public void OpenWireEffect(Vector3 size) 
+    public void OpenWireEffect(Vector3 size, Material[] materials)
     {
+        wireframeMaskController.materials = materials;
         wireEffectGo.transform.localScale = Vector3.zero;
         wireEffectGo.transform.DOKill();
         wireEffectGo.transform.DOScale(size, WIRE_EFFECT_OPEN_TIME);
@@ -477,7 +481,7 @@ public class PlayerController : MonoBehaviour
     public void CloseWireEffect()
     {
         wireEffectGo.transform.DOKill();
-        wireEffectGo.transform.DOScale(Vector3.zero, WIRE_EFFECT_CLOSE_TIME);
+        wireEffectGo.transform.DOScale(Vector3.zero, WIRE_EFFECT_CLOSE_TIME).OnComplete(() => wireframeMaskController.materials = null);
     }
 
     #endregion

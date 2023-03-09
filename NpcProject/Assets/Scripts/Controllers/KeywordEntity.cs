@@ -44,8 +44,7 @@ class CreateKeywordOption
 
 public class KeywordEntity : MonoBehaviour
 {
-    [SerializeField]
-    private OutlineEffect outlineEffect;
+
     [SerializeField]
     private float maxHeight = 3;
     [SerializeField]
@@ -152,12 +151,10 @@ public class KeywordEntity : MonoBehaviour
     public virtual void EnterDebugMod()
     {
         OpenWorldSlotUI();
-        outlineEffect.OutLineGo.SetActive(true);
     }
     public virtual void ExitDebugMod() 
     {
         CloseWorldSlotUI();
-        outlineEffect.OutLineGo.SetActive(false);
     }
 
     public void CloseWorldSlotUI() 
