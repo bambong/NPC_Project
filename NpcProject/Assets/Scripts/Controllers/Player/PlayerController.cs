@@ -272,11 +272,6 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        if (DebugModEnterInputCheck()) 
-        {
-            return;
-        }
-
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
         
@@ -335,7 +330,7 @@ public class PlayerController : MonoBehaviour
         Managers.Game.SetStateDebugMod();
         glitchEffectController.EnterDebugMod(() => 
         {
-            SetStateDebugMod();
+            SetStateIdle();
         });
         interactionDetecter.SwitchDebugMod(true);
     }
@@ -377,13 +372,13 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Mouse0))
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            int layer = LayerMask.GetMask("Interaction");
+            int layer = LayerMask.GetMask("Interaction"); 
             RaycastHit hit;
             if(Physics.Raycast(ray,out hit,float.MaxValue,layer))
             {
                 var entity = hit.collider.GetComponent<KeywordEntity>();
 
-                if(entity == null)
+                if(entity == null )
                 {
                     return;
                 }

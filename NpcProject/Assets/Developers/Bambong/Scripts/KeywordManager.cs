@@ -63,6 +63,7 @@ public class KeywordManager
         {
             effect.EnterDebugMod();
         }
+        playerKeywordPanel.Open();
         Managers.Time.SetTimeScale(TIME_TYPE.NONE_PLAYER, DEBUG_TIME_SCALE);
         prevGravity = Physics.gravity;
         Physics.gravity = prevGravity * DEBUG_TIME_SCALE;
@@ -79,6 +80,7 @@ public class KeywordManager
         {
             effect.ExitDebugMod();
         }
+        playerKeywordPanel.Close();
         Physics.gravity = prevGravity; 
         Managers.Time.SetTimeScale(TIME_TYPE.NONE_PLAYER,1);
         Managers.Game.SetStateNormal();
@@ -94,16 +96,13 @@ public class KeywordManager
             return;
         }
         keywordEntity.OpenKeywordSlot();
-        Managers.Game.SetStateKeywordMod();
+        //Managers.Game.SetStateKeywordMod();
         curKeywordEntity = keywordEntity;
-        playerKeywordPanel.Open();
-        keywordEntity.OpenKeywordSlot();
     }
   
     public void ExitKeywordMod()
     {
-        Managers.Game.SetStateDebugMod();
-        playerKeywordPanel.Close();
+       // Managers.Game.SetStateDebugMod();
         curKeywordEntity.CloseKeywordSlot();
         curKeywordEntity.DecisionKeyword();
     }

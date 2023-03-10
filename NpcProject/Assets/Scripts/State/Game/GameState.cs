@@ -76,14 +76,12 @@ public class GameKeywordModState : Singleton<GameKeywordModState>, IState<GameMa
     }
     public void Enter(GameManager stateController)
     {
-        Time.timeScale = 0;
         stateController.Player.SetStatekeywordMod();
     }
 
     public void Exit(GameManager stateController)
     {
-        Time.timeScale = 1;
-        stateController.Player.SetStateDebugMod();
+        stateController.Player.SetStateIdle();
     }
 
     public void FixedUpdateActive(GameManager stateController)

@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using static UnityEngine.Rendering.DebugUI.Table;
 
 public enum KeywordActionType 
@@ -174,6 +175,7 @@ public class KeywordEntity : MonoBehaviour
 
     public void OpenKeywordSlot() 
     {
+        keywordSlotLayout.transform.position = Input.mousePosition;
         foreach (var slot in keywordFrames)
         {
             slot.Open();

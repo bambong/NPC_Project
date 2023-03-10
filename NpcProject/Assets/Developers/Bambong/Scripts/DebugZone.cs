@@ -8,8 +8,6 @@ using DG.Tweening;
 public class DebugZone : MonoBehaviour
 {
     [SerializeField]
-    private DebugModCameraController debugModCameraController;
-    [SerializeField]
     private int playerSlotCount =2;
 
     [SerializeField]
@@ -81,13 +79,10 @@ public class DebugZone : MonoBehaviour
     public void ClosePlayerLayout() => playerLayout.gameObject.SetActive(false);
     public void OnEnterDebugMod() 
     {
-        debugModCameraController.EnterDebugMod();
         Managers.Game.Player.OpenWireEffect(boxSize *2, wireMaterials);
     }
     public void OnExitDebugMod() 
     {
-        debugModCameraController.ExitDebugMod();
-        Managers.Camera.SwitchPrevCamera();
         Managers.Game.Player.CloseWireEffect();
     }
 
