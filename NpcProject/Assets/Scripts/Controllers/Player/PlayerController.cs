@@ -295,7 +295,8 @@ public class PlayerController : MonoBehaviour
     }
     public bool InteractionInputCheck() 
     {
-        if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.INTERACTION_KEY)))
+        if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.INTERACTION_KEY))) 
+
         {
             rigid.velocity = Vector3.zero;
             interactionDetecter.Interaction();
@@ -369,21 +370,22 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        int layer = LayerMask.GetMask("Interaction"); 
+        RaycastHit hit;
+        if(Physics.Raycast(ray,out hit,float.MaxValue,layer))
         {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            int layer = LayerMask.GetMask("Interaction"); 
-            RaycastHit hit;
-            if(Physics.Raycast(ray,out hit,float.MaxValue,layer))
-            {
-                var entity = hit.collider.GetComponent<KeywordEntity>();
+            var entity = hit.collider.GetComponent<KeywordEntity>();
 
-                if(entity == null )
-                {
-                    return;
-                }
-                Managers.Keyword.EnterKeywordMod(entity);
+            if(entity == null )
+            {
+                return;
             }
+            Managers.Keyword.EnterKeywordMod(entity);
+        }
+        else 
+        {
+            Managers.Keyword.ExitKeywordMod();
         }
     }
 

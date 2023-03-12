@@ -12,7 +12,6 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     private readonly float FOCUSING_SCALE = 1.05f;
     private readonly float KEYWORD_FRAME_MOVE_TIME = 0.1f;
     private readonly string KEYWORD_FRAME_TAG = "KeywordFrame";
-    private readonly string KEYWORD_PLAYER_FRAME_TAG = "KeywordPlayerFrame";
 
     private bool isLock = false;
 
@@ -32,6 +31,8 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     public Image Image { get => image; }
     public string KewordId { get; private set; }
     public KeywordActionType KeywordType { get => keywordType; }
+    public KeywordFrameBase CurFrame { get => curFrame;}
+    public RectTransform RectTransform { get => rectTransform;  }
 
     private Color originColor;
     private readonly Color LOCK_COLOR = new Color(0.45f, 0.45f, 0.45f);
@@ -39,7 +40,6 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     private void Awake()
     {
          KewordId = GetType().ToString();
-       
     }
     public void SetFrame(KeywordFrameBase frame) => curFrame = frame;
     public virtual void SetDebugZone(DebugZone zone) => parentDebugZone = zone;
@@ -69,12 +69,12 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         {
             return;
         }
+        curFrame.OnBeginDrag();
         prevSibilintIndex = rectTransform.GetSiblingIndex();
+        startDragPoint = rectTransform.localPosition;
         startParent = transform.parent;
         transform.SetParent(Managers.Keyword.PlayerKeywordPanel.transform);
-
         rectTransform.SetAsLastSibling();
-        startDragPoint = rectTransform.position;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -109,40 +109,40 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         {
             for(int i =0; i < raycasts.Count; ++i) 
             {
-                if(raycasts[i].gameObject.CompareTag(KEYWORD_FRAME_TAG)) 
+                if (raycasts[i].gameObject.CompareTag(KEYWORD_FRAME_TAG)) 
                 {
                     var keywordFrame = raycasts[i].gameObject.GetComponent<KeywordFrameBase>();
-                    if(curFrame == keywordFrame)
+                    if (curFrame == keywordFrame)
                     {
                         continue;
                     }
 
-                    if(keywordFrame.IsAvailable)
-                    {
-                        keywordFrame.SetKeyWord(this);
-                        curFrame?.ResetKeywordFrame();
-                        curFrame = keywordFrame;
-                        return;
-                    }
-                    else
-                    {
-                        SwapKeywordFrame(keywordFrame as KeywordFrameController);
-                        return;
-                    }
+                    //if (keywordFrame.IsAvailable)
+                    //{
+                    keywordFrame.DragDropKeyword(this);
+                    return;
+                    //}
+                    //else
+                    //{
+                    //    SwapKeywordFrame(keywordFrame);
+                    //    return;
+                    //}
                 }
-
+                else 
+                {
+                    Debug.Log(raycasts[i].gameObject.name);
+                }
+               
             }
         }
         ResetKeyword();
     }
  
-    public void SwapKeywordFrame(KeywordFrameController other) 
+    public void SwapKeywordFrame(KeywordFrameBase other) 
     {
         var innerKeyword = other.CurFrameInnerKeyword;
         curFrame.SetKeyWord(innerKeyword);
-        innerKeyword.curFrame = curFrame;
         other.SetKeyWord(this);
-        curFrame = other;
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -164,7 +164,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
 
     public DG.Tweening.Core.TweenerCore<Vector3,Vector3,DG.Tweening.Plugins.Options.VectorOptions> SetToKeywordFrame(Vector3 pos) 
     {
-        return rectTransform.DOMove(pos, KEYWORD_FRAME_MOVE_TIME).SetUpdate(true);
+        return rectTransform.DOLocalMove(pos, KEYWORD_FRAME_MOVE_TIME).SetUpdate(true);
     }
 
     public void ResetKeyword()
@@ -175,7 +175,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         }
         transform.SetParent(startParent);
         transform.SetSiblingIndex(prevSibilintIndex);
-        rectTransform.DOMove(startDragPoint,START_END_ANIM_TIME,true).SetUpdate(true);
+        rectTransform.DOLocalMove(startDragPoint,START_END_ANIM_TIME,true).SetUpdate(true).OnComplete(()=>curFrame.OnEndDrag());
     }
     public virtual void KeywordAction(KeywordEntity entity) 
     {

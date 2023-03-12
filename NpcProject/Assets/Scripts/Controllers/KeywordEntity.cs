@@ -64,7 +64,7 @@ public class KeywordEntity : MonoBehaviour
     private Action<KeywordEntity> fixedUpdateAction = null;
     private Rigidbody rigidbody;
     private BoxCollider col;
-    private Transform keywordSlotLayout;
+    private KeywordSlotUiController keywordSlotUiController;
     private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
 
     public Dictionary<KeywordController,KeywordAction> CurrentRegisterKeyword { get => currentRegisterKeyword; }
@@ -73,12 +73,14 @@ public class KeywordEntity : MonoBehaviour
     public Vector3 OriginScale { get; private set; }
     public Vector3 MaxScale { get => maxScale; }
     public bool IsAvailable { get => parentDebugZone == Managers.Keyword.CurDebugZone; }
+    public KeywordSlotUiController KeywordSlotUiController { get => keywordSlotUiController;}
 
     private void Start()
     {
         OriginScale = transform.lossyScale;
         Managers.Keyword.AddSceneEntity(this);
-        keywordSlotLayout = Managers.Resource.Instantiate("UI/KeywordSlotLayout",Managers.Keyword.PlayerKeywordPanel.transform).transform;
+        keywordSlotUiController = Managers.UI.MakeSubItem<KeywordSlotUiController>(Managers.Keyword.PlayerKeywordPanel.transform, "KeywrodSlotController");
+        keywordSlotUiController.RegisterEntity(this);
         keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null,"KeywordWorldSlotLayout");
         keywordWorldSlotLayout.RegisterEntity(transform);
 
@@ -102,8 +104,11 @@ public class KeywordEntity : MonoBehaviour
     {
         for (int i = 0; i < keywords.Length; ++i)
         {
-            var frame =  CreateKeywordFrame();
-            CreateKeywordWorldSlotUI();
+            var frame = Managers.UI.MakeSubItem<KeywordFrameController>(keywordSlotUiController.KeywordSlotLayout, "KeywordSlotUI");
+            keywordFrames.Add(frame);
+            var worldFrame = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotUIController>(keywordWorldSlotLayout.Panel, "KeywordSlotWorldSpace");
+            keywordtWorldFrames.Add(worldFrame);
+            frame.RegisterEntity(this,worldFrame);
             if (keywords[i].keywordGo == null) 
             {
                 continue;
@@ -111,16 +116,16 @@ public class KeywordEntity : MonoBehaviour
 
             var keyword = Managers.UI.MakeSubItem<KeywordController>(null, "KeywordPrefabs/" + keywords[i].keywordGo.name);
 
-            frame.SetKeyWord(keyword);
-            keyword.SetFrame(frame);
+            frame.InitKeyword(keyword);
             keyword.SetDebugZone(parentDebugZone);
             if (keywords[i].isLock) 
             {
                 frame.SetLockFrame(true);
             }
-
         }
     }
+
+  
     //private bool RegisterKeyword(KeywordController keyword)
     //{
     //    for (int i = 0; i < keywordSlotUI.Count; ++i)
@@ -138,17 +143,6 @@ public class KeywordEntity : MonoBehaviour
     //    return false;
     //}
     public void SetDebugZone(DebugZone zone) => parentDebugZone = zone;
-    private KeywordFrameController CreateKeywordFrame() 
-    {
-        var frame = Managers.UI.MakeSubItem<KeywordFrameController>(keywordSlotLayout, "KeywordSlotUI");
-        keywordFrames.Add(frame);
-        return frame;
-    }
-    private void CreateKeywordWorldSlotUI() 
-    {
-        keywordtWorldFrames.Add(Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotUIController>(keywordWorldSlotLayout.Panel, "KeywordSlotWorldSpace"));
-    }
-
     public virtual void EnterDebugMod()
     {
         OpenWorldSlotUI();
@@ -175,18 +169,11 @@ public class KeywordEntity : MonoBehaviour
 
     public void OpenKeywordSlot() 
     {
-        keywordSlotLayout.transform.position = Input.mousePosition;
-        foreach (var slot in keywordFrames)
-        {
-            slot.Open();
-        }
+        keywordSlotUiController.Open();
     }
     public void CloseKeywordSlot()
     {
-        foreach (var slot in keywordFrames)
-        {
-            slot.Close();
-        }
+        keywordSlotUiController.Close();
     }
     public void AddOverrideTable(string id,KeywordAction action) 
     {
@@ -239,56 +226,60 @@ public class KeywordEntity : MonoBehaviour
         currentRegisterKeyword[keywordController]?.OnRemove(this);
         currentRegisterKeyword.Remove(keywordController);
     }
+    public void DecisionKeyword(KeywordFrameController keywordFrame) 
+    {
+        // 현재 프레임 안에 들어있는 키워드
+        var curFrameInnerKeyword = keywordFrame.CurFrameInnerKeyword;
+        // 기존 프레임에 등록되어 있던 키워드
+        var frameRegisterKeyword = keywordFrame.RegisterKeyword;
+        KeywordAction keywordAciton;
+        //기존 키워드가 제거 혹은 변경됬다면 
+        if (keywordFrame.IsKeywordRemoved)
+        {
+            //키워드 Remove 이벤트 발생 
+            //Entity 에 등록된 키워드 리스트에서 키워드 제거
+            RemoveAction(frameRegisterKeyword);
+        }
+        //현재 FrameInnerKeyword 를 프레임에 등록
+        keywordFrame.OnDecisionKeyword();
+
+        // 프레임안에 키워드가 없다면 
+        if (curFrameInnerKeyword == null)
+        {
+            //월드 키워드 UI 를 리셋하고 다시 순회 
+            keywordFrame.KeywordWorldSlot.ResetSlotUI();
+            return;
+        }
+        //월드 키워드 UI 설정  
+        keywordFrame.KeywordWorldSlot.SetSlotUI(curFrameInnerKeyword.Image);
+
+        // 이미 등록된 키워드라면 다시 순회  
+        if (currentRegisterKeyword.ContainsKey(curFrameInnerKeyword))
+        {
+            return;
+        }
+
+        var keywordId = curFrameInnerKeyword.KewordId;
+        // 키워드가 오버라이딩 되어 있는지 확인하고 키워드 액션에 할당
+        if (!keywrodOverrideTable.TryGetValue(keywordId, out keywordAciton))
+        {
+            keywordAciton = new KeywordAction(curFrameInnerKeyword.KeywordAction, curFrameInnerKeyword.KeywordType, curFrameInnerKeyword.OnRemove);
+        }
+        // Entity 가  OnRemove 이벤트 핸들러를 오버라이딩 안했다면 Default 핸들러를 넣어준다 
+        if (keywordAciton.OnRemove == null)
+        {
+            keywordAciton.AddOnRemoveEvent(curFrameInnerKeyword.OnRemove);
+        }
+        //OneShot Action 의 경우 실행 
+        //키워드 액션을 추가
+        AddAction(curFrameInnerKeyword, keywordAciton);
+    }
     public void DecisionKeyword()
     {
         // 키워드 프레임을 순회
         for(int i = 0; i< keywordFrames.Count; ++i)  
         {
-            // 현재 프레임 안에 들어있는 키워드
-            var curFrameInnerKeyword = keywordFrames[i].CurFrameInnerKeyword;
-            // 기존 프레임에 등록되어 있던 키워드
-            var frameRegisterKeyword = keywordFrames[i].RegisterKeyword;
-            KeywordAction keywordAciton;
-            //기존 키워드가 제거 혹은 변경됬다면 
-            if(keywordFrames[i].IsKeywordRemoved)
-            {
-                //키워드 Remove 이벤트 발생 
-                //Entity 에 등록된 키워드 리스트에서 키워드 제거
-                RemoveAction(frameRegisterKeyword);
-            }
-            //현재 FrameInnerKeyword 를 프레임에 등록
-            keywordFrames[i].OnDecisionKeyword();
-
-            // 프레임안에 키워드가 없다면 
-            if(curFrameInnerKeyword == null)
-            {
-                //월드 키워드 UI 를 리셋하고 다시 순회 
-                keywordtWorldFrames[i].ResetSlotUI();
-                continue;
-            }
-            //월드 키워드 UI 설정  
-            keywordtWorldFrames[i].SetSlotUI(curFrameInnerKeyword.Image);
-
-            // 이미 등록된 키워드라면 다시 순회  
-            if(currentRegisterKeyword.ContainsKey(curFrameInnerKeyword)) 
-            {
-                continue;
-            }
-
-            var keywordId = curFrameInnerKeyword.KewordId;
-            // 키워드가 오버라이딩 되어 있는지 확인하고 키워드 액션에 할당
-            if(!keywrodOverrideTable.TryGetValue(keywordId,out keywordAciton))
-            {
-                keywordAciton = new KeywordAction(curFrameInnerKeyword.KeywordAction,curFrameInnerKeyword.KeywordType,curFrameInnerKeyword.OnRemove);
-            }
-            // Entity 가  OnRemove 이벤트 핸들러를 오버라이딩 안했다면 Default 핸들러를 넣어준다 
-            if(keywordAciton.OnRemove == null) 
-            {
-                keywordAciton.AddOnRemoveEvent(curFrameInnerKeyword.OnRemove);
-            }
-            //OneShot Action 의 경우 실행 
-            //키워드 액션을 추가
-            AddAction(curFrameInnerKeyword,keywordAciton);         
+            DecisionKeyword(keywordFrames[i]);
         }
     }
 
@@ -518,4 +509,6 @@ public class KeywordEntity : MonoBehaviour
     {
         
     }
+
+
 }

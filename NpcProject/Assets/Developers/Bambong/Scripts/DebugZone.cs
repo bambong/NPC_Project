@@ -23,7 +23,7 @@ public class DebugZone : MonoBehaviour
     public int PlayerSlotCount { get => playerSlotCount; }
     public Material[] WireMaterials { get => wireMaterials; }
 
-    private List<KeywordFrameController> playerFrames = new List<KeywordFrameController>();
+    private List<PlayerKeywordFrame> playerFrames = new List<PlayerKeywordFrame>();
     private Transform playerLayout;
 
     private Vector3 boxSize;
@@ -43,7 +43,7 @@ public class DebugZone : MonoBehaviour
         ClosePlayerLayout();
         for(int i = 0; i < playerSlotCount; ++i)
         {
-            playerFrames.Add(Managers.UI.MakeSubItem<KeywordFrameController>(playerLayout,"KeywordPlayerSlotUI"));
+            playerFrames.Add(Managers.UI.MakeSubItem<PlayerKeywordFrame>(playerLayout,"KeywordPlayerSlotUI"));
         }
     }
     private void MakeKeyword() 
@@ -67,8 +67,7 @@ public class DebugZone : MonoBehaviour
             {
                 continue;
             }
-            playerFrames[i].SetKeyWord(keyword);
-            keyword.SetFrame(playerFrames[i]);
+            playerFrames[i].InitKeyword(keyword);
             keyword.SetDebugZone(this);
             return true;
         }

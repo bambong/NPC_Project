@@ -91,20 +91,29 @@ public class KeywordManager
     }
     public void EnterKeywordMod(KeywordEntity keywordEntity) 
     {
-        if (!keywordEntity.IsAvailable) 
+        if (!keywordEntity.IsAvailable || curKeywordEntity == keywordEntity) 
         {
             return;
         }
-        keywordEntity.OpenKeywordSlot();
+        if(curKeywordEntity != null) 
+        {
+            curKeywordEntity.CloseKeywordSlot();
+        }
+        //keywordEntity.OpenKeywordSlot();
         //Managers.Game.SetStateKeywordMod();
         curKeywordEntity = keywordEntity;
+        curKeywordEntity.OpenKeywordSlot();
     }
   
     public void ExitKeywordMod()
     {
+        if(curKeywordEntity != null) 
+        {
+            curKeywordEntity.CloseKeywordSlot();
+            curKeywordEntity = null;
+        }
        // Managers.Game.SetStateDebugMod();
-        curKeywordEntity.CloseKeywordSlot();
-        curKeywordEntity.DecisionKeyword();
+        // curKeywordEntity.DecisionKeyword();
     }
 
     public void AddDebugEffectController(DebugModEffectController debugModEffectController) 
