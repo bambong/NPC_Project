@@ -38,6 +38,8 @@ public class KeywordWorldSlotLayoutController : UI_Base
 
     private void Update()
     {
+       // panel.position = entityColider.transform.position + Vector3.up * ((entityColider.bounds.size.y / 2) + Y_POS_REVISION_AMOUNT);
+      
         panel.position = entityColider.transform.position + Vector3.up * ((entityColider.bounds.size.y / 2) + Y_POS_REVISION_AMOUNT);
         panel.rotation = Camera.main.transform.rotation;
     }

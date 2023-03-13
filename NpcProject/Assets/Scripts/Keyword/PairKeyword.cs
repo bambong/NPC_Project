@@ -61,6 +61,10 @@ public class PairKeyword : KeywordController
     }
     public override void OnRemove(KeywordEntity entity)
     {
+        if(entity != MasterEntity) 
+        {
+            return;
+        }
         MasterEntity = null;
     }
 
