@@ -6,35 +6,18 @@ public class RevolutionKeyword : KeywordController
 {
     [SerializeField]
     private float speed = 10f;
-    public override void KeywordAction(KeywordEntity entity)
+    public override void OnFixedUpdate(KeywordEntity entity)
     {
         entity.ClearVelocity();
         entity.SetKinematic(true);
-        PairKeyword pairKeyword = null;
-        // entity 에 등록된 키워드 중에 Pair 키워드가 있는지 체크
-        foreach(var keyword in entity.CurrentRegisterKeyword)
-        {
-            if(keyword.Key is PairKeyword)
-            {
-                pairKeyword = keyword.Key as PairKeyword;
-                break;
-            }
-
-        }
-        // 페어 키워드가 없다면 반환
-        if(pairKeyword == null)
+        
+        KeywordEntity otherEntity;
+        if (!PairKeyword.IsAvailablePair(entity, out otherEntity))
         {
             return;
         }
 
-        var target = pairKeyword.GetOtherPair().MasterEntity;
-        // 다른 페어 키워드가 entity 에 들어가있는지 체크 
-        if(target == null || target == pairKeyword.MasterEntity)
-        {
-            return;
-        }
-
-        var _orbitCenter = target.KeywordTransformFactor.position;
+        var _orbitCenter = otherEntity.KeywordTransformFactor.position;
         var _worldRotationAxis = Vector3.up;
         var dir = entity.KeywordTransformFactor.position - _orbitCenter;
 

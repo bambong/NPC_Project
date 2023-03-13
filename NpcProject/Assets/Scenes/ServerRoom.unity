@@ -2836,7 +2836,7 @@ PrefabInstance:
     - target: {fileID: 5894186153558330794, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
       propertyPath: childEntitys.Array.data[1]
       value: 
-      objectReference: {fileID: 2652289197411323422}
+      objectReference: {fileID: 2652289197411323425}
     - target: {fileID: 5894186153558330794, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
       propertyPath: childEntitys.Array.data[2]
       value: 
@@ -4444,7 +4444,7 @@ GameObject:
   - component: {fileID: 1497086691}
   - component: {fileID: 1497086689}
   m_Layer: 8
-  m_Name: keyword_Cube (1)
+  m_Name: keyword_Cube_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8473,7 +8473,7 @@ GameObject:
   - component: {fileID: 2652289196327516480}
   - component: {fileID: 2652289196327516482}
   m_Layer: 8
-  m_Name: keyword_Cube
+  m_Name: keyword_Cube_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10555,7 +10555,7 @@ GameObject:
   - component: {fileID: 2652289197375392191}
   - component: {fileID: 2652289197375392190}
   m_Layer: 8
-  m_Name: keyword_Cube
+  m_Name: keyword_Cube_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10766,34 +10766,15 @@ GameObject:
   - component: {fileID: 2652289197411323393}
   - component: {fileID: 2652289197411323392}
   - component: {fileID: 2652289197411323395}
-  - component: {fileID: 2652289197411323422}
   - component: {fileID: 2652289197411323424}
+  - component: {fileID: 2652289197411323425}
   m_Layer: 8
-  m_Name: keyword_Cube
+  m_Name: keyword_Cube_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2652289197411323422
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2652289197411323421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24651d961476c7a4ca00d46866546750, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHeight: 5.5
-  maxScale: {x: 2, y: 2, z: 2}
-  keywords:
-  - isLock: 0
-    keywordGo: {fileID: 0}
-  - isLock: 0
-    keywordGo: {fileID: 0}
 --- !u!54 &2652289197411323424
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10810,6 +10791,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &2652289197411323425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2652289197411323421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dae1261cdc2509f4b81c83d717c0459a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHeight: 5.5
+  maxScale: {x: 2, y: 2, z: 2}
+  keywords:
+  - isLock: 0
+    keywordGo: {fileID: 0}
+  - isLock: 0
+    keywordGo: {fileID: 0}
 --- !u!1001 &3041262248090223741
 PrefabInstance:
   m_ObjectHideFlags: 0

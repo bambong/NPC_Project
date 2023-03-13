@@ -26,7 +26,9 @@ public class PlayerController : MonoBehaviour
     private BoxCollider box;
     [SerializeField]
     private Rigidbody rigid;
- 
+    [SerializeField]
+    private ConstantForce gravityForce;
+
     [Space(1)]
     [Header("Player Move Option")]
     [Space(1)]
@@ -239,10 +241,12 @@ public class PlayerController : MonoBehaviour
             moveVec = AdjustDirectionToSlope(moveVec);
             gravity = Vector3.zero;
             rigid.useGravity = false;
+            gravityForce.enabled = false;
             Debug.DrawRay(pos, moveVec * 10, Color.blue);
         }
         else
         {
+            gravityForce.enabled = true;
            rigid.useGravity = true;
         }
 

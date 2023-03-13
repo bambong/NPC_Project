@@ -13,7 +13,7 @@ public class MoveKeyword : KeywordController
     {
         dir *= -1;
     }
-    public override void KeywordAction(KeywordEntity entity)
+    public override void OnFixedUpdate(KeywordEntity entity)
     {
         if(!entity.ColisionCheckMove( moveVector *dir* moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER))) 
         {

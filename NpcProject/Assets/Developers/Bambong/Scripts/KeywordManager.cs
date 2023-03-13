@@ -23,6 +23,8 @@ public class KeywordManager
 {
 
     private KeywordEntity curKeywordEntity;
+    private Vector3 prevGravity;
+
     private PlayerKeywordPanelController playerKeywordPanel;
     public PlayerKeywordPanelController PlayerKeywordPanel { get => playerKeywordPanel;}
     public KeywordEntity CurKeywordEntity { get => curKeywordEntity; }
@@ -35,12 +37,14 @@ public class KeywordManager
 
     private DebugZone curDebugZone = null;
     public Transform PlayerPanelLayout { get => playerKeywordPanel.LayoutParent; }
-
-    private Vector3 prevGravity;
+    public Transform KeywordEntitySlots { get; private set; } 
+    public KeywordController CurDragKeyword { get; set; }
     private float DEBUG_TIME_SCALE = 0.2f;
     public void Init()
     {
         playerKeywordPanel = Managers.UI.MakeSceneUI<PlayerKeywordPanelController>(null,"PlayerKeywordPanel");
+        KeywordEntitySlots = new GameObject("KeywordEntitySlots").transform;
+        KeywordEntitySlots.SetParent(playerKeywordPanel.transform);
         graphicRaycaster = playerKeywordPanel.gameObject.GetOrAddComponent<GraphicRaycaster>();
     }
 
@@ -79,6 +83,11 @@ public class KeywordManager
         foreach (var effect in debugModEffectControllers)
         {
             effect.ExitDebugMod();
+        }
+        if(CurDragKeyword != null) 
+        {
+            CurDragKeyword.DragReset();
+            CurDragKeyword = null;
         }
         playerKeywordPanel.Close();
         Physics.gravity = prevGravity; 

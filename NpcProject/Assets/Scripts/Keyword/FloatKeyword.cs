@@ -6,7 +6,7 @@ public class FloatKeyword : KeywordController
 {
     [SerializeField]
     private float speed = 10;
-    public override void KeywordAction(KeywordEntity entity)
+    public override void OnFixedUpdate(KeywordEntity entity)
     {
         entity.SetGravity(false);
         entity.SetKinematic(true);

@@ -8,6 +8,31 @@ public class PairKeyword : KeywordController
 
     public KeywordEntity MasterEntity { get; protected set; }
 
+    public static bool IsAvailablePair(KeywordEntity entity ,out KeywordEntity otherEntity) 
+    {
+        PairKeyword pairKeyword = null;
+        otherEntity = null;
+        foreach (var keyword in entity.CurrentRegisterKeyword)
+        {
+            if (keyword.Key is PairKeyword)
+            {
+                pairKeyword = keyword.Key as PairKeyword;
+                break;
+            }
+        }
+        if (pairKeyword == null)
+        {
+            return false;
+        }
+        otherEntity = pairKeyword.GetOtherPair().MasterEntity;
+
+        if (otherEntity == null || pairKeyword.MasterEntity == null || otherEntity == pairKeyword.MasterEntity)
+        {
+            return false;
+        }
+        return true;
+    }
+
     public PairKeyword GetOtherPair() 
     {
         for(int i = 0;i < PairKeywords[parentDebugZone].Count; ++i) 
@@ -30,7 +55,7 @@ public class PairKeyword : KeywordController
         PairKeywords[zone].Add(this);
     }
 
-    public override void KeywordAction(KeywordEntity entity)
+    public override void OnEnter(KeywordEntity entity)
     {
         MasterEntity = entity;
     }

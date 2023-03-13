@@ -8,8 +8,6 @@ using UnityEngine.UI;
 public class KeywordSlotUiController : UI_Base
 {
     [SerializeField]
-    private Image image;
-    [SerializeField]
     private RectTransform keywordSlotLayout;
     [SerializeField]
     private RectTransform mask;
@@ -19,10 +17,8 @@ public class KeywordSlotUiController : UI_Base
     private readonly float OPEN_ANIM_TIME = 0.3f;
     private readonly float ClOSE_ANIM_TIME = 0.3f;
     private bool isDrag = false;
-
     public override void Init()
     {
-        
     }
     public void RegisterEntity(KeywordEntity entity) 
     {
@@ -49,13 +45,11 @@ public class KeywordSlotUiController : UI_Base
         }
         Close();
     }
-
     public void Open()
     {
+        transform.SetAsLastSibling();
         mask.DOKill();
-        image.DOKill();
         float animTime = OPEN_ANIM_TIME * (1 - (mask.sizeDelta.magnitude / keywordSlotLayout.sizeDelta.magnitude));
-        image.DOFade(0, animTime);
         mask.DOSizeDelta(keywordSlotLayout.sizeDelta, animTime);
     }
     public void Close()
@@ -65,8 +59,6 @@ public class KeywordSlotUiController : UI_Base
             return;
         }
         mask.DOKill();
-        image.DOKill();
-        image.DOFade(1, ClOSE_ANIM_TIME);
         mask.DOSizeDelta(Vector2.zero, ClOSE_ANIM_TIME);
     }
 

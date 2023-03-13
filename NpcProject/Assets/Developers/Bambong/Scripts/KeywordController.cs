@@ -19,18 +19,15 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     private RectTransform rectTransform;
     [SerializeField]
     private Image image;
-    [SerializeField]
-    private KeywordActionType keywordType;
 
     private int prevSibilintIndex;
     private Transform startParent;
     private Vector3 startDragPoint;
     private KeywordFrameBase curFrame;
     protected DebugZone parentDebugZone;
-   
+    
     public Image Image { get => image; }
     public string KewordId { get; private set; }
-    public KeywordActionType KeywordType { get => keywordType; }
     public KeywordFrameBase CurFrame { get => curFrame;}
     public RectTransform RectTransform { get => rectTransform;  }
 
@@ -57,18 +54,15 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         }
         isLock = isOn;
     }
+    private bool IsDragable(PointerEventData eventData) { return isLock || eventData.button != PointerEventData.InputButton.Left; }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (isLock) 
+        if (IsDragable(eventData)) 
         {
             return;
         }
-
-        if(eventData.button != PointerEventData.InputButton.Left) 
-        {
-            return;
-        }
+        Managers.Keyword.CurDragKeyword = this;
         curFrame.OnBeginDrag();
         prevSibilintIndex = rectTransform.GetSiblingIndex();
         startDragPoint = rectTransform.localPosition;
@@ -79,33 +73,24 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (isLock)
+        if (IsDragable(eventData)|| Managers.Keyword.CurDragKeyword != this)
         {
             return;
         }
-        if (eventData.button != PointerEventData.InputButton.Left)
-        {
-            return;
-        }
-
+ 
         rectTransform.position = Input.mousePosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (isLock)
+        if (IsDragable(eventData) || Managers.Keyword.CurDragKeyword != this)
         {
             return;
         }
-
-        if (eventData.button != PointerEventData.InputButton.Left)
-        {
-            return;
-        }
-
         var raycasts = Managers.Keyword.GetRaycastList(eventData);
+        Managers.Keyword.CurDragKeyword = null;
 
-        if(raycasts.Count > 0) 
+        if (raycasts.Count > 0) 
         {
             for(int i =0; i < raycasts.Count; ++i) 
             {
@@ -117,16 +102,8 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
                         continue;
                     }
 
-                    //if (keywordFrame.IsAvailable)
-                    //{
                     keywordFrame.DragDropKeyword(this);
                     return;
-                    //}
-                    //else
-                    //{
-                    //    SwapKeywordFrame(keywordFrame);
-                    //    return;
-                    //}
                 }
                 else 
                 {
@@ -137,13 +114,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         }
         ResetKeyword();
     }
- 
-    public void SwapKeywordFrame(KeywordFrameBase other) 
-    {
-        var innerKeyword = other.CurFrameInnerKeyword;
-        curFrame.SetKeyWord(innerKeyword);
-        other.SetKeyWord(this);
-    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (isLock)
@@ -152,7 +123,6 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         }
         transform.DOScale(FOCUSING_SCALE,START_END_ANIM_TIME).SetUpdate(true);
     }
-
     public void OnPointerExit(PointerEventData eventData)
     {
         if (isLock)
@@ -161,12 +131,10 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         }
         transform.DOScale(Vector3.one,START_END_ANIM_TIME).SetUpdate(true);
     }
-
     public DG.Tweening.Core.TweenerCore<Vector3,Vector3,DG.Tweening.Plugins.Options.VectorOptions> SetToKeywordFrame(Vector3 pos) 
     {
         return rectTransform.DOLocalMove(pos, KEYWORD_FRAME_MOVE_TIME).SetUpdate(true);
     }
-
     public void ResetKeyword()
     {
         if (gameObject == null)
@@ -177,9 +145,23 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         transform.SetSiblingIndex(prevSibilintIndex);
         rectTransform.DOLocalMove(startDragPoint,START_END_ANIM_TIME,true).SetUpdate(true).OnComplete(()=>curFrame.OnEndDrag());
     }
-    public virtual void KeywordAction(KeywordEntity entity) 
+    public void DragReset() 
+    {
+        transform.SetParent(startParent);
+        transform.SetSiblingIndex(prevSibilintIndex);
+        rectTransform.localPosition = startDragPoint;
+        curFrame.OnEndDrag();
+    }
+    public virtual void OnEnter(KeywordEntity entity)
     {
     }
+    public virtual void OnFixedUpdate(KeywordEntity entity) 
+    {
+    }
+    public virtual void OnUpdate(KeywordEntity entity)
+    {
+    }
+
     public virtual void OnRemove(KeywordEntity entity)
     { 
     }

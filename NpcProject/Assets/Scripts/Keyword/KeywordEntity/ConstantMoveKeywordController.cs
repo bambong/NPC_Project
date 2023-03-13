@@ -6,33 +6,22 @@ public class ConstantMoveKeywordController : KeywordEntity
 {
     private void Awake()
     {
-
-        AddOverrideTable(typeof(AttachKeyword).ToString(), new KeywordAction(OnAttachKeyword, KeywordActionType.OnUpdate, null));
-        AddOverrideTable(typeof(ApartKeyword).ToString(), new KeywordAction(OnApartKeyword, KeywordActionType.OnUpdate, null));
+        var attachOverride = new KeywordAction();
+        attachOverride.OnFixecUpdate += OnAttachKeyword;
+        AddOverrideTable(typeof(AttachKeyword).ToString(), attachOverride);
+        var apartOverride = new KeywordAction();
+        apartOverride.OnFixecUpdate += OnApartKeyword;
+        AddOverrideTable(typeof(ApartKeyword).ToString(), apartOverride);
     }
     public void OnAttachKeyword(KeywordEntity entity)
     {
-        PairKeyword pairKeyword = null;
-        foreach (var keyword in entity.CurrentRegisterKeyword)
-        {
-            if (keyword.Key is PairKeyword)
-            {
-                pairKeyword = keyword.Key as PairKeyword;
-                break;
-            }
-
-        }
-        if (pairKeyword == null)
+        KeywordEntity otherEntity;
+        if (!PairKeyword.IsAvailablePair(entity, out otherEntity))
         {
             return;
         }
-        var target = pairKeyword.GetOtherPair().MasterEntity;
 
-        if (target == null || target == pairKeyword.MasterEntity)
-        {
-            return;
-        }
-        var dir = target.KeywordTransformFactor.position - entity.KeywordTransformFactor.position;
+        var dir = otherEntity.KeywordTransformFactor.position - entity.KeywordTransformFactor.position;
         dir.y = 0;
         if (Mathf.Abs(dir.x) > Mathf.Abs(dir.z))
         {
@@ -53,27 +42,13 @@ public class ConstantMoveKeywordController : KeywordEntity
     }
     public void OnApartKeyword(KeywordEntity entity)
     {
-        PairKeyword pairKeyword = null;
-        foreach (var keyword in entity.CurrentRegisterKeyword)
-        {
-            if (keyword.Key is PairKeyword)
-            {
-                pairKeyword = keyword.Key as PairKeyword;
-                break;
-            }
-
-        }
-        if (pairKeyword == null)
+        KeywordEntity otherEntity;
+        if (!PairKeyword.IsAvailablePair(entity, out otherEntity))
         {
             return;
         }
-        var target = pairKeyword.GetOtherPair().MasterEntity;
 
-        if(target == null || target == pairKeyword.MasterEntity)
-        {
-            return;
-        }
-        var dir = entity.KeywordTransformFactor.position - target.KeywordTransformFactor.position;
+        var dir = entity.KeywordTransformFactor.position - otherEntity.KeywordTransformFactor.position;
         dir.y = 0;
         if (Mathf.Abs(dir.x) > Mathf.Abs(dir.z))
         {
@@ -89,18 +64,5 @@ public class ConstantMoveKeywordController : KeywordEntity
         }
         entity.ColisionCheckMove(dir.normalized * ApartKeyword.Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER));
     }
-    //public void OnScaleKeyword(KeywordEntity entity) 
-    //{
-    //    if (transform.lossyScale.magnitude < scaleDesire.magnitude)
-    //    {
-    //        //speed = InSine(transform.lossyScale.magnitude / targetScale.magnitude)*10;
-    //        var curFrameDesirScale = transform.lossyScale + (originScale * Time.deltaTime * 10);
-    //        if (curFrameDesirScale.magnitude > scaleDesire.magnitude)
-    //        {
-    //            curFrameDesirScale = scaleDesire;
-    //        }
-    //        entity.ColisionCheckScale(scaleDesire,ScaleKeyword)
-    //    }
-    //    //onScaleFeedback.PlayFeedbacks();
-    //}
+
 }

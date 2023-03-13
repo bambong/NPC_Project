@@ -290,7 +290,7 @@ GameObject:
   - component: {fileID: 7689613559260098677}
   - component: {fileID: -2748945565535478403}
   - component: {fileID: -3214319884165166903}
-  - component: {fileID: -7478638518323443279}
+  - component: {fileID: 6728709929109359645}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -334,6 +334,7 @@ MonoBehaviour:
   rotater: {fileID: 3074541703899278083}
   box: {fileID: 7689613559260098677}
   rigid: {fileID: -3214319884165166903}
+  gravityForce: {fileID: 6728709929109359645}
   moveSpeed: 600
   maxSlopeAngle: 60
   moveEnableDis: 0.5
@@ -401,7 +402,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!75 &-7478638518323443279
+--- !u!75 &6728709929109359645
 ConstantForce:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -409,7 +410,7 @@ ConstantForce:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5137152168051090498}
   m_Enabled: 1
-  m_Force: {x: 0, y: -20, z: 0}
+  m_Force: {x: 0, y: -10, z: 0}
   m_RelativeForce: {x: 0, y: 0, z: 0}
   m_Torque: {x: 0, y: 0, z: 0}
   m_RelativeTorque: {x: 0, y: 0, z: 0}

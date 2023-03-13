@@ -13,7 +13,7 @@ public class ScaleKeyword : KeywordController
         dummyParent.hideFlags = HideFlags.HideInHierarchy;
     }
 
-    public override void KeywordAction(KeywordEntity entity)
+    public override void OnFixedUpdate(KeywordEntity entity)
     {
         if (entity.transform.lossyScale.magnitude < entity.MaxScale.magnitude)
         {

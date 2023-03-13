@@ -6,31 +6,18 @@ public class ApartKeyword : KeywordController
 {
     [SerializeField]
     public static float Speed = 10f; 
-    public override void KeywordAction(KeywordEntity entity)
+    public override void OnFixedUpdate(KeywordEntity entity)
     {
         //entity.ClearVelocity();
        // entity.SetKinematic(true);
-        PairKeyword pairKeyword = null;
-        foreach(var keyword in entity.CurrentRegisterKeyword)
-        {
-            if(keyword.Key is PairKeyword) 
-            {
-                pairKeyword = keyword.Key as PairKeyword;
-                break;            
-            }
-            
-        }
-        if(pairKeyword == null) 
+
+        KeywordEntity otherEntity;
+        if(!PairKeyword.IsAvailablePair(entity,out otherEntity)) 
         {
             return;
         }
-        var target = pairKeyword.GetOtherPair().MasterEntity;
-       
-        if(target == null || target == pairKeyword.MasterEntity)
-        {
-            return;
-        }
-        var dir = entity.KeywordTransformFactor.position -target.KeywordTransformFactor.position;
+    
+        var dir = entity.KeywordTransformFactor.position -otherEntity.KeywordTransformFactor.position;
         dir.y = 0;
         if(new Vector3(dir.x,0,dir.z).magnitude <= 0) 
         {

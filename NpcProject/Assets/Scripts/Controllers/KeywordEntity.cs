@@ -4,36 +4,50 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.PlayerLoop;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static UnityEngine.Rendering.DebugUI.Table;
 
-public enum KeywordActionType 
-{
-    OnUpdate,
-    OneShot
-}
 
 public class KeywordAction 
 {
-    private Action<KeywordEntity> action;
-    private KeywordActionType actiontype;
+    private Action<KeywordEntity> onEnter;
+    private Action<KeywordEntity> onUpdate;
+    private Action<KeywordEntity> onFixecUpdate;
     private Action<KeywordEntity> onRemove;
-    public Action<KeywordEntity> Action { get => action; }
-    public Action<KeywordEntity> OnRemove { get => onRemove; }
-    public KeywordActionType ActionType { get => actiontype;  }
+    public Action<KeywordEntity> OnEnter { get => onEnter; set => onEnter = value; }
+    public Action<KeywordEntity> OnUpdate { get => onUpdate; set => onUpdate = value; }
+    public Action<KeywordEntity> OnFixecUpdate { get => onFixecUpdate; set => onFixecUpdate = value; }
+    public Action<KeywordEntity> OnRemove { get => onRemove; set => onRemove = value; }
 
-    public KeywordAction(Action<KeywordEntity> action,KeywordActionType actiontype,Action<KeywordEntity> onRemove = null) 
+    public KeywordAction() 
     {
-        this.action = action;
-        this.actiontype = actiontype;
-        this.onRemove = onRemove;
     }
-    public void AddOnRemoveEvent(Action<KeywordEntity> onRemove) 
+    public KeywordAction(KeywordController keywordController) 
     {
-        this.onRemove += onRemove;
+        OnEnter += keywordController.OnEnter;
+        OnFixecUpdate += keywordController.OnFixedUpdate;
+        OnUpdate += keywordController.OnUpdate;
+        OnRemove += keywordController.OnRemove;
     }
+    public void OverrideKeywordAction(KeywordAction overrideAction) 
+    {
+        OverrideAction(ref onEnter, overrideAction.OnEnter);
+        OverrideAction(ref onFixecUpdate, overrideAction.OnFixecUpdate);
+        OverrideAction(ref onUpdate, overrideAction.OnUpdate);
+        OverrideAction(ref onRemove, overrideAction.OnRemove);
+    }
+    private void OverrideAction(ref Action<KeywordEntity> origin, Action<KeywordEntity> overAction) 
+    {
+        if(overAction == null) 
+        {
+            return;
+        }
+        origin = overAction;
 
+    }
 }
 
 [Serializable]
@@ -61,6 +75,7 @@ public class KeywordEntity : MonoBehaviour
     private List<KeywordFrameController> keywordFrames = new List<KeywordFrameController>();
     private List<KeywordWorldSlotUIController> keywordtWorldFrames = new List<KeywordWorldSlotUIController>();
 
+    private Action<KeywordEntity> updateAction = null;
     private Action<KeywordEntity> fixedUpdateAction = null;
     private Rigidbody rigidbody;
     private BoxCollider col;
@@ -79,7 +94,7 @@ public class KeywordEntity : MonoBehaviour
     {
         OriginScale = transform.lossyScale;
         Managers.Keyword.AddSceneEntity(this);
-        keywordSlotUiController = Managers.UI.MakeSubItem<KeywordSlotUiController>(Managers.Keyword.PlayerKeywordPanel.transform, "KeywrodSlotController");
+        keywordSlotUiController = Managers.UI.MakeSubItem<KeywordSlotUiController>(Managers.Keyword.KeywordEntitySlots, "KeywrodSlotController");
         keywordSlotUiController.RegisterEntity(this);
         keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null,"KeywordWorldSlotLayout");
         keywordWorldSlotLayout.RegisterEntity(transform);
@@ -99,7 +114,14 @@ public class KeywordEntity : MonoBehaviour
         keywordWorldSlotLayout.SortChild(2.1f);
         DecisionKeyword();
     }
-   
+    private void Update()
+    {
+        updateAction?.Invoke(this);
+    }
+    public void FixedUpdate()
+    {
+        fixedUpdateAction?.Invoke(this);
+    }
     private void InitCrateKeywordOption()
     {
         for (int i = 0; i < keywords.Length; ++i)
@@ -124,24 +146,6 @@ public class KeywordEntity : MonoBehaviour
             }
         }
     }
-
-  
-    //private bool RegisterKeyword(KeywordController keyword)
-    //{
-    //    for (int i = 0; i < keywordSlotUI.Count; ++i)
-    //    {
-    //        if (keywordSlotUI[i].HasKeyword)
-    //        {
-    //            continue;
-    //        }
-    //        keywordSlotUI[i].SetKeyWord(keyword);
-    //        keyword.SetFrame(keywordSlotUI[i]);
-    //        keyword.SetDebugZone(parentDebugZone);
-    //        return true;
-    //    }
-
-    //    return false;
-    //}
     public void SetDebugZone(DebugZone zone) => parentDebugZone = zone;
     public virtual void EnterDebugMod()
     {
@@ -185,16 +189,19 @@ public class KeywordEntity : MonoBehaviour
     }
     public void AddAction(KeywordController controller,KeywordAction action) 
     {
-        switch(action.ActionType) 
-        {
-            case KeywordActionType.OnUpdate:
-                fixedUpdateAction += action.Action;
-                break;
+        //switch(action.ActionType) 
+        //{
+        //    case KeywordActionType.OnUpdate:
+        //        fixedUpdateAction += action.Action;
+        //        break;
 
-            case KeywordActionType.OneShot:
-                action.Action?.Invoke(this);
-                break;
-        }
+        //    case KeywordActionType.OneShot:
+        //        action.Action?.Invoke(this);
+        //        break;
+        //}
+        action.OnEnter.Invoke(this);
+        fixedUpdateAction += action.OnFixecUpdate;
+        updateAction += action.OnUpdate;
         currentRegisterKeyword[controller] = action;
     }
     public void RemoveAction(KeywordFrameController keywordFrame)
@@ -214,16 +221,18 @@ public class KeywordEntity : MonoBehaviour
         }
         var action = currentRegisterKeyword[keywordFrame.RegisterKeyword];
 
-        switch(action.ActionType)
-        {
-            case KeywordActionType.OnUpdate:
-                fixedUpdateAction -= action.Action;
-                break;
+        //switch(action.ActionType)
+        //{
+        //    case KeywordActionType.OnUpdate:
+        //        fixedUpdateAction -= action.Action;
+        //        break;
 
-            case KeywordActionType.OneShot:
-                break;
-        }
-        if(!keywordFrame.HasKeyword || keywordFrame.RegisterKeyword.KewordId != keywordFrame.CurFrameInnerKeyword.KewordId) 
+        //    case KeywordActionType.OneShot:
+        //        break;
+        //}
+        fixedUpdateAction -= action.OnFixecUpdate;
+        updateAction -= action.OnUpdate;
+        if (!keywordFrame.HasKeyword || keywordFrame.RegisterKeyword.KewordId != keywordFrame.CurFrameInnerKeyword.KewordId) 
         {
             currentRegisterKeyword[keywordFrame.RegisterKeyword]?.OnRemove(this);
         }
@@ -235,7 +244,6 @@ public class KeywordEntity : MonoBehaviour
         var curFrameInnerKeyword = keywordFrame.CurFrameInnerKeyword;
         // 기존 프레임에 등록되어 있던 키워드
         var frameRegisterKeyword = keywordFrame.RegisterKeyword;
-        KeywordAction keywordAciton;
         //기존 키워드가 제거 혹은 변경됬다면 
         if (keywordFrame.IsKeywordRemoved)
         {
@@ -263,17 +271,13 @@ public class KeywordEntity : MonoBehaviour
         }
 
         var keywordId = curFrameInnerKeyword.KewordId;
+        var keywordAciton = new KeywordAction(curFrameInnerKeyword);
+        KeywordAction overAction;
         // 키워드가 오버라이딩 되어 있는지 확인하고 키워드 액션에 할당
-        if (!keywrodOverrideTable.TryGetValue(keywordId, out keywordAciton))
+        if (keywrodOverrideTable.TryGetValue(keywordId, out overAction))
         {
-            keywordAciton = new KeywordAction(curFrameInnerKeyword.KeywordAction, curFrameInnerKeyword.KeywordType, curFrameInnerKeyword.OnRemove);
+            keywordAciton.OverrideKeywordAction(overAction);
         }
-        // Entity 가  OnRemove 이벤트 핸들러를 오버라이딩 안했다면 Default 핸들러를 넣어준다 
-        if (keywordAciton.OnRemove == null)
-        {
-            keywordAciton.AddOnRemoveEvent(curFrameInnerKeyword.OnRemove);
-        }
-        //OneShot Action 의 경우 실행 
         //키워드 액션을 추가
         AddAction(curFrameInnerKeyword, keywordAciton);
     }
@@ -286,14 +290,6 @@ public class KeywordEntity : MonoBehaviour
         }
     }
 
-    public void ClearAction() 
-    {
-        fixedUpdateAction = null;
-    }
-    public void FixedUpdate() 
-    {
-        fixedUpdateAction?.Invoke(this);
-    }
     #region Keyword_Control
 
     public bool ColisionCheckRotate(Vector3 vec)
@@ -508,10 +504,5 @@ public class KeywordEntity : MonoBehaviour
     }
     public void ClearVelocity()=> rigidbody.velocity = Vector3.zero;
     #endregion
-    public void Init() 
-    {
-        
-    }
-
 
 }
