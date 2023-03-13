@@ -48,8 +48,6 @@ public abstract class KeywordFrameBase : UI_Base
     protected KeywordController curFrameInnerKeyword;
     public KeywordController CurFrameInnerKeyword { get => curFrameInnerKeyword; }
     public bool HasKeyword { get => CurFrameInnerKeyword != null; }
-
-    public bool IsAvailable { get => curFrameInnerKeyword == null; }
     public void InitKeyword(KeywordController keywordController)
     {
         keywordController.SetFrame(this);

@@ -197,9 +197,9 @@ public class KeywordEntity : MonoBehaviour
         }
         currentRegisterKeyword[controller] = action;
     }
-    public void RemoveAction(KeywordController keywordController)
+    public void RemoveAction(KeywordFrameController keywordFrame)
     {
-        if(!currentRegisterKeyword.ContainsKey(keywordController))
+        if(!currentRegisterKeyword.ContainsKey(keywordFrame.RegisterKeyword))
         {
             Debug.LogError("포함되지않은 키워드 삭제 시도");
             return;
@@ -207,12 +207,12 @@ public class KeywordEntity : MonoBehaviour
         // 다른 슬롯에 들어가 있는지 확인
         for(int i = 0; i < keywordFrames.Count; ++i) 
         {
-            if(keywordFrames[i].CurFrameInnerKeyword == keywordController)
+            if(keywordFrames[i].CurFrameInnerKeyword == keywordFrame.RegisterKeyword)
             {
                 return;
             }
         }
-        var action = currentRegisterKeyword[keywordController];
+        var action = currentRegisterKeyword[keywordFrame.RegisterKeyword];
 
         switch(action.ActionType)
         {
@@ -223,8 +223,11 @@ public class KeywordEntity : MonoBehaviour
             case KeywordActionType.OneShot:
                 break;
         }
-        currentRegisterKeyword[keywordController]?.OnRemove(this);
-        currentRegisterKeyword.Remove(keywordController);
+        if(!keywordFrame.HasKeyword || keywordFrame.RegisterKeyword.KewordId != keywordFrame.CurFrameInnerKeyword.KewordId) 
+        {
+            currentRegisterKeyword[keywordFrame.RegisterKeyword]?.OnRemove(this);
+        }
+        currentRegisterKeyword.Remove(keywordFrame.RegisterKeyword);
     }
     public void DecisionKeyword(KeywordFrameController keywordFrame) 
     {
@@ -238,7 +241,7 @@ public class KeywordEntity : MonoBehaviour
         {
             //키워드 Remove 이벤트 발생 
             //Entity 에 등록된 키워드 리스트에서 키워드 제거
-            RemoveAction(frameRegisterKeyword);
+            RemoveAction(keywordFrame);
         }
         //현재 FrameInnerKeyword 를 프레임에 등록
         keywordFrame.OnDecisionKeyword();

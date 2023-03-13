@@ -29,11 +29,10 @@ public class RevolutionKeyword : KeywordController
 
         var target = pairKeyword.GetOtherPair().MasterEntity;
         // 다른 페어 키워드가 entity 에 들어가있는지 체크 
-        if(target == null)
+        if(target == null || target == pairKeyword.MasterEntity)
         {
             return;
         }
-
 
         var _orbitCenter = target.KeywordTransformFactor.position;
         var _worldRotationAxis = Vector3.up;

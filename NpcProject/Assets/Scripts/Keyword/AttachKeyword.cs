@@ -26,7 +26,7 @@ public class AttachKeyword : KeywordController
         }
         var target = pairKeyword.GetOtherPair().MasterEntity;
 
-        if(target == null)
+        if(target == null || target == pairKeyword.MasterEntity)
         {
             return;
         }

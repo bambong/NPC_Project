@@ -28,7 +28,7 @@ public class ConstantMoveKeywordController : KeywordEntity
         }
         var target = pairKeyword.GetOtherPair().MasterEntity;
 
-        if (target == null)
+        if (target == null || target == pairKeyword.MasterEntity)
         {
             return;
         }
@@ -69,7 +69,7 @@ public class ConstantMoveKeywordController : KeywordEntity
         }
         var target = pairKeyword.GetOtherPair().MasterEntity;
 
-        if (target == null)
+        if(target == null || target == pairKeyword.MasterEntity)
         {
             return;
         }
