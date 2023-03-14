@@ -12,7 +12,7 @@ public class DebugModGlitchEffectController : UI_Base
     public GameObject effect;
     [SerializeField]
     DigitalGlitchVolume glitch;
-    Tonemapping tonemapping;
+    //Tonemapping tonemapping;
 
     private Volume volume;
     private bool isPlaying = false;
@@ -39,11 +39,11 @@ public class DebugModGlitchEffectController : UI_Base
         {
             glitch = tmp;
         }
-        Tonemapping tone;
-        if (volume.profile.TryGet<Tonemapping>(out tone))
-        {
-            tonemapping = tone;
-        }
+       // Tonemapping tone;
+        //if (volume.profile.TryGet<Tonemapping>(out tone))
+        //{
+        //    tonemapping = tone;
+        //}
         Managers.UI.SetCanvas(gameObject);
     }
     IEnumerator GlitchOnEffect(Action completeAction)
@@ -66,7 +66,7 @@ public class DebugModGlitchEffectController : UI_Base
         progress = 1;
         volume.weight = 1;
         Managers.Keyword.EnterDebugMod();
-        tonemapping.active = true;
+       // tonemapping.active = true;
         yield return new WaitForSeconds(thirdTime);
         while(progress > 0)
         {
@@ -101,7 +101,7 @@ public class DebugModGlitchEffectController : UI_Base
         intensity.value = 1;
         glitch.intensity = intensity;
         Managers.Keyword.ExitDebugMod();
-        tonemapping.active = false;
+        //tonemapping.active = false;
         yield return new WaitForSeconds(thirdTime);
 
         progress = 0;
