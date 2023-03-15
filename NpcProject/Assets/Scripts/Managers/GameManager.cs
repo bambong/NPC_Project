@@ -20,10 +20,14 @@ public class GameManager
     private GameStateController gameStateController;
     private KeyMappingController key = new KeyMappingController();
     private PlayerController player;
+    private Vector3 prevGravity;
     public PlayerController Player { get => player; }
     public KeyMappingController Key { get => key;}
     public IState<GameManager> CurState { get => gameStateController.CurState; }
     public bool IsDebugMod { get => CurState == GameDebugModState.Instance; }
+   
+    private float DEBUG_TIME_SCALE = 0.2f;
+
     public void Init()
     {
         gameStateController = new GameStateController(this);
@@ -33,7 +37,6 @@ public class GameManager
     public void SetStateNormal() => gameStateController.ChangeState(GameNormalState.Instance);
     public void SetStateDialog() => gameStateController.ChangeState(GameDialogState.Instance);
     public void SetStateDebugMod() => gameStateController.ChangeState(GameDebugModState.Instance);
-    public void SetStateKeywordMod() => gameStateController.ChangeState(GameKeywordModState.Instance);
     #endregion
     public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
     {
@@ -54,5 +57,20 @@ public class GameManager
         gameStateController.ChangeState(GameNormalState.Instance);
         player = null;
     }
-    
+    #region StateEnter
+    public void OnDebugModStateEnter()
+    {
+        Managers.Time.SetTimeScale(TIME_TYPE.NONE_PLAYER, DEBUG_TIME_SCALE);
+        prevGravity = Physics.gravity;
+        Physics.gravity = prevGravity * DEBUG_TIME_SCALE;
+
+    }
+    #endregion StateEnter
+    #region StateExit
+    public void OnDebugModStateExit()
+    {
+        Physics.gravity = prevGravity;
+        Managers.Time.SetTimeScale(TIME_TYPE.NONE_PLAYER, 1);
+    }
+    #endregion StateExit
 }

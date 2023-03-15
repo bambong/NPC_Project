@@ -17,6 +17,8 @@ public class KeywordSlotUiController : UI_Base
     private readonly float OPEN_ANIM_TIME = 0.3f;
     private readonly float ClOSE_ANIM_TIME = 0.3f;
     private bool isDrag = false;
+    private bool isKeywordSlotOpen;
+
     public override void Init()
     {
     }
@@ -47,6 +49,12 @@ public class KeywordSlotUiController : UI_Base
     }
     public void Open()
     {
+        if (!gameObject.activeInHierarchy) return;
+        if (isKeywordSlotOpen)
+        {
+            return;
+        }
+        isKeywordSlotOpen = true;
         transform.SetAsLastSibling();
         mask.DOKill();
         float animTime = OPEN_ANIM_TIME * (1 - (mask.sizeDelta.magnitude / keywordSlotLayout.sizeDelta.magnitude));
@@ -54,10 +62,13 @@ public class KeywordSlotUiController : UI_Base
     }
     public void Close()
     {
-        if (isDrag) 
+        if (!gameObject.activeInHierarchy) return;
+
+        if (isDrag || !isKeywordSlotOpen) 
         {
             return;
         }
+        isKeywordSlotOpen = false;
         mask.DOKill();
         mask.DOSizeDelta(Vector2.zero, ClOSE_ANIM_TIME);
     }

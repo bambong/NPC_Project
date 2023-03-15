@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using DG.Tweening;
+using static AmazingAssets.WireframeShader.WireframeMaskController;
 
 [RequireComponent(typeof(Collider))]
 public class DebugZone : MonoBehaviour
@@ -31,7 +32,8 @@ public class DebugZone : MonoBehaviour
     {
         MakeFrame();
         MakeKeyword();
-        for(int i = 0; i< childEntitys.Count; ++i) 
+        WireMaterialClear();
+        for (int i = 0; i< childEntitys.Count; ++i) 
         {
             childEntitys[i].SetDebugZone(this);
         }
@@ -74,11 +76,25 @@ public class DebugZone : MonoBehaviour
 
         return false;
     }
+    private void WireMaterialClear() 
+    {
+        for (int i = 0; i < WireMaterials.Length; i++)
+        {
+            if (WireMaterials[i] == null)
+                continue;
+
+            WireMaterials[i].SetVector("_WireframeShaderMaskSpherePosition",Vector3.zero);
+
+            WireMaterials[i].SetFloat("_WireframeShaderMaskSphereRadius", 0);
+            WireMaterials[i].SetVector("_WireframeShaderMaskBoxBoundingBox", Vector3.zero);
+        }
+    }
     public void OpenPlayerLayout() => playerLayout.gameObject.SetActive(true);
     public void ClosePlayerLayout() => playerLayout.gameObject.SetActive(false);
     public void OnEnterDebugMod() 
     {
-        Managers.Game.Player.OpenWireEffect(boxSize *2, wireMaterials);
+        Managers.Game.Player.SetWireframeMaterial(wireMaterials);
+        Managers.Game.Player.OpenWireEffect(boxSize *2);
     }
     public void OnExitDebugMod() 
     {

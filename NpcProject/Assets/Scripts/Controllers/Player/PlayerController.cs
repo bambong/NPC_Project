@@ -165,7 +165,8 @@ public class PlayerController : MonoBehaviour
         var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
 
         var isSlope = IsOnSlope();
-       
+        var preDir = curDir;
+        CurrentAnimDirUpdtae(moveVec);
         moveVec = MoveRayCheck(moveVec, isSlope);
        
         if (isSlope)
@@ -185,15 +186,12 @@ public class PlayerController : MonoBehaviour
 
         if (new Vector3(moveVec.x, 0, moveVec.z).magnitude > 0.02f)
         {
-            CurrentAnimDirUpdtae(moveVec);
-            animationController.SetMoveAnim(curDir);
-
-         
+            AnimMoveEnter();
             rigid.velocity = moveVec.normalized * speed + gravity;  
-            
         }
         else
         {
+            curDir = preDir;
             rigid.velocity = Vector3.zero;
             SetStateIdle();
         }
@@ -205,7 +203,7 @@ public class PlayerController : MonoBehaviour
         var boxHalfSize = box.size.x * 0.5f;
         var checkWidth = box.size.x * CHECK_RAY_WIDTH;
         float moveEnableWidth = box.size.x * 0.25f;
-        float boxHeight = (stepHeight / 2);// + (isSlope? stepHeight/10:0);
+        float boxHeight = (stepHeight / 2);
         int layer = (-1) - (1 << LayerMask.NameToLayer("Player"));
         if (Mathf.Abs(moveVec.x) > 0)
         {
@@ -219,11 +217,11 @@ public class PlayerController : MonoBehaviour
             ExtDebug.DrawBox(xPos + dir + new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, Color.red);
             ExtDebug.DrawBox(xPos + dir - new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, Color.red);
     
-            if (Physics.OverlapBox(xPos + dir - new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, layer, QueryTriggerInteraction.Ignore).Length == 0)
+            if (!Physics.CheckBox(xPos + dir - new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
             {
                 moveVec.x = 0;
             }
-            else if (Physics.OverlapBox(xPos + dir + new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore).Length == 0)
+            else if (!Physics.CheckBox(xPos + dir + new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
             {
                 moveVec.x = 0;
             }
@@ -240,11 +238,11 @@ public class PlayerController : MonoBehaviour
             var boxSize = new Vector3(moveEnableWidth, boxHeight, moveEnableDis / 2);
             ExtDebug.DrawBox(zPos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
             ExtDebug.DrawBox(zPos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
-            if (Physics.OverlapBox(zPos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer ,QueryTriggerInteraction.Ignore).Length == 0)
+            if (!Physics.CheckBox(zPos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer ,QueryTriggerInteraction.Ignore))
             {
                 moveVec.z = 0;
             }
-            else if (Physics.OverlapBox(zPos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore).Length == 0)
+            else if (!Physics.CheckBox(zPos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
             {
                 moveVec.z = 0;
             }
@@ -255,7 +253,17 @@ public class PlayerController : MonoBehaviour
     private void CurrentAnimDirUpdtae(Vector3 moveVec) 
     {
         var moveDotVer = Vector3.Dot(rotater.transform.forward.normalized, moveVec.normalized);
-        if (Mathf.Abs(moveDotVer) > 0.71f)
+        var factor = 0.71f;
+        if(curDir == PlayerAnimationController.AnimDir.Front || curDir == PlayerAnimationController.AnimDir.Back) 
+        {
+            factor -= 0.1f;
+        }
+        else 
+        {
+            factor += 0.1f;
+        }
+
+        if (Mathf.Abs(moveDotVer) > factor)
         {
             if (moveDotVer < 0)
             {
@@ -266,7 +274,7 @@ public class PlayerController : MonoBehaviour
                 curDir = PlayerAnimationController.AnimDir.Back;
             }
         }
-        else
+        else if (Mathf.Abs(moveDotVer) < factor)
         {
             var moveDotHor = Vector3.Dot(rotater.transform.right.normalized, moveVec.normalized);
             if (moveDotHor < 0)
@@ -363,37 +371,31 @@ public class PlayerController : MonoBehaviour
         AnimIdleEnter();
         rigid.velocity = Vector3.zero;
     }
-    public void KeywordModInputCheck()
-    {
-        if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.EXIT_KEY)))
-        {
-            Managers.Keyword.ExitKeywordMod();
-        }
-    }
+
     public void DebugModeMouseInputCheck()
     {
-        if(!Managers.Game.IsDebugMod)
-        {
-            return;
-        }
+        //if(!Managers.Game.IsDebugMod)
+        //{
+        //    return;
+        //}
 
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        int layer = LayerMask.GetMask("Interaction"); 
-        RaycastHit hit;
-        if(Physics.Raycast(ray,out hit,float.MaxValue,layer))
-        {
-            var entity = hit.collider.GetComponent<KeywordEntity>();
+        //var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //int layer = LayerMask.GetMask("Interaction"); 
+        //RaycastHit hit;
+        //if(Physics.Raycast(ray,out hit,float.MaxValue,layer))
+        //{
+        //    var entity = hit.collider.GetComponent<KeywordEntity>();
 
-            if(entity == null )
-            {
-                return;
-            }
-            Managers.Keyword.EnterKeywordMod(entity);
-        }
-        else 
-        {
-            Managers.Keyword.ExitKeywordMod();
-        }
+        //    if(entity == null )
+        //    {
+        //        return;
+        //    }
+        //    //Managers.Keyword.EnterKeywordMod(entity);
+        //}
+        //else 
+        //{
+        //   // Managers.Keyword.ExitKeywordMod();
+        //}
     }
 
     public bool IsOnSlope()
@@ -428,11 +430,11 @@ public class PlayerController : MonoBehaviour
 
     public void OpenPlayerUI()
     {
-        playerUIController.OnPlayerUI();
+       // playerUIController.OnPlayerUI();
     }
     public void ClosePlayerUI()
     {
-        playerUIController.OffPlayerUI();
+      //  playerUIController.OffPlayerUI();
     }
     public void isDebugButton()
     {
@@ -458,10 +460,6 @@ public class PlayerController : MonoBehaviour
     {
         playerStateController.ChangeState(PlayerIdle.Instance);
     }
-    public void SetStatekeywordMod()
-    {
-        playerStateController.ChangeState(PlayerKeywordMod.Instance);
-    }
     public void SetStateDebugMod()
     {
         playerStateController.ChangeState(PlayerDebugMod.Instance);
@@ -476,9 +474,12 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
     #region WireEffect
-    public void OpenWireEffect(Vector3 size, Material[] materials)
+    public void SetWireframeMaterial(Material[] materials) 
     {
         wireframeMaskController.materials = materials;
+    }
+    public void OpenWireEffect(Vector3 size)
+    {
         wireEffectGo.transform.localScale = Vector3.zero;
         wireEffectGo.transform.DOKill();
         wireEffectGo.transform.DOScale(size, WIRE_EFFECT_OPEN_TIME);

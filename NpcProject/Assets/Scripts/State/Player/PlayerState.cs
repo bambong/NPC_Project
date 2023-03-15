@@ -139,30 +139,7 @@ public class PlayerInteraction : Singleton<PlayerInteraction>, IState<PlayerCont
     {
     }
 }
-public class PlayerKeywordMod : Singleton<PlayerKeywordMod>, IState<PlayerController>
-{
-    public void Init()
-    {
-    }
-    public void Enter(PlayerController stateController)
-    {
-      
-    }
 
-    public void Exit(PlayerController stateController)
-    {
-       
-    }
-
-    public void FixedUpdateActive(PlayerController stateController)
-    {
-    }
-
-    public void UpdateActive(PlayerController stateController)
-    {
-        stateController.KeywordModInputCheck();
-    }
-}
 public class PlayerDeath : Singleton<PlayerDeath>, IState<PlayerController>
 {
     public void Init()

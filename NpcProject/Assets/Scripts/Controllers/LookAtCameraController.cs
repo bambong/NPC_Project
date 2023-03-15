@@ -1,16 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
-public class LookAtCameraController : MonoBehaviour
+public class LookAtCameraController : UI_Base
 {
-    private Transform camera;
-    private void Awake()
+    private BoxCollider entityColider;
+
+    public override void Init()
     {
-        camera = Camera.main.transform;
     }
-    void Update()
+
+    public void RegisterEntity(Transform entity)
     {
-        transform.LookAt(camera.transform);
+        entityColider = entity.GetComponent<BoxCollider>();
+    }
+    private void Update()
+    {
+        var camPos = Camera.main.transform.position;
+        var camdir = camPos - entityColider.transform.position;
+        transform.position = entityColider.bounds.center + camdir.normalized * entityColider.bounds.extents.magnitude;
+        transform.rotation = Camera.main.transform.rotation;
     }
 }
