@@ -9,6 +9,7 @@ using UnityEditor.Rendering.Utilities;
 using System;
 using DG.Tweening;
 using AmazingAssets.WireframeShader;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -24,6 +25,9 @@ public class PlayerController : MonoBehaviour
     private Transform rotater;
     [SerializeField]
     private BoxCollider box;
+    [SerializeField]
+    private CapsuleCollider col;
+
     [SerializeField]
     private Rigidbody rigid;
     [SerializeField]
@@ -118,19 +122,17 @@ public class PlayerController : MonoBehaviour
     {
    
         var moveVec = new Vector3(hor, 0, ver).normalized;
-        //var forward = Camera.main.transform.forward;
-        //forward.y = 0;
-        //var angle = -1 * Vector3.Angle(Vector3.forward, forward);
         moveVec =rotater.transform.TransformDirection(moveVec);
         var boxHalfSize = box.size.x * 0.5f;
         var checkWidth = box.size.x * CHECK_RAY_WIDTH;
+        
         var isSlope = IsOnSlope();
+        moveVec = MoveRayCheck(moveVec, isSlope);
         if (isSlope)
         {
             moveVec = AdjustDirectionToSlope(moveVec);
 
         }
-        moveVec = MoveRayCheck(moveVec, isSlope);
 
 
         if (new Vector3(moveVec.x, 0, moveVec.z).magnitude > 0.02f)
@@ -142,40 +144,107 @@ public class PlayerController : MonoBehaviour
             return false;
         }
     }
+    public void PlayerMoveUpdate()
+    {
+        var hor = Input.GetAxis("Horizontal");
+        var ver = Input.GetAxis("Vertical");
+
+
+        if (new Vector3(hor, 0, ver).magnitude <= 0.1f)
+        {
+            SetStateIdle();
+            rigid.velocity = Vector3.zero;
+            return;
+        }
+
+        var moveVec = new Vector3(hor, 0, ver).normalized;
+        moveVec = rotater.transform.TransformDirection(moveVec);
+        Vector3 gravity = Vector3.down * Mathf.Abs(rigid.velocity.y);
+
+        var pos = transform.position;
+        var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
+
+        var isSlope = IsOnSlope();
+       
+        moveVec = MoveRayCheck(moveVec, isSlope);
+       
+        if (isSlope)
+        {
+            moveVec = AdjustDirectionToSlope(moveVec);
+            gravity = Vector3.zero;
+            rigid.useGravity = false;
+            gravityForce.enabled = false;
+            Debug.DrawRay(pos, moveVec * 10, Color.blue);
+        }
+        else
+        {
+            rigid.useGravity = true;
+            gravityForce.enabled = true;
+        }
+
+
+        if (new Vector3(moveVec.x, 0, moveVec.z).magnitude > 0.02f)
+        {
+            CurrentAnimDirUpdtae(moveVec);
+            animationController.SetMoveAnim(curDir);
+
+         
+            rigid.velocity = moveVec.normalized * speed + gravity;  
+            
+        }
+        else
+        {
+            rigid.velocity = Vector3.zero;
+            SetStateIdle();
+        }
+    }
+
     private Vector3 MoveRayCheck(Vector3 moveVec, bool isSlope )
     {
         var pos = transform.position + (Vector3.down* box.size.y * 0.5f) + (Vector3.down*stepHeight* 0.5f);
         var boxHalfSize = box.size.x * 0.5f;
         var checkWidth = box.size.x * CHECK_RAY_WIDTH;
         float moveEnableWidth = box.size.x * 0.25f;
-        float boxHeight = (stepHeight/2) + (isSlope? stepHeight/2:0);
+        float boxHeight = (stepHeight / 2);// + (isSlope? stepHeight/10:0);
         int layer = (-1) - (1 << LayerMask.NameToLayer("Player"));
         if (Mathf.Abs(moveVec.x) > 0)
         {
+            Vector3 xPos = pos;
+            if (isSlope) 
+            {
+                xPos.y += AdjustDirectionToSlope(new Vector3(moveVec.x,0,0)).y;
+            }
             var dir = (moveVec.x > 0 ? 1 : -1) * (boxHalfSize + moveEnableDis/2) * Vector3.right;
             var boxSize = new Vector3(moveEnableDis / 2, boxHeight, moveEnableWidth);
-            ExtDebug.DrawBox(pos + dir + new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, Color.red);
-            ExtDebug.DrawBox(pos + dir - new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, Color.red);
-            if (!Physics.CheckBox(pos + dir - new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            ExtDebug.DrawBox(xPos + dir + new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, Color.red);
+            ExtDebug.DrawBox(xPos + dir - new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, Color.red);
+    
+            if (Physics.OverlapBox(xPos + dir - new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, layer, QueryTriggerInteraction.Ignore).Length == 0)
             {
                 moveVec.x = 0;
             }
-            else if (!Physics.CheckBox(pos + dir + new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            else if (Physics.OverlapBox(xPos + dir + new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore).Length == 0)
             {
                 moveVec.x = 0;
             }
         }
         if (Mathf.Abs(moveVec.z) > 0)
         {
+            Vector3 zPos = pos;
+            if (isSlope)
+            {
+                zPos.y += AdjustDirectionToSlope(new Vector3(0, 0, moveVec.z)).y;
+            }
+
             var dir = (moveVec.z > 0 ? 1 : -1) * (boxHalfSize + moveEnableDis / 2) * Vector3.forward ;
             var boxSize = new Vector3(moveEnableWidth, boxHeight, moveEnableDis / 2);
-            ExtDebug.DrawBox(pos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
-            ExtDebug.DrawBox(pos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
-            if (!Physics.CheckBox(pos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer ,QueryTriggerInteraction.Ignore))
+            ExtDebug.DrawBox(zPos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
+            ExtDebug.DrawBox(zPos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
+            if (Physics.OverlapBox(zPos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer ,QueryTriggerInteraction.Ignore).Length == 0)
             {
                 moveVec.z = 0;
             }
-            else if (!Physics.CheckBox(pos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            else if (Physics.OverlapBox(zPos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore).Length == 0)
             {
                 moveVec.z = 0;
             }
@@ -210,65 +279,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    public void PlayerMoveUpdate()
-    {
-        var hor = Input.GetAxis("Horizontal");
-        var ver = Input.GetAxis("Vertical");
-
-
-        if (new Vector3(hor, 0, ver).magnitude <= 0.1f)
-        {
-            SetStateIdle();
-            rigid.velocity = Vector3.zero;
-            return;
-        }
-
-        var moveVec = new Vector3(hor, 0, ver).normalized;
-
-        //var forward = Camera.main.transform.forward;
-        //forward.y = 0;
-        //var angle = -1*Vector3.Angle(Vector3.forward, forward);
-        moveVec = rotater.transform.TransformDirection(moveVec);
-        Vector3 gravity = Vector3.down * Mathf.Abs(rigid.velocity.y);
-
-        var pos = transform.position;
-        var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
-
-
-        var isSlope = IsOnSlope();
-        if (isSlope)
-        {
-            moveVec = AdjustDirectionToSlope(moveVec);
-            gravity = Vector3.zero;
-            rigid.useGravity = false;
-            gravityForce.enabled = false;
-            Debug.DrawRay(pos, moveVec * 10, Color.blue);
-        }
-        else
-        {
-            gravityForce.enabled = true;
-           rigid.useGravity = true;
-        }
-
-       
-        //var rayPos = pos + Vector3.down * box.size.y * 0.5f;
-
-        moveVec = MoveRayCheck(moveVec, isSlope);
-
-     
-
-        if (new Vector3(moveVec.x,0,moveVec.z).magnitude > 0.02f)
-        {
-            CurrentAnimDirUpdtae(moveVec);
-            animationController.SetMoveAnim(curDir);
-            rigid.velocity = moveVec.normalized * speed + gravity;
-        }
-        else
-        {
-            rigid.velocity = Vector3.zero;
-            SetStateIdle();
-        }
-    }
 
     public void PlayerInputCheck()
     {
@@ -279,18 +289,11 @@ public class PlayerController : MonoBehaviour
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
         
-
         if(hor == 0 && ver == 0)
         {
             return;
         }
         
-        //if(hor != 0)
-        //{
-        //    var dir = hor < 0 ? 1 : -1;
-        //    skeletonAnimation.skeleton.ScaleX = dir;
-        //}
-
         if(IsMove(transform.position,hor,ver))
         {
             playerStateController.ChangeState(PlayerMove.Instance);
@@ -401,6 +404,7 @@ public class PlayerController : MonoBehaviour
             var angle = Vector3.Angle(Vector3.up, slopeHit.normal);
             if(angle < maxSlopeAngle) 
             {
+                
                 return true;   
             }
             return false;
