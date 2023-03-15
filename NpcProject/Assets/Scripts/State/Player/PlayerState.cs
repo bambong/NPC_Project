@@ -10,7 +10,6 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.OpenPlayerUI();
         stateController.AnimIdleEnter();
     }
 
@@ -64,7 +63,6 @@ public class PlayerStop : Singleton<PlayerStop>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.ClosePlayerUI();
         stateController.ClearMoveAnim();        
     }
 
@@ -87,7 +85,6 @@ public class PlayerDebugMod : Singleton<PlayerDebugMod>, IState<PlayerController
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.ClosePlayerUI();
     }
 
     public void Exit(PlayerController stateController)
@@ -116,7 +113,6 @@ public class PlayerInteraction : Singleton<PlayerInteraction>, IState<PlayerCont
     {
         stateController.ClearMoveAnim();
         stateController.InteractionEnter();
-        stateController.ClosePlayerUI();
     }
 
     public void Exit(PlayerController stateController)

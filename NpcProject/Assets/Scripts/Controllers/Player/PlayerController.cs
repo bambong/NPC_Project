@@ -32,7 +32,8 @@ public class PlayerController : MonoBehaviour
     private PlayerStateController playerStateController;
     private PlayerUIController playerUIController;
     private DeathUIController deathUIController;
-
+    public bool IsDebugMod { get => isDebugMod; }
+    private bool isDebugMod;
     [Header("Player Slope Check")]
     [SerializeField]
     private int maxSlopeAngle = 40;
@@ -58,13 +59,12 @@ public class PlayerController : MonoBehaviour
     private int hp;
     public int Hp { get => hp; }
 
-
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null,"GlitchEffect");
-        playerUIController = Managers.UI.MakeSceneUI<PlayerUIController>(null, "PlayerUI");
+        playerUIController = Managers.UI.MakeWorldSpaceUI<PlayerUIController>(null, "PlayerUI");
         deathUIController = Managers.UI.MakeSceneUI<DeathUIController>(null, "DeathUI");
         groundLayer = 1 << LayerMask.NameToLayer("Ground");
         stairLayer = 1 << LayerMask.NameToLayer("Stair");
@@ -226,6 +226,7 @@ public class PlayerController : MonoBehaviour
     public void EnterDebugMod()
     {
         SetstateStop();
+        isDebugMod = true;
         Managers.Game.SetStateDebugMod();
         glitchEffectController.EnterDebugMod(() => 
         {
@@ -239,6 +240,8 @@ public class PlayerController : MonoBehaviour
         glitchEffectController.ExitDebugMod(() => {
             interactionDetecter.SwitchDebugMod(false);
             SetStateIdle();
+            isDebugMod = false;
+            isDebugButton();
         });
     }
     public void ClearMoveAnim()
@@ -351,17 +354,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OpenPlayerUI()
-    {
-        playerUIController.OnPlayerUI();
-    }
-    public void ClosePlayerUI()
-    {
-        playerUIController.OffPlayerUI();
-    }
     public void isDebugButton()
     {
-        playerUIController.DebugButtom();
+         playerUIController.DebugButton();    
     }
     public void OpenDeathUI()
     {
