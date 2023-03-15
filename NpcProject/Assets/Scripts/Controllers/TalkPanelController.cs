@@ -69,8 +69,7 @@ public class TalkPanelController : UI_Base
         dialogueText.DOText(textDialogue, typingTime).OnStart(()=>
         {
             StartCoroutine(SkipTextani());
-        })
-     
+        })     
         .OnComplete(()=>
         {
             isNext = true;
@@ -108,31 +107,18 @@ public class TalkPanelController : UI_Base
             }
         }
 
-        textSize = textDialogue.Length;
-
-        for (int i = 0; i < textDialogue.Length; i++)
-        {
-            if(textDialogue[i] == '<')
-            {
-                for (int j = i; !(textDialogue[j] == '>'); j++)
-                {
-                    textSize--;
-                    i++;
-                }
-                i--;
-            }
-        }
+        textSize = ClcTextLength(textDialogue, textDialogue.Length);
 
         if (isTrans == true)
         {
             StartCoroutine(SkipTextani());
-            
+
             for (int i = 0; i < textDialogue.Length; i++)
             {
-                if(textDialogue[i] == '<')
+                if (textDialogue[i] == '<')
                 {
                     for (int j = i; !(textDialogue[j] == '>'); j++)
-                    {                        
+                    {
                         textStore += textDialogue[i];
                         i++;
                     }
@@ -146,7 +132,7 @@ public class TalkPanelController : UI_Base
                 }
                 yield return new WaitForSeconds(TEXT_SPEED);
 
-                              
+
                 if (isTrans == false)
                 {
                     dialogueText.text = textDialogue;
@@ -162,6 +148,24 @@ public class TalkPanelController : UI_Base
             DotweenTextani();
             inputKey = true;
         }
+    }
+
+    private int ClcTextLength(string text, int length)
+    {
+        int textLength = length;
+        for (int i = 0; i < length; i++)
+        {
+            if (text[i] == '<')
+            {
+                for (int j = i; !(text[j] == '>'); j++)
+                {
+                    textLength--;
+                    i++;
+                }
+                i--;
+            }
+        }
+        return textLength;
     }
 
     IEnumerator SkipTextani()
@@ -194,7 +198,5 @@ public class TalkPanelController : UI_Base
             }
             yield return null;
         }
-    }
-
-   
+    }   
 }
