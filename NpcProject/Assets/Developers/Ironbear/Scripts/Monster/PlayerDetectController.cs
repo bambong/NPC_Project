@@ -33,7 +33,7 @@ public class PlayerDetectController : MonoBehaviour
             isPlayer = true;
             if(isPlayer)
             {
-                monsterContoller.PursuePlayer(player);
+                monsterContoller.SetMonsterStatePursue();
             }
         }        
     }
@@ -47,7 +47,7 @@ public class PlayerDetectController : MonoBehaviour
             isPlayer = false;
             if(!isPlayer)
             {
-                monsterContoller.Revert(spawnPosition);
+                monsterContoller.SetMonsterStateRevert();
             }
         }
     }

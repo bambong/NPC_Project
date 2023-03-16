@@ -39,12 +39,12 @@ public class MonsterPursue : Singleton<MonsterIdle>, IState<MonsterContoller>
 
     public void Enter(MonsterContoller monsterStateContoller)
     {
-
+        monsterStateContoller.PursuePlayer(Managers.Game.Player.transform);
     }
 
     public void Exit(MonsterContoller monsterStateContoller)
     {
-
+        monsterStateContoller.Revert(Managers.Game.Player.transform);
     }
 
     public void FixedUpdateActive(MonsterContoller monsterStateContoller)
@@ -67,7 +67,7 @@ public class MonsterRevert : Singleton<MonsterIdle>, IState<MonsterContoller>
 
     public void Enter(MonsterContoller monsterStateContoller)
     {
-        Debug.Log("¾Ñ, °£´Ù!");
+
     }
 
     public void Exit(MonsterContoller monsterStateContoller)
