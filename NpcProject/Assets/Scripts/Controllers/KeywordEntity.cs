@@ -59,7 +59,6 @@ class CreateKeywordOption
 
 public class KeywordEntity : MonoBehaviour
 {
-
     [SerializeField]
     private float maxHeight = 3;
     [SerializeField]
@@ -73,23 +72,21 @@ public class KeywordEntity : MonoBehaviour
     private Dictionary<KeywordController,KeywordAction> currentRegisterKeyword = new Dictionary<KeywordController,KeywordAction>();
    
     private List<KeywordFrameController> keywordFrames = new List<KeywordFrameController>();
-    //private List<KeywordWorldSlotUIController> keywordtWorldFrames = new List<KeywordWorldSlotUIController>();
-
     private Action<KeywordEntity> updateAction = null;
     private Action<KeywordEntity> fixedUpdateAction = null;
     private Rigidbody rigidbody;
     private BoxCollider col;
     private KeywordSlotUiController keywordSlotUiController;
-    //private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
-    private LookAtCameraController keywordDebugIcon;
+    private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
     private DebugZone parentDebugZone;
-    private readonly float SLOT_UI_DISTANCE = 100f;
     public Dictionary<KeywordController,KeywordAction> CurrentRegisterKeyword { get => currentRegisterKeyword; }
     public virtual Transform KeywordTransformFactor { get => transform; }
     public Vector3 OriginScale { get; private set; }
     public Vector3 MaxScale { get => maxScale; }
     public bool IsAvailable { get => parentDebugZone == Managers.Keyword.CurDebugZone; }
     public KeywordSlotUiController KeywordSlotUiController { get => keywordSlotUiController;}
+    
+    private readonly float SLOT_UI_DISTANCE = 100f;
     private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude; 
     private void Start()
     {
@@ -97,10 +94,8 @@ public class KeywordEntity : MonoBehaviour
         Managers.Keyword.AddSceneEntity(this);
         keywordSlotUiController = Managers.UI.MakeSubItem<KeywordSlotUiController>(Managers.Keyword.KeywordEntitySlots, "KeywrodSlotController");
         keywordSlotUiController.RegisterEntity(this);
-        keywordDebugIcon = Managers.UI.MakeWorldSpaceUI<LookAtCameraController>(null, "KeywordWorldUI");
-        keywordDebugIcon.RegisterEntity(transform);
-        //keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null,"KeywordWorldSlotLayout");
-        //keywordWorldSlotLayout.RegisterEntity(transform);
+        keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null, "KeywordWorldSlotLayout");
+        keywordWorldSlotLayout.RegisterEntity(transform,keywords.Length);
 
         InitCrateKeywordOption();
 
@@ -114,7 +109,7 @@ public class KeywordEntity : MonoBehaviour
             col = Util.GetOrAddComponent<BoxCollider>(gameObject);
         }
         TryGetComponent<Rigidbody>(out rigidbody);
-        //keywordWorldSlotLayout.SortChild(2.1f);
+        
         DecisionKeyword();
     }
     private void Update()
@@ -145,9 +140,9 @@ public class KeywordEntity : MonoBehaviour
         {
             var frame = Managers.UI.MakeSubItem<KeywordFrameController>(keywordSlotUiController.KeywordSlotLayout, "KeywordSlotUI");
             keywordFrames.Add(frame);
-            //var worldFrame = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotUIController>(keywordWorldSlotLayout.Panel, "KeywordSlotWorldSpace");
-          //  keywordtWorldFrames.Add(worldFrame);
-            frame.RegisterEntity(this);
+            frame.RegisterEntity(this, keywordWorldSlotLayout.KeywordWorldSlots[i]);
+           
+            // 키워드가 미리 생성되어 있는 슬롯인지 확인
             if (keywords[i].keywordGo == null) 
             {
                 continue;
@@ -172,24 +167,14 @@ public class KeywordEntity : MonoBehaviour
     {
         CloseWorldSlotUI();
     }
-
+    public void OpenWorldSlotUI()
+    {
+        keywordWorldSlotLayout.Opne();
+    }
     public void CloseWorldSlotUI() 
     {
-        keywordDebugIcon.gameObject.SetActive(false);
-        //foreach(var slot in keywordtWorldFrames) 
-        //{
-        //    slot.Close();
-        //}
+        keywordWorldSlotLayout.Close();
     }
-    public void OpenWorldSlotUI() 
-    {
-        //foreach (var slot in keywordtWorldFrames)
-        keywordDebugIcon.gameObject.SetActive(true);
-        //{
-        //    slot.Open();
-        //}
-    }
-
     public void OpenKeywordSlot() 
     {
         keywordSlotUiController.Open();
@@ -258,10 +243,11 @@ public class KeywordEntity : MonoBehaviour
         if (curFrameInnerKeyword == null)
         {
             //월드 키워드 UI 를 리셋하고 다시 순회 
-            //keywordFrame.KeywordWorldSlot.ResetSlotUI();
+            keywordFrame.KeywordWorldSlot.UpdateUI(false);
             return;
         }
         ////월드 키워드 UI 설정  
+        keywordFrame.KeywordWorldSlot.UpdateUI(true);
         //keywordFrame.KeywordWorldSlot.SetSlotUI(curFrameInnerKeyword.Image);
 
         // 이미 등록된 키워드라면 다시 순회  
@@ -291,7 +277,6 @@ public class KeywordEntity : MonoBehaviour
     }
 
     #region Keyword_Control
-
     public bool ColisionCheckRotate(Vector3 vec)
     {
         var pos = col.transform.position;
@@ -357,7 +342,6 @@ public class KeywordEntity : MonoBehaviour
         return true;
 
     }
-
     public bool FloatMove(float speed)
     {
         var pos = col.transform.position;

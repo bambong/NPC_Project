@@ -15,21 +15,18 @@ public class KeywordFrameController : KeywordFrameBase
 
     private KeywordController registerKeyword;
 
-   // private KeywordWorldSlotUIController keywordWorldSlot;
+   private KeywordWorldSlotUIController keywordWorldSlot;
 
     private KeywordEntity entity;
     public bool IsKeywordRemoved { get { return (registerKeyword != null && curFrameInnerKeyword != registerKeyword); } }
 
     public KeywordController RegisterKeyword { get => registerKeyword; }
-   // public KeywordWorldSlotUIController KeywordWorldSlot { get => keywordWorldSlot;  }
-
+    public KeywordWorldSlotUIController KeywordWorldSlot { get => keywordWorldSlot;  }
 
     protected override void DecisionKeyword()
     {
         entity.DecisionKeyword(this);
     }
-
- 
     public void SetLockFrame(bool isOn) 
     {
         Color frameColor = Color.black;
@@ -54,10 +51,10 @@ public class KeywordFrameController : KeywordFrameBase
     {
         curFrameInnerKeyword = null;
     }
-    public void RegisterEntity(KeywordEntity entity)
+    public void RegisterEntity(KeywordEntity entity ,KeywordWorldSlotUIController keywordWorldSlot)
     {
         this.entity = entity;
-        //this.keywordWorldSlot = keywordWorldSlot;
+        this.keywordWorldSlot = keywordWorldSlot;
     }
 
     public override void OnBeginDrag()

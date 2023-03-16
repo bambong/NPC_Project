@@ -74,6 +74,8 @@ public class PlayerController : MonoBehaviour
     private readonly float CHECK_RAY_WIDTH = 0.3f;
     private readonly float WIRE_EFFECT_OPEN_TIME = 2f;
     private readonly float WIRE_EFFECT_CLOSE_TIME = 1f;
+    private readonly float PLAYER_ANIM_COS = 0.71f;
+    private readonly float PLAYER_DIR_WEIGHT = 0.1f;
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);
@@ -253,14 +255,14 @@ public class PlayerController : MonoBehaviour
     private void CurrentAnimDirUpdtae(Vector3 moveVec) 
     {
         var moveDotVer = Vector3.Dot(rotater.transform.forward.normalized, moveVec.normalized);
-        var factor = 0.71f;
+        var factor = PLAYER_ANIM_COS;
         if(curDir == PlayerAnimationController.AnimDir.Front || curDir == PlayerAnimationController.AnimDir.Back) 
         {
-            factor -= 0.1f;
+            factor -= PLAYER_DIR_WEIGHT;
         }
         else 
         {
-            factor += 0.1f;
+            factor += PLAYER_DIR_WEIGHT;
         }
 
         if (Mathf.Abs(moveDotVer) > factor)
@@ -370,32 +372,6 @@ public class PlayerController : MonoBehaviour
     {
         AnimIdleEnter();
         rigid.velocity = Vector3.zero;
-    }
-
-    public void DebugModeMouseInputCheck()
-    {
-        //if(!Managers.Game.IsDebugMod)
-        //{
-        //    return;
-        //}
-
-        //var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //int layer = LayerMask.GetMask("Interaction"); 
-        //RaycastHit hit;
-        //if(Physics.Raycast(ray,out hit,float.MaxValue,layer))
-        //{
-        //    var entity = hit.collider.GetComponent<KeywordEntity>();
-
-        //    if(entity == null )
-        //    {
-        //        return;
-        //    }
-        //    //Managers.Keyword.EnterKeywordMod(entity);
-        //}
-        //else 
-        //{
-        //   // Managers.Keyword.ExitKeywordMod();
-        //}
     }
 
     public bool IsOnSlope()

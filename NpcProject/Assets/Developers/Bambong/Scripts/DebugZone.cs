@@ -99,6 +99,7 @@ public class DebugZone : MonoBehaviour
     public void OnExitDebugMod() 
     {
         Managers.Game.Player.CloseWireEffect();
+        ClosePlayerLayout();
     }
 
     private void OnTriggerEnter(Collider other)

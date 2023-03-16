@@ -66,12 +66,11 @@ public class KeywordManager
 
         curDebugZone.OnEnterDebugMod();
         playerKeywordPanel.Open();
-   
+
     }
     
     public void ExitDebugMod()
     {
-        curDebugZone.OnExitDebugMod();
         foreach(var entity in curSceneEntity)
         {
             entity.ExitDebugMod();
@@ -85,14 +84,15 @@ public class KeywordManager
             CurDragKeyword.DragReset();
             CurDragKeyword = null;
         }
+        curDebugZone?.OnExitDebugMod();
         playerKeywordPanel.Close();
-
         Managers.Game.SetStateNormal();
     }
     public void SetDebugZone(DebugZone zone)
     {
         if (zone == null && Managers.Game.IsDebugMod)
         {
+            curDebugZone?.OnExitDebugMod();
             Managers.Game.Player.ExitDebugMod();
         }
         curDebugZone = zone;

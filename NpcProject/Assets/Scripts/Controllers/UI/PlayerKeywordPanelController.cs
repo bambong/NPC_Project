@@ -23,6 +23,5 @@ public class PlayerKeywordPanelController : UI_Base
     public void Close() 
     {
         gameObject.SetActive(false);
-        Managers.Keyword.CurDebugZone.ClosePlayerLayout();
     }
 }

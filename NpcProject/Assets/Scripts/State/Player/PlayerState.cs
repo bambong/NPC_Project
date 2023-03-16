@@ -28,10 +28,7 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
     public void UpdateActive(PlayerController stateController)
     {
         stateController.PlayerInputCheck();
-        if (!stateController.DebugModEnterInputCheck())
-        {
-            stateController.DebugModeMouseInputCheck();
-        }
+        stateController.DebugModEnterInputCheck();
     }
 }
 
@@ -55,12 +52,8 @@ public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
 
     public void UpdateActive(PlayerController stateController)
     {
-        //stateController.PlayerMoveUpdate();
         stateController.InteractionInputCheck();
-        if (!stateController.DebugModEnterInputCheck())
-        {
-            stateController.DebugModeMouseInputCheck();
-        }
+        stateController.DebugModEnterInputCheck();
     }
 }
 
@@ -107,10 +100,7 @@ public class PlayerDebugMod : Singleton<PlayerDebugMod>, IState<PlayerController
 
     public void UpdateActive(PlayerController stateController)
     {
-        if(!stateController.DebugModEnterInputCheck()) 
-        {
-            stateController.DebugModeMouseInputCheck();
-        }
+        stateController.DebugModEnterInputCheck();
     }
 }
 
