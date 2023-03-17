@@ -19,6 +19,7 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
 
     public void FixedUpdateActive(PlayerController stateController)
     {
+       
     }
 
     
@@ -36,7 +37,6 @@ public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.AnimRunEnter();
     }
 
     public void Exit(PlayerController stateController)
@@ -50,7 +50,7 @@ public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
 
     public void UpdateActive(PlayerController stateController)
     {
-       
+        //stateController.PlayerMoveUpdate();
         stateController.DebugModEnterInputCheck();
         stateController.InteractionInputCheck();
     }

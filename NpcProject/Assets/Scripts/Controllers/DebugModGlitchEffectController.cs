@@ -16,7 +16,7 @@ public class DebugModGlitchEffectController : UI_Base
 
     private Volume volume;
     private bool isPlaying = false;
-
+    private readonly float EffectTime = 0.3f;
     public bool IsPlaying { get => isPlaying;}
 
     public void EnterDebugMod(Action completeAction = null)
@@ -54,9 +54,11 @@ public class DebugModGlitchEffectController : UI_Base
         intensity.value = 1;
         glitch.intensity = intensity;
         float progress = 0;
+        var thirdTime = (EffectTime / 3);
+        var effectFactor = 1/thirdTime ;
         while (progress < 1)
         {
-            progress += Time.deltaTime;
+            progress += Time.deltaTime * effectFactor;
             volume.weight = progress;
             yield return null;
 
@@ -65,10 +67,10 @@ public class DebugModGlitchEffectController : UI_Base
         volume.weight = 1;
         Managers.Keyword.EnterDebugMod();
         tonemapping.active = true;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(thirdTime);
         while(progress > 0)
         {
-            progress -= Time.deltaTime;
+            progress -= Time.deltaTime * effectFactor;
             intensity.value = progress;
             glitch.intensity = intensity;
             yield return null;
@@ -85,9 +87,11 @@ public class DebugModGlitchEffectController : UI_Base
         isPlaying = true;
         var intensity = glitch.intensity;
         float progress = 0;
+        var thirdTime = (EffectTime / 3);
+        var effectFactor = 1/thirdTime;
         while (progress < 1)
         {
-            progress += Time.deltaTime;
+            progress += Time.deltaTime * effectFactor;
             intensity.value = progress;
             glitch.intensity = intensity;
             yield return null;
@@ -98,13 +102,13 @@ public class DebugModGlitchEffectController : UI_Base
         glitch.intensity = intensity;
         Managers.Keyword.ExitDebugMod();
         tonemapping.active = false;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(thirdTime);
 
         progress = 0;
         float a = 1;
         while (progress < 1)
         {
-            progress += Time.deltaTime;
+            progress += Time.deltaTime * effectFactor;
             a = Mathf.Lerp(a, 0, progress);
             volume.weight = a;
             yield return null;

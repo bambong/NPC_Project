@@ -2,36 +2,64 @@ using System.Collections;using System.Collections.Generic;
 using UnityEngine;
 using Spine;
 using Spine.Unity;
-
+using UnityEditor.ShaderGraph.Internal;
+using static UnityEditor.PlayerSettings;
+using UnityEditor.Animations;
+using UnityEditor.Rendering.Utilities;
+using System;
+using DG.Tweening;
+using AmazingAssets.WireframeShader;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    private float moveSpeed = 10f;
-    [SerializeField]
-    private SkeletonAnimation skeletonAnimation;
-    [SpineAnimation]
-    [SerializeField]
-    private string idleAnim;
-    [SpineAnimation]
-    [SerializeField]
-    private string runAnim;
 
+ 
+    [Header("Player Element")]
+    [Space(1)]
+    [SerializeField]
+    private PlayerAnimationController animationController;
     [SerializeField]
     private InteractionDetectController interactionDetecter;
     [SerializeField]
     private Transform rotater;
     [SerializeField]
-    private CharacterController characterController;
-
+    private BoxCollider box;
     [SerializeField]
     private Rigidbody rigid;
+ 
+    [Space(1)]
+    [Header("Player Move Option")]
+    [Space(1)]
+    [SerializeField]
+    private float moveSpeed = 10f;
+    [SerializeField]
+    private int maxSlopeAngle = 40;
+    [SerializeField]
+    private float moveEnableDis = 0.5f;
+    [SerializeField]
+    private float stepHeight = 1.0f;
+    
+    [Space(1)]
+    [Header("Player HP")]
+    [Space(1)]
+    [SerializeField]
+    private int maxHp;
+    [SerializeField]
+    private int hp;
+    
+    [Space(1)]
+    [Header("WireEffect")]
+    [SerializeField]
+    private GameObject wireEffectGo;
+    [SerializeField]
+    private WireframeMaskController wireframeMaskController;
 
-    private Vector3 moveVec;
+    private PlayerAnimationController.AnimDir curDir = PlayerAnimationController.AnimDir.Front;
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
     private PlayerUIController playerUIController;
     private DeathUIController deathUIController;
+<<<<<<< HEAD
     public bool IsDebugMod { get => isDebugMod; }
     private bool isDebugMod;
     [Header("Player Slope Check")]
@@ -40,61 +68,60 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private BoxCollider box;
     private bool isOnSlope;
+=======
+
+>>>>>>> main
     private RaycastHit slopeHit;
     private int groundLayer;
-
-    [Header("Player Step Climb")]
-    [SerializeField]
-    private float stepHeight = 1.0f;
-    [SerializeField]
-    private float stepSmooth = 7f;
-    private int stairLayer;
-    private bool isStepClimb;
-
-    [Header("Player HP")]
-    [SerializeField]
-    private int maxHp;
-    public int MaxHp { get => maxHp; }
-    [SerializeField]
-    private int hp;
     public int Hp { get => hp; }
+    public int MaxHp { get => maxHp; }
 
+<<<<<<< HEAD
+=======
+    private readonly float CHECK_RAY_WIDTH = 0.3f;
+    private readonly float WIRE_EFFECT_OPEN_TIME = 2f;
+    private readonly float WIRE_EFFECT_CLOSE_TIME = 1f;
+>>>>>>> main
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
+        hp = maxHp;
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null,"GlitchEffect");
+<<<<<<< HEAD
         playerUIController = Managers.UI.MakeWorldSpaceUI<PlayerUIController>(null, "PlayerUI");
+=======
+        groundLayer = (1 << LayerMask.NameToLayer("Ground"));
+        playerUIController = Managers.UI.MakeSceneUI<PlayerUIController>(null, "PlayerUI");
+>>>>>>> main
         deathUIController = Managers.UI.MakeSceneUI<DeathUIController>(null, "DeathUI");
-        groundLayer = 1 << LayerMask.NameToLayer("Ground");
-        stairLayer = 1 << LayerMask.NameToLayer("Stair");
     }
 
     void Update()
     {
-        rotater.rotation = Camera.main.transform.rotation;
+        var rot = Camera.main.transform.rotation.eulerAngles;
+        rot.x = 0;
+        rotater.rotation = Quaternion.Euler(rot);
         playerStateController.Update();
+        if (transform.lossyScale != Vector3.one)
+        {
+            var factor = 1 / transform.lossyScale.x;
+            transform.localScale *= factor;
+        }
+
     }
     private void FixedUpdate()
     {
         playerStateController.FixedUpdate();
+     
     }
-
-    #region OnStateEnter
-    public void AnimIdleEnter() 
-    {
-        skeletonAnimation.AnimationState.SetAnimation(0,idleAnim,true);
-    }
-    public void AnimRunEnter()
-    {
-        skeletonAnimation.AnimationState.SetAnimation(0,runAnim,true);
-    }
+    
     public void InteractionEnter() 
     {
         interactionDetecter.InteractionUiDisable();
     }
 
-    #endregion
+
     #region OnStateExit
     public void InteractionExit()
     {
@@ -103,59 +130,152 @@ public class PlayerController : MonoBehaviour
 
     #endregion
     #region OnStateUpdate
+    public bool IsMove(Vector3 pos,float hor,float ver)
+    {
+   
+        var moveVec = new Vector3(hor, 0, ver).normalized;
+        //var forward = Camera.main.transform.forward;
+        //forward.y = 0;
+        //var angle = -1 * Vector3.Angle(Vector3.forward, forward);
+        moveVec =rotater.transform.TransformDirection(moveVec);
+        var boxHalfSize = box.size.x * 0.5f;
+        var checkWidth = box.size.x * CHECK_RAY_WIDTH;
+        var isSlope = IsOnSlope();
+        if (isSlope)
+        {
+            moveVec = AdjustDirectionToSlope(moveVec);
 
+        }
+        moveVec = MoveRayCheck(moveVec, isSlope);
+
+
+        if (new Vector3(moveVec.x, 0, moveVec.z).magnitude > 0.02f)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    private Vector3 MoveRayCheck(Vector3 moveVec, bool isSlope )
+    {
+        var pos = transform.position + (Vector3.down* box.size.y * 0.5f) + (Vector3.down*stepHeight* 0.5f);
+        var boxHalfSize = box.size.x * 0.5f;
+        var checkWidth = box.size.x * CHECK_RAY_WIDTH;
+        float moveEnableWidth = box.size.x * 0.25f;
+        float boxHeight = (stepHeight/2) + (isSlope? stepHeight/2:0);
+        int layer = (-1) - (1 << LayerMask.NameToLayer("Player"));
+        if (Mathf.Abs(moveVec.x) > 0)
+        {
+            var dir = (moveVec.x > 0 ? 1 : -1) * (boxHalfSize + moveEnableDis/2) * Vector3.right;
+            var boxSize = new Vector3(moveEnableDis / 2, boxHeight, moveEnableWidth);
+            ExtDebug.DrawBox(pos + dir + new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, Color.red);
+            ExtDebug.DrawBox(pos + dir - new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, Color.red);
+            if (!Physics.CheckBox(pos + dir - new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            {
+                moveVec.x = 0;
+            }
+            else if (!Physics.CheckBox(pos + dir + new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            {
+                moveVec.x = 0;
+            }
+        }
+        if (Mathf.Abs(moveVec.z) > 0)
+        {
+            var dir = (moveVec.z > 0 ? 1 : -1) * (boxHalfSize + moveEnableDis / 2) * Vector3.forward ;
+            var boxSize = new Vector3(moveEnableWidth, boxHeight, moveEnableDis / 2);
+            ExtDebug.DrawBox(pos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
+            ExtDebug.DrawBox(pos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
+            if (!Physics.CheckBox(pos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer ,QueryTriggerInteraction.Ignore))
+            {
+                moveVec.z = 0;
+            }
+            else if (!Physics.CheckBox(pos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            {
+                moveVec.z = 0;
+            }
+        }
+        return moveVec;
+
+    }
+    private void CurrentAnimDirUpdtae(Vector3 moveVec) 
+    {
+        var moveDotVer = Vector3.Dot(rotater.transform.forward.normalized, moveVec.normalized);
+        if (Mathf.Abs(moveDotVer) > 0.71f)
+        {
+            if (moveDotVer < 0)
+            {
+                curDir = PlayerAnimationController.AnimDir.Front;
+            }
+            else
+            {
+                curDir = PlayerAnimationController.AnimDir.Back;
+            }
+        }
+        else
+        {
+            var moveDotHor = Vector3.Dot(rotater.transform.right.normalized, moveVec.normalized);
+            if (moveDotHor < 0)
+            {
+                curDir = PlayerAnimationController.AnimDir.Left;
+            }
+            else
+            {
+                curDir = PlayerAnimationController.AnimDir.Right;
+            }
+        }
+    }
     public void PlayerMoveUpdate()
     {
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
 
-        isOnSlope = IsOnSlope();
 
-        if(Mathf.Abs(hor) <= 0.2f && Mathf.Abs(ver) <= 0.2f)
+        if (new Vector3(hor, 0, ver).magnitude <= 0.1f)
         {
             SetStateIdle();
             rigid.velocity = Vector3.zero;
             return;
         }
-        
-        if(hor != 0) 
-        {
-            var dir = hor < 0 ? 1 : -1;
-            skeletonAnimation.skeleton.ScaleX = dir;
-        }
 
-        moveVec = new Vector3(hor, 0, ver).normalized;
-        moveVec = Quaternion.Euler(new Vector3(0, rotater.rotation.eulerAngles.y, 0)) * moveVec;
+        var moveVec = new Vector3(hor, 0, ver).normalized;
+
+        //var forward = Camera.main.transform.forward;
+        //forward.y = 0;
+        //var angle = -1*Vector3.Angle(Vector3.forward, forward);
+        moveVec = rotater.transform.TransformDirection(moveVec);
         Vector3 gravity = Vector3.down * Mathf.Abs(rigid.velocity.y);
 
         var pos = transform.position;
         var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
-        var nextPos = pos + moveVec * (speed * 0.3f);
-        
-        if(StepClimb())
-        {
-            return;
-        }
 
-        if (isOnSlope)
+
+        var isSlope = IsOnSlope();
+        if (isSlope)
         {
             moveVec = AdjustDirectionToSlope(moveVec);
             gravity = Vector3.zero;
             rigid.useGravity = false;
+            Debug.DrawRay(pos, moveVec * 10, Color.blue);
         }
         else
         {
-            rigid.useGravity = true;
+           rigid.useGravity = true;
         }
 
-        var checkVecOne = Quaternion.Euler(new Vector3(0, 90.0f, 0)) * moveVec * 0.5f;
-        var checkVecTwo = Quaternion.Euler(new Vector3(0, -90.0f, 0)) * moveVec * 0.5f;
-        var checkOne = nextPos + checkVecOne;
-        var checkTwo = nextPos + checkVecTwo;
+       
+        //var rayPos = pos + Vector3.down * box.size.y * 0.5f;
 
-        if ((Physics.Raycast(checkOne, Vector3.down, box.size.y * 0.5f + stepHeight) && Physics.Raycast(checkTwo, Vector3.down, box.size.y * 0.5f + stepHeight)))
+        moveVec = MoveRayCheck(moveVec, isSlope);
+
+     
+
+        if (new Vector3(moveVec.x,0,moveVec.z).magnitude > 0.02f)
         {
-            rigid.velocity = moveVec * speed + gravity;
+            CurrentAnimDirUpdtae(moveVec);
+            animationController.SetMoveAnim(curDir);
+            rigid.velocity = moveVec.normalized * speed + gravity;
         }
         else
         {
@@ -177,20 +297,24 @@ public class PlayerController : MonoBehaviour
 
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
+        
 
-        if(hor != 0 || ver != 0)
+        if(hor == 0 && ver == 0)
         {
-            if (hor != 0)
-            {
-                var dir = hor < 0 ? 1 : -1;
-                skeletonAnimation.skeleton.ScaleX = dir;
-            }
-            
-            if (IsMove(transform.position, hor, ver))
-            {
-                playerStateController.ChangeState(PlayerMove.Instance);
-            }
+            return;
         }
+        
+        //if(hor != 0)
+        //{
+        //    var dir = hor < 0 ? 1 : -1;
+        //    skeletonAnimation.skeleton.ScaleX = dir;
+        //}
+
+        if(IsMove(transform.position,hor,ver))
+        {
+            playerStateController.ChangeState(PlayerMove.Instance);
+        }
+
     }
     public bool InteractionInputCheck() 
     {
@@ -244,6 +368,14 @@ public class PlayerController : MonoBehaviour
             isDebugButton();
         });
     }
+    public void AnimIdleEnter()
+    {
+        animationController.SetIdleAnim(curDir);
+    }
+    public void AnimMoveEnter()
+    {
+        animationController.SetMoveAnim(curDir);
+    }
     public void ClearMoveAnim()
     {
         AnimIdleEnter();
@@ -283,65 +415,21 @@ public class PlayerController : MonoBehaviour
 
     public bool IsOnSlope()
     {
-        Vector3 boxVec = new Vector3(box.size.x, 0, 0) * 0.5f;
-        boxVec = Quaternion.Euler(new Vector3(0, rotater.rotation.eulerAngles.y + 90f, 0)) * boxVec;
-        Ray ray = new Ray(transform.position + boxVec, Vector3.down);
-        Debug.DrawRay(transform.position + boxVec, Vector3.down * transform.position.y, Color.blue);
-        if(Physics.Raycast(ray, out slopeHit, transform.position.y, groundLayer))
+        Debug.DrawRay(transform.position, Vector3.down * transform.position.y, Color.blue);  
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, transform.position.y , groundLayer))
         {
             var angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            return angle != 0f && angle < maxSlopeAngle;
+            if(angle < maxSlopeAngle) 
+            {
+                return true;   
+            }
+            return false;
         }
         return false;
     }
     public Vector3 AdjustDirectionToSlope(Vector3 direction)
     {
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
-    }
-    public bool StepClimb()
-    {
-        var position = Quaternion.Euler(0, rotater.rotation.eulerAngles.y + 90.0f, 0) * new Vector3(box.size.x * -0.5f, box.size.y * 0.5f, 0);
-        Debug.DrawRay(transform.position - position, moveVec * 1.5f, Color.green);
-        if(Physics.Raycast(transform.position - position, moveVec, 1.5f, stairLayer))
-        {
-            Debug.DrawRay(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f - stepHeight, 0), moveVec * 1.6f, Color.green);
-            if(!Physics.Raycast(transform.position - new Vector3(box.size.x * -0.5f, box.size.y * 0.5f - stepHeight, 0), moveVec, 1.6f, stairLayer))
-            {
-                rigid.useGravity = false;
-                rigid.position -= new Vector3(0f, -stepSmooth * Time.fixedDeltaTime, 0f);
-                return true;
-            }
-            else
-            {
-                return false;
-            } 
-        }
-        else
-        {
-            return false;
-        }
-    }
-    public bool IsMove(Vector3 pos, float hor, float ver)
-    {
-        var moveVec = new Vector3(hor, 0, ver).normalized;
-        moveVec = Quaternion.Euler(new Vector3(0, rotater.rotation.eulerAngles.y, 0)) * moveVec;
-        var nextPos = pos + moveVec * (moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER) * 0.3f);
-        
-        var checkVecOne = Quaternion.Euler(new Vector3(0, 90.0f, 0)) * moveVec * 0.5f;
-        var checkVecTwo = Quaternion.Euler(new Vector3(0, -90.0f, 0)) * moveVec * 0.5f;
-        var checkOne = nextPos + checkVecOne;
-        var checkTwo = nextPos + checkVecTwo;
-
-        Debug.DrawRay(checkOne, Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
-        Debug.DrawRay(checkTwo, Vector3.down * (box.size.y * 0.5f + stepHeight), Color.red);
-        if (Physics.Raycast(checkOne, Vector3.down, box.size.y * 0.5f + stepHeight) && Physics.Raycast(checkTwo, Vector3.down, box.size.y * 0.5f + stepHeight))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
 
     public void GetDamage(int damage)
@@ -366,7 +454,7 @@ public class PlayerController : MonoBehaviour
     {
         deathUIController.DeathUIClose();
     }
-    
+  
     #endregion
 
     #region SetState
@@ -394,6 +482,21 @@ public class PlayerController : MonoBehaviour
     {
         playerStateController.ChangeState(PlayerDeath.Instance);
     }
+    #endregion
+    #region WireEffect
+    public void OpenWireEffect(Vector3 size, Material[] materials)
+    {
+        wireframeMaskController.materials = materials;
+        wireEffectGo.transform.localScale = Vector3.zero;
+        wireEffectGo.transform.DOKill();
+        wireEffectGo.transform.DOScale(size, WIRE_EFFECT_OPEN_TIME);
+    }
+    public void CloseWireEffect()
+    {
+        wireEffectGo.transform.DOKill();
+        wireEffectGo.transform.DOScale(Vector3.zero, WIRE_EFFECT_CLOSE_TIME).OnComplete(() => wireframeMaskController.materials = null);
+    }
+
     #endregion
 
 }
