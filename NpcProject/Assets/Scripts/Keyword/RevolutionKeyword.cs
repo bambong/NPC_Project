@@ -8,8 +8,8 @@ public class RevolutionKeyword : KeywordController
     private float speed = 10f;
     public override void KeywordAction(KeywordEntity entity)
     {
-        //entity.ClearVelocity();
-        //entity.SetGravity(false);
+        entity.ClearVelocity();
+        entity.SetKinematic(true);
         PairKeyword pairKeyword = null;
         // entity 에 등록된 키워드 중에 Pair 키워드가 있는지 체크
         foreach(var keyword in entity.CurrentRegisterKeyword)
@@ -40,13 +40,13 @@ public class RevolutionKeyword : KeywordController
         var dir = entity.KeywordTransformFactor.position - _orbitCenter;
 
         // var _radius = dir.magnitude * Vector3.Normalize(dir);
-        var _newRotation = Quaternion.AngleAxis(Managers.Time.GetDeltaTime(TIME_TYPE.PLAYER) * speed,_worldRotationAxis);
+        var _newRotation = Quaternion.AngleAxis(Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER) * speed,_worldRotationAxis);
         var _desiredOrbitPosition = _orbitCenter + _newRotation * dir;
         entity.ColisionCheckMove((_desiredOrbitPosition - entity.KeywordTransformFactor.position));
 
     }
     public override void OnRemove(KeywordEntity entity)
     {
-        //entity.SetGravity(true);
+        entity.SetKinematic(false);
     }
 }

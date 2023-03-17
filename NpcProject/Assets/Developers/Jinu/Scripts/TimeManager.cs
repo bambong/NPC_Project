@@ -6,7 +6,7 @@ using Spine.Unity;
 public enum TIME_TYPE
 {
     PLAYER,
-    PROJECTILE
+    NONE_PLAYER
 }
 
 public class TimeManager
@@ -14,7 +14,7 @@ public class TimeManager
     Dictionary<TIME_TYPE, float> timeScale = new Dictionary<TIME_TYPE, float>()
     {
         {TIME_TYPE.PLAYER, 1.0f},
-        {TIME_TYPE.PROJECTILE, 1.0f}
+        {TIME_TYPE.NONE_PLAYER, 1.0f}
     };
 
     public void SetTimeScale(float timeScale)

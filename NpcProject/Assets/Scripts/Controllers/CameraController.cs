@@ -20,6 +20,6 @@ public class CameraController : MonoBehaviour
     private void LateUpdate()
     {
         var pos = Vector3.Lerp(transform.position,target.position + diffPosToTarget,dumpingAmount * Time.deltaTime);
-        transform.position = pos;
+        transform.position = pos;       
     }
 }
