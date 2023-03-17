@@ -1,4 +1,5 @@
-using System.Collections;using System.Collections.Generic;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Spine;
 using Spine.Unity;
@@ -13,7 +14,7 @@ using AmazingAssets.WireframeShader;
 public class PlayerController : MonoBehaviour
 {
 
- 
+
     [Header("Player Element")]
     [Space(1)]
     [SerializeField]
@@ -26,7 +27,7 @@ public class PlayerController : MonoBehaviour
     private BoxCollider box;
     [SerializeField]
     private Rigidbody rigid;
- 
+
     [Space(1)]
     [Header("Player Move Option")]
     [Space(1)]
@@ -38,7 +39,7 @@ public class PlayerController : MonoBehaviour
     private float moveEnableDis = 0.5f;
     [SerializeField]
     private float stepHeight = 1.0f;
-    
+
     [Space(1)]
     [Header("Player HP")]
     [Space(1)]
@@ -46,7 +47,7 @@ public class PlayerController : MonoBehaviour
     private int maxHp;
     [SerializeField]
     private int hp;
-    
+
     [Space(1)]
     [Header("WireEffect")]
     [SerializeField]
@@ -62,8 +63,12 @@ public class PlayerController : MonoBehaviour
 
     private RaycastHit slopeHit;
     private int groundLayer;
+    public bool IsDebugMod { get => isDebugMod; }
+    private bool isDebugMod;
     public int Hp { get => hp; }
     public int MaxHp { get => maxHp; }
+
+
 
     private readonly float CHECK_RAY_WIDTH = 0.3f;
     private readonly float WIRE_EFFECT_OPEN_TIME = 2f;
@@ -73,9 +78,9 @@ public class PlayerController : MonoBehaviour
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
         hp = maxHp;
-        glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null,"GlitchEffect");
+        glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null, "GlitchEffect");
         groundLayer = (1 << LayerMask.NameToLayer("Ground"));
-        playerUIController = Managers.UI.MakeSceneUI<PlayerUIController>(null, "PlayerUI");
+        playerUIController = Managers.UI.MakeWorldSpaceUI<PlayerUIController>(null, "PlayerUI");
         deathUIController = Managers.UI.MakeSceneUI<DeathUIController>(null, "DeathUI");
     }
 
@@ -95,10 +100,10 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         playerStateController.FixedUpdate();
-     
+
     }
-    
-    public void InteractionEnter() 
+
+    public void InteractionEnter()
     {
         interactionDetecter.InteractionUiDisable();
     }
@@ -112,14 +117,14 @@ public class PlayerController : MonoBehaviour
 
     #endregion
     #region OnStateUpdate
-    public bool IsMove(Vector3 pos,float hor,float ver)
+    public bool IsMove(Vector3 pos, float hor, float ver)
     {
-   
+
         var moveVec = new Vector3(hor, 0, ver).normalized;
         //var forward = Camera.main.transform.forward;
         //forward.y = 0;
         //var angle = -1 * Vector3.Angle(Vector3.forward, forward);
-        moveVec =rotater.transform.TransformDirection(moveVec);
+        moveVec = rotater.transform.TransformDirection(moveVec);
         var boxHalfSize = box.size.x * 0.5f;
         var checkWidth = box.size.x * CHECK_RAY_WIDTH;
         var isSlope = IsOnSlope();
@@ -140,21 +145,21 @@ public class PlayerController : MonoBehaviour
             return false;
         }
     }
-    private Vector3 MoveRayCheck(Vector3 moveVec, bool isSlope )
+    private Vector3 MoveRayCheck(Vector3 moveVec, bool isSlope)
     {
-        var pos = transform.position + (Vector3.down* box.size.y * 0.5f) + (Vector3.down*stepHeight* 0.5f);
+        var pos = transform.position + (Vector3.down * box.size.y * 0.5f) + (Vector3.down * stepHeight * 0.5f);
         var boxHalfSize = box.size.x * 0.5f;
         var checkWidth = box.size.x * CHECK_RAY_WIDTH;
         float moveEnableWidth = box.size.x * 0.25f;
-        float boxHeight = (stepHeight/2) + (isSlope? stepHeight/2:0);
+        float boxHeight = (stepHeight / 2) + (isSlope ? stepHeight / 2 : 0);
         int layer = (-1) - (1 << LayerMask.NameToLayer("Player"));
         if (Mathf.Abs(moveVec.x) > 0)
         {
-            var dir = (moveVec.x > 0 ? 1 : -1) * (boxHalfSize + moveEnableDis/2) * Vector3.right;
+            var dir = (moveVec.x > 0 ? 1 : -1) * (boxHalfSize + moveEnableDis / 2) * Vector3.right;
             var boxSize = new Vector3(moveEnableDis / 2, boxHeight, moveEnableWidth);
-            ExtDebug.DrawBox(pos + dir + new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, Color.red);
+            ExtDebug.DrawBox(pos + dir + new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, Color.red);
             ExtDebug.DrawBox(pos + dir - new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, Color.red);
-            if (!Physics.CheckBox(pos + dir - new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            if (!Physics.CheckBox(pos + dir - new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
             {
                 moveVec.x = 0;
             }
@@ -165,11 +170,11 @@ public class PlayerController : MonoBehaviour
         }
         if (Mathf.Abs(moveVec.z) > 0)
         {
-            var dir = (moveVec.z > 0 ? 1 : -1) * (boxHalfSize + moveEnableDis / 2) * Vector3.forward ;
+            var dir = (moveVec.z > 0 ? 1 : -1) * (boxHalfSize + moveEnableDis / 2) * Vector3.forward;
             var boxSize = new Vector3(moveEnableWidth, boxHeight, moveEnableDis / 2);
             ExtDebug.DrawBox(pos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
             ExtDebug.DrawBox(pos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
-            if (!Physics.CheckBox(pos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer ,QueryTriggerInteraction.Ignore))
+            if (!Physics.CheckBox(pos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
             {
                 moveVec.z = 0;
             }
@@ -181,7 +186,7 @@ public class PlayerController : MonoBehaviour
         return moveVec;
 
     }
-    private void CurrentAnimDirUpdtae(Vector3 moveVec) 
+    private void CurrentAnimDirUpdtae(Vector3 moveVec)
     {
         var moveDotVer = Vector3.Dot(rotater.transform.forward.normalized, moveVec.normalized);
         if (Mathf.Abs(moveDotVer) > 0.71f)
@@ -243,17 +248,17 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-           rigid.useGravity = true;
+            rigid.useGravity = true;
         }
 
-       
+
         //var rayPos = pos + Vector3.down * box.size.y * 0.5f;
 
         moveVec = MoveRayCheck(moveVec, isSlope);
 
-     
 
-        if (new Vector3(moveVec.x,0,moveVec.z).magnitude > 0.02f)
+
+        if (new Vector3(moveVec.x, 0, moveVec.z).magnitude > 0.02f)
         {
             CurrentAnimDirUpdtae(moveVec);
             animationController.SetMoveAnim(curDir);
@@ -268,39 +273,39 @@ public class PlayerController : MonoBehaviour
 
     public void PlayerInputCheck()
     {
-        if(InteractionInputCheck())
+        if (InteractionInputCheck())
         {
             return;
         }
-        if (DebugModEnterInputCheck()) 
+        if (DebugModEnterInputCheck())
         {
             return;
         }
 
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
-        
 
-        if(hor == 0 && ver == 0)
+
+        if (hor == 0 && ver == 0)
         {
             return;
         }
-        
+
         //if(hor != 0)
         //{
         //    var dir = hor < 0 ? 1 : -1;
         //    skeletonAnimation.skeleton.ScaleX = dir;
         //}
 
-        if(IsMove(transform.position,hor,ver))
+        if (IsMove(transform.position, hor, ver))
         {
             playerStateController.ChangeState(PlayerMove.Instance);
         }
 
     }
-    public bool InteractionInputCheck() 
+    public bool InteractionInputCheck()
     {
-        if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.INTERACTION_KEY)))
+        if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.INTERACTION_KEY)))
         {
             rigid.velocity = Vector3.zero;
             interactionDetecter.Interaction();
@@ -308,20 +313,20 @@ public class PlayerController : MonoBehaviour
         }
         return false;
     }
-    public bool DebugModEnterInputCheck() 
+    public bool DebugModEnterInputCheck()
     {
-        if(!Managers.Keyword.IsDebugZoneIn || glitchEffectController.IsPlaying) 
+        if (!Managers.Keyword.IsDebugZoneIn || glitchEffectController.IsPlaying)
         {
             return false;
         }
 
         if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.DEBUGMOD_KEY)))
         {
-            if (Managers.Game.IsDebugMod) 
+            if (Managers.Game.IsDebugMod)
             {
                 ExitDebugMod();
             }
-            else 
+            else
             {
                 EnterDebugMod();
             }
@@ -332,8 +337,9 @@ public class PlayerController : MonoBehaviour
     public void EnterDebugMod()
     {
         SetstateStop();
+        isDebugMod = true;
         Managers.Game.SetStateDebugMod();
-        glitchEffectController.EnterDebugMod(() => 
+        glitchEffectController.EnterDebugMod(() =>
         {
             SetStateDebugMod();
         });
@@ -345,6 +351,8 @@ public class PlayerController : MonoBehaviour
         glitchEffectController.ExitDebugMod(() => {
             interactionDetecter.SwitchDebugMod(false);
             SetStateIdle();
+            isDebugMod = false;
+            isDebugButton();
         });
     }
     public void AnimIdleEnter()
@@ -362,28 +370,28 @@ public class PlayerController : MonoBehaviour
     }
     public void KeywordModInputCheck()
     {
-        if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.EXIT_KEY)))
+        if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.EXIT_KEY)))
         {
             Managers.Keyword.ExitKeywordMod();
         }
     }
     public void DebugModeMouseInputCheck()
     {
-        if(!Managers.Game.IsDebugMod)
+        if (!Managers.Game.IsDebugMod)
         {
             return;
         }
 
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             int layer = LayerMask.GetMask("Interaction");
             RaycastHit hit;
-            if(Physics.Raycast(ray,out hit,float.MaxValue,layer))
+            if (Physics.Raycast(ray, out hit, float.MaxValue, layer))
             {
                 var entity = hit.collider.GetComponent<KeywordEntity>();
 
-                if(entity == null)
+                if (entity == null)
                 {
                     return;
                 }
@@ -394,13 +402,13 @@ public class PlayerController : MonoBehaviour
 
     public bool IsOnSlope()
     {
-        Debug.DrawRay(transform.position, Vector3.down * transform.position.y, Color.blue);  
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, transform.position.y , groundLayer))
+        Debug.DrawRay(transform.position, Vector3.down * transform.position.y, Color.blue);
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, transform.position.y, groundLayer))
         {
             var angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            if(angle < maxSlopeAngle) 
+            if (angle < maxSlopeAngle)
             {
-                return true;   
+                return true;
             }
             return false;
         }
@@ -415,23 +423,15 @@ public class PlayerController : MonoBehaviour
     {
         hp = hp - damage;
         playerUIController.SetHp(damage);
-        if(hp <= 0)
+        if (hp <= 0)
         {
             SetstateDeath();
         }
     }
 
-    public void OpenPlayerUI()
-    {
-        playerUIController.OnPlayerUI();
-    }
-    public void ClosePlayerUI()
-    {
-        playerUIController.OffPlayerUI();
-    }
     public void isDebugButton()
     {
-        playerUIController.DebugButtom();
+        playerUIController.DebugButton();
     }
     public void OpenDeathUI()
     {
@@ -441,15 +441,15 @@ public class PlayerController : MonoBehaviour
     {
         deathUIController.DeathUIClose();
     }
-  
+
     #endregion
 
     #region SetState
-    public void SetStateInteraction() 
+    public void SetStateInteraction()
     {
         playerStateController.ChangeState(PlayerInteraction.Instance);
     }
-    public void SetStateIdle() 
+    public void SetStateIdle()
     {
         playerStateController.ChangeState(PlayerIdle.Instance);
     }
@@ -461,7 +461,7 @@ public class PlayerController : MonoBehaviour
     {
         playerStateController.ChangeState(PlayerDebugMod.Instance);
     }
-    public void SetstateStop() 
+    public void SetstateStop()
     {
         playerStateController.ChangeState(PlayerStop.Instance);
     }
