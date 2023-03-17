@@ -59,41 +59,23 @@ public class PlayerController : MonoBehaviour
     private PlayerStateController playerStateController;
     private PlayerUIController playerUIController;
     private DeathUIController deathUIController;
-<<<<<<< HEAD
-    public bool IsDebugMod { get => isDebugMod; }
-    private bool isDebugMod;
-    [Header("Player Slope Check")]
-    [SerializeField]
-    private int maxSlopeAngle = 40;
-    [SerializeField]
-    private BoxCollider box;
-    private bool isOnSlope;
-=======
 
->>>>>>> main
     private RaycastHit slopeHit;
     private int groundLayer;
     public int Hp { get => hp; }
     public int MaxHp { get => maxHp; }
 
-<<<<<<< HEAD
-=======
     private readonly float CHECK_RAY_WIDTH = 0.3f;
     private readonly float WIRE_EFFECT_OPEN_TIME = 2f;
     private readonly float WIRE_EFFECT_CLOSE_TIME = 1f;
->>>>>>> main
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
         hp = maxHp;
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null,"GlitchEffect");
-<<<<<<< HEAD
-        playerUIController = Managers.UI.MakeWorldSpaceUI<PlayerUIController>(null, "PlayerUI");
-=======
         groundLayer = (1 << LayerMask.NameToLayer("Ground"));
         playerUIController = Managers.UI.MakeSceneUI<PlayerUIController>(null, "PlayerUI");
->>>>>>> main
         deathUIController = Managers.UI.MakeSceneUI<DeathUIController>(null, "DeathUI");
     }
 
@@ -350,7 +332,6 @@ public class PlayerController : MonoBehaviour
     public void EnterDebugMod()
     {
         SetstateStop();
-        isDebugMod = true;
         Managers.Game.SetStateDebugMod();
         glitchEffectController.EnterDebugMod(() => 
         {
@@ -364,8 +345,6 @@ public class PlayerController : MonoBehaviour
         glitchEffectController.ExitDebugMod(() => {
             interactionDetecter.SwitchDebugMod(false);
             SetStateIdle();
-            isDebugMod = false;
-            isDebugButton();
         });
     }
     public void AnimIdleEnter()
@@ -442,9 +421,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OpenPlayerUI()
+    {
+        playerUIController.OnPlayerUI();
+    }
+    public void ClosePlayerUI()
+    {
+        playerUIController.OffPlayerUI();
+    }
     public void isDebugButton()
     {
-         playerUIController.DebugButton();    
+        playerUIController.DebugButtom();
     }
     public void OpenDeathUI()
     {
