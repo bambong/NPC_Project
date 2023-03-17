@@ -6,7 +6,7 @@ using System.Collections;
 
 public class BubbleUI :  MonoBehaviour
 {
-    private readonly float Y_POS_REVISION_AMOUNT = 1;
+    private readonly float Y_POS_REVISION_AMOUNT = 2f;
     private readonly string DEFALUT_TEXT = ". . .";
     [SerializeField]
     private CanvasGroup bubbleUI;
@@ -19,25 +19,30 @@ public class BubbleUI :  MonoBehaviour
     [SerializeField]
     private List <string> bubbleText;
 
+    private GameObject parent;
+
     private bool isStart = true;
-    private bool isEnter;
+    private bool isEnter = false;
     private int count = 0;
 
     public void Start()
     {
+        parent = transform.parent.gameObject;
+        transform.position = parent.transform.position + Vector3.up * ((parent.GetComponent<Collider>().bounds.size.y / 2) * Y_POS_REVISION_AMOUNT);
         bubbleDefalutUI.alpha = 1;
-        bubbleDefalutUI.transform.position = transform.position + Vector3.up * (transform.position.y + Y_POS_REVISION_AMOUNT);
-        bubbleDefalutUI.transform.rotation = Camera.main.transform.rotation;
-
         bubbleUI.alpha = 0;
-        bubbleUI.transform.position = transform.position + Vector3.up * (transform.position.y + Y_POS_REVISION_AMOUNT);
-        bubbleUI.transform.rotation = Camera.main.transform.rotation;
+        
+        if (parent.transform.localScale.x < 0)
+        {
+            transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+        }
     }
 
     public void Update()
     {
-        bubbleDefalutUI.transform.rotation = Camera.main.transform.rotation;
-        if(isStart)
+
+        transform.rotation = Camera.main.transform.rotation;
+        if (isStart && !isEnter)
         {
             isStart = false;
             bubbleDefalutTextUI.DOText(DEFALUT_TEXT, 2.0f).OnStart(()=>
@@ -50,37 +55,29 @@ public class BubbleUI :  MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void OpenBubbleUI()
     {
         bubbleDefalutTextUI.DOKill();
         isEnter = true;
-        if(other.tag == "Player")
+        bubbleTextUI.text = "";
+
+        bubbleDefalutUI.alpha = 0;
+        bubbleUI.transform.DOScale(0f, 0f).OnStart(() =>
         {
-            bubbleDefalutUI.alpha = 0;
-            bubbleUI.transform.DOScale(0f, 0f).OnStart(() =>
-            {
-                bubbleUI.alpha = 1;
-                bubbleUI.transform.DOScale(0.02f, 0.2f);
-            }).OnComplete(()=>
-            {
-                MoveNext();
-            });                   
-        }
+            bubbleUI.alpha = 1;
+            bubbleUI.transform.DOScale(0.02f, 0.2f);
+        }).OnComplete(() =>
+        {
+            MoveNext();
+        });
     }
 
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.tag == "Player")
-        {
-            bubbleUI.transform.rotation = Camera.main.transform.rotation;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
+    public void CloseBubbleUI()
     {
         isEnter = false;
         bubbleUI.alpha = 0;
         bubbleDefalutTextUI.text = "";
+        bubbleDefalutTextUI.DOKill();
         bubbleDefalutUI.alpha = 1;
         isStart = true;
         bubbleTextUI.text = "";
