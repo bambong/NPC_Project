@@ -347,8 +347,8 @@ public class PlayerController : MonoBehaviour
     public void GetDamage(int damage)
     {
         hp = hp - damage;
-        playerUIController.SetHp();
-        if(hp == 0)
+        playerUIController.SetHp(damage);
+        if(hp <= 0)
         {
             SetstateDeath();
         }

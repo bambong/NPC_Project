@@ -7,6 +7,8 @@ using DG.Tweening;
 public class PlayerUIController : UI_Base
 {
     [SerializeField]
+    private GameObject playerUIPanel;
+    [SerializeField]
     private Image hpUI;
     [SerializeField]
     private Image hpIncreaseUI;
@@ -16,41 +18,67 @@ public class PlayerUIController : UI_Base
     private Image hpDefalutUI;
     [SerializeField]
     private Image debugUI;
-    private bool isHpAni = false;
+
     private bool isHpOpen = true;
     private bool isDebugAni = false;
     private bool isDebugOpen = true;
-    private Vector3 hpUIPos;
     public override void Init()
     {
     }
 
-    public void SetHp()
+    public void SetHp(int damage)
     {
         UIEnable();
 
         if (Managers.Game.Player.Hp <= Managers.Game.Player.MaxHp || Managers.Game.Player.Hp >= 0)
         {
+            float exHp = (float)(Managers.Game.Player.Hp + damage) / Managers.Game.Player.MaxHp;
             float hp = (float)Managers.Game.Player.Hp / Managers.Game.Player.MaxHp;
-            //hpUI.fillAmount = hp;
-            hpUI.DOFillAmount(hp, 0.1f).OnComplete(() =>
+
+            if(hp >= 1)
             {
-                hpDecreaseUI.DOFillAmount(hp, 0.5f).OnComplete(() =>
-                {
-                    hpDecreaseUI.gameObject.SetActive(false);
-                    hpUI.DOFade(0f, 1.0f).OnStart(() =>
-                    {
-                        hpDefalutUI.DOFade(0f, 1.0f);
-                    }).OnComplete(() =>
-                    {
-                        isHpOpen = false;
-                        hpUI.gameObject.SetActive(false);
-                        hpDefalutUI.gameObject.SetActive(false);
-                    });
-                });
-            });
+                hp = 1;
+            }
+
+            FillUI(exHp);
+
+            if (damage > 0)
+            {
+                HpUIAnimation(hpDecreaseUI, hp);
+            }
+            else
+            {
+                HpUIAnimation(hpIncreaseUI, hp);
+            }
         }
         StartCoroutine(OpenhpUI());
+    }
+
+    private void FillUI(float exHp)
+    {
+        hpUI.fillAmount = exHp;
+        hpIncreaseUI.fillAmount = exHp;
+        hpDecreaseUI.fillAmount = exHp;
+    }
+
+    private void HpUIAnimation(Image hpChangeUI, float hp)
+    {
+        hpUI.DOFillAmount(hp, 0.1f).OnComplete(() =>
+        {
+            hpChangeUI.DOFillAmount(hp, 0.5f).OnComplete(() =>
+            {
+                hpChangeUI.gameObject.SetActive(false);
+                hpUI.DOFade(0f, 1.0f).OnStart(() =>
+                {
+                    hpDefalutUI.DOFade(0f, 1.0f);
+                }).OnComplete(() =>
+                {
+                    isHpOpen = false;
+                    hpUI.gameObject.SetActive(false);
+                    hpDefalutUI.gameObject.SetActive(false);
+                });
+            });
+        });
     }
 
     private void UIEnable()
@@ -89,13 +117,8 @@ public class PlayerUIController : UI_Base
         isHpOpen = true;
         while (isHpOpen)
         {
-            hpUIPos = Managers.Game.Player.transform.position + (Vector3.up * 4) + (hpUI.transform.rotation * Vector3.left * 0.4f);
-            hpUI.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);
-            hpUI.transform.position = hpUIPos;
-            hpDecreaseUI.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);
-            hpDecreaseUI.transform.position = hpUIPos;
-            hpDefalutUI.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);
-            hpDefalutUI.transform.position = hpUIPos;
+            playerUIPanel.transform.position = Managers.Game.Player.transform.position + (Vector3.up * 4);
+            playerUIPanel.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);
             yield return null;
         }
     }
@@ -104,8 +127,8 @@ public class PlayerUIController : UI_Base
     {
         while(isDebugOpen)
         {
-            debugUI.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);
-            debugUI.transform.position = Managers.Game.Player.transform.position + (Vector3.up * 4) +  (debugUI.transform.rotation * Vector3.left * -0.4f);
+            playerUIPanel.transform.position = Managers.Game.Player.transform.position + (Vector3.up * 4);
+            playerUIPanel.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);            
             if (isDebugAni)
             {
                 debugUI.DOFade(0f, 1.0f).OnStart(() =>
