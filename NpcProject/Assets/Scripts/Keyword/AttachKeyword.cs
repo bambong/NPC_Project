@@ -5,11 +5,11 @@ using UnityEngine;
 public class AttachKeyword : KeywordController
 {
     [SerializeField]
-    public static float Speed = 10f; 
+    private float speed = 10f; 
     public override void KeywordAction(KeywordEntity entity)
     {
         //entity.ClearVelocity();
-        //entity.SetKinematic(true);
+       // entity.SetGravity(false);
         PairKeyword pairKeyword = null;
         foreach(var keyword in entity.CurrentRegisterKeyword)
         {
@@ -32,17 +32,17 @@ public class AttachKeyword : KeywordController
         }
         var dir = target.KeywordTransformFactor.position - entity.KeywordTransformFactor.position;
         dir.y = 0;
-        if(dir.magnitude <= Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER)) 
+        if(dir.magnitude < speed * Managers.Time.GetDeltaTime(TIME_TYPE.PLAYER)) 
         {
             entity.ColisionCheckMove(dir);
         }
         else 
         {
-            entity.ColisionCheckMove(dir.normalized * Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER));
+            entity.ColisionCheckMove(dir.normalized * speed * Managers.Time.GetDeltaTime(TIME_TYPE.PLAYER));
         }
     }
     public override void OnRemove(KeywordEntity entity)
     {
-       // entity.SetKinematic(false);
+       // entity.SetGravity(true);
     }
 }

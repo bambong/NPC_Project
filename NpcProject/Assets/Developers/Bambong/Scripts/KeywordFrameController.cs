@@ -10,11 +10,6 @@ public class KeywordFrameController : KeywordFrameBase
     private GameObject parentObj;
     [SerializeField]
     private RectTransform rectTransform;
-    [SerializeField]
-    private Image raycastImage;
-
-    [SerializeField]
-    private Image[] frameColorImages;
 
     private KeywordController registerKeyword;
     private KeywordController curFrameInnerKeyword;
@@ -31,21 +26,6 @@ public class KeywordFrameController : KeywordFrameBase
         curFrameInnerKeyword = keywordController;
         keywordController.transform.SetParent(transform);
         keywordController.SetToKeywordFrame(rectTransform.position);
-    }
-    public void SetLockFrame(bool isOn) 
-    {
-        Color frameColor = Color.black;
-        if (isOn) 
-        {
-            frameColor = new Color(0.4f, 0.4f, 0.4f);
-        }
-      
-        for(int i =0; i< frameColorImages.Length; ++i) 
-        {
-            frameColorImages[i].color = frameColor;
-        }
-        raycastImage.raycastTarget = !isOn;
-        curFrameInnerKeyword.SetLock(isOn);
     }
     public void OnDecisionKeyword() 
     {

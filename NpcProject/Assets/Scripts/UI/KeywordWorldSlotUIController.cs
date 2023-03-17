@@ -8,22 +8,21 @@ public class KeywordWorldSlotUIController : UI_Base
 {
     [SerializeField]
     private Transform parent;
-
+    [SerializeField]
+    private TextMeshProUGUI keywordText;
     [SerializeField]
     private Image image;
 
-    [SerializeField]
-    private Sprite defaultSprite;
-    [SerializeField]
-    private GameObject defaultTextGo;
+    private readonly string DEFAULT_TEXT = "NULL";
+    
     public override void Init()
     {
         
     }
-    public void SetSlotUI(Image image) 
+    public void SetSlotUI(Color color ,string text) 
     {
-        this.image.sprite = image.sprite;
-        defaultTextGo.SetActive(false);
+        this.keywordText.text = text;
+        image.color = color;
     }
 
     public void Open()
@@ -38,7 +37,7 @@ public class KeywordWorldSlotUIController : UI_Base
 
     public void ResetSlotUI() 
     {
-        image.sprite = defaultSprite;
-        defaultTextGo.SetActive(true);
+        image.color = Color.black;
+        keywordText.text = DEFAULT_TEXT;
     }
 }

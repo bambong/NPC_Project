@@ -14,12 +14,13 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     private readonly string KEYWORD_FRAME_TAG = "KeywordFrame";
     private readonly string KEYWORD_PLAYER_FRAME_TAG = "KeywordPlayerFrame";
 
-    private bool isLock = false;
-
     [SerializeField]
     private RectTransform rectTransform;
     [SerializeField]
     private Image image;
+    [SerializeField]
+    private TextMeshProUGUI keywordText;
+
     [SerializeField]
     private KeywordActionType keywordType;
 
@@ -27,44 +28,19 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     private Transform startParent;
     private Vector3 startDragPoint;
     private KeywordFrameBase curFrame;
-    protected DebugZone parentDebugZone;
-   
+    public TextMeshProUGUI KeywordText { get => keywordText;}
     public Image Image { get => image; }
     public string KewordId { get; private set; }
     public KeywordActionType KeywordType { get => keywordType; }
 
-    private Color originColor;
-    private readonly Color LOCK_COLOR = new Color(0.45f, 0.45f, 0.45f);
-
     private void Awake()
     {
          KewordId = GetType().ToString();
-       
     }
     public void SetFrame(KeywordFrameBase frame) => curFrame = frame;
-    public virtual void SetDebugZone(DebugZone zone) => parentDebugZone = zone;
-
-    public void SetLock(bool isOn)
-    {
-        if (isOn)
-        {
-            originColor = image.color;
-            image.color = LOCK_COLOR;
-        }
-        else 
-        {
-            image.color = originColor;
-        }
-        isLock = isOn;
-    }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (isLock) 
-        {
-            return;
-        }
-
         if(eventData.button != PointerEventData.InputButton.Left) 
         {
             return;
@@ -79,10 +55,6 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (isLock)
-        {
-            return;
-        }
         if (eventData.button != PointerEventData.InputButton.Left)
         {
             return;
@@ -93,11 +65,6 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (isLock)
-        {
-            return;
-        }
-
         if (eventData.button != PointerEventData.InputButton.Left)
         {
             return;
@@ -146,19 +113,11 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (isLock)
-        {
-            return;
-        }
         transform.DOScale(FOCUSING_SCALE,START_END_ANIM_TIME).SetUpdate(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (isLock)
-        {
-            return;
-        }
         transform.DOScale(Vector3.one,START_END_ANIM_TIME).SetUpdate(true);
     }
 

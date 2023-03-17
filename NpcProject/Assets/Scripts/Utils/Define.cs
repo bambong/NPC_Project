@@ -21,7 +21,7 @@ public class Define
     }
     public enum ColiiderMask 
     {
-        //Player,
+        Player,
         Interaction
     }
 }
