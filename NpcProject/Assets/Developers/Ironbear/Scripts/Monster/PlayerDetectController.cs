@@ -10,8 +10,6 @@ public class PlayerDetectController : MonoBehaviour
 
     [SerializeField]
     private string detectionTag = "Player";
-    [SerializeField]
-    private Transform spawnPosition;
 
 
     private MonsterContoller monsterContoller;
