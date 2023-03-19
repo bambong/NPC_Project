@@ -35,6 +35,9 @@ public class TalkPanelController : UI_Base
     private bool isTrans = false;
     private bool inputKey = false;
 
+    private int textSize = 0;
+    private int randomSize = 0;
+
     public override void Init()
     {
     }
@@ -66,8 +69,7 @@ public class TalkPanelController : UI_Base
         dialogueText.DOText(textDialogue, typingTime).OnStart(()=>
         {
             StartCoroutine(SkipTextani());
-        })
-     
+        })     
         .OnComplete(()=>
         {
             isNext = true;
@@ -78,7 +80,7 @@ public class TalkPanelController : UI_Base
     {
         random = new System.Random();
         string charcters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        return new string(Enumerable.Repeat(charcters, length).Select(s => s[random.Next(s.Length)]).ToArray());
+        return "<color=black>" + new string(Enumerable.Repeat(charcters, length).Select(s => s[random.Next(s.Length)]).ToArray()) + "</color>";
     }
 
     IEnumerator TransText()
@@ -86,9 +88,11 @@ public class TalkPanelController : UI_Base
         inputKey = false;
         textStore = null;
         textDialogue = null;
+        randomSize = 0;
         typingTime = curDialogue.text.Length * TEXT_SPEED;
 
-        char[] sep = { '<', '>' };
+        char[] sep = { '#', '#' };
+
         string[] result = curDialogue.text.Split(sep);
 
         foreach (var item in result)
@@ -96,24 +100,39 @@ public class TalkPanelController : UI_Base
             if (item == "dummy")
             {
                 isTrans = true;
-            }            
+            }
             else
             {
                 textDialogue += item;
             }
         }
 
+        textSize = ClcTextLength(textDialogue, textDialogue.Length);
+
         if (isTrans == true)
         {
             StartCoroutine(SkipTextani());
-            
+
             for (int i = 0; i < textDialogue.Length; i++)
             {
-                textStore += textDialogue[i];
-                dialogueText.text = textStore + RandomText(textDialogue.Length - (i + 1));
+                if (textDialogue[i] == '<')
+                {
+                    for (int j = i; !(textDialogue[j] == '>'); j++)
+                    {
+                        textStore += textDialogue[i];
+                        i++;
+                    }
+                    i--;
+                }
+                else
+                {
+                    randomSize++;
+                    textStore += textDialogue[i];
+                    dialogueText.text = textStore + RandomText(textSize - randomSize);
+                }
                 yield return new WaitForSeconds(TEXT_SPEED);
 
-                              
+
                 if (isTrans == false)
                 {
                     dialogueText.text = textDialogue;
@@ -129,6 +148,24 @@ public class TalkPanelController : UI_Base
             DotweenTextani();
             inputKey = true;
         }
+    }
+
+    private int ClcTextLength(string text, int length)
+    {
+        int textLength = length;
+        for (int i = 0; i < length; i++)
+        {
+            if (text[i] == '<')
+            {
+                for (int j = i; !(text[j] == '>'); j++)
+                {
+                    textLength--;
+                    i++;
+                }
+                i--;
+            }
+        }
+        return textLength;
     }
 
     IEnumerator SkipTextani()
@@ -161,7 +198,5 @@ public class TalkPanelController : UI_Base
             }
             yield return null;
         }
-    }
-
-   
+    }   
 }

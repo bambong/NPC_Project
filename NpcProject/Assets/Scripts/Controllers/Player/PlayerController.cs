@@ -1,4 +1,5 @@
-using System.Collections;using System.Collections.Generic;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Spine;
 using Spine.Unity;
@@ -14,7 +15,7 @@ using UnityEngine.UIElements;
 public class PlayerController : MonoBehaviour
 {
 
- 
+
     [Header("Player Element")]
     [Space(1)]
     [SerializeField]
@@ -33,6 +34,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private ConstantForce gravityForce;
 
+
     [Space(1)]
     [Header("Player Move Option")]
     [Space(1)]
@@ -44,7 +46,7 @@ public class PlayerController : MonoBehaviour
     private float moveEnableDis = 0.5f;
     [SerializeField]
     private float stepHeight = 1.0f;
-    
+
     [Space(1)]
     [Header("Player HP")]
     [Space(1)]
@@ -52,7 +54,7 @@ public class PlayerController : MonoBehaviour
     private int maxHp;
     [SerializeField]
     private int hp;
-    
+
     [Space(1)]
     [Header("WireEffect")]
     [SerializeField]
@@ -68,8 +70,12 @@ public class PlayerController : MonoBehaviour
 
     private RaycastHit slopeHit;
     private int groundLayer;
+    public bool IsDebugMod { get => isDebugMod; }
+    private bool isDebugMod;
     public int Hp { get => hp; }
     public int MaxHp { get => maxHp; }
+
+
 
     private readonly float CHECK_RAY_WIDTH = 0.3f;
     private readonly float WIRE_EFFECT_OPEN_TIME = 2f;
@@ -81,9 +87,9 @@ public class PlayerController : MonoBehaviour
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
         hp = maxHp;
-        glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null,"GlitchEffect");
+        glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null, "GlitchEffect");
         groundLayer = (1 << LayerMask.NameToLayer("Ground"));
-        playerUIController = Managers.UI.MakeSceneUI<PlayerUIController>(null, "PlayerUI");
+        playerUIController = Managers.UI.MakeWorldSpaceUI<PlayerUIController>(null, "PlayerUI");
         deathUIController = Managers.UI.MakeSceneUI<DeathUIController>(null, "DeathUI");
     }
 
@@ -103,10 +109,10 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         playerStateController.FixedUpdate();
-     
+
     }
-    
-    public void InteractionEnter() 
+
+    public void InteractionEnter()
     {
         interactionDetecter.InteractionUiDisable();
     }
@@ -120,11 +126,12 @@ public class PlayerController : MonoBehaviour
 
     #endregion
     #region OnStateUpdate
-    public bool IsMove(Vector3 pos,float hor,float ver)
+    public bool IsMove(Vector3 pos, float hor, float ver)
     {
-   
+
         var moveVec = new Vector3(hor, 0, ver).normalized;
         moveVec =rotater.transform.TransformDirection(moveVec);
+
         var boxHalfSize = box.size.x * 0.5f;
         var checkWidth = box.size.x * CHECK_RAY_WIDTH;
         
@@ -146,6 +153,7 @@ public class PlayerController : MonoBehaviour
             return false;
         }
     }
+
     public void PlayerMoveUpdate()
     {
         var hor = Input.GetAxis("Horizontal");
@@ -184,7 +192,6 @@ public class PlayerController : MonoBehaviour
             rigid.useGravity = true;
             gravityForce.enabled = true;
         }
-
 
         if (new Vector3(moveVec.x, 0, moveVec.z).magnitude > 0.02f)
         {
@@ -292,10 +299,11 @@ public class PlayerController : MonoBehaviour
 
     public void PlayerInputCheck()
     {
-        if(InteractionInputCheck())
+        if (InteractionInputCheck())
         {
             return;
         }
+
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
         
@@ -310,10 +318,9 @@ public class PlayerController : MonoBehaviour
         }
 
     }
-    public bool InteractionInputCheck() 
+    public bool InteractionInputCheck()
     {
         if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.INTERACTION_KEY))) 
-
         {
             rigid.velocity = Vector3.zero;
             interactionDetecter.Interaction();
@@ -321,20 +328,20 @@ public class PlayerController : MonoBehaviour
         }
         return false;
     }
-    public bool DebugModEnterInputCheck() 
+    public bool DebugModEnterInputCheck()
     {
-        if(!Managers.Keyword.IsDebugZoneIn || glitchEffectController.IsPlaying) 
+        if (!Managers.Keyword.IsDebugZoneIn || glitchEffectController.IsPlaying)
         {
             return false;
         }
 
         if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.DEBUGMOD_KEY)))
         {
-            if (Managers.Game.IsDebugMod) 
+            if (Managers.Game.IsDebugMod)
             {
                 ExitDebugMod();
             }
-            else 
+            else
             {
                 EnterDebugMod();
             }
@@ -345,8 +352,9 @@ public class PlayerController : MonoBehaviour
     public void EnterDebugMod()
     {
         SetstateStop();
+        isDebugMod = true;
         Managers.Game.SetStateDebugMod();
-        glitchEffectController.EnterDebugMod(() => 
+        glitchEffectController.EnterDebugMod(() =>
         {
             SetStateIdle();
         });
@@ -358,6 +366,8 @@ public class PlayerController : MonoBehaviour
         glitchEffectController.ExitDebugMod(() => {
             interactionDetecter.SwitchDebugMod(false);
             SetStateIdle();
+            isDebugMod = false;
+            isDebugButton();
         });
     }
     public void AnimIdleEnter()
@@ -374,15 +384,15 @@ public class PlayerController : MonoBehaviour
         rigid.velocity = Vector3.zero;
     }
 
+
     public bool IsOnSlope()
     {
-        Debug.DrawRay(transform.position, Vector3.down * transform.position.y, Color.blue);  
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, transform.position.y , groundLayer))
+        Debug.DrawRay(transform.position, Vector3.down * transform.position.y, Color.blue);
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, transform.position.y, groundLayer))
         {
             var angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            if(angle < maxSlopeAngle) 
-            {
-                
+            if (angle < maxSlopeAngle)
+            {   
                 return true;   
             }
             return false;
@@ -397,24 +407,16 @@ public class PlayerController : MonoBehaviour
     public void GetDamage(int damage)
     {
         hp = hp - damage;
-        playerUIController.SetHp();
-        if(hp == 0)
+        playerUIController.SetHp(damage);
+        if (hp <= 0)
         {
             SetstateDeath();
         }
     }
 
-    public void OpenPlayerUI()
-    {
-       // playerUIController.OnPlayerUI();
-    }
-    public void ClosePlayerUI()
-    {
-      //  playerUIController.OffPlayerUI();
-    }
     public void isDebugButton()
     {
-        playerUIController.DebugButtom();
+        playerUIController.DebugButton();
     }
     public void OpenDeathUI()
     {
@@ -424,15 +426,15 @@ public class PlayerController : MonoBehaviour
     {
         deathUIController.DeathUIClose();
     }
-  
+
     #endregion
 
     #region SetState
-    public void SetStateInteraction() 
+    public void SetStateInteraction()
     {
         playerStateController.ChangeState(PlayerInteraction.Instance);
     }
-    public void SetStateIdle() 
+    public void SetStateIdle()
     {
         playerStateController.ChangeState(PlayerIdle.Instance);
     }
@@ -440,7 +442,7 @@ public class PlayerController : MonoBehaviour
     {
         playerStateController.ChangeState(PlayerDebugMod.Instance);
     }
-    public void SetstateStop() 
+    public void SetstateStop()
     {
         playerStateController.ChangeState(PlayerStop.Instance);
     }
