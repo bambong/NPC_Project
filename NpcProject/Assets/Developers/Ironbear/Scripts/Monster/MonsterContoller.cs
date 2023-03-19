@@ -18,7 +18,7 @@ public class MonsterContoller : MonoBehaviour
     private NavMeshAgent monsterNav;
 
     [SerializeField]
-    private float fadeTime = 2f;
+    private float fadeTime = 3.5f;
     private float time = 0;
     private float start = 1f;
     private float end = 0f;
