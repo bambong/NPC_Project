@@ -101,7 +101,8 @@ public class PlayerController : MonoBehaviour
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null, "GlitchEffect");
         groundLayer = (1 << LayerMask.NameToLayer("Ground"));
         playerUIController = Managers.UI.MakeWorldSpaceUI<PlayerUIController>(transform, "PlayerUI");
-        deathUIController = Managers.UI.MakeSceneUI<DeathUIController>(null, "DeathUI");
+        deathUIController = Managers.UI.MakeCameraSpaceUI<DeathUIController>(1f,null, "DeathUI");
+      
     }
 
     void Update()
