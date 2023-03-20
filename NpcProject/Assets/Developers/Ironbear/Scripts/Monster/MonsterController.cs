@@ -2,20 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using DG.Tweening;
 
-public class MonsterContoller : MonoBehaviour
+public class MonsterController : MonoBehaviour
 {
     [SerializeField]
     private PlayerDetectController playerDetectController;
     [SerializeField]
-    private Transform spawnPosition;
-    [SerializeField]
     private int health = 100;
 
-
-    private SpriteRenderer spriteRenderer;
-    private MonsterStateController monsterStateController;
-    private NavMeshAgent monsterNav;
 
     [SerializeField]
     private float fadeTime = 3.5f;
@@ -23,29 +18,43 @@ public class MonsterContoller : MonoBehaviour
     private float start = 1f;
     private float end = 0f;
 
+    private Vector3 spawnPoint;
+
+    private SpriteRenderer spriteRenderer;
+    private MonsterStateController monsterStateController;
+    private NavMeshAgent monsterNav;
+    private Animator animator;
+
 
     private void Awake()
     {
         monsterStateController = new MonsterStateController(this);
         monsterNav = GetComponent<NavMeshAgent>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+
+        spawnPoint = this.gameObject.transform.position;
 
         playerDetectController.Init();
+
+
+        health = 0;
+        GetDamaged();
     }
 
     private void Update()
     {
         monsterStateController.Update();
-        if(health<=0)
-        {
-            SetMonsterStateDeath();
-        }
     }
 
     private void FixedUpdate()
     {
         monsterStateController.FixedUpdate();
     }
+
+
+
+
 
     public void PursuePlayer(Transform player)
     {
@@ -54,19 +63,53 @@ public class MonsterContoller : MonoBehaviour
 
     public void Revert()
     {
-        monsterNav.SetDestination(spawnPosition.position);
+        monsterNav.SetDestination(spawnPoint);
+    }
+
+    public IEnumerator Wait()
+    {
+        return null;
     }
 
     public void Dead()
     {
-        //animation controll part put here
         StartCoroutine(Invisible());
+    }
+
+    public void GetDamaged()
+    {
+        if (health == 0)
+        {
+            SetMonsterStateDeath();
+        }
+    }
+    
+
+
+
+
+    #region SetMonsterAnimation
+    public void MosterAnimationIdle()
+    {
+        animator.SetBool("isWalk", false);
+    }
+
+    public void MonsterAnimationWalk()
+    {
+        animator.SetBool("isWalk", true);
+    }
+
+    public void MonsterAnimationDead()
+    {
+        animator.SetTrigger("isDead");
     }
 
     IEnumerator Invisible()
     {
         Color fadeColor = spriteRenderer.material.color;
         fadeColor.a = Mathf.Lerp(start, end, time);
+
+        yield return new WaitForSeconds(0.35f);
 
         while (fadeColor.a > 0f)
         {
@@ -77,6 +120,11 @@ public class MonsterContoller : MonoBehaviour
             yield return null;
         }
     }
+    #endregion
+
+
+
+
 
     #region SetMonsterState
     public void SetMonsterStateIdle()

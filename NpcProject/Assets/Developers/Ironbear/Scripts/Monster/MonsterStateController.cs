@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterStateController : StateController<MonsterContoller>
+public class MonsterStateController : StateController<MonsterController>
 {
-    public MonsterStateController(MonsterContoller monster) : base(monster)
+    public MonsterStateController(MonsterController monster) : base(monster)
     {
         Init();
     }

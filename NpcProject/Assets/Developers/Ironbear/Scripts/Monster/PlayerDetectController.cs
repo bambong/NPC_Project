@@ -12,14 +12,13 @@ public class PlayerDetectController : MonoBehaviour
     private string detectionTag = "Player";
 
 
-    private MonsterContoller monsterContoller;
-    private MonsterStateController monsterStateController;
+    private MonsterController monsterController;
 
     private bool isPlayer = false;
 
     public void Init()
     {
-        monsterContoller = GetComponentInParent<MonsterContoller>();
+        monsterController = GetComponentInParent<MonsterController>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -31,7 +30,7 @@ public class PlayerDetectController : MonoBehaviour
             isPlayer = true;
             if(isPlayer)
             {
-                monsterContoller.SetMonsterStatePursue();
+                monsterController.SetMonsterStatePursue();
             }
         }        
     }
@@ -45,7 +44,7 @@ public class PlayerDetectController : MonoBehaviour
             isPlayer = false;
             if(!isPlayer)
             {
-                monsterContoller.SetMonsterStateRevert();
+                monsterController.SetMonsterStateRevert();
             }
         }
     }

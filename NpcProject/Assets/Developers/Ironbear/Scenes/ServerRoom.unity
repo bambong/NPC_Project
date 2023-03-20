@@ -630,7 +630,7 @@ Animator:
   m_GameObject: {fileID: 82083967}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 996654c6a076ab842b4f6f1b426cafea, type: 2}
+  m_Controller: {fileID: 9100000, guid: a68e95afcdf215444b557db59ee47901, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -653,9 +653,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerDetectController: {fileID: 1928068374}
-  spawnPosition: {fileID: 740656001}
   health: 100
-  fadeTime: 2
+  fadeTime: 3.5
 --- !u!195 &82083972
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3657,37 +3656,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 6849319278938474116, guid: da1c2630796dac240926ef89b79c4cf4, type: 3}
---- !u!1 &740656000
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 740656001}
-  m_Layer: 0
-  m_Name: SpawnPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &740656001
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 740656000}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 50.919655, y: 1.83, z: -111.96}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 13
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &740975312
 GameObject:
   m_ObjectHideFlags: 0
@@ -9108,7 +9076,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 5
+  m_Radius: 6.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1928238977 stripped
 GameObject:
