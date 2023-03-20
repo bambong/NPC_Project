@@ -133,7 +133,7 @@ public class PlayerDeath : Singleton<PlayerDeath>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.OpenDeathUI();
+        stateController.PlayDeathFeedback();
     }
 
     public void Exit(PlayerController stateController)

@@ -11,11 +11,12 @@ using System;
 using DG.Tweening;
 using AmazingAssets.WireframeShader;
 using UnityEngine.UIElements;
+using System.Runtime.CompilerServices;
+using MoreMountains.Feedbacks;
+using Spine.Unity.Examples;
 
 public class PlayerController : MonoBehaviour
 {
-
-
     [Header("Player Element")]
     [Space(1)]
     [SerializeField]
@@ -62,6 +63,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private WireframeMaskController wireframeMaskController;
 
+    [Space(1)]
+    [Header("MM_Feedback")]
+    [SerializeField]
+    private MMFeedbacks deathFeedback;
+
+    [Space(1)]
+    [Header("Motion Effec")]
+    [SerializeField]
+    private SkeletonGhost ghost;
+    [SerializeField]
+    private SpineGhostColorController motionTrail;
+
     private PlayerAnimationController.AnimDir curDir = PlayerAnimationController.AnimDir.Front;
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
@@ -75,8 +88,6 @@ public class PlayerController : MonoBehaviour
     public int Hp { get => hp; }
     public int MaxHp { get => maxHp; }
 
-
-
     private readonly float CHECK_RAY_WIDTH = 0.3f;
     private readonly float WIRE_EFFECT_OPEN_TIME = 2f;
     private readonly float WIRE_EFFECT_CLOSE_TIME = 1f;
@@ -89,7 +100,7 @@ public class PlayerController : MonoBehaviour
         hp = maxHp;
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null, "GlitchEffect");
         groundLayer = (1 << LayerMask.NameToLayer("Ground"));
-        playerUIController = Managers.UI.MakeWorldSpaceUI<PlayerUIController>(null, "PlayerUI");
+        playerUIController = Managers.UI.MakeWorldSpaceUI<PlayerUIController>(transform, "PlayerUI");
         deathUIController = Managers.UI.MakeSceneUI<DeathUIController>(null, "DeathUI");
     }
 
@@ -117,7 +128,11 @@ public class PlayerController : MonoBehaviour
         interactionDetecter.InteractionUiDisable();
     }
 
-
+    public void SetMotionEffect(bool isOn) 
+    {
+        ghost.enabled = isOn;
+        motionTrail.enabled = isOn;
+    }
     #region OnStateExit
     public void InteractionExit()
     {
@@ -357,6 +372,7 @@ public class PlayerController : MonoBehaviour
         glitchEffectController.EnterDebugMod(() =>
         {
             SetStateIdle();
+            SetMotionEffect(true);
         });
         interactionDetecter.SwitchDebugMod(true);
     }
@@ -368,6 +384,7 @@ public class PlayerController : MonoBehaviour
             SetStateIdle();
             isDebugMod = false;
             isDebugButton();
+            SetMotionEffect(false);
         });
     }
     public void AnimIdleEnter()
@@ -468,6 +485,16 @@ public class PlayerController : MonoBehaviour
         wireEffectGo.transform.DOScale(Vector3.zero, WIRE_EFFECT_CLOSE_TIME).OnComplete(() => wireframeMaskController.materials = null);
     }
 
+    #endregion
+    #region MM_FeedBack
+    public void PlayDeathFeedback()
+    {
+        //rotater.gameObject.SetActive(false);
+        deathFeedback.transform.SetParent(null);
+        deathFeedback.PlayFeedbacks();
+        rigid.velocity = Vector3.zero;
+        gameObject.SetActive(false);
+    }
     #endregion
 
 }
