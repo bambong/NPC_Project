@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   active: 1
   color:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {r: 0, g: 0, b: 0, a: 1}
   center:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.582
+    m_Value: 0.35
   smoothness:
     m_OverrideState: 1
-    m_Value: 0.1
+    m_Value: 0.35
   rounded:
     m_OverrideState: 0
     m_Value: 0
@@ -45,6 +45,7 @@ MonoBehaviour:
   - {fileID: 4919863946662317719}
   - {fileID: 2511959298928025641}
   - {fileID: -1798951157790276885}
+  - {fileID: 2505004138391857618}
 --- !u!114 &2127330058318978710
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -60,19 +61,19 @@ MonoBehaviour:
   active: 1
   threshold:
     m_OverrideState: 1
-    m_Value: 0.9
+    m_Value: 1.5
   intensity:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.5
   scatter:
-    m_OverrideState: 0
-    m_Value: 0.7
+    m_OverrideState: 1
+    m_Value: 0.8
   clamp:
     m_OverrideState: 0
     m_Value: 65472
   tint:
-    m_OverrideState: 0
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 0.89019614, b: 0.7960785, a: 1}
   highQualityFiltering:
     m_OverrideState: 0
     m_Value: 0
@@ -86,6 +87,22 @@ MonoBehaviour:
   dirtIntensity:
     m_OverrideState: 0
     m_Value: 0
+--- !u!114 &2505004138391857618
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97c23e3b12dc18c42a140437e53d3951, type: 3}
+  m_Name: Tonemapping
+  m_EditorClassIdentifier: 
+  active: 1
+  mode:
+    m_OverrideState: 1
+    m_Value: 1
 --- !u!114 &2511959298928025641
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -98,7 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d536c364ebc24dd6b769ef6affde936a, type: 3}
   m_Name: DigitalGlitchVolume
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   intensity:
     m_OverrideState: 1
     m_Value: 0.058
@@ -114,7 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45fac1424df44990a90443d3cf649a75, type: 3}
   m_Name: AnalogGlitchVolume
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   scanLineJitter:
     m_OverrideState: 1
     m_Value: 0.044
