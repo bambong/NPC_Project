@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviour
         interactionDetecter.Init();
         hp = maxHp;
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null, "GlitchEffect");
-        groundLayer = (1 << LayerMask.NameToLayer("Ground"));
+        groundLayer = (1 << LayerMask.NameToLayer("Slope"));
         playerUIController = Managers.UI.MakeWorldSpaceUI<PlayerUIController>(transform, "PlayerUI");
         deathUIController = Managers.UI.MakeCameraSpaceUI<DeathUIController>(1f,null, "DeathUI");
       
