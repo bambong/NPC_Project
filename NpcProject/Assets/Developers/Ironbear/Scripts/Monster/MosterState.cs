@@ -9,17 +9,17 @@ public class MonsterIdle : Singleton<MonsterIdle>, IState<MonsterController>
 
     }
 
-    public void Enter(MonsterController monsterStateContoller)
+    public void Enter(MonsterController monsterStateController)
+    {
+        monsterStateController.MosterAnimationIdle();
+    }
+
+    public void Exit(MonsterController monsterStateController)
     {
 
     }
 
-    public void Exit(MonsterController monsterStateContoller)
-    {
-
-    }
-
-    public void FixedUpdateActive(MonsterController monsterStateContoller)
+    public void FixedUpdateActive(MonsterController monsterStateController)
     {
 
     }
@@ -29,7 +29,7 @@ public class MonsterIdle : Singleton<MonsterIdle>, IState<MonsterController>
 
     }
 }
-
+ 
 public class MonsterPursue : Singleton<MonsterPursue>, IState<MonsterController>
 {
     public void Init()
@@ -44,8 +44,7 @@ public class MonsterPursue : Singleton<MonsterPursue>, IState<MonsterController>
 
     public void Exit(MonsterController monsterStateController)
     {
-        monsterStateController.MosterAnimationIdle();
-        monsterStateController.Revert();
+        
     }
 
     public void FixedUpdateActive(MonsterController monsterStateController)
@@ -66,17 +65,18 @@ public class MonsterRevert : Singleton<MonsterRevert>, IState<MonsterController>
 
     }
 
-    public void Enter(MonsterController monsterStateContoller)
+    public void Enter(MonsterController monsterStateController)
     {
-
+        monsterStateController.MonsterAnimationWalk();
+        monsterStateController.Revert();
     }
 
-    public void Exit(MonsterController monsterStateContoller)
+    public void Exit(MonsterController monsterStateController)
     {
-
+        //monsterStateController.SetMonsterStateIdle();
     }
 
-    public void FixedUpdateActive(MonsterController monsterStateContoller)
+    public void FixedUpdateActive(MonsterController monsterStateController)
     {
 
     }
@@ -94,17 +94,17 @@ public class MonsterAttack : Singleton<MonsterAttack>, IState<MonsterController>
 
     }
 
-    public void Enter(MonsterController monsterStateContoller)
+    public void Enter(MonsterController monsterStateController)
     {
 
     }
 
-    public void Exit(MonsterController monsterStateContoller)
+    public void Exit(MonsterController monsterStateController)
     {
 
     }
 
-    public void FixedUpdateActive(MonsterController monsterStateContoller)
+    public void FixedUpdateActive(MonsterController monsterStateController)
     {
 
     }
@@ -122,18 +122,18 @@ public class MonsterDeath : Singleton<MonsterDeath>, IState<MonsterController>
 
     }
 
-    public void Enter(MonsterController monsterStateContoller)
+    public void Enter(MonsterController monsterStateController)
     {
-        monsterStateContoller.MonsterAnimationDead();
-        monsterStateContoller.Dead();
+        monsterStateController.MonsterAnimationDead();
+        monsterStateController.Dead();
     }
 
-    public void Exit(MonsterController monsterStateContoller)
+    public void Exit(MonsterController monsterStateController)
     {
 
     }
 
-    public void FixedUpdateActive(MonsterController monsterStateContoller)
+    public void FixedUpdateActive(MonsterController monsterStateController)
     {
 
     }

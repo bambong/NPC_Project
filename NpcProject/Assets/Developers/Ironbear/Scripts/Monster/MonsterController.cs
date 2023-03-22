@@ -38,7 +38,7 @@ public class MonsterController : MonoBehaviour
         playerDetectController.Init();
 
 
-        health = 0;
+        //health = 0;
         GetDamaged();
     }
 
