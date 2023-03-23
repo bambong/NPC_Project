@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PlayerDetectController : MonoBehaviour
 {
-
-    public bool playerInArea { get; private set; }
     public Transform player { get; private set; }
 
     [SerializeField]
@@ -14,6 +12,7 @@ public class PlayerDetectController : MonoBehaviour
 
     private MonsterController monsterController;
 
+    private float distance;
     private bool isPlayer = false;
 
     public void Init()
@@ -21,16 +20,25 @@ public class PlayerDetectController : MonoBehaviour
         monsterController = GetComponentInParent<MonsterController>();
     }
 
+    private void FixedUpdate()
+    {
+        distance = Vector3.Distance(transform.position, monsterController.spawnPoint);
+
+        if (distance <= 0.1f && !isPlayer)
+        {
+            monsterController.SetMonsterStateIdle();
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag(detectionTag))
         {
-            playerInArea = true;
             player = other.gameObject.transform;
             isPlayer = true;
             if(isPlayer)
             {
-                monsterController.SetMonsterStatePursue();
+                monsterController.SetMonsterStateMove();
             }
         }        
     }
@@ -39,7 +47,6 @@ public class PlayerDetectController : MonoBehaviour
     {
         if(other.CompareTag(detectionTag))
         {
-            playerInArea = false;
             player = null;
             isPlayer = false;
             if(!isPlayer)

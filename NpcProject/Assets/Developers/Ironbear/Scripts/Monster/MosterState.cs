@@ -30,7 +30,7 @@ public class MonsterIdle : Singleton<MonsterIdle>, IState<MonsterController>
     }
 }
  
-public class MonsterPursue : Singleton<MonsterPursue>, IState<MonsterController>
+public class MonsterMove : Singleton<MonsterMove>, IState<MonsterController>
 {
     public void Init()
     {
@@ -67,18 +67,18 @@ public class MonsterRevert : Singleton<MonsterRevert>, IState<MonsterController>
 
     public void Enter(MonsterController monsterStateController)
     {
-        monsterStateController.MonsterAnimationWalk();
-        monsterStateController.Revert();
+        monsterStateController.MosterAnimationIdle();
+        monsterStateController.StartCoroutine(monsterStateController.Wait());
     }
 
     public void Exit(MonsterController monsterStateController)
     {
-        //monsterStateController.SetMonsterStateIdle();
+
     }
 
     public void FixedUpdateActive(MonsterController monsterStateController)
     {
-
+        
     }
 
     public void UpdateActive(MonsterController mmonsterStateController)

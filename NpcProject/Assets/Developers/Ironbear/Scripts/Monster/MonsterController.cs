@@ -11,6 +11,8 @@ public class MonsterController : MonoBehaviour
     [SerializeField]
     private int health = 100;
 
+    [SerializeField]
+    private float moveSpeed = 1f;
 
     [SerializeField]
     private float fadeTime = 3.5f;
@@ -18,7 +20,11 @@ public class MonsterController : MonoBehaviour
     private float start = 1f;
     private float end = 0f;
 
-    private Vector3 spawnPoint;
+    private float waitTime = 0f;
+
+    [HideInInspector]
+    public Vector3 spawnPoint;
+
 
     private SpriteRenderer spriteRenderer;
     private MonsterStateController monsterStateController;
@@ -33,6 +39,7 @@ public class MonsterController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
 
+        monsterNav.speed = moveSpeed;
         spawnPoint = this.gameObject.transform.position;
 
         playerDetectController.Init();
@@ -50,6 +57,7 @@ public class MonsterController : MonoBehaviour
     private void FixedUpdate()
     {
         monsterStateController.FixedUpdate();
+        waitTime = Random.Range(0f, 2f);
     }
 
 
@@ -63,12 +71,18 @@ public class MonsterController : MonoBehaviour
 
     public void Revert()
     {
+        monsterNav.speed = 1f;
         monsterNav.SetDestination(spawnPoint);
     }
 
     public IEnumerator Wait()
     {
-        return null;
+        monsterNav.speed = 0f;
+        
+        yield return new WaitForSeconds(waitTime);
+
+        MonsterAnimationWalk();
+        Revert();
     }
 
     public void Dead()
@@ -84,9 +98,6 @@ public class MonsterController : MonoBehaviour
         }
     }
     
-
-
-
 
     #region SetMonsterAnimation
     public void MosterAnimationIdle()
@@ -123,18 +134,15 @@ public class MonsterController : MonoBehaviour
     #endregion
 
 
-
-
-
     #region SetMonsterState
     public void SetMonsterStateIdle()
     {
         monsterStateController.ChangeState(MonsterIdle.Instance);
     }
 
-    public void SetMonsterStatePursue()
+    public void SetMonsterStateMove()
     {
-        monsterStateController.ChangeState(MonsterPursue.Instance);
+        monsterStateController.ChangeState(MonsterMove.Instance);
     }
 
     public void SetMonsterStateRevert()
