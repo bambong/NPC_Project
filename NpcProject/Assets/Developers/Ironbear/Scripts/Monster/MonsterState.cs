@@ -40,6 +40,7 @@ public class MonsterMove : Singleton<MonsterMove>, IState<MonsterController>
     public void Enter(MonsterController monsterStateController)
     {
         monsterStateController.MonsterAnimationWalk();
+        monsterStateController.GetDamaged();
     }
 
     public void Exit(MonsterController monsterStateController)
@@ -79,6 +80,35 @@ public class MonsterRevert : Singleton<MonsterRevert>, IState<MonsterController>
     public void FixedUpdateActive(MonsterController monsterStateController)
     {
         
+    }
+
+    public void UpdateActive(MonsterController mmonsterStateController)
+    {
+
+    }
+}
+
+public class MonsterDamaged : Singleton<MonsterDamaged>, IState<MonsterController>
+{
+    public void Init()
+    {
+
+    }
+
+    public void Enter(MonsterController monsterStateController)
+    {
+        monsterStateController.GetDamaged();
+        monsterStateController.KnockBack();
+    }
+
+    public void Exit(MonsterController monsterStateController)
+    {
+
+    }
+
+    public void FixedUpdateActive(MonsterController monsterStateController)
+    {
+
     }
 
     public void UpdateActive(MonsterController mmonsterStateController)

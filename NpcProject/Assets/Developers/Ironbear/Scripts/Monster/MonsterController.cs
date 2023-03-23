@@ -13,6 +13,8 @@ public class MonsterController : MonoBehaviour
 
     [SerializeField]
     private float moveSpeed = 1f;
+    [SerializeField]
+    private float knockbackForce = 5f;
 
     [SerializeField]
     private float fadeTime = 3.5f;
@@ -30,6 +32,8 @@ public class MonsterController : MonoBehaviour
     private MonsterStateController monsterStateController;
     private NavMeshAgent monsterNav;
     private Animator animator;
+    private Rigidbody monsterRigid;
+    private GameObject player;
 
 
     private void Awake()
@@ -38,15 +42,13 @@ public class MonsterController : MonoBehaviour
         monsterNav = GetComponent<NavMeshAgent>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        monsterRigid = GetComponent<Rigidbody>();
+        player = GameObject.FindGameObjectWithTag("Player");
 
         monsterNav.speed = moveSpeed;
         spawnPoint = this.gameObject.transform.position;
 
         playerDetectController.Init();
-
-
-        //health = 0;
-        GetDamaged();
     }
 
     private void Update()
@@ -96,6 +98,12 @@ public class MonsterController : MonoBehaviour
         {
             SetMonsterStateDeath();
         }
+    }
+
+    public void KnockBack()
+    {
+        Vector3 knockbackDirection = (transform.position - player.transform.position).normalized;
+        monsterRigid.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);       
     }
     
 
@@ -153,6 +161,11 @@ public class MonsterController : MonoBehaviour
     public void SetMonsterStateAttack()
     {
         monsterStateController.ChangeState(MonsterAttack.Instance);
+    }
+
+    public void SetMonsterStateDamaged()
+    {
+        monsterStateController.ChangeState(MonsterDamaged.Instance);
     }
 
     public void SetMonsterStateDeath()
