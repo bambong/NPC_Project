@@ -1,3 +1,4 @@
+using MoreMountains.Tools;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro.EditorUtilities;
@@ -43,6 +44,16 @@ public class KeywordManager
         KeywordEntitySlots = new GameObject("KeywordEntitySlots").transform;
         KeywordEntitySlots.SetParent(playerKeywordPanel.transform);
         graphicRaycaster = playerKeywordPanel.gameObject.GetOrAddComponent<GraphicRaycaster>();
+    }
+    public void OnSceneLoaded() 
+    {
+        playerKeywordPanel = Managers.UI.MakeSceneUI<PlayerKeywordPanelController>(null, "PlayerKeywordPanel");
+        KeywordEntitySlots = new GameObject("KeywordEntitySlots").transform;
+        KeywordEntitySlots.SetParent(playerKeywordPanel.transform);
+        graphicRaycaster = playerKeywordPanel.gameObject.GetOrAddComponent<GraphicRaycaster>();
+    }
+    public void OnSceneLoadComplete() 
+    {
     }
 
     public List<RaycastResult> GetRaycastList(PointerEventData pointerEventData)

@@ -11,7 +11,8 @@ public class Define
         Chapter_01,
         Chapter_01_Puzzle_01, 
         Chapter_01_Puzzle_02,
-        Chapter_01_Puzzle_03
+        Chapter_01_Puzzle_03,
+        Serverroom
     }
     public enum WorldObject
     {

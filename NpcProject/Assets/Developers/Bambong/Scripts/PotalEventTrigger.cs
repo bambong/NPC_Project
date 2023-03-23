@@ -9,7 +9,7 @@ public class PotalEventTrigger : EventTrigger
     public override void OnEventTrigger(Collider other)
     {
         Managers.Game.Player.SetstateStop();
-        Managers.Scene.LoadScene(Define.Scene.Chapter_01);
+        Managers.Scene.LoadScene(transitionScene);
         base.OnEventTrigger(other);
     }
 }

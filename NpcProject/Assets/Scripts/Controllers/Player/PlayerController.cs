@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
     private DeathUIController deathUIController;
 
     private RaycastHit slopeHit;
-    private int groundLayer;
+    private int slopeLayer;
     public bool IsDebugMod { get => isDebugMod; }
     private bool isDebugMod;
     public int Hp { get => hp; }
@@ -99,10 +99,10 @@ public class PlayerController : MonoBehaviour
         interactionDetecter.Init();
         hp = maxHp;
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null, "GlitchEffect");
-        groundLayer = (1 << LayerMask.NameToLayer("Slope"));
+        slopeLayer = (1 << LayerMask.NameToLayer("Slope"));
         playerUIController = Managers.UI.MakeWorldSpaceUI<PlayerUIController>(transform, "PlayerUI");
         deathUIController = Managers.UI.MakeCameraSpaceUI<DeathUIController>(1f,null, "DeathUI");
-      
+        deathUIController.DeathUIClose();
     }
 
     void Update()
@@ -151,7 +151,7 @@ public class PlayerController : MonoBehaviour
         var boxHalfSize = box.size.x * 0.5f;
         var checkWidth = box.size.x * CHECK_RAY_WIDTH;
         
-        var isSlope = IsOnSlope();
+        var isSlope = IsOnSlope(moveVec);
         moveVec = MoveRayCheck(moveVec, isSlope);
         if (isSlope)
         {
@@ -190,7 +190,7 @@ public class PlayerController : MonoBehaviour
         var pos = transform.position;
         var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
 
-        var isSlope = IsOnSlope();
+        var isSlope = IsOnSlope(moveVec);
         var preDir = curDir;
         CurrentAnimDirUpdtae(moveVec);
         moveVec = MoveRayCheck(moveVec, isSlope);
@@ -233,12 +233,14 @@ public class PlayerController : MonoBehaviour
         if (Mathf.Abs(moveVec.x) > 0)
         {
             Vector3 xPos = pos;
+            float slopeAmountY =0 ;
             if (isSlope) 
             {
-                xPos.y += AdjustDirectionToSlope(new Vector3(moveVec.x,0,0)).y;
+                 slopeAmountY = Mathf.Abs(AdjustDirectionToSlope(new Vector3(moveVec.x,0,0)).y);
+                //xPos.y += slopeAmountY/2;
             }
             var dir = (moveVec.x > 0 ? 1 : -1) * (boxHalfSize + moveEnableDis/2) * Vector3.right;
-            var boxSize = new Vector3(moveEnableDis / 2, boxHeight, moveEnableWidth);
+            var boxSize = new Vector3(moveEnableDis / 2, boxHeight + slopeAmountY, moveEnableWidth);
             ExtDebug.DrawBox(xPos + dir + new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, Color.red);
             ExtDebug.DrawBox(xPos + dir - new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, Color.red);
     
@@ -254,13 +256,18 @@ public class PlayerController : MonoBehaviour
         if (Mathf.Abs(moveVec.z) > 0)
         {
             Vector3 zPos = pos;
+            //if (isSlope)
+            //{
+            //    zPos.y += AdjustDirectionToSlope(new Vector3(0, 0, moveVec.z)).y;
+            //}
+            float slopeAmountY = 0;
             if (isSlope)
             {
-                zPos.y += AdjustDirectionToSlope(new Vector3(0, 0, moveVec.z)).y;
+                slopeAmountY = Mathf.Abs(AdjustDirectionToSlope(new Vector3(0, 0, moveVec.z)).y);
+                //xPos.y += slopeAmountY/2;
             }
-
             var dir = (moveVec.z > 0 ? 1 : -1) * (boxHalfSize + moveEnableDis / 2) * Vector3.forward ;
-            var boxSize = new Vector3(moveEnableWidth, boxHeight, moveEnableDis / 2);
+            var boxSize = new Vector3(moveEnableWidth, boxHeight + slopeAmountY, moveEnableDis / 2);
             ExtDebug.DrawBox(zPos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
             ExtDebug.DrawBox(zPos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
             if (!Physics.CheckBox(zPos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer ,QueryTriggerInteraction.Ignore))
@@ -403,10 +410,11 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    public bool IsOnSlope()
+    public bool IsOnSlope(Vector3 dir)
     {
-        Debug.DrawRay(transform.position, Vector3.down * transform.position.y, Color.blue);
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, transform.position.y, groundLayer))
+        var dirPos = transform.position;
+        Debug.DrawRay(dirPos, Vector3.down *(box.bounds.extents.y + stepHeight), Color.blue);
+        if (Physics.Raycast(dirPos, Vector3.down, out slopeHit, (box.bounds.extents.y + stepHeight), slopeLayer))
         {
             var angle = Vector3.Angle(Vector3.up, slopeHit.normal);
             if (angle < maxSlopeAngle)

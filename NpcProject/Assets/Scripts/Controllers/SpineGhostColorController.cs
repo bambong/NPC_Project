@@ -30,7 +30,7 @@ public class SpineGhostColorController : MonoBehaviour
             curIndex = (curIndex + 1) % colors.Count;
         }
         int nextIndex = (curIndex+1) % colors.Count;
-
-        ghost.color = Color.Lerp(colors[curIndex], colors[nextIndex], curTime);
+        Debug.Log("lerp time : "+  curTime  * (1f / colorTime));
+        ghost.color = Color.Lerp(colors[curIndex], colors[nextIndex],  curTime * (1/ colorTime));
     }
 }

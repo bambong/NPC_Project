@@ -31,7 +31,17 @@ public class SceneManagerEx
         }
         alpha = 1;
         sceneTransition.canvasGroup.alpha = alpha;
-        SceneManager.LoadScene(GetSceneName(type));
+        var async =  SceneManager.LoadSceneAsync(GetSceneName(type));
+        async.allowSceneActivation = false;
+        async.completed += (async) => { Managers.OnSceneLoad(); };
+        while (async.progress < 0.9f)
+        {
+            progress += Time.deltaTime;
+            sceneTransition.canvasGroup.alpha = Mathf.Lerp(alpha, 1, progress);
+            yield return null;
+        }
+     
+        async.allowSceneActivation = true;
         progress = 0;
         while (progress < 1)
         {
@@ -40,6 +50,7 @@ public class SceneManagerEx
             yield return null;
         }
         sceneTransition.canvasGroup.alpha = 0;
+       
         onComplete?.Invoke();
     }
 

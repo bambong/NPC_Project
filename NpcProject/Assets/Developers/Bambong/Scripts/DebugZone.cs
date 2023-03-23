@@ -28,7 +28,7 @@ public class DebugZone : MonoBehaviour
     private Transform playerLayout;
 
     private Vector3 boxSize;
-    private void Awake()
+    private void Start()
     {
         MakeFrame();
         MakeKeyword();
