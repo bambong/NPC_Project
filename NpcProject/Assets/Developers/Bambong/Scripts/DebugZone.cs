@@ -31,7 +31,7 @@ public class DebugZone : MonoBehaviour
     private void Start()
     {
         MakeFrame();
-        MakeKeyword();
+        InitKeywords();
         WireMaterialClear();
         for (int i = 0; i< childEntitys.Count; ++i) 
         {
@@ -48,34 +48,37 @@ public class DebugZone : MonoBehaviour
             playerFrames.Add(Managers.UI.MakeSubItem<PlayerKeywordFrame>(playerLayout,"KeywordPlayerSlotUI"));
         }
     }
-    private void MakeKeyword() 
+    private void InitKeywords() 
     { 
         for(int i = 0; i< keywords.Length; ++i) 
         {
             var keyword =Managers.UI.MakeSubItem<KeywordController>(null,"KeywordPrefabs/" + keywords[i].name);
-
-            if(!RegisterKeyword(keyword)) 
+            if(MakeKeyword(keywords[i].name) == null) 
             {
                 Debug.LogError($" DebugZone : {gameObject.name} 슬롯 갯수 이상의 키워드 생성");
                 return;
             }
         }
     }
-    private bool RegisterKeyword(KeywordController keyword)
+    public KeywordController MakeKeyword(string name)
     {
-        for(int i =0; i < playerFrames.Count; ++i) 
+        KeywordController keyword;
+
+        for (int i = 0; i < playerFrames.Count; ++i)
         {
-            if(playerFrames[i].HasKeyword) 
+            if (playerFrames[i].HasKeyword)
             {
                 continue;
             }
+            keyword = Managers.UI.MakeSubItem<KeywordController>(null, "KeywordPrefabs/" + name);
             playerFrames[i].InitKeyword(keyword);
             keyword.SetDebugZone(this);
-            return true;
+            return keyword;
         }
-
-        return false;
+        return null;
     }
+
+
     private void WireMaterialClear() 
     {
         for (int i = 0; i < WireMaterials.Length; i++)

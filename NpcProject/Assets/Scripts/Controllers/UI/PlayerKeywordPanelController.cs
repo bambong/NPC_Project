@@ -7,21 +7,27 @@ public class PlayerKeywordPanelController : UI_Base
 {
     [SerializeField]
     private Transform layoutParent;
+    [SerializeField]
+    private KeywordMakerGaugeController keywordMakerGaugeController;
+
     public Transform LayoutParent { get => layoutParent; }
 
     public override void Init()
     {
         
     }
-   
+    public void AddKeywordMakerGauge(int amount) 
+    {
+        keywordMakerGaugeController.AddCount(amount);
+    }
     public void Open() 
     {
-        gameObject.SetActive(true);
+        //gameObject.SetActive(true);
         Managers.Keyword.CurDebugZone.OpenPlayerLayout();
 
     }
     public void Close() 
     {
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 }

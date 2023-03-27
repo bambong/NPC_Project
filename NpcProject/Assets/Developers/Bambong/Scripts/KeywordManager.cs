@@ -7,19 +7,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class KeywordEvent : GameEvent
-{
-    public override void Play()
-    {
-        onStart?.Invoke();
-    }
-    
-    
-
-}
-
-
-
 public class KeywordManager
 {
     private KeywordEntity curKeywordEntity;
@@ -55,7 +42,10 @@ public class KeywordManager
     public void OnSceneLoadComplete() 
     {
     }
-
+    public void AddKeywordMakerGauge(int amount)
+    {
+        playerKeywordPanel.AddKeywordMakerGauge(amount);
+    }
     public List<RaycastResult> GetRaycastList(PointerEventData pointerEventData)
     {
         var raycastResults = new List<RaycastResult>();
@@ -74,10 +64,8 @@ public class KeywordManager
         {
             effect.EnterDebugMod();
         }
-
         curDebugZone.OnEnterDebugMod();
         playerKeywordPanel.Open();
-
     }
     
     public void ExitDebugMod()
@@ -107,7 +95,11 @@ public class KeywordManager
             Managers.Game.Player.ExitDebugMod();
         }
         curDebugZone = zone;
-       
+    }
+
+    public KeywordController MakeKeywordToCurPlayerPanel(string name) 
+    {
+        return curDebugZone.MakeKeyword(name);
     }
 
     public void AddDebugEffectController(DebugModEffectController debugModEffectController) 

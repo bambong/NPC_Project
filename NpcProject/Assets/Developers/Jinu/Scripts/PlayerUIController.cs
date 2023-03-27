@@ -117,8 +117,8 @@ public class PlayerUIController : UI_Base
         isHpOpen = true;
         while (isHpOpen)
         {
-            playerUIPanel.transform.position = Managers.Game.Player.transform.position + (Vector3.up * 4);
-            playerUIPanel.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);
+          //  playerUIPanel.transform.position = Managers.Game.Player.transform.position + (Vector3.up * 4);
+          //  playerUIPanel.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);
             yield return null;
         }
     }
@@ -127,8 +127,8 @@ public class PlayerUIController : UI_Base
     {
         while(isDebugOpen)
         {
-            playerUIPanel.transform.position = Managers.Game.Player.transform.position + (Vector3.up * 4);
-            playerUIPanel.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);            
+           // playerUIPanel.transform.position = Managers.Game.Player.transform.position + (Vector3.up * 4);
+           // playerUIPanel.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);            
             if (isDebugAni)
             {
                 debugUI.DOFade(0f, 1.0f).OnStart(() =>

@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rigid;
     [SerializeField]
     private ConstantForce gravityForce;
+    [SerializeField]
+    private PlayerUIController playerUIController;
 
 
     [Space(1)]
@@ -78,7 +80,7 @@ public class PlayerController : MonoBehaviour
     private PlayerAnimationController.AnimDir curDir = PlayerAnimationController.AnimDir.Front;
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
-    private PlayerUIController playerUIController;
+
     private DeathUIController deathUIController;
 
     private RaycastHit slopeHit;
@@ -100,7 +102,7 @@ public class PlayerController : MonoBehaviour
         hp = maxHp;
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null, "GlitchEffect");
         slopeLayer = (1 << LayerMask.NameToLayer("Slope"));
-        playerUIController = Managers.UI.MakeWorldSpaceUI<PlayerUIController>(transform, "PlayerUI");
+       // playerUIController = Managers.UI.MakeWorldSpaceUI<PlayerUIController>(transform, "PlayerUI");
         deathUIController = Managers.UI.MakeCameraSpaceUI<DeathUIController>(1f,null, "DeathUI");
         deathUIController.DeathUIClose();
     }

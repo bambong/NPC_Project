@@ -12,13 +12,13 @@ public class PoolManager
 
         Stack<Poolable> _poolStack = new Stack<Poolable>();
 
-        public void Init(GameObject original,int count = 5)
+        public void Init(GameObject original, int count = 5)
         {
             Original = original;
             Root = new GameObject().transform;
             Root.name = $"{original.name}_Root";
 
-            for(int i = 0; i < count; i++) 
+            for (int i = 0; i < count; i++)
             {
                 Push(Create());
             }
@@ -33,11 +33,14 @@ public class PoolManager
 
         public void Push(Poolable poolable)
         {
-            if(poolable == null) 
+            if (poolable == null)
             {
                 return;
             }
-
+            if (_poolStack.Contains(poolable)) 
+            {
+                Debug.Log("Error");
+            }
             poolable.transform.parent = Root;
             poolable.gameObject.SetActive(false);
             poolable.IsUsing = false;
@@ -49,23 +52,27 @@ public class PoolManager
         {
             Poolable poolable;
 
-            if(_poolStack.Count > 0)
+            if (_poolStack.Count > 0)
             {
                 poolable = _poolStack.Pop();
             }
-            else 
+            else
             {
                 poolable = Create();
             }
 
             poolable.gameObject.SetActive(true);
+            if (!(poolable.transform.parent == Root || poolable.transform.parent == null))
+            {
+                Debug.Log("error");
+            }
 
             // DontDestroyOnLoad 해제 용도
-            if(parent == null) 
+            if (parent == null)
             {
                 poolable.transform.parent = Managers.Scene.CurrentScene.transform;
             }
-
+     
             poolable.transform.parent = parent;
             poolable.IsUsing = true;
 
