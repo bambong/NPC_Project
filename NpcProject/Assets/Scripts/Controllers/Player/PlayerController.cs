@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
     [Space(1)]
     [Header("MM_Feedback")]
     [SerializeField]
-    private MMFeedbacks deathFeedback;
+    private MMF_Player deathFeedback;
 
     [Space(1)]
     [Header("Motion Effec")]

@@ -31,5 +31,6 @@ public class Define
     public enum EFFECT
     {
         EnergeItemEffect,
+        BombEffect,
     }
 }

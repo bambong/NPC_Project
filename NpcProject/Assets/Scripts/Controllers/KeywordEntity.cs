@@ -118,22 +118,18 @@ public class KeywordEntity : MonoBehaviour
     }
     public void FixedUpdate()
     {
-        if (Managers.Game.IsDebugMod)
-        {
-            Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
-            var factor = SCREEN_OFFSET / new Vector2(Screen.width, Screen.height).magnitude;
-            pos.z = 0;
-            if ((Input.mousePosition - pos).magnitude * factor <= SLOT_UI_DISTANCE)
-            {
-                OpenKeywordSlot();
-            }
-            else
-            {
-                CloseKeywordSlot();
-            }
-        }
+     
         fixedUpdateAction?.Invoke(this);
     }
+
+    public virtual void DestroyKeywordEntity() 
+    {
+        Destroy(keywordWorldSlotLayout.gameObject);
+        Destroy(keywordSlotUiController.gameObject);
+        Managers.Keyword.RemoveSceneEntity(this);
+        Destroy(gameObject);
+    }
+
     private void InitCrateKeywordOption()
     {
         for (int i = 0; i < keywords.Length; ++i)
@@ -161,11 +157,31 @@ public class KeywordEntity : MonoBehaviour
     public void SetDebugZone(DebugZone zone) => parentDebugZone = zone;
     public virtual void EnterDebugMod()
     {
+        StartCoroutine(KeywordSlotUiUpdate());
         OpenWorldSlotUI();
+    }
+    IEnumerator KeywordSlotUiUpdate() 
+    {
+        while (Managers.Game.IsDebugMod) 
+        {
+            Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
+            var factor = SCREEN_OFFSET / new Vector2(Screen.width, Screen.height).magnitude;
+            pos.z = 0;
+            if ((Input.mousePosition - pos).magnitude * factor <= SLOT_UI_DISTANCE)
+            {
+                OpenKeywordSlot();
+            }
+            else
+            {
+                CloseKeywordSlot();
+            }
+            yield return null;
+        }
     }
     public virtual void ExitDebugMod() 
     {
         CloseWorldSlotUI();
+        CloseKeywordSlot();
     }
     public void OpenWorldSlotUI()
     {

@@ -53,7 +53,7 @@ public class KeywordManager
         return raycastResults;
     }
     public void AddSceneEntity(KeywordEntity entity) => curSceneEntity.Add(entity);
-
+    public void RemoveSceneEntity(KeywordEntity entity) => curSceneEntity.Remove(entity);
     public void EnterDebugMod() 
     {        
         foreach(var entity in curSceneEntity)

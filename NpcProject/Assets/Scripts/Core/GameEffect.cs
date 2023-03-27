@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameEffect : MonoBehaviour
 {
     [SerializeField]
-    protected MMFeedbacks feedbacks;
+    protected MMF_Player feedbacks;
 
     private void Awake()
     {
