@@ -55,7 +55,7 @@ public class MonsterMove : Singleton<MonsterMove>, IState<MonsterController>
 
     public void UpdateActive(MonsterController monsterStateController)
     {
-        
+
     }
 }
 
@@ -79,7 +79,7 @@ public class MonsterRevert : Singleton<MonsterRevert>, IState<MonsterController>
 
     public void FixedUpdateActive(MonsterController monsterStateController)
     {
-        
+
     }
 
     public void UpdateActive(MonsterController mmonsterStateController)
@@ -126,7 +126,7 @@ public class MonsterAttack : Singleton<MonsterAttack>, IState<MonsterController>
 
     public void Enter(MonsterController monsterStateController)
     {
-
+        monsterStateController.MonsterAnimationAttack();
     }
 
     public void Exit(MonsterController monsterStateController)
@@ -136,10 +136,10 @@ public class MonsterAttack : Singleton<MonsterAttack>, IState<MonsterController>
 
     public void FixedUpdateActive(MonsterController monsterStateController)
     {
-
+        
     }
 
-    public void UpdateActive(MonsterController mmonsterStateController)
+    public void UpdateActive(MonsterController monsterStateController)
     {
 
     }

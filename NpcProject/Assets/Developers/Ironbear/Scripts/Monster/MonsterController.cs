@@ -14,19 +14,20 @@ public class MonsterController : MonoBehaviour
     [SerializeField]
     private float moveSpeed = 1f;
     [SerializeField]
-    private float knockbackForce = 5f;
+    private float knockbackForce = 1f;
 
     [SerializeField]
     private float fadeTime = 3.5f;
-    private float time = 0;
+    private float effectDuration = 0;
     private float start = 1f;
     private float end = 0f;
 
     private float waitTime = 0f;
 
-    [HideInInspector]
-    public Vector3 spawnPoint;
-
+    public string detectionTag = "Player";
+    private float attackTime = 2f;
+    private float patienceTime = 0f;
+    private bool isPlayer = false;
 
     private SpriteRenderer spriteRenderer;
     private MonsterStateController monsterStateController;
@@ -34,7 +35,10 @@ public class MonsterController : MonoBehaviour
     private Animator animator;
     private Rigidbody monsterRigid;
     private GameObject player;
+    
 
+    [HideInInspector]
+    public Vector3 spawnPoint;
 
     private void Awake()
     {
@@ -105,40 +109,47 @@ public class MonsterController : MonoBehaviour
         Vector3 knockbackDirection = (transform.position - player.transform.position).normalized;
         monsterRigid.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);       
     }
-    
-
-    #region SetMonsterAnimation
-    public void MosterAnimationIdle()
-    {
-        animator.SetBool("isWalk", false);
-    }
-
-    public void MonsterAnimationWalk()
-    {
-        animator.SetBool("isWalk", true);
-    }
-
-    public void MonsterAnimationDead()
-    {
-        animator.SetTrigger("isDead");
-    }
 
     IEnumerator Invisible()
     {
         Color fadeColor = spriteRenderer.material.color;
-        fadeColor.a = Mathf.Lerp(start, end, time);
+        fadeColor.a = Mathf.Lerp(start, end, effectDuration);
 
         yield return new WaitForSeconds(0.35f);
 
         while (fadeColor.a > 0f)
         {
-            time += Time.deltaTime / fadeTime;
-            fadeColor.a = Mathf.Lerp(start, end, time);
+            effectDuration += Time.deltaTime / fadeTime;
+            fadeColor.a = Mathf.Lerp(start, end, effectDuration);
             spriteRenderer.material.color = fadeColor;
 
             yield return null;
         }
     }
+
+
+    #region SetMonsterAnimation
+    public void MosterAnimationIdle()
+    {
+        animator.SetBool("isWalk", false);
+        animator.SetBool("isAttack", false);
+    }
+
+    public void MonsterAnimationWalk()
+    {
+        animator.SetBool("isWalk", true);
+        animator.SetBool("isAttack", false);
+    }
+
+    public void MonsterAnimationAttack()
+    {
+        animator.SetBool("isAttack", true);
+    }
+
+    public void MonsterAnimationDead()
+    {
+        animator.SetTrigger("isDead");
+    }   
     #endregion
 
 

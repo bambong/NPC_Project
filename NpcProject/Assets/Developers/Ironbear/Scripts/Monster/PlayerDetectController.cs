@@ -12,8 +12,11 @@ public class PlayerDetectController : MonoBehaviour
 
     private MonsterController monsterController;
 
+    private float attackTime = 2f;
+    private float patienceTime = 0f;
     private float distance;
     private bool isPlayer = false;
+
 
     public void Init()
     {
@@ -34,11 +37,16 @@ public class PlayerDetectController : MonoBehaviour
     {
         if(other.CompareTag(detectionTag))
         {
+            patienceTime += Time.deltaTime;
             player = other.gameObject.transform;
             isPlayer = true;
             if(isPlayer)
             {
                 monsterController.SetMonsterStateMove();
+            }
+            else if(isPlayer && patienceTime==attackTime)
+            {
+                Debug.Log(patienceTime);
             }
         }        
     }
