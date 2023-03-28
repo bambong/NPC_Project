@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 6366111677996807306}
   - component: {fileID: 7065958305315896496}
   - component: {fileID: 6742709313442633273}
+  - component: {fileID: 3005685278125048529}
+  - component: {fileID: 1935029059772679738}
   m_Layer: 0
   m_Name: Back_Idle_Spine
   m_TagString: Untagged
@@ -121,6 +123,43 @@ MonoBehaviour:
   _animationName: animation
   loop: 1
   timeScale: 1.3
+--- !u!114 &3005685278125048529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684023597253486585}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f2fa991881c6d419500ccc40ad443f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghostingEnabled: 1
+  spawnInterval: 0.14
+  maximumGhosts: 30
+  fadeSpeed: 5
+  ghostShader: {fileID: 4800000, guid: 3873d4699ee8a4b4da8fa6b8c229b94d, type: 3}
+  color:
+    serializedVersion: 2
+    rgba: 6094160
+  additive: 1
+  textureFade: 1
+  sortWithDistanceOnly: 0
+  zOffset: 0
+--- !u!114 &1935029059772679738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684023597253486585}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96c87a65079f3154fb5fd33a95cca57b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghost: {fileID: 3005685278125048529}
 --- !u!1 &1719746091281472723
 GameObject:
   m_ObjectHideFlags: 0
@@ -132,6 +171,7 @@ GameObject:
   - component: {fileID: 739286468477351377}
   - component: {fileID: 3883182412271440895}
   - component: {fileID: 7738459083281581883}
+  - component: {fileID: 5962338160030845581}
   m_Layer: 3
   m_Name: Player_FrameAnim
   m_TagString: Untagged
@@ -226,6 +266,22 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &5962338160030845581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1719746091281472723}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a906b12cf60d4e84682e53440448d79a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerSpriteRender: {fileID: 3883182412271440895}
+  interval: 0.14
+  fadeTime: 1
+  alpha: 0.5
 --- !u!1 &2651666308150187510
 GameObject:
   m_ObjectHideFlags: 0
@@ -293,6 +349,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3074541703899278083}
+  - component: {fileID: 2299308842911941008}
   m_Layer: 3
   m_Name: PlayerRotater
   m_TagString: Untagged
@@ -320,6 +377,24 @@ Transform:
   m_Father: {fileID: 5137152168051090499}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2299308842911941008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3567413477781239731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dff21bf62145b364cbe99731684849e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colors:
+  - {r: 0, g: 1, b: 0.9616327, a: 0}
+  - {r: 0.25, g: 1, b: 0.36253262, a: 0}
+  - {r: 1, g: 0.33333337, b: 0.86634636, a: 0}
+  - {r: 0.25943398, g: 0.3264961, b: 1, a: 0}
+  colorTime: 0.25
 --- !u!1 &5137152168051090498
 GameObject:
   m_ObjectHideFlags: 0
@@ -392,8 +467,6 @@ MonoBehaviour:
   wireEffectGo: {fileID: 8894137876106884633}
   wireframeMaskController: {fileID: 6930505361111398999}
   deathFeedback: {fileID: 6794421696221332829}
-  ghost: {fileID: 5670100813688805415}
-  motionTrail: {fileID: 3453932403963168096}
 --- !u!114 &1118931517153202617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -410,6 +483,12 @@ MonoBehaviour:
   frontIdleSpineAnim: {fileID: 8919397571430265557}
   backIdleSpineAnim: {fileID: 6742709313442633273}
   frontBackMoveframeAnim: {fileID: 7738459083281581883}
+  ghostColorPicker: {fileID: 2299308842911941008}
+  ghostEffects:
+  - {fileID: 5195630993575665816}
+  - {fileID: 5962338160030845581}
+  - {fileID: 3731435211918642453}
+  - {fileID: 1935029059772679738}
 --- !u!65 &7689613559260098677
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -537,7 +616,7 @@ GameObject:
   - component: {fileID: 9206293448859307566}
   - component: {fileID: 5691810548003072013}
   - component: {fileID: 5670100813688805415}
-  - component: {fileID: 3453932403963168096}
+  - component: {fileID: 5195630993575665816}
   m_Layer: 0
   m_Name: Side_Spine
   m_TagString: Untagged
@@ -691,7 +770,7 @@ MonoBehaviour:
   textureFade: 1
   sortWithDistanceOnly: 0
   zOffset: 0
---- !u!114 &3453932403963168096
+--- !u!114 &5195630993575665816
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -704,12 +783,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ghost: {fileID: 5670100813688805415}
-  colors:
-  - {r: 0, g: 1, b: 0.9616327, a: 0}
-  - {r: 0.25, g: 1, b: 0.36253262, a: 0}
-  - {r: 1, g: 0.33333337, b: 0.86634636, a: 0}
-  - {r: 0.25943398, g: 0.3264961, b: 1, a: 0}
-  colorTime: 0.25
 --- !u!1 &7673182707486203579
 GameObject:
   m_ObjectHideFlags: 0
@@ -722,6 +795,8 @@ GameObject:
   - component: {fileID: 4316060861921651965}
   - component: {fileID: 2663305704515334478}
   - component: {fileID: 8919397571430265557}
+  - component: {fileID: 7791315265163435385}
+  - component: {fileID: 3731435211918642453}
   m_Layer: 0
   m_Name: Front_Idle_Spine
   m_TagString: Untagged
@@ -833,6 +908,43 @@ MonoBehaviour:
   _animationName: idle
   loop: 1
   timeScale: 1.3
+--- !u!114 &7791315265163435385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7673182707486203579}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f2fa991881c6d419500ccc40ad443f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghostingEnabled: 1
+  spawnInterval: 0.14
+  maximumGhosts: 30
+  fadeSpeed: 5
+  ghostShader: {fileID: 4800000, guid: 3873d4699ee8a4b4da8fa6b8c229b94d, type: 3}
+  color:
+    serializedVersion: 2
+    rgba: 6094160
+  additive: 1
+  textureFade: 1
+  sortWithDistanceOnly: 0
+  zOffset: 0
+--- !u!114 &3731435211918642453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7673182707486203579}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96c87a65079f3154fb5fd33a95cca57b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghost: {fileID: 7791315265163435385}
 --- !u!1 &8103830471464003381
 GameObject:
   m_ObjectHideFlags: 0

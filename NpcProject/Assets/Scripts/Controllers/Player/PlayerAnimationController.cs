@@ -1,4 +1,5 @@
 using Spine.Unity;
+using Spine.Unity.Examples;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,12 @@ public class PlayerAnimationController : MonoBehaviour
     private SkeletonAnimation backIdleSpineAnim;
     [SerializeField]
     private Animator frontBackMoveframeAnim;
+    [Header("GhostEffect")]
+    [SerializeField]
+    private GhostEffectColorPickerController ghostColorPicker;
+    [Header("FrameGhost")]
+    [SerializeField]
+    private List<GhostEffectController> ghostEffects;
 
     private List<GameObject> anims =new List<GameObject>();
 
@@ -33,7 +40,29 @@ public class PlayerAnimationController : MonoBehaviour
         anims.Add(frontIdleSpineAnim.gameObject);
         anims.Add(backIdleSpineAnim.gameObject);
         anims.Add(frontBackMoveframeAnim.gameObject);
+        
+        
+        foreach (var item in ghostEffects)
+        {
+            item.Init(ghostColorPicker);
+        }
     }
+    public void OnEnterDebugMod() 
+    {
+        ghostColorPicker.OnEnterDebugMod();
+        foreach(var item in ghostEffects) 
+        {
+            item.Open();
+        }
+    }
+    public void OnExitDebugMod() 
+    {
+        foreach (var item in ghostEffects)
+        {
+            item.Close();
+        }
+    }
+
     private void EnableAnim(GameObject target)
     {
         for(int i =0; i<anims.Count; ++i) 

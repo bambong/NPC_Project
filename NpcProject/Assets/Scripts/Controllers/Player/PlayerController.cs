@@ -70,13 +70,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private MMF_Player deathFeedback;
 
-    [Space(1)]
-    [Header("Motion Effec")]
-    [SerializeField]
-    private SkeletonGhost ghost;
-    [SerializeField]
-    private SpineGhostColorController motionTrail;
-
     private PlayerAnimationController.AnimDir curDir = PlayerAnimationController.AnimDir.Front;
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
@@ -129,11 +122,6 @@ public class PlayerController : MonoBehaviour
         interactionDetecter.InteractionUiDisable();
     }
 
-    public void SetMotionEffect(bool isOn) 
-    {
-        ghost.enabled = isOn;
-        motionTrail.enabled = isOn;
-    }
     #region OnStateExit
     public void InteractionExit()
     {
@@ -374,12 +362,10 @@ public class PlayerController : MonoBehaviour
     }
     public void EnterDebugMod()
     {
-        //SetstateStop();
         Managers.Game.SetStateDebugMod();
         glitchEffectController.EnterDebugMod(() =>
         {
-            //SetStateIdle();
-            SetMotionEffect(true);
+            animationController.OnEnterDebugMod();
         });
         interactionDetecter.SwitchDebugMod(true);
     }
@@ -387,10 +373,10 @@ public class PlayerController : MonoBehaviour
     {
         //SetstateStop();
         glitchEffectController.ExitDebugMod(() => {
+            
             interactionDetecter.SwitchDebugMod(false);
-            //SetStateIdle();
+            animationController.OnExitDebugMod();
             isDebugButton();
-            SetMotionEffect(false);
         });
     }
     public void AnimIdleEnter()
