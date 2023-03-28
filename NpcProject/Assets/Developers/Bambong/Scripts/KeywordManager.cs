@@ -14,7 +14,7 @@ public class KeywordManager
     private PlayerKeywordPanelController playerKeywordPanel;
     public PlayerKeywordPanelController PlayerKeywordPanel { get => playerKeywordPanel;}
     public KeywordEntity CurKeywordEntity { get => curKeywordEntity; }
-    public bool IsDebugZoneIn { get => curDebugZone != null; }
+    public bool IsDebugZoneIn { get => curDebugZone != null && curDebugZone.IsDebugAble; }
     public DebugZone CurDebugZone { get => curDebugZone;  }
 
     private List<KeywordEntity> curSceneEntity = new List<KeywordEntity>();

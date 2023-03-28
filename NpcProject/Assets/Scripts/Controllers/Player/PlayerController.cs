@@ -85,8 +85,6 @@ public class PlayerController : MonoBehaviour
 
     private RaycastHit slopeHit;
     private int slopeLayer;
-    public bool IsDebugMod { get => isDebugMod; }
-    private bool isDebugMod;
     public int Hp { get => hp; }
     public int MaxHp { get => maxHp; }
 
@@ -376,23 +374,21 @@ public class PlayerController : MonoBehaviour
     }
     public void EnterDebugMod()
     {
-        SetstateStop();
-        isDebugMod = true;
+        //SetstateStop();
         Managers.Game.SetStateDebugMod();
         glitchEffectController.EnterDebugMod(() =>
         {
-            SetStateIdle();
+            //SetStateIdle();
             SetMotionEffect(true);
         });
         interactionDetecter.SwitchDebugMod(true);
     }
     public void ExitDebugMod()
     {
-        SetstateStop();
+        //SetstateStop();
         glitchEffectController.ExitDebugMod(() => {
             interactionDetecter.SwitchDebugMod(false);
-            SetStateIdle();
-            isDebugMod = false;
+            //SetStateIdle();
             isDebugButton();
             SetMotionEffect(false);
         });

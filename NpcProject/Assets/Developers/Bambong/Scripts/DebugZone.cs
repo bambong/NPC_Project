@@ -4,10 +4,18 @@ using UnityEngine;
 using Cinemachine;
 using DG.Tweening;
 using static AmazingAssets.WireframeShader.WireframeMaskController;
+using Unity.Services.Analytics.Platform;
+using UnityEditorInternal;
 
 [RequireComponent(typeof(Collider))]
 public class DebugZone : MonoBehaviour
 {
+    [Header("디버그 모드 제한 시간 -1  = Infinity")]
+    [SerializeField]
+    private float debugAbleTime = -1f;
+    [SerializeField]
+    private float coolTime = 1f;
+
     [SerializeField]
     private int playerSlotCount =2;
 
@@ -21,18 +29,22 @@ public class DebugZone : MonoBehaviour
     [SerializeField]
     private Material[] wireMaterials;
 
-    public int PlayerSlotCount { get => playerSlotCount; }
-    public Material[] WireMaterials { get => wireMaterials; }
+    private DebugGaugeUiController debugGaugeUi;
 
     private List<PlayerKeywordFrame> playerFrames = new List<PlayerKeywordFrame>();
     private Transform playerLayout;
-
     private Vector3 boxSize;
+    private bool isDebugAble = true;
+    public int PlayerSlotCount { get => playerSlotCount; }
+    public Material[] WireMaterials { get => wireMaterials; }
+    public bool IsDebugAble { get => isDebugAble; }
     private void Start()
     {
         MakeFrame();
         InitKeywords();
         WireMaterialClear();
+        MakeDebugGaugeUi();
+        
         for (int i = 0; i< childEntitys.Count; ++i) 
         {
             childEntitys[i].SetDebugZone(this);
@@ -77,7 +89,12 @@ public class DebugZone : MonoBehaviour
         }
         return null;
     }
-
+    public void MakeDebugGaugeUi() 
+    {
+        debugGaugeUi = Managers.UI.MakeSubItem<DebugGaugeUiController>(Managers.Keyword.PlayerKeywordPanel.DebugGaugePanel.transform, "DebugGaugeUI");
+        debugGaugeUi.transform.localPosition = Vector3.zero;
+        debugGaugeUi.Close();
+    }
 
     private void WireMaterialClear() 
     {
@@ -98,12 +115,52 @@ public class DebugZone : MonoBehaviour
     {
         Managers.Game.Player.SetWireframeMaterial(wireMaterials);
         Managers.Game.Player.OpenWireEffect(boxSize *2);
+        
+        StartCoroutine(DebugModeTimeUpdate());
+       
     }
     public void OnExitDebugMod() 
     {
         Managers.Game.Player.CloseWireEffect();
         ClosePlayerLayout();
+        debugGaugeUi.Close();
+        StartCoroutine(NormalModeTimeUpdate());
     }
+
+    IEnumerator DebugModeTimeUpdate() 
+    {
+        debugGaugeUi.Open(debugAbleTime);
+        if (debugAbleTime < 0)
+        {
+            yield break;
+        }
+        float curTime = 0; 
+        while (Managers.Game.IsDebugMod) 
+        {
+            curTime += Managers.Time.GetDeltaTime(TIME_TYPE.PLAYER);
+            debugGaugeUi.GaugeUiUpdate(1f-(curTime/debugAbleTime));
+            if (curTime >= debugAbleTime) 
+            {
+                Managers.Game.Player.ExitDebugMod();
+                break;
+            }
+            yield return null;
+        }
+    }
+    IEnumerator NormalModeTimeUpdate() 
+    {
+        isDebugAble = false;
+        float curTime = 0;
+        while (curTime < coolTime)
+        {
+            curTime += Managers.Time.GetDeltaTime(TIME_TYPE.PLAYER);
+            
+            yield return null;
+        }
+        isDebugAble = true;
+        Managers.Game.Player.isDebugButton();
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {
