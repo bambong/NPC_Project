@@ -6,9 +6,12 @@ using TMPro;
 using System;
 using DG.Tweening;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 public class TalkPanelController : UI_Base
-{ 
+{
+    private const string pattern = "@(.*?)@";
     private readonly float TEXT_SPEED = 0.05f;
     
     [SerializeField]
@@ -19,6 +22,14 @@ public class TalkPanelController : UI_Base
     private TextMeshProUGUI dialogueText;
     [SerializeField]
     private Transform talkPanelInner;
+    [SerializeField]
+    private Button choiceA;
+    [SerializeField]
+    private Button choiceB;
+    [SerializeField]
+    private TextMeshProUGUI choiceTextA;
+    [SerializeField]
+    private TextMeshProUGUI choiceTextB;
 
     public Transform TalkPanelInner { get => talkPanelInner; }
     public bool IsNext { get => isNext;}
@@ -34,6 +45,8 @@ public class TalkPanelController : UI_Base
     private bool isNext = false;
     private bool isTrans = false;
     private bool inputKey = false;
+    private bool isChoice = false;
+    private bool isSelect = false;
 
     private int textSize = 0;
     private int randomSize = 0;
@@ -46,6 +59,8 @@ public class TalkPanelController : UI_Base
     {
         speakImage.sprite = dialogue.speaker.sprite;
         spekerName.text = dialogue.speaker.name;
+        choiceA.gameObject.SetActive(false);
+        choiceB.gameObject.SetActive(false);
         dialogueText.text = "";
     }
     public void PlayDialogue(Dialogue dialogue) 
@@ -56,12 +71,11 @@ public class TalkPanelController : UI_Base
         speakImage.sprite = dialogue.speaker.sprite;
         spekerName.text = dialogue.speaker.name;
         StartCoroutine(TransText());
-
     }
 
-    private void DotweenTextani()
+    private void DotweenTextani(string text)
     {
-        textDialogue = curDialogue.text;
+        textDialogue = text;
         typingTime = textDialogue.Length * TEXT_SPEED;
 
         dialogueText.text = "";
@@ -72,8 +86,18 @@ public class TalkPanelController : UI_Base
         })     
         .OnComplete(()=>
         {
-            isNext = true;
+            if(isChoice == true)
+            {
+                Invoke("ChoicePanelActive", 0.2f);
+                StartCoroutine(ChoiceSelect());                
+            }
         });
+    }
+
+    private void ChoicePanelActive()
+    {
+        choiceA.gameObject.SetActive(true);
+        choiceB.gameObject.SetActive(true);
     }
 
     private string RandomText(int length)
@@ -101,10 +125,19 @@ public class TalkPanelController : UI_Base
             {
                 isTrans = true;
             }
+            else if (item == "choice")
+            {
+                isChoice = true;
+            }
             else
             {
                 textDialogue += item;
             }
+        }
+
+        if (isChoice)
+        {
+            textDialogue = TextExtraction(textDialogue);
         }
 
         textSize = ClcTextLength(textDialogue, textDialogue.Length);
@@ -145,9 +178,46 @@ public class TalkPanelController : UI_Base
         }
         else
         {
-            DotweenTextani();
+            DotweenTextani(textDialogue);
             inputKey = true;
         }
+    }
+
+    private string TextExtraction(string textDialogue)
+    {
+
+        MatchCollection matches = Regex.Matches(textDialogue, pattern);
+
+        List<string> matchedStrings = new List<string>();
+        StringBuilder replacedStrings = new StringBuilder();        
+
+        int lastIndex = 0;
+        foreach(Match match in matches)
+        {
+            string value = match.Groups[1].Value;
+            int index = match.Index;
+            int length = match.Length;
+
+            matchedStrings.Add(value);
+
+            string replacedString = textDialogue.Substring(lastIndex, index - lastIndex);
+            replacedStrings.Append(replacedString);
+
+            lastIndex = index + length;
+        }
+
+        string lastString = textDialogue.Substring(lastIndex);
+        replacedStrings.Append(lastString);
+
+        textDialogue = replacedStrings.ToString();
+
+        if(!(matchedStrings.Count == 0))
+        {
+            choiceTextA.text = matchedStrings[0];
+            choiceTextB.text = matchedStrings[1];
+        }        
+
+        return textDialogue;
     }
 
     private int ClcTextLength(string text, int length)
@@ -177,7 +247,6 @@ public class TalkPanelController : UI_Base
             {
                 if(isTrans == false && inputKey == true)
                 {
-                    Debug.Log("skipdialog");
                     dialogueText.DOKill();
                     dialogueText.text = textDialogue;
                     yield return new WaitForSeconds(0.1f);
@@ -199,4 +268,23 @@ public class TalkPanelController : UI_Base
             yield return null;
         }
     }   
+
+    IEnumerator ChoiceSelect()
+    {
+        while(isSelect == false)
+        {
+            choiceA.onClick.AddListener(Selected);
+            choiceB.onClick.AddListener(Selected);
+            yield return null;
+        }
+        isNext = true;
+    }
+
+    private void Selected()
+    {
+        Debug.Log("select");
+        isSelect = true;
+        choiceA.gameObject.SetActive(false);
+        choiceB.gameObject.SetActive(false);
+    }
 }
