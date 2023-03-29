@@ -12,11 +12,11 @@ public class PlayerDetectController : MonoBehaviour
 
     private MonsterController monsterController;
 
-    private float attackTime = 2f;
-    private float patienceTime = 0f;
+    //private float patienceTime = 0f;
+    //private float attackTime = 1f;
     private float distance;
+    private float attackRange;
     private bool isPlayer = false;
-
 
     public void Init()
     {
@@ -26,7 +26,7 @@ public class PlayerDetectController : MonoBehaviour
     private void FixedUpdate()
     {
         distance = Vector3.Distance(transform.position, monsterController.spawnPoint);
-
+        
         if (distance <= 0.1f && !isPlayer)
         {
             monsterController.SetMonsterStateIdle();
@@ -37,16 +37,23 @@ public class PlayerDetectController : MonoBehaviour
     {
         if(other.CompareTag(detectionTag))
         {
-            patienceTime += Time.deltaTime;
-            player = other.gameObject.transform;
             isPlayer = true;
-            if(isPlayer)
+            player = other.gameObject.transform;
+
+            attackRange = Vector3.Distance(player.position, transform.position);
+
+            //monsterController.LeftAndRight(player.position.z);
+
+            if (isPlayer)
             {
                 monsterController.SetMonsterStateMove();
-            }
-            else if(isPlayer && patienceTime==attackTime)
-            {
-                Debug.Log(patienceTime);
+
+                /*
+                if (attackRange < 5f)
+                {
+                    monsterController.SetMonsterStateAttack();
+                }
+                */
             }
         }        
     }

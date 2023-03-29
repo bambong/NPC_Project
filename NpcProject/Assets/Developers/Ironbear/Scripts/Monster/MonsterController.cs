@@ -14,20 +14,21 @@ public class MonsterController : MonoBehaviour
     [SerializeField]
     private float moveSpeed = 1f;
     [SerializeField]
-    private float knockbackForce = 1f;
+    private float knockbackForce = 5f;
 
     [SerializeField]
     private float fadeTime = 3.5f;
-    private float effectDuration = 0;
+    private float time = 0;
     private float start = 1f;
     private float end = 0f;
 
     private float waitTime = 0f;
 
-    public string detectionTag = "Player";
-    private float attackTime = 2f;
-    private float patienceTime = 0f;
-    private bool isPlayer = false;
+    [HideInInspector]
+    public Vector3 spawnPoint;
+    [SerializeField]
+    private BoxCollider attackRange;
+
 
     private SpriteRenderer spriteRenderer;
     private MonsterStateController monsterStateController;
@@ -35,10 +36,7 @@ public class MonsterController : MonoBehaviour
     private Animator animator;
     private Rigidbody monsterRigid;
     private GameObject player;
-    
 
-    [HideInInspector]
-    public Vector3 spawnPoint;
 
     private void Awake()
     {
@@ -110,17 +108,55 @@ public class MonsterController : MonoBehaviour
         monsterRigid.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);       
     }
 
+    public void AttackRangeActive()
+    {
+        attackRange.gameObject.SetActive(true);
+    }
+
+    public void AttackRangeDeactive()
+    {
+        attackRange.gameObject.SetActive(false);
+    }
+
+    public void LeftAndRightPlayer(Transform player)
+    {
+        Vector3 lookDirection = (player.transform.position - transform.position).normalized;
+
+        if (lookDirection.z < 0f)
+        {
+            spriteRenderer.flipX = false;
+        }
+        else
+        {
+            spriteRenderer.flipX = true;
+        }
+    }
+
+    public void LeftAndRightSpawnPoint()
+    {
+        Vector3 lookDirection = (spawnPoint - transform.position).normalized;
+
+        if (lookDirection.z < 0f)
+        {
+            spriteRenderer.flipX = false;
+        }
+        else
+        {
+            spriteRenderer.flipX = true;
+        }
+    }
+
     IEnumerator Invisible()
     {
         Color fadeColor = spriteRenderer.material.color;
-        fadeColor.a = Mathf.Lerp(start, end, effectDuration);
+        fadeColor.a = Mathf.Lerp(start, end, time);
 
         yield return new WaitForSeconds(0.35f);
 
         while (fadeColor.a > 0f)
         {
-            effectDuration += Time.deltaTime / fadeTime;
-            fadeColor.a = Mathf.Lerp(start, end, effectDuration);
+            time += Time.deltaTime / fadeTime;
+            fadeColor.a = Mathf.Lerp(start, end, time);
             spriteRenderer.material.color = fadeColor;
 
             yield return null;
@@ -132,24 +168,17 @@ public class MonsterController : MonoBehaviour
     public void MosterAnimationIdle()
     {
         animator.SetBool("isWalk", false);
-        animator.SetBool("isAttack", false);
     }
 
     public void MonsterAnimationWalk()
     {
         animator.SetBool("isWalk", true);
-        animator.SetBool("isAttack", false);
-    }
-
-    public void MonsterAnimationAttack()
-    {
-        animator.SetBool("isAttack", true);
     }
 
     public void MonsterAnimationDead()
     {
         animator.SetTrigger("isDead");
-    }   
+    }  
     #endregion
 
 

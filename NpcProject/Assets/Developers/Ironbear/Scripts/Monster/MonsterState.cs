@@ -51,11 +51,12 @@ public class MonsterMove : Singleton<MonsterMove>, IState<MonsterController>
     public void FixedUpdateActive(MonsterController monsterStateController)
     {
         monsterStateController.PursuePlayer(Managers.Game.Player.transform);
+        monsterStateController.LeftAndRightPlayer(Managers.Game.Player.transform);
     }
 
     public void UpdateActive(MonsterController monsterStateController)
     {
-
+        
     }
 }
 
@@ -79,7 +80,7 @@ public class MonsterRevert : Singleton<MonsterRevert>, IState<MonsterController>
 
     public void FixedUpdateActive(MonsterController monsterStateController)
     {
-
+        monsterStateController.LeftAndRightSpawnPoint();
     }
 
     public void UpdateActive(MonsterController mmonsterStateController)
@@ -126,7 +127,7 @@ public class MonsterAttack : Singleton<MonsterAttack>, IState<MonsterController>
 
     public void Enter(MonsterController monsterStateController)
     {
-        monsterStateController.MonsterAnimationAttack();
+
     }
 
     public void Exit(MonsterController monsterStateController)
@@ -136,10 +137,10 @@ public class MonsterAttack : Singleton<MonsterAttack>, IState<MonsterController>
 
     public void FixedUpdateActive(MonsterController monsterStateController)
     {
-        
+
     }
 
-    public void UpdateActive(MonsterController monsterStateController)
+    public void UpdateActive(MonsterController mmonsterStateController)
     {
 
     }
