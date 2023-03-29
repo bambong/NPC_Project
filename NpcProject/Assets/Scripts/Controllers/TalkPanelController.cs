@@ -27,12 +27,18 @@ public class TalkPanelController : UI_Base
     [SerializeField]
     private Button choiceB;
     [SerializeField]
+    private Button choiceC;
+    [SerializeField]
     private TextMeshProUGUI choiceTextA;
     [SerializeField]
     private TextMeshProUGUI choiceTextB;
+    [SerializeField]
+    private TextMeshProUGUI choiceTextC;
 
     public Transform TalkPanelInner { get => talkPanelInner; }
     public bool IsNext { get => isNext;}
+    public bool IsChoice { get => isChoice; }
+    public bool IsSelect { get => isSelect; }
 
     private Dialogue curDialogue;
 
@@ -53,6 +59,9 @@ public class TalkPanelController : UI_Base
 
     public override void Init()
     {
+        choiceA.onClick.AddListener(Selected);
+        choiceB.onClick.AddListener(Selected);
+        //choiceC.onClick.AddListener(Selected);
     }
 
     public void SetDialogue(Dialogue dialogue)
@@ -96,8 +105,12 @@ public class TalkPanelController : UI_Base
 
     private void ChoicePanelActive()
     {
-        choiceA.gameObject.SetActive(true);
-        choiceB.gameObject.SetActive(true);
+        for(int i = 0; i < 2; i++)
+        {
+            choiceA.gameObject.SetActive(true);
+            choiceB.gameObject.SetActive(true);
+            //choiceC.gameObject.SetActive(true);
+        }
     }
 
     private string RandomText(int length)
@@ -215,6 +228,7 @@ public class TalkPanelController : UI_Base
         {
             choiceTextA.text = matchedStrings[0];
             choiceTextB.text = matchedStrings[1];
+            //choiceTextC.text = matchedStrings[2];
         }        
 
         return textDialogue;
@@ -245,9 +259,14 @@ public class TalkPanelController : UI_Base
 
             if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY)))
             {
-                if(isTrans == false && inputKey == true)
+                if(isChoice == true)
                 {
-                    dialogueText.DOKill();
+                    ChoicePanelActive();
+                    StartCoroutine(ChoiceSelect());
+                }
+                if (isTrans == false && inputKey == true)
+                {
+                    dialogueText.DOKill();                    
                     dialogueText.text = textDialogue;
                     yield return new WaitForSeconds(0.1f);
                     isNext = true;
@@ -271,20 +290,23 @@ public class TalkPanelController : UI_Base
 
     IEnumerator ChoiceSelect()
     {
-        while(isSelect == false)
+        while (isSelect == false)
         {
-            choiceA.onClick.AddListener(Selected);
-            choiceB.onClick.AddListener(Selected);
             yield return null;
         }
+        isChoice = false;
         isNext = true;
     }
 
-    private void Selected()
+    public void Selected()
     {
         Debug.Log("select");
         isSelect = true;
         choiceA.gameObject.SetActive(false);
         choiceB.gameObject.SetActive(false);
+    }
+    public void InputIsSelect(bool value)
+    {
+         isSelect = value;
     }
 }
