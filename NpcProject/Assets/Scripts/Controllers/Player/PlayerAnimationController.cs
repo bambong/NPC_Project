@@ -145,5 +145,8 @@ public class PlayerAnimationController : MonoBehaviour
         curDir = dir;
         isMove = false;
     }
-
+    public void PlayerHitEffectPlay() 
+    {
+    
+    }
 }
