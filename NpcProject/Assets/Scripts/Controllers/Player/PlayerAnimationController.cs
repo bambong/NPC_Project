@@ -33,6 +33,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     private AnimDir curDir = AnimDir.Front;
     private bool isMove = false;
+    private bool isDebugMod = false;
     private void Awake()
     {
         frontBackMoveframeAnim.gameObject.GetComponent<SpriteRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
@@ -49,6 +50,7 @@ public class PlayerAnimationController : MonoBehaviour
     }
     public void OnEnterDebugMod() 
     {
+        isDebugMod = true;
         ghostColorPicker.OnEnterDebugMod();
         foreach(var item in ghostEffects) 
         {
@@ -57,6 +59,7 @@ public class PlayerAnimationController : MonoBehaviour
     }
     public void OnExitDebugMod() 
     {
+        isDebugMod = false;
         foreach (var item in ghostEffects)
         {
             item.Close();
@@ -75,9 +78,9 @@ public class PlayerAnimationController : MonoBehaviour
         target.SetActive(true);
     }
 
-    public void SetMoveAnim(AnimDir dir) 
+    public void SetMoveAnim(AnimDir dir , Vector3 moveVec) 
     {
-        if(isMove && curDir == dir)
+        if (isMove && curDir == dir)
         {
             return;
         }
@@ -94,10 +97,19 @@ public class PlayerAnimationController : MonoBehaviour
                 sideSpineAnim.skeleton.ScaleX = -1;
                 break;
             case AnimDir.Front:
+                //if (isDebugMod) 
+                //{
+                //    ghostEffects[0].Open();
+                //}
                 EnableAnim(frontBackMoveframeAnim.gameObject);
                 frontBackMoveframeAnim.SetBool("IsFront", true);
                 break;
             case AnimDir.Back:
+                //if (isDebugMod)
+                //{
+                //    ghostEffects[0].Close();
+                //}
+               
                 EnableAnim(frontBackMoveframeAnim.gameObject);
                 frontBackMoveframeAnim.SetBool("IsFront", false);
                 break;

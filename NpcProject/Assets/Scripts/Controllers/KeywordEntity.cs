@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using UnityEditor.Searcher;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.PlayerLoop;
@@ -68,12 +70,16 @@ public class KeywordEntity : MonoBehaviour
     [SerializeField]
     private CreateKeywordOption[] keywords;
 
+    [SerializeField]
+    private string worldSlotLayoutName = "KeywordWorldSlotLayout";
+
+#region NeedClearForRespawn
     private Dictionary<string,KeywordAction> keywrodOverrideTable = new Dictionary<string,KeywordAction>();
     private Dictionary<KeywordController,KeywordAction> currentRegisterKeyword = new Dictionary<KeywordController,KeywordAction>();
-   
     private List<KeywordFrameController> keywordFrames = new List<KeywordFrameController>();
     private Action<KeywordEntity> updateAction = null;
     private Action<KeywordEntity> fixedUpdateAction = null;
+#endregion
     private Rigidbody rigidbody;
     private BoxCollider col;
     private KeywordSlotUiController keywordSlotUiController;
@@ -87,31 +93,53 @@ public class KeywordEntity : MonoBehaviour
     public KeywordSlotUiController KeywordSlotUiController { get => keywordSlotUiController;}
     
     private readonly float SLOT_UI_DISTANCE = 100f;
-    private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude; 
+    private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude;
+
+    private bool isInit = false;
     private void Start()
     {
+        Init();
+    }
+    public void Init()
+    {
+        if(isInit)
+        {
+            return;
+        }
+        isInit = true;
+
         OriginScale = transform.lossyScale;
         Managers.Keyword.AddSceneEntity(this);
         keywordSlotUiController = Managers.UI.MakeSubItem<KeywordSlotUiController>(Managers.Keyword.KeywordEntitySlots, "KeywrodSlotController");
         keywordSlotUiController.RegisterEntity(this);
-        keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null, "KeywordWorldSlotLayout");
-        keywordWorldSlotLayout.RegisterEntity(transform,keywords.Length);
+        keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null, worldSlotLayoutName);
+        keywordWorldSlotLayout.RegisterEntity(transform, keywords.Length);
 
         InitCrateKeywordOption();
 
         if (!TryGetComponent<BoxCollider>(out col))
         {
             Collider temp;
-            if(TryGetComponent<Collider>(out temp))
+            if (TryGetComponent<Collider>(out temp))
             {
                 temp.enabled = false;
             }
             col = Util.GetOrAddComponent<BoxCollider>(gameObject);
         }
         TryGetComponent<Rigidbody>(out rigidbody);
-        
+
         DecisionKeyword();
+        StartCoroutine(CheckInitDebugMod());
     }
+    IEnumerator CheckInitDebugMod() 
+    {
+        yield return null;
+        if (Managers.Game.IsDebugMod)
+        {
+            EnterDebugMod();
+        }
+    }
+
     private void Update()
     {
         updateAction?.Invoke(this);
@@ -121,13 +149,29 @@ public class KeywordEntity : MonoBehaviour
      
         fixedUpdateAction?.Invoke(this);
     }
-
-    public virtual void DestroyKeywordEntity() 
+    public void ClearForPool() 
     {
+        //keywrodOverrideTable.Clear();
+        currentRegisterKeyword.Clear();
+        foreach(var frame in keywordFrames) 
+        {
+            frame.ClearForPool();
+        }
+        keywordFrames.Clear();
+
+        updateAction = null;
+        fixedUpdateAction = null;
+        
         Destroy(keywordWorldSlotLayout.gameObject);
         Destroy(keywordSlotUiController.gameObject);
         Managers.Keyword.RemoveSceneEntity(this);
-        Destroy(gameObject);
+        isInit = false; 
+    }
+
+    public virtual void DestroyKeywordEntity() 
+    {
+        ClearForPool();
+        Managers.Resource.Destroy(gameObject);
     }
 
     private void InitCrateKeywordOption()

@@ -199,7 +199,7 @@ public class PlayerController : MonoBehaviour
 
         if (new Vector3(moveVec.x, 0, moveVec.z).magnitude > 0.02f)
         {
-            AnimMoveEnter();
+            AnimMoveEnter(new Vector3(hor, 0, ver));
             rigid.velocity = moveVec.normalized * speed + gravity;  
         }
         else
@@ -383,9 +383,9 @@ public class PlayerController : MonoBehaviour
     {
         animationController.SetIdleAnim(curDir);
     }
-    public void AnimMoveEnter()
+    public void AnimMoveEnter(Vector3 moveVec)
     {
-        animationController.SetMoveAnim(curDir);
+        animationController.SetMoveAnim(curDir,moveVec);
     }
     public void ClearMoveAnim()
     {

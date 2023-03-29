@@ -13,6 +13,15 @@ public abstract class GhostEffectController : MonoBehaviour
     public abstract void Open();
 
     public abstract void Close();
+    public virtual void Stop()
+    {
+    }
+    public virtual void Play()
+    {
+    }
 
+    public virtual void SetInput(Vector3 moveVec) 
+    {
     
+    }
 }

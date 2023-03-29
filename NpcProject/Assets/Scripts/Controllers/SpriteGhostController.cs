@@ -18,7 +18,7 @@ public class SpriteGhostController : GhostEffectController
 
     private float curtime = 0;
     private readonly string SOMBRA_NAME = "Sombra";
-
+    
     private void LateUpdate()
     {
         curtime += Time.deltaTime;
@@ -40,9 +40,10 @@ public class SpriteGhostController : GhostEffectController
 
     }
 
+
     public override void Open()
     {
-        curtime = interval;
+        //curtime = interval;
         enabled = true;
     }
 
