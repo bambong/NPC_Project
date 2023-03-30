@@ -87,6 +87,7 @@ public class MonsterController : MonoBehaviour
 
         MonsterAnimationWalk();
         Revert();
+        LeftAndRightSpawnPoint();
     }
 
     public void Dead()
