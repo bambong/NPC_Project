@@ -58,7 +58,7 @@ public class AttackKeyword : KeywordController
             yield return null;
         }
         render.material = originMat;
-        Managers.Effect.PlayeEffect(Define.EFFECT.BombEffect,entity.transform);
+        Managers.Effect.PlayEffect(Define.EFFECT.BombEffect,entity.transform);
         entity.DestroyKeywordEntity();
     }
 }

@@ -36,7 +36,7 @@ public class EnergeItemController : MonoBehaviour
         if (other.CompareTag("Player") && isOn)
         {
             isOn = false;
-            Managers.Effect.PlayeEffect(Define.EFFECT.EnergeItemEffect,transform);
+            Managers.Effect.PlayEffect(Define.EFFECT.EnergeItemEffect,transform);
             Managers.Keyword.AddKeywordMakerGauge(gaugeAmount);
             parentSpawner.RemoveItem(this);
         }

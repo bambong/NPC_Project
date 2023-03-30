@@ -8,20 +8,20 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Han_re_Material_Fill
-  m_Shader: {fileID: 4800000, guid: 64005298b9a80bb4899eabd5140dc4a8, type: 3}
+  m_Shader: {fileID: 4800000, guid: 45495790b394f894a967dbf44489b57b, type: 3}
   m_ValidKeywords:
-  - _ALPHABLEND_ON
+  - _STRAIGHT_ALPHA_INPUT
   m_InvalidKeywords:
+  - _ALPHABLEND_ON
   - _OLD_HARD_RAMP
   - _USE8NEIGHBOURHOOD_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap:
     AlphaDepth: true
     IGNOREPROJECTOR: true
-    RenderType: Transparent
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -77,7 +77,7 @@ Material:
     - _SrcBlend: 1
     - _StencilComp: 8
     - _StencilRef: 1
-    - _StraightAlphaInput: 0
+    - _StraightAlphaInput: 1
     - _ThresholdEnd: 0.25
     - _Use8Neighbourhood: 1
     - _ZWrite: 0
