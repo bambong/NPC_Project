@@ -56,34 +56,11 @@ public class GameDebugModState : Singleton<GameDebugModState>, IState<GameManage
     }
     public void Enter(GameManager stateController)
     {
+        stateController.OnDebugModStateEnter();
     }
     public void Exit(GameManager stateController)
     {
-    }
-
-    public void FixedUpdateActive(GameManager stateController)
-    {
-    }
-
-    public void UpdateActive(GameManager stateController)
-    {
-    }
-}
-public class GameKeywordModState : Singleton<GameKeywordModState>, IState<GameManager>
-{
-    public void Init()
-    {
-    }
-    public void Enter(GameManager stateController)
-    {
-        Time.timeScale = 0;
-        stateController.Player.SetStatekeywordMod();
-    }
-
-    public void Exit(GameManager stateController)
-    {
-        Time.timeScale = 1;
-        stateController.Player.SetStateDebugMod();
+        stateController.OnDebugModStateExit();
     }
 
     public void FixedUpdateActive(GameManager stateController)

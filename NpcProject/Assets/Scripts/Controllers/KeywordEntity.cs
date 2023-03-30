@@ -1,86 +1,105 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.PlayerLoop;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using static UnityEngine.Rendering.DebugUI.Table;
 
-public enum KeywordActionType 
-{
-    OnUpdate,
-    OneShot
-}
 
 public class KeywordAction 
 {
-    private Action<KeywordEntity> action;
-    private KeywordActionType actiontype;
+    private Action<KeywordEntity> onEnter;
+    private Action<KeywordEntity> onUpdate;
+    private Action<KeywordEntity> onFixecUpdate;
     private Action<KeywordEntity> onRemove;
-    public Action<KeywordEntity> Action { get => action; }
-    public Action<KeywordEntity> OnRemove { get => onRemove; }
-    public KeywordActionType ActionType { get => actiontype;  }
+    public Action<KeywordEntity> OnEnter { get => onEnter; set => onEnter = value; }
+    public Action<KeywordEntity> OnUpdate { get => onUpdate; set => onUpdate = value; }
+    public Action<KeywordEntity> OnFixecUpdate { get => onFixecUpdate; set => onFixecUpdate = value; }
+    public Action<KeywordEntity> OnRemove { get => onRemove; set => onRemove = value; }
 
-    public KeywordAction(Action<KeywordEntity> action,KeywordActionType actiontype,Action<KeywordEntity> onRemove = null) 
+    public KeywordAction() 
     {
-        this.action = action;
-        this.actiontype = actiontype;
-        this.onRemove = onRemove;
     }
-    public void AddOnRemoveEvent(Action<KeywordEntity> onRemove) 
+    public KeywordAction(KeywordController keywordController) 
     {
-        this.onRemove += onRemove;
+        OnEnter += keywordController.OnEnter;
+        OnFixecUpdate += keywordController.OnFixedUpdate;
+        OnUpdate += keywordController.OnUpdate;
+        OnRemove += keywordController.OnRemove;
     }
+    public void OverrideKeywordAction(KeywordAction overrideAction) 
+    {
+        OverrideAction(ref onEnter, overrideAction.OnEnter);
+        OverrideAction(ref onFixecUpdate, overrideAction.OnFixecUpdate);
+        OverrideAction(ref onUpdate, overrideAction.OnUpdate);
+        OverrideAction(ref onRemove, overrideAction.OnRemove);
+    }
+    private void OverrideAction(ref Action<KeywordEntity> origin, Action<KeywordEntity> overAction) 
+    {
+        if(overAction == null) 
+        {
+            return;
+        }
+        origin = overAction;
 
+    }
 }
 
-
+[Serializable]
+class CreateKeywordOption 
+{
+    public bool isLock = false;
+    public GameObject keywordGo;
+}
 
 public class KeywordEntity : MonoBehaviour
 {
-    [SerializeField]
-    private int keywordSlot = 1;
-
-    [SerializeField]
-    private OutlineEffect outlineEffect;
     [SerializeField]
     private float maxHeight = 3;
     [SerializeField]
     private Vector3 maxScale = Vector3.one * 2;
 
-    private float curHeight = 0;
+    [Header("Make Keyword")]
+    [SerializeField]
+    private CreateKeywordOption[] keywords;
+
     private Dictionary<string,KeywordAction> keywrodOverrideTable = new Dictionary<string,KeywordAction>();
     private Dictionary<KeywordController,KeywordAction> currentRegisterKeyword = new Dictionary<KeywordController,KeywordAction>();
-    private List<KeywordFrameController> keywordSlotUI = new List<KeywordFrameController>();
-    private List<KeywordWorldSlotUIController> keywordSlotWorldUI = new List<KeywordWorldSlotUIController>();
-
+   
+    private List<KeywordFrameController> keywordFrames = new List<KeywordFrameController>();
+    private Action<KeywordEntity> updateAction = null;
     private Action<KeywordEntity> fixedUpdateAction = null;
     private Rigidbody rigidbody;
     private BoxCollider col;
-    private Transform keywordSlotLayout;
+    private KeywordSlotUiController keywordSlotUiController;
     private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
-
+    private DebugZone parentDebugZone;
     public Dictionary<KeywordController,KeywordAction> CurrentRegisterKeyword { get => currentRegisterKeyword; }
-
     public virtual Transform KeywordTransformFactor { get => transform; }
     public Vector3 OriginScale { get; private set; }
     public Vector3 MaxScale { get => maxScale; }
-
+    public bool IsAvailable { get => parentDebugZone == Managers.Keyword.CurDebugZone; }
+    public KeywordSlotUiController KeywordSlotUiController { get => keywordSlotUiController;}
+    
+    private readonly float SLOT_UI_DISTANCE = 100f;
+    private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude; 
     private void Start()
     {
         OriginScale = transform.lossyScale;
         Managers.Keyword.AddSceneEntity(this);
-        keywordSlotLayout = Managers.Resource.Instantiate("UI/KeywordSlotLayout",Managers.Keyword.PlayerKeywordPanel.transform).transform;
-        keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null,"KeywordWorldSlotLayout");
-        keywordWorldSlotLayout.RegisterEntity(transform);
-        //keywordWorldSlotLayout.transform.SetParent(transform,false);
-        for(int i = 0; i < keywordSlot; ++i) 
-        {
-            CreateKeywordFrame();
-            CreateKeywordWorldSlotUI();
-        }
+        keywordSlotUiController = Managers.UI.MakeSubItem<KeywordSlotUiController>(Managers.Keyword.KeywordEntitySlots, "KeywrodSlotController");
+        keywordSlotUiController.RegisterEntity(this);
+        keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null, "KeywordWorldSlotLayout");
+        keywordWorldSlotLayout.RegisterEntity(transform,keywords.Length);
 
-        if(!TryGetComponent<BoxCollider>(out col))
+        InitCrateKeywordOption();
+
+        if (!TryGetComponent<BoxCollider>(out col))
         {
             Collider temp;
             if(TryGetComponent<Collider>(out temp))
@@ -89,61 +108,80 @@ public class KeywordEntity : MonoBehaviour
             }
             col = Util.GetOrAddComponent<BoxCollider>(gameObject);
         }
-   
-
         TryGetComponent<Rigidbody>(out rigidbody);
-        keywordWorldSlotLayout.SortChild(2.1f);
+        
+        DecisionKeyword();
     }
-   
-    private void CreateKeywordFrame() 
+    private void Update()
     {
-        var slot = Managers.UI.MakeSubItem<KeywordFrameController>(keywordSlotLayout, "KeywordSlotUI");
-        keywordSlotUI.Add(slot);
+        updateAction?.Invoke(this);
     }
-    private void CreateKeywordWorldSlotUI() 
+    public void FixedUpdate()
     {
-        keywordSlotWorldUI.Add(Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotUIController>(keywordWorldSlotLayout.Panel, "KeywordSlotWorldSpace"));
+        if (Managers.Game.IsDebugMod)
+        {
+            Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
+            var factor = SCREEN_OFFSET / new Vector2(Screen.width, Screen.height).magnitude;
+            pos.z = 0;
+            if ((Input.mousePosition - pos).magnitude * factor <= SLOT_UI_DISTANCE)
+            {
+                OpenKeywordSlot();
+            }
+            else
+            {
+                CloseKeywordSlot();
+            }
+        }
+        fixedUpdateAction?.Invoke(this);
     }
+    private void InitCrateKeywordOption()
+    {
+        for (int i = 0; i < keywords.Length; ++i)
+        {
+            var frame = Managers.UI.MakeSubItem<KeywordFrameController>(keywordSlotUiController.KeywordSlotLayout, "KeywordSlotUI");
+            keywordFrames.Add(frame);
+            frame.RegisterEntity(this, keywordWorldSlotLayout.KeywordWorldSlots[i]);
+           
+            // 키워드가 미리 생성되어 있는 슬롯인지 확인
+            if (keywords[i].keywordGo == null) 
+            {
+                continue;
+            }
 
+            var keyword = Managers.UI.MakeSubItem<KeywordController>(null, "KeywordPrefabs/" + keywords[i].keywordGo.name);
+
+            frame.InitKeyword(keyword);
+            keyword.SetDebugZone(parentDebugZone);
+            if (keywords[i].isLock) 
+            {
+                frame.SetLockFrame(true);
+            }
+        }
+    }
+    public void SetDebugZone(DebugZone zone) => parentDebugZone = zone;
     public virtual void EnterDebugMod()
     {
         OpenWorldSlotUI();
-        outlineEffect.OutLineGo.SetActive(true);
     }
     public virtual void ExitDebugMod() 
     {
         CloseWorldSlotUI();
-        outlineEffect.OutLineGo.SetActive(false);
     }
-
+    public void OpenWorldSlotUI()
+    {
+        keywordWorldSlotLayout.Opne();
+    }
     public void CloseWorldSlotUI() 
     {
-        foreach(var slot in keywordSlotWorldUI) 
-        {
-            slot.Close();
-        }
+        keywordWorldSlotLayout.Close();
     }
-    public void OpenWorldSlotUI() 
-    {
-        foreach (var slot in keywordSlotWorldUI)
-        {
-            slot.Open();
-        }
-    }
-
     public void OpenKeywordSlot() 
     {
-        foreach (var slot in keywordSlotUI)
-        {
-            slot.Open();
-        }
+        keywordSlotUiController.Open();
     }
     public void CloseKeywordSlot()
     {
-        foreach (var slot in keywordSlotUI)
-        {
-            slot.Close();
-        }
+        keywordSlotUiController.Close();
     }
     public void AddOverrideTable(string id,KeywordAction action) 
     {
@@ -155,117 +193,90 @@ public class KeywordEntity : MonoBehaviour
     }
     public void AddAction(KeywordController controller,KeywordAction action) 
     {
-        switch(action.ActionType) 
-        {
-            case KeywordActionType.OnUpdate:
-                fixedUpdateAction += action.Action;
-                break;
-
-            case KeywordActionType.OneShot:
-                action.Action?.Invoke(this);
-                break;
-        }
+        action.OnEnter.Invoke(this);
+        fixedUpdateAction += action.OnFixecUpdate;
+        updateAction += action.OnUpdate;
         currentRegisterKeyword[controller] = action;
     }
-    public void RemoveAction(KeywordController keywordController)
+    public void RemoveAction(KeywordFrameController keywordFrame)
     {
-        if(!currentRegisterKeyword.ContainsKey(keywordController))
+        if(!currentRegisterKeyword.ContainsKey(keywordFrame.RegisterKeyword))
         {
             Debug.LogError("포함되지않은 키워드 삭제 시도");
             return;
         }
         // 다른 슬롯에 들어가 있는지 확인
-        for(int i = 0; i < keywordSlotUI.Count; ++i) 
+        for(int i = 0; i < keywordFrames.Count; ++i) 
         {
-            if(keywordSlotUI[i].CurFrameInnerKeyword == keywordController)
+            if(keywordFrames[i].CurFrameInnerKeyword == keywordFrame.RegisterKeyword)
             {
                 return;
             }
         }
-        var action = currentRegisterKeyword[keywordController];
+        var action = currentRegisterKeyword[keywordFrame.RegisterKeyword];
 
-        switch(action.ActionType)
+        fixedUpdateAction -= action.OnFixecUpdate;
+        updateAction -= action.OnUpdate;
+        if (!keywordFrame.HasKeyword || keywordFrame.RegisterKeyword.KewordId != keywordFrame.CurFrameInnerKeyword.KewordId) 
         {
-            case KeywordActionType.OnUpdate:
-                fixedUpdateAction -= action.Action;
-                break;
-
-            case KeywordActionType.OneShot:
-                break;
+            currentRegisterKeyword[keywordFrame.RegisterKeyword]?.OnRemove(this);
         }
-        currentRegisterKeyword[keywordController]?.OnRemove(this);
-        currentRegisterKeyword.Remove(keywordController);
+        currentRegisterKeyword.Remove(keywordFrame.RegisterKeyword);
+    }
+    public void DecisionKeyword(KeywordFrameController keywordFrame) 
+    {
+        // 현재 프레임 안에 들어있는 키워드
+        var curFrameInnerKeyword = keywordFrame.CurFrameInnerKeyword;
+        // 기존 프레임에 등록되어 있던 키워드
+        var frameRegisterKeyword = keywordFrame.RegisterKeyword;
+        //기존 키워드가 제거 혹은 변경됬다면 
+        if (keywordFrame.IsKeywordRemoved)
+        {
+            //키워드 Remove 이벤트 발생 
+            //Entity 에 등록된 키워드 리스트에서 키워드 제거
+            RemoveAction(keywordFrame);
+        }
+        //현재 FrameInnerKeyword 를 프레임에 등록
+        keywordFrame.OnDecisionKeyword();
+
+        // 프레임안에 키워드가 없다면 
+        if (curFrameInnerKeyword == null)
+        {
+            //월드 키워드 UI 를 리셋하고 다시 순회 
+            keywordFrame.KeywordWorldSlot.UpdateUI(false);
+            return;
+        }
+        ////월드 키워드 UI 설정  
+        keywordFrame.KeywordWorldSlot.UpdateUI(true);
+        //keywordFrame.KeywordWorldSlot.SetSlotUI(curFrameInnerKeyword.Image);
+
+        // 이미 등록된 키워드라면 다시 순회  
+        if (currentRegisterKeyword.ContainsKey(curFrameInnerKeyword))
+        {
+            return;
+        }
+
+        var keywordId = curFrameInnerKeyword.KewordId;
+        var keywordAciton = new KeywordAction(curFrameInnerKeyword);
+        KeywordAction overAction;
+        // 키워드가 오버라이딩 되어 있는지 확인하고 키워드 액션에 할당
+        if (keywrodOverrideTable.TryGetValue(keywordId, out overAction))
+        {
+            keywordAciton.OverrideKeywordAction(overAction);
+        }
+        //키워드 액션을 추가
+        AddAction(curFrameInnerKeyword, keywordAciton);
     }
     public void DecisionKeyword()
     {
         // 키워드 프레임을 순회
-        for(int i = 0; i< keywordSlotUI.Count; ++i)  
+        for(int i = 0; i< keywordFrames.Count; ++i)  
         {
-            // 현재 프레임 안에 들어있는 키워드
-            var curFrameInnerKeyword = keywordSlotUI[i].CurFrameInnerKeyword;
-            // 기존 프레임에 등록되어 있던 키워드
-            var frameRegisterKeyword = keywordSlotUI[i].RegisterKeyword;
-            KeywordAction keywordAciton;
-            //기존 키워드가 제거 혹은 변경됬다면 
-            if(keywordSlotUI[i].IsKeywordRemoved)
-            {
-                //키워드 Remove 이벤트 발생 
-                //Entity 에 등록된 키워드 리스트에서 키워드 제거
-                RemoveAction(frameRegisterKeyword);
-            }
-            //현재 FrameInnerKeyword 를 프레임에 등록
-            keywordSlotUI[i].OnDecisionKeyword();
-
-            // 프레임안에 키워드가 없다면 
-            if(curFrameInnerKeyword == null)
-            {
-                //월드 키워드 UI 를 리셋하고 다시 순회 
-                keywordSlotWorldUI[i].ResetSlotUI();
-                continue;
-            }
-            //월드 키워드 UI 설정  
-            keywordSlotWorldUI[i].SetSlotUI(curFrameInnerKeyword.Image.color,curFrameInnerKeyword.KeywordText.text);
-
-            // 이미 등록된 키워드라면 다시 순회  
-            if(currentRegisterKeyword.ContainsKey(curFrameInnerKeyword)) 
-            {
-                continue;
-            }
-
-            var keywordId = curFrameInnerKeyword.KewordId;
-            // 키워드가 오버라이딩 되어 있는지 확인하고 키워드 액션에 할당
-            if(!keywrodOverrideTable.TryGetValue(keywordId,out keywordAciton))
-            {
-                keywordAciton = new KeywordAction(curFrameInnerKeyword.KeywordAction,curFrameInnerKeyword.KeywordType,curFrameInnerKeyword.OnRemove);
-            }
-            // Entity 가  OnRemove 이벤트 핸들러를 오버라이딩 안했다면 Default 핸들러를 넣어준다 
-            if(keywordAciton.OnRemove == null) 
-            {
-                keywordAciton.AddOnRemoveEvent(curFrameInnerKeyword.OnRemove);
-            }
-            //OneShot Action 의 경우 실행 
-            //키워드 액션을 추가
-            AddAction(curFrameInnerKeyword,keywordAciton);         
+            DecisionKeyword(keywordFrames[i]);
         }
     }
 
-    public void ClearAction() 
-    {
-        fixedUpdateAction = null;
-    }
-    public void FixedUpdate() 
-    {
-        fixedUpdateAction?.Invoke(this);
-    }
     #region Keyword_Control
-
-    private Vector3 VectorMultipleScale(Vector3 origin,Vector3 scale) 
-    {
-        origin.x *= scale.x;
-        origin.y *= scale.y;
-        origin.z *= scale.z;
-        return origin;
-    }
     public bool ColisionCheckRotate(Vector3 vec)
     {
         var pos = col.transform.position;
@@ -275,7 +286,7 @@ public class KeywordEntity : MonoBehaviour
         {
             layer += (1 << (LayerMask.NameToLayer(name)));
         }
-        var boxSize = VectorMultipleScale(col.size/2,transform.lossyScale)* 0.99f;
+        var boxSize = Util.VectorMultipleScale(col.size/2,transform.lossyScale)* 0.99f;
         var rot = KeywordTransformFactor.rotation * Quaternion.Euler(vec);
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos,boxSize,rot,Color.blue);
@@ -300,8 +311,21 @@ public class KeywordEntity : MonoBehaviour
         {
             layer += (1 << (LayerMask.NameToLayer(name)));
         }
-        var boxSize = VectorMultipleScale(col.size / 2, transform.lossyScale);
-        boxSize *= 0.99f;
+        var boxSize = Util.VectorMultipleScale(col.size / 2, transform.lossyScale);
+        boxSize.y = boxSize.y * 0.99f;
+        var vecXSize = Mathf.Abs(vec.x);
+        var vecZSize = Mathf.Abs(vec.z);
+        var boxXdiff = boxSize.x * 0.01f;
+        var boxZdiff = boxSize.z * 0.01f;
+
+        if (vecXSize == 0 || vecXSize >= boxXdiff)
+        { 
+            boxSize.x *= 0.99f;
+        }
+        if(vecZSize == 0 || vecZSize >= boxZdiff)
+        { 
+            boxSize.z *= 0.99f;
+        }
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos + vec, boxSize, KeywordTransformFactor.rotation, Color.blue);
 #endif
@@ -318,8 +342,7 @@ public class KeywordEntity : MonoBehaviour
         return true;
 
     }
-
-    public bool FloatMove(Vector3 vec)
+    public bool FloatMove(float speed)
     {
         var pos = col.transform.position;
         RaycastHit hit;
@@ -328,16 +351,15 @@ public class KeywordEntity : MonoBehaviour
         {
             layer += (1 << (LayerMask.NameToLayer(name)));
         }
-        //var boxSize = VectorMultipleScale(col.size / 2,transform.lossyScale);
-        var boxSize = col.bounds.extents;
+        var boxSize = Util.VectorMultipleScale(col.size / 2,transform.lossyScale);
+        boxSize *= 0.99f;
         boxSize.y = 0;
-        var rayDis = maxHeight + col.bounds.extents.y;
+        var rayDis = maxHeight + col.bounds.size.y;
 #if UNITY_EDITOR
-        ExtDebug.DrawBoxCastBox(pos,boxSize,Quaternion.identity,Vector3.down,rayDis,Color.red);
+        ExtDebug.DrawBoxCastBox(pos,boxSize,KeywordTransformFactor.rotation, Vector3.down,rayDis,Color.red);
 #endif
-        Physics.BoxCast(pos,boxSize,Vector3.down,out hit,Quaternion.identity,rayDis,layer);
-
-        if(hit.collider != null)
+        Physics.BoxCast(pos,boxSize,Vector3.down,out hit,KeywordTransformFactor.rotation,rayDis,layer);
+        if (hit.collider != null)
         {
             var realDis = hit.distance - col.bounds.extents.y;
             if(realDis <= maxHeight) 
@@ -347,20 +369,38 @@ public class KeywordEntity : MonoBehaviour
                 {
                     return true;
                 }
-                if(remainDis < vec.magnitude)
+                if(remainDis < speed)
                 {
-                    vec = Vector3.up * remainDis;
+                    speed =  remainDis;
                 }
-                KeywordTransformFactor.position += vec;
+                var upVec = Vector3.up * speed;
+                ColisionCheckMove(upVec);
                 return true;
             }
+            else 
+            {
+                var remainDis = realDis - maxHeight;
+                if (remainDis < 0.1f)
+                {
+                    return true;
+                }
+                if (remainDis < speed)
+                {
+                    speed = remainDis;
+                }
+                var downVec = Vector3.down * speed;
+                KeywordTransformFactor.position += downVec;
+                return true;
+            }
+           
         }
+        KeywordTransformFactor.position += Vector3.down * speed;
         return false;
     }
     public bool ColisionCheckScale(Vector3 desireScale, GameObject dummyParent) 
     {
-        var desireBoxSize = VectorMultipleScale(col.size / 2, desireScale);
-        var curBoxSize = VectorMultipleScale(col.size / 2, transform.lossyScale);
+        var desireBoxSize = Util.VectorMultipleScale(col.size / 2, desireScale);
+        var curBoxSize = Util.VectorMultipleScale(col.size / 2, transform.lossyScale);
         var boxScaleDiff = (desireBoxSize - curBoxSize);
 
         Vector3 parentPos = Vector3.zero;
@@ -435,21 +475,9 @@ public class KeywordEntity : MonoBehaviour
     }
     public void SetKinematic(bool isOn) 
     {
-        //if(isOn)
-        //{
-        //    rigidbody.constraints = RigidbodyConstraints.FreezeAll;
-        //}
-        //else 
-        //{
-        //    rigidbody.constraints = RigidbodyConstraints.FreezeAll^RigidbodyConstraints.FreezePositionY;
-        //}
-
         rigidbody.isKinematic = isOn;
     }
     public void ClearVelocity()=> rigidbody.velocity = Vector3.zero;
     #endregion
-    public void Init() 
-    {
-        
-    }
+
 }

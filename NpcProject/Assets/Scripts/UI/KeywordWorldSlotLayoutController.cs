@@ -1,23 +1,66 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class KeywordWorldSlotLayoutController : UI_Base
 {
     [SerializeField]
     private Transform panel;
-
-    private readonly float Y_POS_REVISION_AMOUNT = 2f;
+    [SerializeField]
+    private Transform debugIcon;
     public Transform Panel { get => panel; }
-    private Collider entityColider;
+
+    private BoxCollider entityColider;
+    private List<KeywordWorldSlotUIController> keywordWorldSlots = new List<KeywordWorldSlotUIController>();
+    public List<KeywordWorldSlotUIController> KeywordWorldSlots { get => keywordWorldSlots;}
+    private readonly float ELEMENT_WIDTH = 0.6f;
     public override void Init()
     {
 
     }
-
-    public void RegisterEntity(Transform entity) 
+    public void Opne() 
     {
-        entityColider = entity.GetComponent<Collider>();
+        panel.gameObject.SetActive(true);
+        debugIcon.gameObject.SetActive(true);
+    }
+    public void Close() 
+    {
+        panel.gameObject.SetActive(false);
+        debugIcon.gameObject.SetActive(false);
+    }
+
+    public void AnimClose(float time) 
+    {
+        panel.DOKill();
+        debugIcon.DOKill();
+        panel.DOScale(Vector3.zero, time);
+        debugIcon.DOScale(Vector3.zero, time);
+
+    }
+    public void AnimOpne(float time)
+    {
+        panel.DOKill();
+        debugIcon.DOKill();
+        panel.DOScale(Vector3.one, time);
+        debugIcon.DOScale(Vector3.one, time);
+
+    }
+    public void RegisterEntity(Transform entity ,int count) 
+    {
+        entityColider = entity.GetComponent<BoxCollider>();
+        for(int i = 0; i < count; ++i) 
+        {
+            MakeWorldSlot();
+        }
+        SortChild(ELEMENT_WIDTH);
+    }
+    private KeywordWorldSlotUIController MakeWorldSlot() 
+    {
+        var worldSlot = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotUIController>(panel,"KeywordSlotWorldSpace");
+        keywordWorldSlots.Add(worldSlot);
+        return worldSlot;
     }
     public void SortChild(float width) 
     {
@@ -38,8 +81,12 @@ public class KeywordWorldSlotLayoutController : UI_Base
 
     private void Update()
     {
-        panel.position = entityColider.transform.position + Vector3.up * ((entityColider.bounds.size.y / 2) + Y_POS_REVISION_AMOUNT);
-        panel.rotation = Camera.main.transform.rotation;
+        // panel.position = entityColider.transform.position + Vector3.up * ((entityColider.bounds.size.y / 2) + Y_POS_REVISION_AMOUNT);
+        var camPos = Camera.main.transform.position;
+        var camdir = camPos - entityColider.transform.position;
+        //panel.position = entityColider.transform.position + Vector3.up * ((entityColider.bounds.size.y / 2) + Y_POS_REVISION_AMOUNT);
+        transform.position = entityColider.bounds.center + camdir.normalized * entityColider.bounds.extents.magnitude;
+        transform.rotation = Camera.main.transform.rotation;
     }
 
 }

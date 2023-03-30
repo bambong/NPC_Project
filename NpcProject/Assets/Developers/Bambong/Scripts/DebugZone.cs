@@ -2,28 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
-
+using DG.Tweening;
+using static AmazingAssets.WireframeShader.WireframeMaskController;
 
 [RequireComponent(typeof(Collider))]
 public class DebugZone : MonoBehaviour
 {
     [SerializeField]
-    private DebugModCameraController debugModCameraController;
-    [SerializeField]
     private int playerSlotCount =2;
+
+    [SerializeField]
+    private List<KeywordEntity> childEntitys = new List<KeywordEntity>(); 
 
     [SerializeField]
     private GameObject[] keywords;
 
-    public int PlayerSlotCount { get => playerSlotCount; }
+    [Header("Wrie Material list")]
+    [SerializeField]
+    private Material[] wireMaterials;
 
-    private List<KeywordFrameController> playerFrames = new List<KeywordFrameController>();
+    public int PlayerSlotCount { get => playerSlotCount; }
+    public Material[] WireMaterials { get => wireMaterials; }
+
+    private List<PlayerKeywordFrame> playerFrames = new List<PlayerKeywordFrame>();
     private Transform playerLayout;
 
-    private void Awake()
+    private Vector3 boxSize;
+    private void Start()
     {
         MakeFrame();
         MakeKeyword();
+        WireMaterialClear();
+        for (int i = 0; i< childEntitys.Count; ++i) 
+        {
+            childEntitys[i].SetDebugZone(this);
+        }
+        boxSize = GetComponent<BoxCollider>().bounds.size;
     }
     private void MakeFrame() 
     {
@@ -31,7 +45,7 @@ public class DebugZone : MonoBehaviour
         ClosePlayerLayout();
         for(int i = 0; i < playerSlotCount; ++i)
         {
-            playerFrames.Add(Managers.UI.MakeSubItem<KeywordFrameController>(playerLayout,"KeywordPlayerSlotUI"));
+            playerFrames.Add(Managers.UI.MakeSubItem<PlayerKeywordFrame>(playerLayout,"KeywordPlayerSlotUI"));
         }
     }
     private void MakeKeyword() 
@@ -55,23 +69,37 @@ public class DebugZone : MonoBehaviour
             {
                 continue;
             }
-            playerFrames[i].SetKeyWord(keyword);
-            keyword.SetFrame(playerFrames[i]);
+            playerFrames[i].InitKeyword(keyword);
+            keyword.SetDebugZone(this);
             return true;
         }
 
         return false;
     }
+    private void WireMaterialClear() 
+    {
+        for (int i = 0; i < WireMaterials.Length; i++)
+        {
+            if (WireMaterials[i] == null)
+                continue;
+
+            WireMaterials[i].SetVector("_WireframeShaderMaskSpherePosition",Vector3.zero);
+
+            WireMaterials[i].SetFloat("_WireframeShaderMaskSphereRadius", 0);
+            WireMaterials[i].SetVector("_WireframeShaderMaskBoxBoundingBox", Vector3.zero);
+        }
+    }
     public void OpenPlayerLayout() => playerLayout.gameObject.SetActive(true);
     public void ClosePlayerLayout() => playerLayout.gameObject.SetActive(false);
     public void OnEnterDebugMod() 
     {
-        debugModCameraController.EnterDebugMod();
+        Managers.Game.Player.SetWireframeMaterial(wireMaterials);
+        Managers.Game.Player.OpenWireEffect(boxSize *2);
     }
     public void OnExitDebugMod() 
     {
-        debugModCameraController.ExitDebugMod();
-        Managers.Camera.SwitchPrevCamera();
+        Managers.Game.Player.CloseWireEffect();
+        ClosePlayerLayout();
     }
 
     private void OnTriggerEnter(Collider other)

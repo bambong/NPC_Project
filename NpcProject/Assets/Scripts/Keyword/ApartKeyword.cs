@@ -5,42 +5,29 @@ using UnityEngine;
 public class ApartKeyword : KeywordController
 {
     [SerializeField]
-    private float speed = 10f; 
-    public override void KeywordAction(KeywordEntity entity)
+    public static float Speed = 10f; 
+    public override void OnFixedUpdate(KeywordEntity entity)
     {
-        entity.ClearVelocity();
-        entity.SetKinematic(true);
-        PairKeyword pairKeyword = null;
-        foreach(var keyword in entity.CurrentRegisterKeyword)
-        {
-            if(keyword.Key is PairKeyword) 
-            {
-                pairKeyword = keyword.Key as PairKeyword;
-                break;            
-            }
-            
-        }
-        if(pairKeyword == null) 
-        {
-            return;
-        }
-        var target = pairKeyword.GetOtherPair().MasterEntity;
+        //entity.ClearVelocity();
+       // entity.SetKinematic(true);
 
-        if(target == null)
+        KeywordEntity otherEntity;
+        if(!PairKeyword.IsAvailablePair(entity,out otherEntity)) 
         {
             return;
         }
-        var dir = entity.KeywordTransformFactor.position -target.KeywordTransformFactor.position;
+    
+        var dir = entity.KeywordTransformFactor.position -otherEntity.KeywordTransformFactor.position;
         dir.y = 0;
         if(new Vector3(dir.x,0,dir.z).magnitude <= 0) 
         {
             dir = Vector3.right;
         }
-        entity.ColisionCheckMove(dir.normalized * speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER));
+        entity.ColisionCheckMove(dir.normalized * Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER));
         
     }
     public override void OnRemove(KeywordEntity entity)
     {
-       entity.SetKinematic(false);
+      // entity.SetKinematic(false);
     }
 }

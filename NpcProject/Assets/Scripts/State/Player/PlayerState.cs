@@ -10,7 +10,6 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.OpenPlayerUI();
         stateController.AnimIdleEnter();
     }
 
@@ -28,6 +27,7 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
     public void UpdateActive(PlayerController stateController)
     {
         stateController.PlayerInputCheck();
+        stateController.DebugModEnterInputCheck();
     }
 }
 
@@ -51,9 +51,8 @@ public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
 
     public void UpdateActive(PlayerController stateController)
     {
-        //stateController.PlayerMoveUpdate();
-        stateController.DebugModEnterInputCheck();
         stateController.InteractionInputCheck();
+        stateController.DebugModEnterInputCheck();
     }
 }
 
@@ -64,7 +63,6 @@ public class PlayerStop : Singleton<PlayerStop>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.ClosePlayerUI();
         stateController.ClearMoveAnim();        
     }
 
@@ -87,7 +85,6 @@ public class PlayerDebugMod : Singleton<PlayerDebugMod>, IState<PlayerController
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.ClosePlayerUI();
     }
 
     public void Exit(PlayerController stateController)
@@ -100,10 +97,7 @@ public class PlayerDebugMod : Singleton<PlayerDebugMod>, IState<PlayerController
 
     public void UpdateActive(PlayerController stateController)
     {
-        if(!stateController.DebugModEnterInputCheck()) 
-        {
-            stateController.DebugModeMouseInputCheck();
-        }
+        stateController.DebugModEnterInputCheck();
     }
 }
 
@@ -116,7 +110,6 @@ public class PlayerInteraction : Singleton<PlayerInteraction>, IState<PlayerCont
     {
         stateController.ClearMoveAnim();
         stateController.InteractionEnter();
-        stateController.ClosePlayerUI();
     }
 
     public void Exit(PlayerController stateController)
@@ -132,30 +125,7 @@ public class PlayerInteraction : Singleton<PlayerInteraction>, IState<PlayerCont
     {
     }
 }
-public class PlayerKeywordMod : Singleton<PlayerKeywordMod>, IState<PlayerController>
-{
-    public void Init()
-    {
-    }
-    public void Enter(PlayerController stateController)
-    {
-      
-    }
 
-    public void Exit(PlayerController stateController)
-    {
-       
-    }
-
-    public void FixedUpdateActive(PlayerController stateController)
-    {
-    }
-
-    public void UpdateActive(PlayerController stateController)
-    {
-        stateController.KeywordModInputCheck();
-    }
-}
 public class PlayerDeath : Singleton<PlayerDeath>, IState<PlayerController>
 {
     public void Init()
@@ -163,7 +133,7 @@ public class PlayerDeath : Singleton<PlayerDeath>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.OpenDeathUI();
+        stateController.PlayDeathFeedback();
     }
 
     public void Exit(PlayerController stateController)

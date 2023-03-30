@@ -8,36 +8,32 @@ public class KeywordWorldSlotUIController : UI_Base
 {
     [SerializeField]
     private Transform parent;
-    [SerializeField]
-    private TextMeshProUGUI keywordText;
+
     [SerializeField]
     private Image image;
 
-    private readonly string DEFAULT_TEXT = "NULL";
-    
+
     public override void Init()
     {
         
     }
-    public void SetSlotUI(Color color ,string text) 
+    public void UpdateUI(bool hasKeyword) 
     {
-        this.keywordText.text = text;
-        image.color = color;
+        if (hasKeyword) 
+        {
+            this.image.color = Color.green;
+        }
+        else 
+        {
+            this.image.color = Color.white;
+        }
     }
-
     public void Open()
     {
         gameObject.SetActive(true);
     }
-    public void Close() 
+    public void Close()
     {
         parent.gameObject.SetActive(false);
-    }
-
-
-    public void ResetSlotUI() 
-    {
-        image.color = Color.black;
-        keywordText.text = DEFAULT_TEXT;
     }
 }

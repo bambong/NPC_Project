@@ -1,3 +1,4 @@
+using MoreMountains.Tools;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro.EditorUtilities;
@@ -21,8 +22,8 @@ public class KeywordEvent : GameEvent
 
 public class KeywordManager
 {
-
     private KeywordEntity curKeywordEntity;
+
     private PlayerKeywordPanelController playerKeywordPanel;
     public PlayerKeywordPanelController PlayerKeywordPanel { get => playerKeywordPanel;}
     public KeywordEntity CurKeywordEntity { get => curKeywordEntity; }
@@ -35,11 +36,24 @@ public class KeywordManager
 
     private DebugZone curDebugZone = null;
     public Transform PlayerPanelLayout { get => playerKeywordPanel.LayoutParent; }
-
+    public Transform KeywordEntitySlots { get; private set; } 
+    public KeywordController CurDragKeyword { get; set; }
     public void Init()
     {
         playerKeywordPanel = Managers.UI.MakeSceneUI<PlayerKeywordPanelController>(null,"PlayerKeywordPanel");
+        KeywordEntitySlots = new GameObject("KeywordEntitySlots").transform;
+        KeywordEntitySlots.SetParent(playerKeywordPanel.transform);
         graphicRaycaster = playerKeywordPanel.gameObject.GetOrAddComponent<GraphicRaycaster>();
+    }
+    public void OnSceneLoaded() 
+    {
+        playerKeywordPanel = Managers.UI.MakeSceneUI<PlayerKeywordPanelController>(null, "PlayerKeywordPanel");
+        KeywordEntitySlots = new GameObject("KeywordEntitySlots").transform;
+        KeywordEntitySlots.SetParent(playerKeywordPanel.transform);
+        graphicRaycaster = playerKeywordPanel.gameObject.GetOrAddComponent<GraphicRaycaster>();
+    }
+    public void OnSceneLoadComplete() 
+    {
     }
 
     public List<RaycastResult> GetRaycastList(PointerEventData pointerEventData)
@@ -52,7 +66,6 @@ public class KeywordManager
 
     public void EnterDebugMod() 
     {        
-        curDebugZone.OnEnterDebugMod();
         foreach(var entity in curSceneEntity)
         {
             entity.EnterDebugMod();
@@ -61,11 +74,14 @@ public class KeywordManager
         {
             effect.EnterDebugMod();
         }
+
+        curDebugZone.OnEnterDebugMod();
+        playerKeywordPanel.Open();
+
     }
     
     public void ExitDebugMod()
     {
-        curDebugZone.OnExitDebugMod();
         foreach(var entity in curSceneEntity)
         {
             entity.ExitDebugMod();
@@ -74,27 +90,24 @@ public class KeywordManager
         {
             effect.ExitDebugMod();
         }
+        if(CurDragKeyword != null) 
+        {
+            CurDragKeyword.DragReset();
+            CurDragKeyword = null;
+        }
+        curDebugZone?.OnExitDebugMod();
+        playerKeywordPanel.Close();
         Managers.Game.SetStateNormal();
     }
     public void SetDebugZone(DebugZone zone)
     {
+        if (zone == null && Managers.Game.IsDebugMod)
+        {
+            curDebugZone?.OnExitDebugMod();
+            Managers.Game.Player.ExitDebugMod();
+        }
         curDebugZone = zone;
-    }
-    public void EnterKeywordMod(KeywordEntity keywordEntity) 
-    {
-        keywordEntity.OpenKeywordSlot();
-        Managers.Game.SetStateKeywordMod();
-        curKeywordEntity = keywordEntity;
-        playerKeywordPanel.Open();
-        keywordEntity.OpenKeywordSlot();
-    }
-  
-    public void ExitKeywordMod()
-    {
-        Managers.Game.SetStateDebugMod();
-        playerKeywordPanel.Close();
-        curKeywordEntity.CloseKeywordSlot();
-        curKeywordEntity.DecisionKeyword();
+       
     }
 
     public void AddDebugEffectController(DebugModEffectController debugModEffectController) 

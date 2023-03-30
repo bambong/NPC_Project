@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Util
 {
+    public static Vector3 VectorMultipleScale(Vector3 origin, Vector3 scale)
+    {
+        origin.x *= scale.x;
+        origin.y *= scale.y;
+        origin.z *= scale.z;
+        return origin;
+    }
+
     public static T GetOrAddComponent<T>(GameObject go) where T : UnityEngine.Component
     {
         T component = go.GetComponent<T>();

@@ -61,8 +61,10 @@ public class Managers : MonoBehaviour
         }
 
     }
-
-
+    public static void OnSceneLoad() 
+    {
+        Keyword.OnSceneLoaded();
+    }
     public static void Clear()
     {
         UI.Clear();

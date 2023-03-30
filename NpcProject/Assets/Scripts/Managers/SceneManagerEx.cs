@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,25 +13,35 @@ public class SceneManagerEx
         sceneTransition = Managers.UI.MakeSceneUI<SceneTransitionUIController>(null,"SceneTransitionUI");
     }
 
-    public void LoadScene(Define.Scene type)
+    public void LoadScene(Define.Scene type ,Action onComplete = null)
     {
         Managers.Clear();
-        sceneTransition.StartCoroutine(LoadSceneCo(type));
+        sceneTransition.StartCoroutine(LoadSceneCo(type, onComplete));
 
     }
-    private IEnumerator LoadSceneCo(Define.Scene type) 
+    private IEnumerator LoadSceneCo(Define.Scene type, Action onComplete = null)
     {
         float alpha = 0;
         float progress = 0;
         while (progress < 1)
         {
             progress += Time.deltaTime;
-            sceneTransition.canvasGroup.alpha =  Mathf.Lerp(alpha,1,progress);
+            sceneTransition.canvasGroup.alpha = Mathf.Lerp(alpha, 1, progress);
             yield return null;
         }
         alpha = 1;
         sceneTransition.canvasGroup.alpha = alpha;
-        SceneManager.LoadScene(GetSceneName(type));
+        var async =  SceneManager.LoadSceneAsync(GetSceneName(type));
+        async.allowSceneActivation = false;
+        async.completed += (async) => { Managers.OnSceneLoad(); };
+        while (async.progress < 0.9f)
+        {
+            progress += Time.deltaTime;
+            sceneTransition.canvasGroup.alpha = Mathf.Lerp(alpha, 1, progress);
+            yield return null;
+        }
+     
+        async.allowSceneActivation = true;
         progress = 0;
         while (progress < 1)
         {
@@ -39,6 +50,8 @@ public class SceneManagerEx
             yield return null;
         }
         sceneTransition.canvasGroup.alpha = 0;
+       
+        onComplete?.Invoke();
     }
 
 
