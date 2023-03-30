@@ -12,8 +12,6 @@ public class PlayerDetectController : MonoBehaviour
 
     private MonsterController monsterController;
 
-    //private float patienceTime = 0f;
-    //private float attackTime = 1f;
     private float distance;
     private float attackRange;
     private bool isPlayer = false;
@@ -46,13 +44,6 @@ public class PlayerDetectController : MonoBehaviour
             if (isPlayer)
             {
                 monsterController.SetMonsterStateMove();
-
-                /*
-                if (attackRange < 5f)
-                {
-                    monsterController.SetMonsterStateAttack();
-                }
-                */
             }
         }        
     }

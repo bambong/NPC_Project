@@ -10,6 +10,7 @@ public class MonsterController : MonoBehaviour
     private PlayerDetectController playerDetectController;
     [SerializeField]
     private int health = 100;
+    private int curHealth = 0;
 
     [SerializeField]
     private float moveSpeed = 1f;
@@ -46,6 +47,7 @@ public class MonsterController : MonoBehaviour
         animator = GetComponent<Animator>();
         monsterRigid = GetComponent<Rigidbody>();
         player = GameObject.FindGameObjectWithTag("Player");
+        curHealth = health;
 
         monsterNav.speed = moveSpeed;
         spawnPoint = this.gameObject.transform.position;
@@ -97,7 +99,9 @@ public class MonsterController : MonoBehaviour
 
     public void GetDamaged()
     {
-        if (health == 0)
+        StartCoroutine(ColorBlink());
+
+        if (curHealth == 0)
         {
             SetMonsterStateDeath();
         }
@@ -162,6 +166,19 @@ public class MonsterController : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    IEnumerator ColorBlink()
+    {
+        spriteRenderer.material.color = Color.red;
+        yield return new WaitForSeconds(0.2f);
+
+        /*
+        if (curHealth > 0)
+        {
+            spriteRenderer.material.color = new Color(1, 1, 1);
+        }
+        */
     }
 
 
