@@ -144,7 +144,7 @@ public class TalkManager
         
         while(true) 
         {
-            if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.TALK_KEY)) && talkPanel.IsNext == true && !talkPanel.IsChoice || talkPanel.IsSelect) 
+            if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.TALK_KEY)) && talkPanel.IsNext == true && !talkPanel.IsChoice || talkPanel.GetIsSelect()) 
             {
                 talkPanel.InputIsSelect(false);
                 if(curTalkEvent.MoveNext())
