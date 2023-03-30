@@ -13,7 +13,7 @@ public class MonsterController : MonoBehaviour
     private int curHealth = 0;
 
     [SerializeField]
-    private float moveSpeed = 1f;
+    private float moveSpeed = 2f;
     [SerializeField]
     private float knockbackForce = 5f;
 
@@ -77,7 +77,7 @@ public class MonsterController : MonoBehaviour
 
     public void Revert()
     {
-        monsterNav.speed = 1f;
+        monsterNav.speed = moveSpeed;
         monsterNav.SetDestination(spawnPoint);
     }
 
@@ -101,7 +101,7 @@ public class MonsterController : MonoBehaviour
     {
         StartCoroutine(ColorBlink());
 
-        if (curHealth == 0)
+        if (curHealth <= 0)
         {
             SetMonsterStateDeath();
         }
@@ -172,13 +172,6 @@ public class MonsterController : MonoBehaviour
     {
         spriteRenderer.material.color = Color.red;
         yield return new WaitForSeconds(0.2f);
-
-        /*
-        if (curHealth > 0)
-        {
-            spriteRenderer.material.color = new Color(1, 1, 1);
-        }
-        */
     }
 
 

@@ -40,11 +40,7 @@ public class PlayerDetectController : MonoBehaviour
 
             attackRange = Vector3.Distance(player.position, transform.position);
 
-
-            if (isPlayer)
-            {
-                monsterController.SetMonsterStateMove();
-            }
+            monsterController.SetMonsterStateMove();
         }        
     }
 
