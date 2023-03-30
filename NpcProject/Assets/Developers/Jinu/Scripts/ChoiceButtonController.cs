@@ -40,11 +40,16 @@ public class ChoiceButtonController : UI_Base
             choiceA.gameObject.SetActive(true);
             choiceB.gameObject.SetActive(true);
         }
-        if(activeCount ==3)
+        else if(activeCount ==3)
         {
             choiceA.gameObject.SetActive(true);
             choiceB.gameObject.SetActive(true);
             choiceC.gameObject.SetActive(true);
+        }
+        else
+        {
+            isSelect = true;
+            Debug.Log("The choice are not completely created");
         }
     }
 

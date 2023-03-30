@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 
 public class TalkPanelController : UI_Base
 {
-    private const string pattern = "@(.*?)@";
+    private const string PATTERN = "@(.*?)@";
     private readonly float TEXT_SPEED = 0.05f;
     
     [SerializeField]
@@ -39,7 +39,6 @@ public class TalkPanelController : UI_Base
 
     private bool isNext = false;
     private bool isTrans = false;
-    private bool inputKey = false;
     private bool isChoice = false;
     private int buttonCount;
 
@@ -70,7 +69,6 @@ public class TalkPanelController : UI_Base
     {
         int randomSize = 0;
         string textStore = null;
-        inputKey = false;
         textDialogue = null;
 
         SettingTextAnimation();
@@ -89,6 +87,11 @@ public class TalkPanelController : UI_Base
 
             for (int i = 0; i < textDialogue.Length; i++)
             {
+                if (isTrans == false)
+                {
+                    isNext = true;
+                    yield break;
+                }
                 if (textDialogue[i] == '<')
                 {
                     for (int j = i; !(textDialogue[j] == '>'); j++)
@@ -105,22 +108,21 @@ public class TalkPanelController : UI_Base
                     dialogueText.text = textStore + RandomText(textSize - randomSize);
                 }
                 yield return new WaitForSeconds(TEXT_SPEED);
-
-
-                if (isTrans == false)
-                {
-                    dialogueText.text = textDialogue;
-                    yield break;
-                }
-                inputKey = true;
             }
+
+            if (isChoice == true)
+            {
+                choiceButton.Active(buttonCount);
+                StartCoroutine(ChoiceSelect());
+            }
+
             isTrans = false;
-            isNext = true;
+            isNext = true; 
+
         }
         else
         {
             DotweenTextAnimation(textDialogue);
-            inputKey = true;
         }
     }
 
@@ -149,7 +151,6 @@ public class TalkPanelController : UI_Base
     {
         while (!isNext)
         {
-
             if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY)))
             {
                 if (isChoice == true)
@@ -157,23 +158,18 @@ public class TalkPanelController : UI_Base
                     choiceButton.Active(buttonCount);
                     StartCoroutine(ChoiceSelect());
                 }
-                if (isTrans == false && inputKey == true)
+                if (isTrans == false)
                 {
                     dialogueText.DOKill();
                     dialogueText.text = textDialogue;
-                    yield return new WaitForSeconds(0.1f);
                     isNext = true;
-                    inputKey = false;
                     yield break;
                 }
-                if (isTrans == true && inputKey == true)
+                if (isTrans == true)
                 {
                     dialogueText.text = "";
                     dialogueText.text = textDialogue;
-                    yield return new WaitForSeconds(0.1f);
-                    isNext = true;
                     isTrans = false;
-                    inputKey = false;
                     yield break;
                 }
             }
@@ -192,15 +188,14 @@ public class TalkPanelController : UI_Base
             if (item == "dummy")
             {
                 isTrans = true;
+                continue;
             }
-            else if (item == "choice")
+            if (item == "choice")
             {
                 isChoice = true;
-            }
-            else
-            {
-                textDialogue += item;
-            }
+                continue;
+            }     
+            textDialogue += item;
         }
     }
     #endregion
@@ -208,7 +203,7 @@ public class TalkPanelController : UI_Base
     #region TextParsing
     private string TextExtraction(string textDialogue)
     {
-        MatchCollection matches = Regex.Matches(textDialogue, pattern);
+        MatchCollection matches = Regex.Matches(textDialogue, PATTERN);
 
         List<string> matchedStrings = new List<string>();
         StringBuilder replacedStrings = new StringBuilder();        
@@ -233,23 +228,20 @@ public class TalkPanelController : UI_Base
 
         textDialogue = replacedStrings.ToString();
 
-        if(!(matchedStrings.Count == 0))
-        {
-            buttonCount = matchedStrings.Count;
-            SetChoiceText(matchedStrings);
-        }
+        buttonCount = matchedStrings.Count;
+        SetChoiceText(matchedStrings);
 
         return textDialogue;
     }
 
     private void SetChoiceText(List<string> matchedStrings)
     {
-        if (matchedStrings.Count == 2)
+        if (buttonCount == 2)
         {
             choiceButton.choiceTextA.text = matchedStrings[0];
             choiceButton.choiceTextB.text = matchedStrings[1];
         }
-        if (matchedStrings.Count == 3)
+        if (buttonCount == 3)
         {
             choiceButton.choiceTextA.text = matchedStrings[0];
             choiceButton.choiceTextB.text = matchedStrings[1];
@@ -290,13 +282,18 @@ public class TalkPanelController : UI_Base
         {
             yield return null;
         }
-        isChoice = false;
+        if(isTrans == true)
+        {
+            isChoice = false;
+        }        
         isNext = true;
     }
 
     public void InputIsSelect(bool value)
     {
         choiceButton.SetisSelect(value);
+        choiceButton.Inactive();
+        isChoice = false;
     }
 
     public bool GetIsSelect()
