@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.Rendering;
 
 public class PlayerUIController : UI_Base
 {
@@ -97,7 +98,7 @@ public class PlayerUIController : UI_Base
 
     public void DebugButton()
     {
-        if(Managers.Keyword.CurDebugZone == null)
+        if(Managers.Keyword.CurDebugZone == null || !Managers.Keyword.CurDebugZone.IsDebugAble)
         {
             isDebugOpen = false;
             debugUI.DOKill();
@@ -107,6 +108,9 @@ public class PlayerUIController : UI_Base
         {
             isDebugOpen = true;
             isDebugAni = true;
+            var color = debugUI.color;
+            color.a = 0;
+            debugUI.color = color;
             debugUI.gameObject.SetActive(true);
             StartCoroutine(OpenDebugUI());
         }
@@ -140,7 +144,7 @@ public class PlayerUIController : UI_Base
                     debugUI.DOFade(1.0f, 0);
                 });
             }    
-            if(Managers.Game.Player.IsDebugMod)
+            if(Managers.Game.IsDebugMod)
             {
                 debugUI.DOKill();
                 debugUI.gameObject.SetActive(false);

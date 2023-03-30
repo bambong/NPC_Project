@@ -13,7 +13,6 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     private readonly float KEYWORD_FRAME_MOVE_TIME = 0.1f;
     private readonly string KEYWORD_FRAME_TAG = "KeywordFrame";
 
-    private bool isLock = false;
 
     [SerializeField]
     private RectTransform rectTransform;
@@ -25,6 +24,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     private Vector3 startDragPoint;
     private KeywordFrameBase curFrame;
     protected DebugZone parentDebugZone;
+    private bool isLock = false;
     
     public Image Image { get => image; }
     public string KewordId { get; private set; }
@@ -165,8 +165,18 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     public virtual void OnRemove(KeywordEntity entity)
     { 
     }
+    public virtual void ClearForPool() 
+    {
+    
+    }
 
     public override void Init()
     {
+        curFrame = null;
+        parentDebugZone = null;
+        if (isLock) 
+        {
+            SetLock(false);
+        }
     }
 }

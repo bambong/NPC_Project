@@ -7,9 +7,9 @@ using UnityEngine.UI;
 public class KeywordWorldSlotLayoutController : UI_Base
 {
     [SerializeField]
-    private Transform panel;
+    protected Transform panel;
     [SerializeField]
-    private Transform debugIcon;
+    protected Transform debugIcon;
     public Transform Panel { get => panel; }
 
     private BoxCollider entityColider;
@@ -20,12 +20,12 @@ public class KeywordWorldSlotLayoutController : UI_Base
     {
 
     }
-    public void Opne() 
+    public virtual void Opne() 
     {
         panel.gameObject.SetActive(true);
         debugIcon.gameObject.SetActive(true);
     }
-    public void Close() 
+    public virtual void Close() 
     {
         panel.gameObject.SetActive(false);
         debugIcon.gameObject.SetActive(false);

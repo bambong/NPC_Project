@@ -3,33 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpineGhostColorController : MonoBehaviour
+public class SpineGhostColorController : GhostEffectController
 {
-
     [SerializeField]
     private SkeletonGhost ghost;
-    [SerializeField]
-    private List<Color> colors;
-    
-    [SerializeField]
-    private float colorTime = 1f;
 
-    private float curTime;
-    private int curIndex;
-    void Start()
+    public override void Close()
     {
-
+        ghost.enabled = false;
+        enabled = false;
     }
 
-    void Update()
+    public override void Open()
     {
-        curTime += Time.deltaTime;
-        if(curTime >= colorTime) 
-        {
-            curTime = 0;
-            curIndex = (curIndex + 1) % colors.Count;
-        }
-        int nextIndex = (curIndex+1) % colors.Count;
-        ghost.color = Color.Lerp(colors[curIndex], colors[nextIndex],  curTime * (1/ colorTime));
+        ghost.enabled = true;
+        enabled = true;
+    }
+
+    void FixedUpdate()
+    {
+        ghost.color = colorPicker.CurrentColor;
     }
 }

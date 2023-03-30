@@ -72,6 +72,9 @@ public class KeywordSlotUiController : UI_Base
         mask.DOKill();
         mask.DOSizeDelta(Vector2.zero, ClOSE_ANIM_TIME);
     }
-
+    public void ClearAll() 
+    {
+    
+    }
   
 }

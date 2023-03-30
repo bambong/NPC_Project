@@ -37,12 +37,15 @@ public class PoolManager
             {
                 return;
             }
+            
+
             if (_poolStack.Contains(poolable)) 
             {
-                Debug.Log("Error");
+                Debug.LogError("Pool Error");
             }
-            poolable.transform.parent = Root;
+            poolable.transform.SetParent(Root);
             poolable.gameObject.SetActive(false);
+            poolable.Return();
             poolable.IsUsing = false;
 
             _poolStack.Push(poolable);
@@ -62,20 +65,17 @@ public class PoolManager
             }
 
             poolable.gameObject.SetActive(true);
-            if (!(poolable.transform.parent == Root || poolable.transform.parent == null))
-            {
-                Debug.Log("error");
-            }
 
             // DontDestroyOnLoad 해제 용도
             if (parent == null)
             {
-                poolable.transform.parent = Managers.Scene.CurrentScene.transform;
+                poolable.transform.SetParent(Managers.Scene.CurrentScene.transform);
             }
      
-            poolable.transform.parent = parent;
+            poolable.transform.SetParent(parent);
             poolable.IsUsing = true;
-
+            poolable.Init();
+            
             return poolable;
         }
     }
@@ -97,7 +97,7 @@ public class PoolManager
     {
         Pool pool = new Pool();
         pool.Init(original,count);
-        pool.Root.parent = _root;
+        pool.Root.SetParent(_root);
 
         _pool.Add(original.name,pool);
     }

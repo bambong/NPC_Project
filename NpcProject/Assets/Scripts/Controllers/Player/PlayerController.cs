@@ -70,13 +70,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private MMF_Player deathFeedback;
 
-    [Space(1)]
-    [Header("Motion Effec")]
-    [SerializeField]
-    private SkeletonGhost ghost;
-    [SerializeField]
-    private SpineGhostColorController motionTrail;
-
     private PlayerAnimationController.AnimDir curDir = PlayerAnimationController.AnimDir.Front;
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
@@ -85,8 +78,6 @@ public class PlayerController : MonoBehaviour
 
     private RaycastHit slopeHit;
     private int slopeLayer;
-    public bool IsDebugMod { get => isDebugMod; }
-    private bool isDebugMod;
     public int Hp { get => hp; }
     public int MaxHp { get => maxHp; }
 
@@ -131,11 +122,6 @@ public class PlayerController : MonoBehaviour
         interactionDetecter.InteractionUiDisable();
     }
 
-    public void SetMotionEffect(bool isOn) 
-    {
-        ghost.enabled = isOn;
-        motionTrail.enabled = isOn;
-    }
     #region OnStateExit
     public void InteractionExit()
     {
@@ -213,7 +199,7 @@ public class PlayerController : MonoBehaviour
 
         if (new Vector3(moveVec.x, 0, moveVec.z).magnitude > 0.02f)
         {
-            AnimMoveEnter();
+            AnimMoveEnter(new Vector3(hor, 0, ver));
             rigid.velocity = moveVec.normalized * speed + gravity;  
         }
         else
@@ -376,34 +362,30 @@ public class PlayerController : MonoBehaviour
     }
     public void EnterDebugMod()
     {
-        SetstateStop();
-        isDebugMod = true;
         Managers.Game.SetStateDebugMod();
         glitchEffectController.EnterDebugMod(() =>
         {
-            SetStateIdle();
-            SetMotionEffect(true);
+            animationController.OnEnterDebugMod();
         });
         interactionDetecter.SwitchDebugMod(true);
     }
     public void ExitDebugMod()
     {
-        SetstateStop();
+        //SetstateStop();
         glitchEffectController.ExitDebugMod(() => {
+            
             interactionDetecter.SwitchDebugMod(false);
-            SetStateIdle();
-            isDebugMod = false;
+            animationController.OnExitDebugMod();
             isDebugButton();
-            SetMotionEffect(false);
         });
     }
     public void AnimIdleEnter()
     {
         animationController.SetIdleAnim(curDir);
     }
-    public void AnimMoveEnter()
+    public void AnimMoveEnter(Vector3 moveVec)
     {
-        animationController.SetMoveAnim(curDir);
+        animationController.SetMoveAnim(curDir,moveVec);
     }
     public void ClearMoveAnim()
     {
