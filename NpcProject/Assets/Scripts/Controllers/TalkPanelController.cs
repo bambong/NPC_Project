@@ -13,6 +13,7 @@ public class TalkPanelController : UI_Base
 {
     private const string PATTERN = "@(.*?)@";
     private readonly float TEXT_SPEED = 0.05f;
+    private readonly float SKIP_DELAY_TIME = 0.1f;
     
     [SerializeField]
     private Image speakImage;
@@ -37,6 +38,7 @@ public class TalkPanelController : UI_Base
     
     private string textDialogue = null;
 
+    private bool isSkip = false;
     private bool isNext = false;
     private bool isTrans = false;
     private bool isChoice = false;
@@ -57,10 +59,11 @@ public class TalkPanelController : UI_Base
     public void PlayDialogue(Dialogue dialogue) 
     {
         dialogueText.text = "";
-        isNext = false;
+        isNext = false;        
         curDialogue = dialogue;
         speakImage.sprite = dialogue.speaker.sprite;
         spekerName.text = dialogue.speaker.name;
+        StartCoroutine(SkipDelayTime());
         StartCoroutine(PlayTextAnimation());
     }
 
@@ -89,7 +92,6 @@ public class TalkPanelController : UI_Base
             {
                 if (isTrans == false)
                 {
-                    isNext = true;
                     yield break;
                 }
                 if (textDialogue[i] == '<')
@@ -118,7 +120,6 @@ public class TalkPanelController : UI_Base
 
             isTrans = false;
             isNext = true; 
-
         }
         else
         {
@@ -151,7 +152,7 @@ public class TalkPanelController : UI_Base
     {
         while (!isNext)
         {
-            if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY)))
+            if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY)) && isSkip == true)
             {
                 if (isChoice == true)
                 {
@@ -162,19 +163,25 @@ public class TalkPanelController : UI_Base
                 {
                     dialogueText.DOKill();
                     dialogueText.text = textDialogue;
+                    yield return new WaitForSeconds(0.3f);
+                    isSkip = false;
                     isNext = true;
-                    yield break;
+                    break;                    
                 }
                 if (isTrans == true)
                 {
                     dialogueText.text = "";
                     dialogueText.text = textDialogue;
                     isTrans = false;
-                    yield break;
+                    yield return new WaitForSeconds(0.3f);
+                    isSkip = false;
+                    isNext = true;
+                    break;
                 }
             }
             yield return null;
         }
+        isSkip = false;
     }
 
     private void SettingTextAnimation()
@@ -197,6 +204,12 @@ public class TalkPanelController : UI_Base
             }     
             textDialogue += item;
         }
+    }
+
+    IEnumerator SkipDelayTime()
+    {
+        yield return new WaitForSeconds(SKIP_DELAY_TIME);
+        isSkip = true;
     }
     #endregion
 

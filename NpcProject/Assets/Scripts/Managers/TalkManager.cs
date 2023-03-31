@@ -146,11 +146,7 @@ public class TalkManager
         {
             if((Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.TALK_KEY)) && talkPanel.IsNext == true && !talkPanel.IsChoice) || talkPanel.GetIsSelect()) 
             {
-                if(!talkPanel.GetIsSelect())
-                {
-                    yield return new WaitForSeconds(0.3f);
-                }
-                talkPanel.InputIsSelect(false);                
+                talkPanel.InputIsSelect(false);
 
                 if(curTalkEvent.MoveNext())
                 {
