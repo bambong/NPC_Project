@@ -21,7 +21,7 @@ public class DamageDetectorController : MonoBehaviour
     {
         if (other.CompareTag(detectionTag))
         {
-            monsterController.SetMonsterStateDamaged();
+            monsterController.SetStateDamaged();
         }
     }
 }

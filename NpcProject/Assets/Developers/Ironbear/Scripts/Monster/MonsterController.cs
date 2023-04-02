@@ -4,54 +4,51 @@ using UnityEngine;
 using UnityEngine.AI;
 using DG.Tweening;
 
-public class MonsterController : MonoBehaviour
+public class MonsterController : KeywordEntity
 {
+    [Header("Element")]
+    [SerializeField]
+    private SpriteRenderer spriteRenderer;
+    [SerializeField]
+    private NavMeshAgent monsterNav;
+    [SerializeField]
+    private Animator animator;
+    [SerializeField]
+    private Rigidbody monsterRigid;
     [SerializeField]
     private PlayerDetectController playerDetectController;
     [SerializeField]
+    private BoxCollider attackRange;
+    [Space(1)]
+    [Header("Monster Stat")]
+    [SerializeField]
     private int health = 100;
-    private int curHealth = 0;
-
     [SerializeField]
     private float moveSpeed = 2f;
     [SerializeField]
     private float knockbackForce = 5f;
-
     [SerializeField]
-    private float fadeTime = 3.5f;
-    private float time = 0;
-    private float start = 1f;
-    private float end = 0f;
-
-    private float waitTime = 0f;
+    private float chaseDistance = 5f;
+    [SerializeField]
+    private float chaseTime = 5f;
 
     [HideInInspector]
     public Vector3 spawnPoint;
-    [SerializeField]
-    private BoxCollider attackRange;
 
-
-    private SpriteRenderer spriteRenderer;
+    private float waitTime = 2f;
+    private int curHealth = 0;
+    private float curChaseTime = 0;
+    private float curWaitTime = 0;
     private MonsterStateController monsterStateController;
-    private NavMeshAgent monsterNav;
-    private Animator animator;
-    private Rigidbody monsterRigid;
-    private GameObject player;
-
 
     private void Awake()
     {
         monsterStateController = new MonsterStateController(this);
-        monsterNav = GetComponent<NavMeshAgent>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();
-        monsterRigid = GetComponent<Rigidbody>();
-        player = GameObject.FindGameObjectWithTag("Player");
         curHealth = health;
-
-        monsterNav.speed = moveSpeed;
-        spawnPoint = this.gameObject.transform.position;
-
+        // monsterRigid = GetComponent<Rigidbody>();
+        MoveSpeedUpdate();
+        spawnPoint = transform.position;
+        chaseDistance += playerDetectController.DetectRange;
         playerDetectController.Init();
     }
 
@@ -60,120 +57,77 @@ public class MonsterController : MonoBehaviour
         monsterStateController.Update();
     }
 
-    private void FixedUpdate()
+    public override void FixedUpdate()
     {
+        base.FixedUpdate();
         monsterStateController.FixedUpdate();
-        waitTime = Random.Range(0f, 2f);
+    }
+    public void LateUpdate()
+    {
+        var rotY = Camera.main.transform.rotation.eulerAngles.y;
+        transform.rotation = Quaternion.Euler(0,rotY,0);
     }
 
-
-
-
-
-    public void PursuePlayer(Transform player)
+    public void ChasePlayer(Transform player)
     {
         monsterNav.SetDestination(player.position);
+        FlipToDestination();
     }
 
     public void Revert()
     {
-        monsterNav.speed = moveSpeed;
         monsterNav.SetDestination(spawnPoint);
-    }
-
-    public IEnumerator Wait()
-    {
-        monsterNav.speed = 0f;
-        
-        yield return new WaitForSeconds(waitTime);
-
-        MonsterAnimationWalk();
-        Revert();
-        LeftAndRightSpawnPoint();
-    }
-
-    public void Dead()
-    {
-        StartCoroutine(Invisible());
+        FlipToDestination();
     }
 
     public void GetDamaged()
     {
-        StartCoroutine(ColorBlink());
-
+        curHealth--;
         if (curHealth <= 0)
         {
-            SetMonsterStateDeath();
+            SetStateDeath();
         }
     }
-
     public void KnockBack()
     {
-        Vector3 knockbackDirection = (transform.position - player.transform.position).normalized;
-        monsterRigid.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);       
+        var playerPos = Managers.Game.Player.transform.position;
+        Vector3 knockbackDirection = (transform.position - playerPos).normalized;
+        monsterRigid.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);
     }
-
     public void AttackRangeActive()
     {
         attackRange.gameObject.SetActive(true);
     }
-
     public void AttackRangeDeactive()
     {
         attackRange.gameObject.SetActive(false);
     }
 
-    public void LeftAndRightPlayer(Transform player)
+    public void FlipToDestination() 
     {
-        Vector3 lookDirection = (player.transform.position - transform.position).normalized;
-
-        if (lookDirection.z < 0f)
-        {
-            spriteRenderer.flipX = false;
-        }
-        else
-        {
-            spriteRenderer.flipX = true;
-        }
+        var det = Vector3.Cross(monsterNav.destination - transform.position , transform.forward);
+         spriteRenderer.flipX = 0 > Vector3.Dot( Vector3.up ,det );
     }
-
-    public void LeftAndRightSpawnPoint()
+    public override void DestroyKeywordEntity()
     {
-        Vector3 lookDirection = (spawnPoint - transform.position).normalized;
-
-        if (lookDirection.z < 0f)
-        {
-            spriteRenderer.flipX = false;
-        }
-        else
-        {
-            spriteRenderer.flipX = true;
-        }
+        monsterNav.isStopped = true;
+        SetStateDeath();
+        base.DestroyKeywordEntity();
     }
-
-    IEnumerator Invisible()
+    public void MoveSpeedUpdate()
     {
-        Color fadeColor = spriteRenderer.material.color;
-        fadeColor.a = Mathf.Lerp(start, end, time);
-
-        yield return new WaitForSeconds(0.35f);
-
-        while (fadeColor.a > 0f)
-        {
-            time += Time.deltaTime / fadeTime;
-            fadeColor.a = Mathf.Lerp(start, end, time);
-            spriteRenderer.material.color = fadeColor;
-
-            yield return null;
-        }
+        monsterNav.speed = moveSpeed * Managers.Time.GetTimeSacle(TIME_TYPE.NONE_PLAYER);
     }
-
-    IEnumerator ColorBlink()
+    public override void EnterDebugMod()
     {
-        spriteRenderer.material.color = Color.red;
-        yield return new WaitForSeconds(0.2f);
+        MoveSpeedUpdate();
+        base.EnterDebugMod();
     }
-
+    public override void ExitDebugMod()
+    {
+        monsterNav.speed = moveSpeed;
+        base.ExitDebugMod();
+    }
 
     #region SetMonsterAnimation
     public void MosterAnimationIdle()
@@ -189,39 +143,128 @@ public class MonsterController : MonoBehaviour
     public void MonsterAnimationDead()
     {
         animator.SetTrigger("isDead");
-    }  
+    }
+
+    public void MonsterAnimationAttack(bool isON)
+    {
+        animator.SetBool("isAttack", isON);
+    }
     #endregion
 
-
-    #region SetMonsterState
-    public void SetMonsterStateIdle()
+    #region SetState
+    public void SetStateIdle()
     {
         monsterStateController.ChangeState(MonsterIdle.Instance);
     }
 
-    public void SetMonsterStateMove()
+    public void SetStateChase()
     {
-        monsterStateController.ChangeState(MonsterMove.Instance);
+        monsterStateController.ChangeState(MonsterChase.Instance);
     }
 
-    public void SetMonsterStateRevert()
+    public void SetStateRevert()
     {
         monsterStateController.ChangeState(MonsterRevert.Instance);
     }
 
-    public void SetMonsterStateAttack()
+    public void SetStateAttack()
     {
         monsterStateController.ChangeState(MonsterAttack.Instance);
     }
 
-    public void SetMonsterStateDamaged()
+    public void SetStateDamaged()
     {
         monsterStateController.ChangeState(MonsterDamaged.Instance);
     }
 
-    public void SetMonsterStateDeath()
+    public void SetStateWait()
+    {
+        monsterStateController.ChangeState(MonsterWait.Instance);
+    }
+    public void SetStateDeath()
     {
         monsterStateController.ChangeState(MonsterDeath.Instance);
+    }
+    #endregion
+
+    #region OnStateEnter
+    public void OnStateEnterIdle() 
+    {
+        MosterAnimationIdle();
+    }
+
+    public void OnStateEnterWait()
+    {
+        waitTime = Random.Range(1, 3f);
+        monsterNav.isStopped = true;
+        MosterAnimationIdle();
+    }
+    public void OnStateEnterChase()
+    {
+        playerDetectController.SetActive(false);
+        MonsterAnimationWalk();
+    }
+    public void OnStateEnterDead()
+    {
+        MonsterAnimationDead();
+    }
+    public void OnStateEnterDamaged()
+    {
+        GetDamaged();
+        KnockBack();
+    }
+    public void OnStateEnterRevert()
+    {
+        MonsterAnimationWalk();
+        Revert();
+    }
+
+    #endregion
+
+    #region OnStateExit
+    public void OnStateExitWait() 
+    {
+        curWaitTime = 0;
+        monsterNav.isStopped = false;
+    }
+    public void OnStateExitChase()
+    {
+        curChaseTime = 0;
+        playerDetectController.SetActive(true);
+    }
+    #endregion
+
+    #region OnStateFixedUpdate
+    public void OnStateFixedUpdateWait()
+    {
+        curWaitTime += Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER);
+        if (curWaitTime >= waitTime)
+        {
+            SetStateRevert();
+        }
+    }
+    public void OnStateFixedUpdateRevert()
+    {
+        if (0.1f > monsterNav.remainingDistance)
+        {
+            SetStateIdle();
+            return;
+        }
+    }
+    public void OnStateFixedUpdateChase()
+    {
+
+        curChaseTime += Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER);
+
+        if (curChaseTime >= chaseTime)
+        {
+            if(chaseDistance < monsterNav.remainingDistance) 
+            {
+                SetStateWait();
+                return;
+            }
+        }
+        ChasePlayer(Managers.Game.Player.transform);
     }
     #endregion
 }

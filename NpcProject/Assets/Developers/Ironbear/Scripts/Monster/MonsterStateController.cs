@@ -8,7 +8,6 @@ public class MonsterStateController : StateController<MonsterController>
     {
         Init();
     }
-
     public void Init()
     {
         curState = MonsterIdle.Instance;

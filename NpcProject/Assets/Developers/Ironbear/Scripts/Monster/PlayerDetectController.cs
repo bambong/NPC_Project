@@ -4,56 +4,26 @@ using UnityEngine;
 
 public class PlayerDetectController : MonoBehaviour
 {
-    public Transform player { get; private set; }
-
     [SerializeField]
     private string detectionTag = "Player";
 
-
+    [SerializeField]
     private MonsterController monsterController;
-
-    private float distance;
-    private float attackRange;
-    private bool isPlayer = false;
-
+    [SerializeField]
+    private SphereCollider sphereCollider;
+    public float DetectRange { get => sphereCollider.radius; }
     public void Init()
     {
-        monsterController = GetComponentInParent<MonsterController>();
     }
-
-    private void FixedUpdate()
+    public void SetActive(bool isOn)
     {
-        distance = Vector3.Distance(transform.position, monsterController.spawnPoint);
-        
-        if (distance <= 0.1f && !isPlayer)
-        {
-            monsterController.SetMonsterStateIdle();
-        }
+        gameObject.SetActive(isOn);
     }
-
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag(detectionTag))
         {
-            isPlayer = true;
-            player = other.gameObject.transform;
-
-            attackRange = Vector3.Distance(player.position, transform.position);
-
-            monsterController.SetMonsterStateMove();
+            monsterController.SetStateChase();
         }        
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if(other.CompareTag(detectionTag))
-        {
-            player = null;
-            isPlayer = false;
-            if(!isPlayer)
-            {
-                monsterController.SetMonsterStateRevert();
-            }
-        }
     }
 }

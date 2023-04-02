@@ -144,7 +144,7 @@ public class KeywordEntity : MonoBehaviour
     {
         updateAction?.Invoke(this);
     }
-    public void FixedUpdate()
+    public virtual void FixedUpdate()
     {
      
         fixedUpdateAction?.Invoke(this);
