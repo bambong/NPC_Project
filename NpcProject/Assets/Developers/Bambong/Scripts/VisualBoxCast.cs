@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,6 +32,29 @@ public static class ExtDebug
     {
         DrawBox(new Box(origin,halfExtents,orientation),color);
     }
+    public static void DrawBox(Vector3 origin, Vector3 halfExtents, Quaternion orientation, Color color, float time)
+    {
+        DrawBox(new Box(origin, halfExtents, orientation), color, time);
+    }
+
+    private static void DrawBox(Box box, Color color, float time)
+    {
+        Debug.DrawLine(box.frontTopLeft, box.frontTopRight, color, time);
+        Debug.DrawLine(box.frontTopRight, box.frontBottomRight, color, time);
+        Debug.DrawLine(box.frontBottomRight, box.frontBottomLeft, color, time);
+        Debug.DrawLine(box.frontBottomLeft, box.frontTopLeft, color, time);
+
+        Debug.DrawLine(box.backTopLeft, box.backTopRight, color, time);
+        Debug.DrawLine(box.backTopRight, box.backBottomRight, color, time);
+        Debug.DrawLine(box.backBottomRight, box.backBottomLeft, color , time);
+        Debug.DrawLine(box.backBottomLeft, box.backTopLeft, color, time);
+
+        Debug.DrawLine(box.frontTopLeft, box.backTopLeft, color, time);
+        Debug.DrawLine(box.frontTopRight, box.backTopRight, color, time);
+        Debug.DrawLine(box.frontBottomRight, box.backBottomRight, color, time);
+        Debug.DrawLine(box.frontBottomLeft, box.backBottomLeft, color, time);
+    }
+
     public static void DrawBox(Box box,Color color)
     {
         Debug.DrawLine(box.frontTopLeft,box.frontTopRight,color);

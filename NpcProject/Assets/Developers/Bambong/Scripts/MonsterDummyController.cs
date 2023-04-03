@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class MonsterDummyController : KeywordEntity
 {
-    public override void DestroyKeywordEntity()
+    public override void ClearForPool()
     {
         Managers.Scene.CurrentScene.StartCoroutine(Test(transform.position));
-        base.DestroyKeywordEntity();
+        base.ClearForPool();
     }
     IEnumerator Test(Vector3 pos )
     {

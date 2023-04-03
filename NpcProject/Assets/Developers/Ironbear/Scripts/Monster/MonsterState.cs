@@ -2,6 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public class MonsterStop : Singleton<MonsterStop>, IState<MonsterController>
+{
+    public void Init()
+    {
+
+    }
+
+    public void Enter(MonsterController monsterStateController)
+    {
+        monsterStateController.OnStateEnterStop();
+    }
+
+    public void Exit(MonsterController monsterStateController)
+    {
+        monsterStateController.OnStateExitStop();
+    }
+
+    public void FixedUpdateActive(MonsterController monsterStateController)
+    {
+
+    }
+
+    public void UpdateActive(MonsterController mmonsterStateController)
+    {
+
+    }
+}
+
 public class MonsterIdle : Singleton<MonsterIdle>, IState<MonsterController>
 {
     public void Init()
@@ -21,7 +50,7 @@ public class MonsterIdle : Singleton<MonsterIdle>, IState<MonsterController>
 
     public void FixedUpdateActive(MonsterController monsterStateController)
     {
-
+        monsterStateController.OnStateFixedUpdateIdle();
     }
 
     public void UpdateActive(MonsterController mmonsterStateController)
@@ -123,12 +152,12 @@ public class MonsterAttack : Singleton<MonsterAttack>, IState<MonsterController>
 
     public void Enter(MonsterController monsterStateController)
     {
-
+        monsterStateController.OnStateEnterAttack();
     }
 
     public void Exit(MonsterController monsterStateController)
     {
-
+        monsterStateController.OnStateExitAttack();
     }
 
     public void FixedUpdateActive(MonsterController monsterStateController)

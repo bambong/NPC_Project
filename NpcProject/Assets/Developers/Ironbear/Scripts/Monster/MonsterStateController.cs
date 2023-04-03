@@ -10,6 +10,6 @@ public class MonsterStateController : StateController<MonsterController>
     }
     public void Init()
     {
-        curState = MonsterIdle.Instance;
+        curState = MonsterStop.Instance;
     }
 }

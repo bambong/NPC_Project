@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using DG.Tweening;
+using System;
+using Unity.Mathematics;
+using static UnityEngine.Rendering.DebugUI.Table;
 
-public class MonsterController : KeywordEntity
+public class MonsterController : KeywordEntity , ISpawnAble
 {
     [Header("Element")]
     [SerializeField]
@@ -17,12 +20,11 @@ public class MonsterController : KeywordEntity
     private Rigidbody monsterRigid;
     [SerializeField]
     private PlayerDetectController playerDetectController;
-    [SerializeField]
-    private BoxCollider attackRange;
+  
     [Space(1)]
     [Header("Monster Stat")]
     [SerializeField]
-    private int health = 100;
+    private int maxHealth = 100;
     [SerializeField]
     private float moveSpeed = 2f;
     [SerializeField]
@@ -31,25 +33,55 @@ public class MonsterController : KeywordEntity
     private float chaseDistance = 5f;
     [SerializeField]
     private float chaseTime = 5f;
+    [Space(1)]
+    [Header("Attack Stat")]
+    [SerializeField]
+    private float attackDistance = 0.5f;
+    [Tooltip("X Y = 기본 Box Size 배율 Z 는 실제 Attack Range ")]
+    [SerializeField]
+    private Vector3 attackBound = new Vector3(1,1,2);
+    [SerializeField]
+    private float attackSpeed = 1;
+    [SerializeField]
+    private float attackCoolTime = 0.5f;
+    [SerializeField]
+    private int attackDamage = 1;
+    [Tooltip("공격 거리 몇 퍼센트에서 브레이크를 잡을지 ")]
+    [Range(0,1),SerializeField]
+    private float attackAutoBreakingAmount = 0.2f;
 
-    [HideInInspector]
-    public Vector3 spawnPoint;
 
     private float waitTime = 2f;
     private int curHealth = 0;
     private float curChaseTime = 0;
     private float curWaitTime = 0;
-    private MonsterStateController monsterStateController;
+    private float curAttackTime = 0;
 
+    private MonsterStateController monsterStateController;
+    private Vector3 spawnPos;
+    private Transform spawnSpot;
+    private SpawnController parentSpawn;
+    private int attackLayer = 0;
+    private readonly int IDLE_PRIORITY = 99;
+    private readonly int REVERT_PRIORITY = 50;
+    private readonly int CHASE_PRIORITY = 30;
+    
     private void Awake()
     {
         monsterStateController = new MonsterStateController(this);
-        curHealth = health;
-        // monsterRigid = GetComponent<Rigidbody>();
-        MoveSpeedUpdate();
-        spawnPoint = transform.position;
+        curHealth = maxHealth; 
         chaseDistance += playerDetectController.DetectRange;
-        playerDetectController.Init();
+        MoveSpeedUpdate();
+        monsterNav.enabled = false;
+        SetAvoidPriority(IDLE_PRIORITY);
+        monsterNav.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+
+        playerDetectController.SetActive(false);
+        if (spawnSpot == null)
+        {
+            spawnPos = transform.position;
+        }
+
     }
 
     private void Update()
@@ -76,7 +108,7 @@ public class MonsterController : KeywordEntity
 
     public void Revert()
     {
-        monsterNav.SetDestination(spawnPoint);
+        monsterNav.SetDestination(spawnPos);
         FlipToDestination();
     }
 
@@ -94,26 +126,41 @@ public class MonsterController : KeywordEntity
         Vector3 knockbackDirection = (transform.position - playerPos).normalized;
         monsterRigid.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);
     }
-    public void AttackRangeActive()
-    {
-        attackRange.gameObject.SetActive(true);
-    }
-    public void AttackRangeDeactive()
-    {
-        attackRange.gameObject.SetActive(false);
-    }
+
 
     public void FlipToDestination() 
     {
         var det = Vector3.Cross(monsterNav.destination - transform.position , transform.forward);
          spriteRenderer.flipX = 0 > Vector3.Dot( Vector3.up ,det );
     }
-    public override void DestroyKeywordEntity()
+
+
+    public override void Init()
     {
-        monsterNav.isStopped = true;
-        SetStateDeath();
-        base.DestroyKeywordEntity();
+        InitMonsterAttackLayer();
+        animator.SetFloat("AttackSpeed", attackSpeed);
+        curAttackTime = 0;
+        curHealth = maxHealth;
+        transform.SetParent(null);
+        StartCoroutine(InvokeNextFrame(() => { SetStateIdle(); }));
+        playerDetectController.SetActive(true);
+        base.Init();
     }
+    public override void ClearForPool()
+    {
+        SetStateStop();
+        if(parentSpawn != null) 
+        {
+            parentSpawn.RemoveItem(spawnSpot);
+        }
+        base.ClearForPool();
+    }
+
+    private void SetAvoidPriority(int amount) 
+    {
+        monsterNav.avoidancePriority = amount;
+    }
+
     public void MoveSpeedUpdate()
     {
         monsterNav.speed = moveSpeed * Managers.Time.GetTimeSacle(TIME_TYPE.NONE_PLAYER);
@@ -128,7 +175,91 @@ public class MonsterController : KeywordEntity
         monsterNav.speed = moveSpeed;
         base.ExitDebugMod();
     }
+    public void SetSpawnController(Transform spot, SpawnController controller)
+    {
+        spawnSpot = spot;
+        spawnPos = spawnSpot.transform.position;
+        transform.position = spot.position;
+        parentSpawn = controller;
+    }
+    IEnumerator InvokeNextFrame(Action action)
+    {
+        yield return null;
+        action?.Invoke();
+    }
+    IEnumerator IsMosnterNavEnable(Action action)
+    {
+        while (!monsterNav.enabled) 
+        {
+            yield return null;
+        }
 
+        action?.Invoke();
+    }
+    public void AttackTimeFixedUpdate() 
+    {
+        curAttackTime += Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER);
+    }
+    public bool IsAttackAble() 
+    {
+        if (attackCoolTime > curAttackTime)
+        {
+            return false;
+        }
+        var dirPlayer = Managers.Game.Player.transform.position - transform.position;
+        dirPlayer.y = 0;
+        var disToPlayer = dirPlayer.magnitude;
+        if (attackDistance >= disToPlayer) 
+        {
+            var rayDis = monsterNav.destination - transform.position;
+#if UNITY_EDITOR
+            Debug.DrawRay(transform.position, rayDis.normalized * disToPlayer, Color.blue, 5f);
+#endif
+            if (!Physics.Raycast(transform.position, rayDis.normalized, disToPlayer, attackLayer,QueryTriggerInteraction.Ignore))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    private void InitMonsterAttackLayer() 
+    {
+        attackLayer = 1;
+        foreach (var name in Enum.GetNames(typeof(Define.ColiiderMask)))
+        {
+            if (name == "Player")
+            {
+                continue;
+            }
+            attackLayer += (1 << (LayerMask.NameToLayer(name)));
+        }
+    }
+
+    public void Attack() 
+    {
+        var rayDis = (monsterNav.destination - transform.position);
+        rayDis.y = 0;
+        rayDis = rayDis.normalized;
+        var pos = transform.position + (rayDis * attackBound.z / 2);
+        
+        int playerLayer = 1 << LayerMask.NameToLayer("Player");
+        var boxSize = Util.VectorMultipleScale(new Vector3(col.size.x * attackBound.x, col.size.y * attackBound.y, attackBound.z) /2, transform.lossyScale);
+        var rot = Quaternion.LookRotation(rayDis);
+#if UNITY_EDITOR
+        ExtDebug.DrawBox(pos, boxSize, rot, Color.blue,5f);
+#endif
+        var hits = Physics.OverlapBox(pos, boxSize, rot, playerLayer, QueryTriggerInteraction.Ignore);
+        if (hits.Length < 1)
+        {
+            return;
+        }
+        Managers.Game.Player.GetDamage(attackDamage);
+    }
+
+    public void AttackAnimDone()
+    {
+        SetStateIdle();
+    }
     #region SetMonsterAnimation
     public void MosterAnimationIdle()
     {
@@ -185,22 +316,30 @@ public class MonsterController : KeywordEntity
     {
         monsterStateController.ChangeState(MonsterDeath.Instance);
     }
+    public void SetStateStop()
+    {
+        monsterStateController.ChangeState(MonsterStop.Instance);
+    }
     #endregion
 
     #region OnStateEnter
     public void OnStateEnterIdle() 
     {
+        SetAvoidPriority(IDLE_PRIORITY);
         MosterAnimationIdle();
     }
 
     public void OnStateEnterWait()
     {
-        waitTime = Random.Range(1, 3f);
+        SetAvoidPriority(IDLE_PRIORITY);
+        waitTime = UnityEngine.Random.Range(1, 3f);
         monsterNav.isStopped = true;
         MosterAnimationIdle();
     }
     public void OnStateEnterChase()
     {
+        monsterNav.stoppingDistance = attackDistance * attackAutoBreakingAmount;
+        SetAvoidPriority(CHASE_PRIORITY);
         playerDetectController.SetActive(false);
         MonsterAnimationWalk();
     }
@@ -215,8 +354,23 @@ public class MonsterController : KeywordEntity
     }
     public void OnStateEnterRevert()
     {
+        SetAvoidPriority(REVERT_PRIORITY);
         MonsterAnimationWalk();
         Revert();
+    }
+    public void OnStateEnterAttack()
+    {
+        curAttackTime = 0;
+        monsterNav.isStopped = true;
+        monsterNav.velocity = Vector3.zero;
+        playerDetectController.SetActive(false);
+        MonsterAnimationAttack(true);
+    }
+    public void OnStateEnterStop() 
+    {
+        playerDetectController.SetActive(false);
+        monsterNav.isStopped = true;
+        monsterNav.enabled = false;
     }
 
     #endregion
@@ -229,14 +383,28 @@ public class MonsterController : KeywordEntity
     }
     public void OnStateExitChase()
     {
+        monsterNav.stoppingDistance = 0;
         curChaseTime = 0;
         playerDetectController.SetActive(true);
+    }
+    public void OnStateExitStop()
+    {
+        playerDetectController.SetActive(true);
+        monsterNav.enabled = true;
+        StartCoroutine(IsMosnterNavEnable(() => { monsterNav.isStopped = false; }));
+    }
+    public void OnStateExitAttack()
+    {
+        monsterNav.isStopped = false;
+        playerDetectController.SetActive(true);
+        MonsterAnimationAttack(false);
     }
     #endregion
 
     #region OnStateFixedUpdate
     public void OnStateFixedUpdateWait()
     {
+        AttackTimeFixedUpdate();
         curWaitTime += Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER);
         if (curWaitTime >= waitTime)
         {
@@ -245,6 +413,7 @@ public class MonsterController : KeywordEntity
     }
     public void OnStateFixedUpdateRevert()
     {
+        AttackTimeFixedUpdate();
         if (0.1f > monsterNav.remainingDistance)
         {
             SetStateIdle();
@@ -253,8 +422,15 @@ public class MonsterController : KeywordEntity
     }
     public void OnStateFixedUpdateChase()
     {
-
+        AttackTimeFixedUpdate();
+        if (IsAttackAble()) 
+        {
+            SetStateAttack();
+            return;
+        }
+        
         curChaseTime += Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER);
+        monsterNav.avoidancePriority = Mathf.Clamp((int)monsterNav.remainingDistance,1,CHASE_PRIORITY);
 
         if (curChaseTime >= chaseTime)
         {
@@ -265,6 +441,10 @@ public class MonsterController : KeywordEntity
             }
         }
         ChasePlayer(Managers.Game.Player.transform);
+    }
+    public void OnStateFixedUpdateIdle()
+    {
+        AttackTimeFixedUpdate();
     }
     #endregion
 }

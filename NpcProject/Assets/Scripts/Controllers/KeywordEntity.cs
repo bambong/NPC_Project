@@ -81,7 +81,7 @@ public class KeywordEntity : MonoBehaviour
     private Action<KeywordEntity> fixedUpdateAction = null;
 #endregion
     private Rigidbody rigidbody;
-    private BoxCollider col;
+    protected BoxCollider col;
     private KeywordSlotUiController keywordSlotUiController;
     private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
     private DebugZone parentDebugZone;
@@ -95,12 +95,13 @@ public class KeywordEntity : MonoBehaviour
     private readonly float SLOT_UI_DISTANCE = 100f;
     private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude;
 
+    protected int colisionCheckLayer;
     private bool isInit = false;
     private void Start()
     {
         Init();
     }
-    public void Init()
+    public virtual void Init()
     {
         if(isInit)
         {
@@ -116,6 +117,7 @@ public class KeywordEntity : MonoBehaviour
         keywordWorldSlotLayout.RegisterEntity(transform, keywords.Length);
 
         InitCrateKeywordOption();
+        InitColisionLayer();
 
         if (!TryGetComponent<BoxCollider>(out col))
         {
@@ -127,7 +129,7 @@ public class KeywordEntity : MonoBehaviour
             col = Util.GetOrAddComponent<BoxCollider>(gameObject);
         }
         TryGetComponent<Rigidbody>(out rigidbody);
-
+        
         DecisionKeyword();
         StartCoroutine(CheckInitDebugMod());
     }
@@ -149,8 +151,13 @@ public class KeywordEntity : MonoBehaviour
      
         fixedUpdateAction?.Invoke(this);
     }
-    public void ClearForPool() 
+    public virtual void ClearForPool() 
     {
+        if (!isInit) 
+        {
+            return;
+        }
+        Debug.Log("Clear For Pool");
         //keywrodOverrideTable.Clear();
         currentRegisterKeyword.Clear();
         foreach(var frame in keywordFrames) 
@@ -168,7 +175,7 @@ public class KeywordEntity : MonoBehaviour
         isInit = false; 
     }
 
-    public virtual void DestroyKeywordEntity() 
+    public void DestroyKeywordEntity() 
     {
         ClearForPool();
         Managers.Resource.Destroy(gameObject);
@@ -222,6 +229,8 @@ public class KeywordEntity : MonoBehaviour
             yield return null;
         }
     }
+   
+
     public virtual void ExitDebugMod() 
     {
         CloseWorldSlotUI();
@@ -335,23 +344,25 @@ public class KeywordEntity : MonoBehaviour
             DecisionKeyword(keywordFrames[i]);
         }
     }
-
+    private void InitColisionLayer() 
+    {
+        colisionCheckLayer = 1;
+        foreach (var name in Enum.GetNames(typeof(Define.ColiiderMask)))
+        {
+            colisionCheckLayer += (1 << (LayerMask.NameToLayer(name)));
+        }
+    }
     #region Keyword_Control
     public bool ColisionCheckRotate(Vector3 vec)
     {
         var pos = col.transform.position;
         RaycastHit hit;
-        int layer = 1;
-        foreach(var name in Enum.GetNames(typeof(Define.ColiiderMask)))
-        {
-            layer += (1 << (LayerMask.NameToLayer(name)));
-        }
         var boxSize = Util.VectorMultipleScale(col.size/2,transform.lossyScale)* 0.99f;
         var rot = KeywordTransformFactor.rotation * Quaternion.Euler(vec);
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos,boxSize,rot,Color.blue);
 #endif
-        var hits = Physics.OverlapBox(pos,boxSize,rot,layer,QueryTriggerInteraction.Ignore);
+        var hits = Physics.OverlapBox(pos,boxSize,rot, colisionCheckLayer, QueryTriggerInteraction.Ignore);
         if(hits.Length > 1)
         {
             return false;
@@ -366,11 +377,7 @@ public class KeywordEntity : MonoBehaviour
         var pos = col.transform.position;
 
         RaycastHit hit;
-        int layer = 1;
-        foreach (var name in Enum.GetNames(typeof(Define.ColiiderMask)))
-        {
-            layer += (1 << (LayerMask.NameToLayer(name)));
-        }
+   
         var boxSize = Util.VectorMultipleScale(col.size / 2, transform.lossyScale);
         boxSize.y = boxSize.y * 0.99f;
         var vecXSize = Mathf.Abs(vec.x);
@@ -389,7 +396,7 @@ public class KeywordEntity : MonoBehaviour
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos + vec, boxSize, KeywordTransformFactor.rotation, Color.blue);
 #endif
-        var hits = Physics.OverlapBox(pos+vec, boxSize, KeywordTransformFactor.rotation, layer, QueryTriggerInteraction.Ignore);
+        var hits = Physics.OverlapBox(pos+vec, boxSize, KeywordTransformFactor.rotation, colisionCheckLayer, QueryTriggerInteraction.Ignore);
         
         for(int i = 0; i< hits.Length; ++i) 
         {
@@ -406,11 +413,7 @@ public class KeywordEntity : MonoBehaviour
     {
         var pos = col.transform.position;
         RaycastHit hit;
-        int layer = 1;
-        foreach(var name in Enum.GetNames(typeof(Define.ColiiderMask)))
-        {
-            layer += (1 << (LayerMask.NameToLayer(name)));
-        }
+
         var boxSize = Util.VectorMultipleScale(col.size / 2,transform.lossyScale);
         boxSize *= 0.99f;
         boxSize.y = 0;
@@ -418,7 +421,7 @@ public class KeywordEntity : MonoBehaviour
 #if UNITY_EDITOR
         ExtDebug.DrawBoxCastBox(pos,boxSize,KeywordTransformFactor.rotation, Vector3.down,rayDis,Color.red);
 #endif
-        Physics.BoxCast(pos,boxSize,Vector3.down,out hit,KeywordTransformFactor.rotation,rayDis,layer);
+        Physics.BoxCast(pos,boxSize,Vector3.down,out hit,KeywordTransformFactor.rotation,rayDis, colisionCheckLayer);
         if (hit.collider != null)
         {
             var realDis = hit.distance - col.bounds.extents.y;
@@ -506,15 +509,11 @@ public class KeywordEntity : MonoBehaviour
         var pos = col.transform.position;
 
         RaycastHit hit;
-        int layer = 1;
-        foreach (var name in Enum.GetNames(typeof(Define.ColiiderMask)))
-        {
-            layer += (1 << (LayerMask.NameToLayer(name)));
-        }
+     
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos + vec, boxSize, KeywordTransformFactor.rotation, Color.blue);
 #endif
-        var hits = Physics.OverlapBox(pos + vec, boxSize, KeywordTransformFactor.rotation, layer, QueryTriggerInteraction.Ignore);
+        var hits = Physics.OverlapBox(pos + vec, boxSize, KeywordTransformFactor.rotation, colisionCheckLayer, QueryTriggerInteraction.Ignore);
 
         for (int i = 0; i < hits.Length; ++i)
         {

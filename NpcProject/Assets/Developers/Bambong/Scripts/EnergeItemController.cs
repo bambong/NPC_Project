@@ -6,7 +6,7 @@ using UnityEditor.Searcher;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI.Table;
 
-public class EnergeItemController : MonoBehaviour
+public class EnergeItemController : MonoBehaviour , ISpawnAble
 {
     [SerializeField]
     private float rotateSpeed = 100f;
@@ -14,7 +14,8 @@ public class EnergeItemController : MonoBehaviour
     [SerializeField]
     private int gaugeAmount = 1;
 
-    private ItemSpawnController parentSpawner;
+    private SpawnController parentSpawner;
+    private Transform spawnSpot;
 
     private bool isOn = false;
 
@@ -23,7 +24,7 @@ public class EnergeItemController : MonoBehaviour
         var speed = rotateSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER);
         transform.Rotate(new Vector3(speed, speed, speed));
     }
-    public void Init(ItemSpawnController spawner)
+    public void Init(SpawnController spawner)
     {
         var randoms = Random.Range(0, 360f);
         isOn = true;
@@ -38,8 +39,15 @@ public class EnergeItemController : MonoBehaviour
             isOn = false;
             Managers.Effect.PlayEffect(Define.EFFECT.EnergeItemEffect,transform);
             Managers.Keyword.AddKeywordMakerGauge(gaugeAmount);
-            parentSpawner.RemoveItem(this);
+            parentSpawner.RemoveItem(spawnSpot);
+            Managers.Resource.Destroy(gameObject);
         }
     }
 
+    public void SetSpawnController(Transform spot, SpawnController controller)
+    {
+        transform.position = spot.position;
+        spawnSpot = spot;
+        Init(controller);
+    }
 }

@@ -12,9 +12,7 @@ public class PlayerDetectController : MonoBehaviour
     [SerializeField]
     private SphereCollider sphereCollider;
     public float DetectRange { get => sphereCollider.radius; }
-    public void Init()
-    {
-    }
+
     public void SetActive(bool isOn)
     {
         gameObject.SetActive(isOn);
