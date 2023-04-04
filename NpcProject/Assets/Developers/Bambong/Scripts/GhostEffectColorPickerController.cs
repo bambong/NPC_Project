@@ -17,7 +17,7 @@ public class GhostEffectColorPickerController : MonoBehaviour
     private Color culColor = Color.white;
     public Color CurrentColor { get => culColor; }
 
-    public void OnEnterDebugMod() => StartCoroutine(ColorUpdate());
+    public void OnEnterDebugMod() => Managers.Scene.CurrentScene.StartCoroutine(ColorUpdate());
     IEnumerator ColorUpdate()
     {
         while (Managers.Game.IsDebugMod)

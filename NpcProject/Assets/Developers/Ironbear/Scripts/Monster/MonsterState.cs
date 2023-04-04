@@ -101,7 +101,7 @@ public class MonsterRevert : Singleton<MonsterRevert>, IState<MonsterController>
 
     public void Exit(MonsterController monsterStateController)
     {
-
+        monsterStateController.OnStateExitRevert();
     }
 
     public void FixedUpdateActive(MonsterController monsterStateController)

@@ -19,8 +19,9 @@ public class PlayerUIController : UI_Base
     private Image hpDefalutUI;
     [SerializeField]
     private Image debugUI;
+    [SerializeField]
+    private CanvasGroup canvasGroup;
 
-    private bool isHpOpen = true;
     private bool isDebugAni = false;
     private bool isDebugOpen = true;
     public override void Init()
@@ -52,7 +53,6 @@ public class PlayerUIController : UI_Base
                 HpUIAnimation(hpIncreaseUI, hp);
             }
         }
-        StartCoroutine(OpenhpUI());
     }
 
     private void FillUI(float exHp)
@@ -71,10 +71,10 @@ public class PlayerUIController : UI_Base
                 hpChangeUI.gameObject.SetActive(false);
                 hpUI.DOFade(0f, 1.0f).OnStart(() =>
                 {
+                    //canvasGroup.DOFade(0f, 1f);
                     hpDefalutUI.DOFade(0f, 1.0f);
                 }).OnComplete(() =>
                 {
-                    isHpOpen = false;
                     hpUI.gameObject.SetActive(false);
                     hpDefalutUI.gameObject.SetActive(false);
                 });
@@ -89,15 +89,22 @@ public class PlayerUIController : UI_Base
         hpUI.DOKill();
         hpDefalutUI.DOKill();
         hpDecreaseUI.DOKill();
+        canvasGroup.DOKill();
         hpUI.gameObject.SetActive(true);
         hpDefalutUI.gameObject.SetActive(true);
         hpDecreaseUI.gameObject.SetActive(true);
+        //canvasGroup.DOFade(1.0f, 0.2f);
         hpUI.DOFade(1.0f, 0f);
-        hpDefalutUI.DOFade(1.0f, 0f);
+        //hpUI.DOFade(1.0f, 0f);
+         hpDefalutUI.DOFade(1.0f, 0f);
     }
 
     public void DebugButton()
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
         if(Managers.Keyword.CurDebugZone == null || !Managers.Keyword.CurDebugZone.IsDebugAble)
         {
             isDebugOpen = false;
@@ -116,23 +123,11 @@ public class PlayerUIController : UI_Base
         }
     }
 
-    IEnumerator OpenhpUI()
-    {
-        isHpOpen = true;
-        while (isHpOpen)
-        {
-          //  playerUIPanel.transform.position = Managers.Game.Player.transform.position + (Vector3.up * 4);
-          //  playerUIPanel.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);
-            yield return null;
-        }
-    }
 
     IEnumerator OpenDebugUI()
     {
         while(isDebugOpen)
-        {
-           // playerUIPanel.transform.position = Managers.Game.Player.transform.position + (Vector3.up * 4);
-           // playerUIPanel.transform.rotation = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0);            
+        {   
             if (isDebugAni)
             {
                 debugUI.DOFade(0f, 1.0f).OnStart(() =>

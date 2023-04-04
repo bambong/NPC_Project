@@ -20,7 +20,8 @@ public class MonsterController : KeywordEntity , ISpawnAble
     private Rigidbody monsterRigid;
     [SerializeField]
     private PlayerDetectController playerDetectController;
-  
+    [SerializeField]
+    private Animator monsterEmoge;
     [Space(1)]
     [Header("Monster Stat")]
     [SerializeField]
@@ -137,6 +138,8 @@ public class MonsterController : KeywordEntity , ISpawnAble
 
     public override void Init()
     {
+        SetEmogeChase(false);
+        SetEmogeWait(false);
         InitMonsterAttackLayer();
         animator.SetFloat("AttackSpeed", attackSpeed);
         curAttackTime = 0;
@@ -144,6 +147,7 @@ public class MonsterController : KeywordEntity , ISpawnAble
         transform.SetParent(null);
         StartCoroutine(InvokeNextFrame(() => { SetStateIdle(); }));
         playerDetectController.SetActive(true);
+        MonsterAnimTimeScaleUpdate();
         base.Init();
     }
     public override void ClearForPool()
@@ -163,15 +167,18 @@ public class MonsterController : KeywordEntity , ISpawnAble
 
     public void MoveSpeedUpdate()
     {
+        
         monsterNav.speed = moveSpeed * Managers.Time.GetTimeSacle(TIME_TYPE.NONE_PLAYER);
     }
     public override void EnterDebugMod()
     {
+        MonsterAnimTimeScaleUpdate();
         MoveSpeedUpdate();
         base.EnterDebugMod();
     }
     public override void ExitDebugMod()
     {
+        MonsterAnimTimeScaleClear();
         monsterNav.speed = moveSpeed;
         base.ExitDebugMod();
     }
@@ -280,6 +287,26 @@ public class MonsterController : KeywordEntity , ISpawnAble
     {
         animator.SetBool("isAttack", isON);
     }
+
+    public void MonsterAnimTimeScaleUpdate()
+    {
+        animator.SetFloat("TimeScale", Managers.Time.GetTimeSacle(TIME_TYPE.NONE_PLAYER));
+        animator.SetFloat("AttackSpeed", attackSpeed *Managers.Time.GetTimeSacle(TIME_TYPE.NONE_PLAYER));
+    }
+    public void MonsterAnimTimeScaleClear()
+    {
+        animator.SetFloat("TimeScale", 1);
+        animator.SetFloat("AttackSpeed", attackSpeed);
+    }
+    public void SetEmogeWait(bool isOn)
+    {
+        monsterEmoge.SetBool("IsWait", isOn);
+    }
+    public void SetEmogeChase(bool isOn)
+    {
+        monsterEmoge.SetBool("IsChase", isOn);
+    }
+ 
     #endregion
 
     #region SetState
@@ -331,6 +358,7 @@ public class MonsterController : KeywordEntity , ISpawnAble
 
     public void OnStateEnterWait()
     {
+        SetEmogeWait(true);
         SetAvoidPriority(IDLE_PRIORITY);
         waitTime = UnityEngine.Random.Range(1, 3f);
         monsterNav.isStopped = true;
@@ -338,6 +366,8 @@ public class MonsterController : KeywordEntity , ISpawnAble
     }
     public void OnStateEnterChase()
     {
+
+        SetEmogeChase(true);
         monsterNav.stoppingDistance = attackDistance * attackAutoBreakingAmount;
         SetAvoidPriority(CHASE_PRIORITY);
         playerDetectController.SetActive(false);
@@ -354,12 +384,14 @@ public class MonsterController : KeywordEntity , ISpawnAble
     }
     public void OnStateEnterRevert()
     {
+        SetEmogeWait(true);
         SetAvoidPriority(REVERT_PRIORITY);
         MonsterAnimationWalk();
         Revert();
     }
     public void OnStateEnterAttack()
     {
+        SetEmogeChase(true);
         curAttackTime = 0;
         monsterNav.isStopped = true;
         monsterNav.velocity = Vector3.zero;
@@ -378,11 +410,13 @@ public class MonsterController : KeywordEntity , ISpawnAble
     #region OnStateExit
     public void OnStateExitWait() 
     {
+        SetEmogeWait(false);
         curWaitTime = 0;
         monsterNav.isStopped = false;
     }
     public void OnStateExitChase()
     {
+        SetEmogeChase(false);
         monsterNav.stoppingDistance = 0;
         curChaseTime = 0;
         playerDetectController.SetActive(true);
@@ -395,9 +429,14 @@ public class MonsterController : KeywordEntity , ISpawnAble
     }
     public void OnStateExitAttack()
     {
+        SetEmogeChase(false);
         monsterNav.isStopped = false;
         playerDetectController.SetActive(true);
         MonsterAnimationAttack(false);
+    }
+    public void OnStateExitRevert()
+    {
+        SetEmogeWait(false);
     }
     #endregion
 

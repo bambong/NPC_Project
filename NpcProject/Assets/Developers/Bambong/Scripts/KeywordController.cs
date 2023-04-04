@@ -141,9 +141,15 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         {
             return;
         }
+        isLock = true;
         transform.SetParent(startParent);
         transform.SetSiblingIndex(prevSibilintIndex);
-        rectTransform.DOLocalMove(startDragPoint,START_END_ANIM_TIME,true).SetUpdate(true).OnComplete(()=>curFrame.OnEndDrag());
+        rectTransform.DOLocalMove(startDragPoint,START_END_ANIM_TIME,true).SetUpdate(true).OnComplete(
+            ()=>
+            { 
+                curFrame.OnEndDrag();
+                isLock = false;
+            });
     }
     public void DragReset() 
     {

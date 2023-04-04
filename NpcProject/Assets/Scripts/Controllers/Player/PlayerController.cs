@@ -69,6 +69,8 @@ public class PlayerController : MonoBehaviour
     [Header("MM_Feedback")]
     [SerializeField]
     private MMF_Player deathFeedback;
+    [SerializeField]
+    private MMF_Player hitFeedback;
 
     private PlayerAnimationController.AnimDir curDir = PlayerAnimationController.AnimDir.Front;
     private DebugModGlitchEffectController glitchEffectController;
@@ -421,7 +423,9 @@ public class PlayerController : MonoBehaviour
         if (hp <= 0)
         {
             SetstateDeath();
+            return;
         }
+        hitFeedback.PlayFeedbacks();
     }
 
     public void isDebugButton()
