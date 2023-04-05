@@ -306,7 +306,10 @@ public class MonsterController : KeywordEntity , ISpawnAble
     {
         monsterEmoge.SetBool("IsChase", isOn);
     }
- 
+    public void SetEmogeAttack(bool isOn)
+    {
+        monsterEmoge.SetBool("IsAttack", isOn);
+    }
     #endregion
 
     #region SetState
@@ -391,7 +394,7 @@ public class MonsterController : KeywordEntity , ISpawnAble
     }
     public void OnStateEnterAttack()
     {
-        SetEmogeChase(true);
+        SetEmogeAttack(true);
         curAttackTime = 0;
         monsterNav.isStopped = true;
         monsterNav.velocity = Vector3.zero;
@@ -429,7 +432,7 @@ public class MonsterController : KeywordEntity , ISpawnAble
     }
     public void OnStateExitAttack()
     {
-        SetEmogeChase(false);
+        SetEmogeAttack(false);
         monsterNav.isStopped = false;
         playerDetectController.SetActive(true);
         MonsterAnimationAttack(false);
