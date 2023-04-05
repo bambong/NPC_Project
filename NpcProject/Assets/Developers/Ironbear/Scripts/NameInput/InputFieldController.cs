@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class InputFieldController : UI_Base
 {
@@ -40,7 +41,7 @@ public class InputFieldController : UI_Base
     {
         SaveUserName();
         SceneManager.LoadScene("Chapter_01");
-    }
+    }   
 
     public void StringCheck()
     {
@@ -62,7 +63,7 @@ public class InputFieldController : UI_Base
                 if (nameChars[i] == restrictChars[j])
                 {
                     isRestrict = true;
-                    warning.gameObject.SetActive(true);
+                    StartCoroutine(WarningTextEffect());
                 }             
             }
         }
@@ -76,5 +77,15 @@ public class InputFieldController : UI_Base
     public void SaveUserName()
     {
         player.charName = playerName;
+    }
+
+    private IEnumerator WarningTextEffect()
+    {
+        //Transform warningTransfom = warning.transform;
+
+        warning.gameObject.SetActive(true);
+        //warningTransfom.DOScale(new Vector3(1, 1, 1), 1).SetEase(Ease.InOutCubic).onComplete();
+        yield return new WaitForSeconds(1.5f);
+        warning.gameObject.SetActive(false);
     }
 }
