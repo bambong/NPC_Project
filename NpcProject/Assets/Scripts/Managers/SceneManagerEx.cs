@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class SceneManagerEx
 {
     public BaseScene CurrentScene { get { return GameObject.FindObjectOfType<BaseScene>(); } }
-    private SceneTransitionUIController sceneTransition;
+    public SceneTransitionUIController sceneTransition;
     public void Init() 
     {
         sceneTransition = Managers.UI.MakeSceneUI<SceneTransitionUIController>(null,"SceneTransitionUI");
