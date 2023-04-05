@@ -45,7 +45,7 @@ public class TalkPanelController : UI_Base
     public void SetDialogue(Dialogue dialogue)
     {
         speakImage.sprite = dialogue.speaker.sprite;
-        spekerName.text = dialogue.speaker.name;
+        spekerName.text = dialogue.speaker.charName;
         dialogueText.text = "";
     }
     public void PlayDialogue(Dialogue dialogue) 
@@ -54,7 +54,7 @@ public class TalkPanelController : UI_Base
         isNext = false;
         curDialogue = dialogue;
         speakImage.sprite = dialogue.speaker.sprite;
-        spekerName.text = dialogue.speaker.name;
+        spekerName.text = dialogue.speaker.charName;
         StartCoroutine(TransText());
 
     }
