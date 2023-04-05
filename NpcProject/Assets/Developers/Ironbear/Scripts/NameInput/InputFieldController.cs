@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class InputFieldController : UI_Base
 {
-    public Speaker speaker;
+    public Speaker player;
 
     [SerializeField]
     private TMP_Text warning;
@@ -26,11 +26,6 @@ public class InputFieldController : UI_Base
              
     }
 
-    private void Awake()
-    {
-        
-    }
-
     public void ConfirmUIOpen()
     {
         confirmUI.SetActive(true);
@@ -43,11 +38,13 @@ public class InputFieldController : UI_Base
 
     public void LoadNextScene()
     {
+        SaveUserName();
         SceneManager.LoadScene("Chapter_01");
     }
 
     public void StringCheck()
     {
+        isRestrict = false;
         playerName = test.text;
 
         char[] restrictChars = { 'た', 'ち', 'っ', 'づ', 'で', 'に', 'ぬ', 'ば', 'ぱ', 'び', 'だ', 'ぢ', 'つ', 'て', 'な', 'は', 'ど', 'の', 'ね', 'ぁ', 'い', 'ぇ', 'ぉ', 'け', 'げ', 'さ', 'し', 'じ', 'ず', 'せ', 'ぜ', 'そ', 'ぞ', 'ざ', 'え', 'あ' };
@@ -76,8 +73,8 @@ public class InputFieldController : UI_Base
         }        
     }
 
-    private void OnInputFieldValueChanged(string newValue)
+    public void SaveUserName()
     {
-        speaker.charName = newValue;
+        player.charName = playerName;
     }
 }
