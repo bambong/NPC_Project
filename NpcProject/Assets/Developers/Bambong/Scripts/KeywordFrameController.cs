@@ -40,7 +40,7 @@ public class KeywordFrameController : KeywordFrameBase
             frameColorImages[i].color = frameColor;
         }
         raycastImage.raycastTarget = !isOn;
-        curFrameInnerKeyword.SetLock(isOn);
+        curFrameInnerKeyword.SetLockState(isOn);
     }
     public void OnDecisionKeyword() 
     {

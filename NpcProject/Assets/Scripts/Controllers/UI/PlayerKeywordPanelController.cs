@@ -31,6 +31,6 @@ public class PlayerKeywordPanelController : UI_Base
     }
     public void Close() 
     {
-        //gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 }

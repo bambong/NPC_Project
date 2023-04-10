@@ -25,6 +25,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     private KeywordFrameBase curFrame;
     protected DebugZone parentDebugZone;
     private bool isLock = false;
+    private bool isMove = false;
     private bool isDrag = false;
     public Image Image { get => image; }
     public string KewordId { get; private set; }
@@ -41,11 +42,10 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     public void SetFrame(KeywordFrameBase frame)
     {
         curFrame = frame;
-        isDrag = false;
     }
     public virtual void SetDebugZone(DebugZone zone) => parentDebugZone = zone;
 
-    public void SetLock(bool isOn)
+    public void SetLockState(bool isOn)
     {
         if (isOn)
         {
@@ -58,15 +58,25 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         }
         isLock = isOn;
     }
-    private bool IsDragable(PointerEventData eventData) { return isLock; }
+    public void SetMoveState(bool isOn)
+    {
+        isMove = isOn;
+    }
+    public void SetDragState(bool isOn)
+    {
+        isDrag = isOn;
+    }
 
+    private bool IsDragable(PointerEventData eventData) { return isLock || eventData.button != PointerEventData.InputButton.Left; }
+   
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (IsDragable(eventData) || isDrag) 
+        if (IsDragable(eventData) || isMove) 
         {
             return;
         }
-        isDrag = true;
+        SetDragState(true);
+        SetMoveState(true);
         Managers.Keyword.CurDragKeyword = this;
         curFrame.OnBeginDrag();
         prevSibilintIndex = rectTransform.GetSiblingIndex();
@@ -74,8 +84,9 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         startParent = transform.parent;
         transform.SetParent(Managers.Keyword.PlayerKeywordPanel.transform);
         rectTransform.SetAsLastSibling();
+        StartCoroutine(DragCheck());
     }
-
+   
     public void OnDrag(PointerEventData eventData)
     {
         if (IsDragable(eventData)|| Managers.Keyword.CurDragKeyword != this)
@@ -89,9 +100,10 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     public void OnEndDrag(PointerEventData eventData)
     {
         if (IsDragable(eventData) || Managers.Keyword.CurDragKeyword != this)
-        {
+        { 
             return;
         }
+        SetDragState(false);
         var raycasts = Managers.Keyword.GetRaycastList(eventData);
         Managers.Keyword.CurDragKeyword = null;
 
@@ -110,11 +122,12 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
                     keywordFrame.DragDropKeyword(this);
                     return;
                 }
+#if UNITY_EDITOR
                 else 
                 {
                     Debug.Log(raycasts[i].gameObject.name);
                 }
-               
+#endif
             }
         }
         ResetKeyword();
@@ -122,7 +135,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (isLock)
+        if (isLock || isMove)
         {
             return;
         }
@@ -130,7 +143,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     }
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (isLock)
+        if (isLock || isMove)
         {
             return;
         }
@@ -140,6 +153,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     {
         return rectTransform.DOLocalMove(pos, KEYWORD_FRAME_MOVE_TIME).SetUpdate(true);
     }
+
     public void ResetKeyword()
     {
         if (gameObject == null)
@@ -153,7 +167,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
             ()=>
             { 
                 curFrame.OnEndDrag();
-                isDrag = false;
+                SetMoveState(false);
             });
     }
     public void DragReset() 
@@ -161,8 +175,22 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         transform.SetParent(startParent);
         transform.SetSiblingIndex(prevSibilintIndex);
         rectTransform.localPosition = startDragPoint;
-        isDrag = false;
+        SetMoveState(false);
+        SetDragState(false);
         curFrame.OnEndDrag();
+    }
+    IEnumerator DragCheck()
+    {
+        while (isDrag) 
+        {
+            if (!Input.GetMouseButton(0))
+            {
+                DragReset();
+                Debug.Log("유니티 드래그 버그 발생!");
+                yield break;
+            }
+            yield return null;
+        }
     }
     public virtual void OnEnter(KeywordEntity entity)
     {
@@ -179,17 +207,18 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     }
     public virtual void ClearForPool() 
     {
-    
+        StopAllCoroutines();
     }
 
     public override void Init()
     {
         curFrame = null;
-        isDrag = false;
+        SetDragState(false);
+        SetMoveState(false);
         parentDebugZone = null;
         if (isLock) 
         {
-            SetLock(false);
+            SetLockState(false);
         }
     }
 }

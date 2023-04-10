@@ -34,6 +34,7 @@ public class KeywordManager
     }
     public void OnSceneLoaded() 
     {
+        curSceneEntity.Clear();
         Init();
     }
     public void OnSceneLoadComplete() 
@@ -81,7 +82,7 @@ public class KeywordManager
             CurDragKeyword = null;
         }
         curDebugZone?.OnExitDebugMod();
-        playerKeywordPanel.Close();
+       // playerKeywordPanel.Close();
         Managers.Game.SetStateNormal();
     }
     public void SetDebugZone(DebugZone zone)
