@@ -21,22 +21,34 @@ public class GameManager
     private KeyMappingController key = new KeyMappingController();
     private PlayerController player;
     private Vector3 prevGravity;
+    private RetryPanelController retryPanel;
     public PlayerController Player { get => player; }
     public KeyMappingController Key { get => key;}
     public IState<GameManager> CurState { get => gameStateController.CurState; }
     public bool IsDebugMod { get => CurState == GameDebugModState.Instance; }
-   
+    public RetryPanelController RetryPanel { get => retryPanel; }
+
     private float DEBUG_TIME_SCALE = 0.2f;
+
+
 
     public void Init()
     {
         gameStateController = new GameStateController(this);
-    }
+        retryPanel = Managers.UI.MakeSceneUI<RetryPanelController>(null, "RetryPanelUI");
+        SetStateNormal();
 
+    }
+    public void OnSceneLoaded()
+    {
+        retryPanel = Managers.UI.MakeSceneUI<RetryPanelController>(null, "RetryPanelUI");
+        SetStateNormal();
+    }
     #region SetState
     public void SetStateNormal() => gameStateController.ChangeState(GameNormalState.Instance);
     public void SetStateDialog() => gameStateController.ChangeState(GameDialogState.Instance);
     public void SetStateDebugMod() => gameStateController.ChangeState(GameDebugModState.Instance);
+    public void SetStateGameOver() => gameStateController.ChangeState(GameOverState.Instance);
     #endregion
     public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
     {

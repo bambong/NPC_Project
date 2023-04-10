@@ -34,10 +34,7 @@ public class KeywordManager
     }
     public void OnSceneLoaded() 
     {
-        playerKeywordPanel = Managers.UI.MakeSceneUI<PlayerKeywordPanelController>(null, "PlayerKeywordPanel");
-        KeywordEntitySlots = new GameObject("KeywordEntitySlots").transform;
-        KeywordEntitySlots.SetParent(playerKeywordPanel.transform);
-        graphicRaycaster = playerKeywordPanel.gameObject.GetOrAddComponent<GraphicRaycaster>();
+        Init();
     }
     public void OnSceneLoadComplete() 
     {

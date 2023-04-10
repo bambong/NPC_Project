@@ -134,6 +134,7 @@ public class PlayerDeath : Singleton<PlayerDeath>, IState<PlayerController>
     public void Enter(PlayerController stateController)
     {
         stateController.PlayDeathFeedback();
+        Managers.Game.SetStateGameOver();
     }
 
     public void Exit(PlayerController stateController)

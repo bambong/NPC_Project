@@ -64,7 +64,6 @@ public class DebugZone : MonoBehaviour
     { 
         for(int i = 0; i< keywords.Length; ++i) 
         {
-            var keyword =Managers.UI.MakeSubItem<KeywordController>(null,"KeywordPrefabs/" + keywords[i].name);
             if(MakeKeyword(keywords[i].name) == null) 
             {
                 Debug.LogError($" DebugZone : {gameObject.name} 슬롯 갯수 이상의 키워드 생성");
@@ -168,6 +167,7 @@ public class DebugZone : MonoBehaviour
         {
             Managers.Keyword.SetDebugZone(this);
             Managers.Game.Player.isDebugButton();
+            Managers.Game.RetryPanel.OpenResetButton();
         }
     }
 
@@ -177,6 +177,7 @@ public class DebugZone : MonoBehaviour
         {
             Managers.Keyword.SetDebugZone(null);
             Managers.Game.Player.isDebugButton();
+            Managers.Game.RetryPanel.CloseResetButton();
         }
     }
 }

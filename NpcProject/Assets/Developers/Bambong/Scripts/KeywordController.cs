@@ -25,7 +25,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     private KeywordFrameBase curFrame;
     protected DebugZone parentDebugZone;
     private bool isLock = false;
-    
+    private bool isDrag = false;
     public Image Image { get => image; }
     public string KewordId { get; private set; }
     public KeywordFrameBase CurFrame { get => curFrame;}
@@ -38,7 +38,11 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     {
          KewordId = GetType().ToString();
     }
-    public void SetFrame(KeywordFrameBase frame) => curFrame = frame;
+    public void SetFrame(KeywordFrameBase frame)
+    {
+        curFrame = frame;
+        isDrag = false;
+    }
     public virtual void SetDebugZone(DebugZone zone) => parentDebugZone = zone;
 
     public void SetLock(bool isOn)
@@ -54,18 +58,19 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         }
         isLock = isOn;
     }
-    private bool IsDragable(PointerEventData eventData) { return isLock || eventData.button != PointerEventData.InputButton.Left; }
+    private bool IsDragable(PointerEventData eventData) { return isLock; }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (IsDragable(eventData)) 
+        if (IsDragable(eventData) || isDrag) 
         {
             return;
         }
+        isDrag = true;
         Managers.Keyword.CurDragKeyword = this;
         curFrame.OnBeginDrag();
         prevSibilintIndex = rectTransform.GetSiblingIndex();
-        startDragPoint = rectTransform.localPosition;
+        startDragPoint = curFrame.RectTransform.localPosition;
         startParent = transform.parent;
         transform.SetParent(Managers.Keyword.PlayerKeywordPanel.transform);
         rectTransform.SetAsLastSibling();
@@ -141,14 +146,14 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         {
             return;
         }
-        isLock = true;
+       
         transform.SetParent(startParent);
         transform.SetSiblingIndex(prevSibilintIndex);
         rectTransform.DOLocalMove(startDragPoint,START_END_ANIM_TIME,true).SetUpdate(true).OnComplete(
             ()=>
             { 
                 curFrame.OnEndDrag();
-                isLock = false;
+                isDrag = false;
             });
     }
     public void DragReset() 
@@ -156,6 +161,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         transform.SetParent(startParent);
         transform.SetSiblingIndex(prevSibilintIndex);
         rectTransform.localPosition = startDragPoint;
+        isDrag = false;
         curFrame.OnEndDrag();
     }
     public virtual void OnEnter(KeywordEntity entity)
@@ -179,6 +185,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     public override void Init()
     {
         curFrame = null;
+        isDrag = false;
         parentDebugZone = null;
         if (isLock) 
         {

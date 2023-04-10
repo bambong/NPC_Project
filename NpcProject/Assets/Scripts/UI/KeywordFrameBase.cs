@@ -8,6 +8,12 @@ public abstract class KeywordFrameBase : UI_Base
 {
     [SerializeField]
     protected RectTransform rectTransform;
+
+    protected KeywordController curFrameInnerKeyword;
+    public KeywordController CurFrameInnerKeyword { get => curFrameInnerKeyword; }
+    public bool HasKeyword { get => CurFrameInnerKeyword != null; }
+    public RectTransform RectTransform { get => rectTransform; }
+
     public virtual void SetKeyWord(KeywordController keywordController,Action onComplete = null) 
     {
         if (keywordController == null)
@@ -45,9 +51,6 @@ public abstract class KeywordFrameBase : UI_Base
     public virtual void OnEndDrag() { }
     public override void Init(){}
 
-    protected KeywordController curFrameInnerKeyword;
-    public KeywordController CurFrameInnerKeyword { get => curFrameInnerKeyword; }
-    public bool HasKeyword { get => CurFrameInnerKeyword != null; }
     public void InitKeyword(KeywordController keywordController)
     {
         keywordController.SetFrame(this);

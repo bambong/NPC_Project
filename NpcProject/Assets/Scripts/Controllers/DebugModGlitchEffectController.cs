@@ -19,6 +19,11 @@ public class DebugModGlitchEffectController : UI_Base
     private readonly float EffectTime = 0.3f;
     public bool IsPlaying { get => isPlaying;}
 
+    private void Start()
+    {
+        Managers.Scene.OnSceneUnload += () => { StopAllCoroutines(); };
+    }
+
     public void EnterDebugMod(Action completeAction = null)
     {
         volume.weight = 0;

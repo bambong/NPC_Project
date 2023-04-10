@@ -168,7 +168,7 @@ public class KeywordEntity : MonoBehaviour
 
         updateAction = null;
         fixedUpdateAction = null;
-        
+        StopAllCoroutines();
         Destroy(keywordWorldSlotLayout.gameObject);
         Destroy(keywordSlotUiController.gameObject);
         Managers.Keyword.RemoveSceneEntity(this);
