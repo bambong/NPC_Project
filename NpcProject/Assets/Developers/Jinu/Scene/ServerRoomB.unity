@@ -3360,6 +3360,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e734157c9a7582949b2a9474cead41bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetTag: Player
+  isPlayOnce: 1
   virCamera: {fileID: 1995927017}
 --- !u!1 &548136732 stripped
 GameObject:
@@ -4736,6 +4738,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 060e2cfef8673f4419ab3152849811c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetScene: 0
 --- !u!1 &869760006 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3088151792522854529, guid: da1c2630796dac240926ef89b79c4cf4, type: 3}
@@ -4791,6 +4794,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e734157c9a7582949b2a9474cead41bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetTag: Player
+  isPlayOnce: 1
   virCamera: {fileID: 1586442338}
 --- !u!65 &871274192
 BoxCollider:
@@ -4832,7 +4837,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6859b47adef8fc4dbd10ed9bc035647, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugModCameraController: {fileID: 932348398}
+  debugAbleTime: -1
+  coolTime: 1
   playerSlotCount: 2
   childEntitys: []
   keywords:
@@ -6021,6 +6027,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e734157c9a7582949b2a9474cead41bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetTag: Player
+  isPlayOnce: 1
   virCamera: {fileID: 1384963559}
 --- !u!65 &1132089576
 BoxCollider:
@@ -10150,6 +10158,7 @@ MonoBehaviour:
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
   keywords: []
+  worldSlotLayoutName: KeywordWorldSlotLayout
 --- !u!114 &1933723345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10191,6 +10200,7 @@ MonoBehaviour:
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
   keywords: []
+  worldSlotLayoutName: KeywordWorldSlotLayout
 --- !u!114 &1935820502
 MonoBehaviour:
   m_ObjectHideFlags: 0

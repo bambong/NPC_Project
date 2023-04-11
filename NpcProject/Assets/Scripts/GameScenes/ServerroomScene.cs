@@ -34,7 +34,7 @@ public class ServerroomScene : BaseScene
         Managers.Camera.InitCamera(new CameraInfo(vircam, player.transform));
         Managers.Talk.LoadTalkData(tutorialSceneTalkData);
 
-        cutScene = new CutSceneEvent(playableDirector);
+        cutScene = new CutSceneEvent(playableDirector);        
         cutScene.OnStart(() => Managers.Game.Player.SetstateStop());
         cutScene.OnComplete(() => Managers.Game.Player.SetStateIdle());
         cutScene.Play();
