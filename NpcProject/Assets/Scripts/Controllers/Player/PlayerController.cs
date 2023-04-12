@@ -172,7 +172,7 @@ public class PlayerController : MonoBehaviour
             rigid.velocity = Vector3.zero;
             return;
         }
-
+        
         var moveVec = new Vector3(hor, 0, ver).normalized;
         moveVec = rotater.transform.TransformDirection(moveVec);
         Vector3 gravity = Vector3.down * Mathf.Abs(rigid.velocity.y);
@@ -425,6 +425,7 @@ public class PlayerController : MonoBehaviour
             SetstateDeath();
             return;
         }
+        Managers.Sound.AskSfxPlay(20007);
         hitFeedback.PlayFeedbacks();
     }
 

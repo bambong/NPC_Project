@@ -111,11 +111,13 @@ public abstract class KeywordFrameBase : UI_Base
         var prevFrame = keywordController.CurFrame;
         if (IsAvailableKeyword(keywordController) && prevFrame.IsAvailableKeyword(CurFrameInnerKeyword)) 
         {
+            Managers.Sound.AskSfxPlay(20010);
             prevFrame.SetKeyWord(curFrameInnerKeyword, prevFrame.OnEndDrag);
             SetKeyWord(keywordController, DecisionKeyword);
         }
         else 
         {
+            Managers.Sound.AskSfxPlay(20012);
             keywordController.ResetKeyword();
         }
     }

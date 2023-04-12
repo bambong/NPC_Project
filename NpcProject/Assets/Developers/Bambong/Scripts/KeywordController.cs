@@ -20,7 +20,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     private readonly float KEYWORD_FRAME_MOVE_TIME = 0.1f;
     private readonly string KEYWORD_FRAME_TAG = "KeywordFrame";
 
-
+ 
     [SerializeField]
     private RectTransform rectTransform;
     [SerializeField]
@@ -87,6 +87,8 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         {
             return;
         }
+        Managers.Sound.AskSfxPlay(20009);
+
         SetDragState(true);
         SetMoveState(true);
         Managers.Keyword.CurDragKeyword = this;
@@ -142,6 +144,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
 #endif
             }
         }
+        Managers.Sound.AskSfxPlay(20011);
         ResetKeyword();
     }
 
@@ -172,7 +175,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         {
             return;
         }
-       
+        
         transform.SetParent(startParent);
         transform.SetSiblingIndex(prevSibilintIndex);
         rectTransform.DOLocalMove(startDragPoint,START_END_ANIM_TIME,true).SetUpdate(true).OnComplete(
@@ -197,6 +200,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         {
             if (!Input.GetMouseButton(0))
             {
+                Managers.Sound.AskSfxPlay(20011);
                 DragReset();
                 Debug.Log("유니티 드래그 버그 발생!");
                 yield break;

@@ -41,10 +41,11 @@ public class SoundController : MonoBehaviour
         }
     }
 
-    public void SfxPlay(AudioClip sfxClip = null)
+    public void SfxPlay(AudioClip sfxClip = null , float vol = 1)
     {
         sfxSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Sfx")[0];
         sfxSource.clip = sfxClip;
+        sfxSource.volume = vol;
         sfxSource.PlayOneShot(sfxClip);
     }
 }

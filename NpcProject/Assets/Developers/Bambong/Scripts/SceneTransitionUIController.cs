@@ -9,7 +9,8 @@ public class SceneTransitionUIController : UI_Base
     public Canvas canvas;
     [SerializeField]
     public CanvasGroup canvasGroup;
-
+    [SerializeField]
+    private GameObject testEffect;
     public override void Init()
     {
         canvas.sortingOrder = 100;
@@ -24,6 +25,8 @@ public class SceneTransitionUIController : UI_Base
     {
         float alpha = 1;
         canvasGroup.alpha = 1;
+        yield return new WaitForSeconds(0.2f);
+        testEffect.SetActive(true);
         yield return new WaitForSeconds(1f);
         float progress = 0;
         while (progress < 1)
@@ -32,7 +35,8 @@ public class SceneTransitionUIController : UI_Base
             canvasGroup.alpha = Mathf.Lerp(alpha, 0, progress);
             yield return null;
         }
-        
+        testEffect.SetActive(false);
+
     }
 
 }
