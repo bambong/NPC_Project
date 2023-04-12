@@ -4,8 +4,15 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
-
+[Flags]
+public enum E_KEYWORD_TYPE
+{
+    ALL = -1,
+    DEFALUT = 1 << 0,
+    ATTACK = 1 << 1,
+}
 public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler, IPointerExitHandler, IPointerEnterHandler
 {
     private readonly float START_END_ANIM_TIME = 0.2f;
@@ -18,12 +25,16 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     private RectTransform rectTransform;
     [SerializeField]
     private Image image;
+    [SerializeField]
+    private E_KEYWORD_TYPE keywordType = E_KEYWORD_TYPE.DEFALUT;
 
     private int prevSibilintIndex;
     private Transform startParent;
     private Vector3 startDragPoint;
     private KeywordFrameBase curFrame;
     protected DebugZone parentDebugZone;
+
+    private bool isInit = false;
     private bool isLock = false;
     private bool isMove = false;
     private bool isDrag = false;
@@ -31,6 +42,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     public string KewordId { get; private set; }
     public KeywordFrameBase CurFrame { get => curFrame;}
     public RectTransform RectTransform { get => rectTransform;  }
+    public E_KEYWORD_TYPE KeywordType { get => keywordType;  }
 
     private Color originColor;
     private readonly Color LOCK_COLOR = new Color(0.45f, 0.45f, 0.45f);
@@ -207,11 +219,27 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     }
     public virtual void ClearForPool() 
     {
+        isInit = false;
+        curFrame.ResetKeywordFrame();
         StopAllCoroutines();
+    }
+    public void DestroyKeyword() 
+    {
+        if (!isInit)
+        {
+            return;
+        }
+        ClearForPool();
+        Managers.Resource.Destroy(gameObject);
     }
 
     public override void Init()
     {
+        if (isInit)
+        {
+            return;
+        }
+        isInit = true;
         curFrame = null;
         SetDragState(false);
         SetMoveState(false);

@@ -29,6 +29,10 @@ public class PlayerKeywordPanelController : UI_Base
         Managers.Keyword.CurDebugZone.OpenPlayerLayout();
 
     }
+    public void ClearForPool()
+    {
+        keywordMakerGaugeController.StopAllCoroutines();
+    }
     public void Close() 
     {
         gameObject.SetActive(false);

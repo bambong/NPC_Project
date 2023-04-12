@@ -62,6 +62,9 @@ class CreateKeywordOption
 public class KeywordEntity : MonoBehaviour
 {
     [SerializeField]
+    private E_KEYWORD_TYPE availableKeywordType = E_KEYWORD_TYPE.ALL;
+
+    [SerializeField]
     private float maxHeight = 3;
     [SerializeField]
     private Vector3 maxScale = Vector3.one * 2;
@@ -79,7 +82,10 @@ public class KeywordEntity : MonoBehaviour
     private List<KeywordFrameController> keywordFrames = new List<KeywordFrameController>();
     private Action<KeywordEntity> updateAction = null;
     private Action<KeywordEntity> fixedUpdateAction = null;
-#endregion
+    #endregion
+    private Renderer mRenderer;
+    private Material originMat;
+   
     private Rigidbody rigidbody;
     protected BoxCollider col;
     private KeywordSlotUiController keywordSlotUiController;
@@ -91,7 +97,10 @@ public class KeywordEntity : MonoBehaviour
     public Vector3 MaxScale { get => maxScale; }
     public bool IsAvailable { get => parentDebugZone == Managers.Keyword.CurDebugZone; }
     public KeywordSlotUiController KeywordSlotUiController { get => keywordSlotUiController;}
-    
+    public E_KEYWORD_TYPE AvailableKeywordType { get => availableKeywordType; }
+    public Material OriginMat { get => originMat;}
+    public Renderer MRenderer { get => mRenderer;}
+
     private readonly float SLOT_UI_DISTANCE = 100f;
     private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude;
 
@@ -99,6 +108,19 @@ public class KeywordEntity : MonoBehaviour
     private bool isInit = false;
     private void Start()
     {
+        InitColisionLayer();
+        if (!TryGetComponent<BoxCollider>(out col))
+        {
+            Collider temp;
+            if (TryGetComponent<Collider>(out temp))
+            {
+                temp.enabled = false;
+            }
+            col = Util.GetOrAddComponent<BoxCollider>(gameObject);
+        }
+        TryGetComponent<Rigidbody>(out rigidbody);
+        mRenderer = GetComponent<Renderer>();
+        originMat = mRenderer.material;
         Init();
     }
     public virtual void Init()
@@ -117,18 +139,6 @@ public class KeywordEntity : MonoBehaviour
         keywordWorldSlotLayout.RegisterEntity(transform, keywords.Length);
 
         InitCrateKeywordOption();
-        InitColisionLayer();
-
-        if (!TryGetComponent<BoxCollider>(out col))
-        {
-            Collider temp;
-            if (TryGetComponent<Collider>(out temp))
-            {
-                temp.enabled = false;
-            }
-            col = Util.GetOrAddComponent<BoxCollider>(gameObject);
-        }
-        TryGetComponent<Rigidbody>(out rigidbody);
         
         DecisionKeyword();
         StartCoroutine(CheckInitDebugMod());
@@ -165,7 +175,7 @@ public class KeywordEntity : MonoBehaviour
             frame.ClearForPool();
         }
         keywordFrames.Clear();
-
+        mRenderer.material = originMat;
         updateAction = null;
         fixedUpdateAction = null;
         StopAllCoroutines();
@@ -186,6 +196,7 @@ public class KeywordEntity : MonoBehaviour
         for (int i = 0; i < keywords.Length; ++i)
         {
             var frame = Managers.UI.MakeSubItem<KeywordFrameController>(keywordSlotUiController.KeywordSlotLayout, "KeywordSlotUI");
+            frame.SetKeywordType(availableKeywordType);
             keywordFrames.Add(frame);
             frame.RegisterEntity(this, keywordWorldSlotLayout.KeywordWorldSlots[i]);
            
@@ -196,7 +207,7 @@ public class KeywordEntity : MonoBehaviour
             }
 
             var keyword = Managers.UI.MakeSubItem<KeywordController>(null, "KeywordPrefabs/" + keywords[i].keywordGo.name);
-
+            
             frame.InitKeyword(keyword);
             keyword.SetDebugZone(parentDebugZone);
             if (keywords[i].isLock) 

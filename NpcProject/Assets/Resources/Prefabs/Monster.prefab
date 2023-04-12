@@ -272,9 +272,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d68a377e1334ca4998645d3e19cbc9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  availableKeywordType: 2
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
   keywords:
+  - isLock: 0
+    keywordGo: {fileID: 0}
   - isLock: 0
     keywordGo: {fileID: 0}
   worldSlotLayoutName: MonsterKeywordWorldSlotLayout
@@ -284,9 +287,9 @@ MonoBehaviour:
   monsterRigid: {fileID: 6737983144649957169}
   playerDetectController: {fileID: 6737983143244729639}
   monsterEmoge: {fileID: 5388938960051157284}
-  maxHealth: 100
+  maxHealth: 3
   moveSpeed: 5
-  knockbackForce: 5
+  knockbackForce: 1
   chaseDistance: 3
   chaseTime: 5
   attackDistance: 4
@@ -295,6 +298,7 @@ MonoBehaviour:
   attackCoolTime: 0.5
   attackDamage: 1
   attackAutoBreakingAmount: 0.2
+  hitMaterial: {fileID: 2100000, guid: 364021b4e0f2d114ab8a168a37ea77f3, type: 2}
 --- !u!54 &6737983144649957169
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -32,5 +32,6 @@ public class Define
     {
         EnergeItemEffect,
         BombEffect,
+        MonsterDeathEffect
     }
 }

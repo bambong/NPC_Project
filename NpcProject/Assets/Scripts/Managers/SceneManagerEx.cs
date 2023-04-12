@@ -18,14 +18,11 @@ public class SceneManagerEx
 
     public void LoadScene(Define.Scene type ,Action onComplete = null)
     {
-        Managers.Clear();
         sceneTransition.StartCoroutine(LoadSceneCo(GetSceneName(type), onComplete));
     }
 
     public void ReLoadCurrentScene(Action onComplete = null) 
     {
-        Managers.Clear();
-       
         sceneTransition.StartCoroutine(LoadSceneCo(SceneManager.GetActiveScene().name ,onComplete));
     }
     private IEnumerator LoadSceneCo(string sceneName, Action onComplete = null)
@@ -50,6 +47,7 @@ public class SceneManagerEx
             sceneTransition.canvasGroup.alpha = Mathf.Lerp(alpha, 1, progress);
             yield return null;
         }
+        Managers.Clear();
         DOTween.KillAll();
         async.allowSceneActivation = true;
         progress = 0;

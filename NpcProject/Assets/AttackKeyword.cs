@@ -10,6 +10,7 @@ public class AttackKeyword : KeywordController
     private Material bombMat;
     [SerializeField]
     private Material bombSpriteMat;
+
     private readonly float BOMB_TIME = 3f;
     public override void OnEnter(KeywordEntity entity)
     {
@@ -22,8 +23,8 @@ public class AttackKeyword : KeywordController
     }
     public IEnumerator CountAttack(KeywordEntity entity)
     {
-        var render = entity.GetComponent<Renderer>();
-        var originMat = render.material;
+        var render = entity.MRenderer;
+        var originMat = entity.OriginMat;
         float curTime = 0;
         float blinkFactorTime = BOMB_TIME/6;
         float curBlinkTime = 0;

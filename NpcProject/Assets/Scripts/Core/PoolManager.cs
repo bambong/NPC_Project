@@ -44,8 +44,8 @@ public class PoolManager
                 Debug.LogError("Pool Error");
             }
             poolable.transform.SetParent(Root);
-            poolable.gameObject.SetActive(false);
             poolable.Return();
+            poolable.gameObject.SetActive(false);
             poolable.IsUsing = false;
 
             _poolStack.Push(poolable);

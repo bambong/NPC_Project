@@ -10,8 +10,6 @@ public class KeywordFrameController : KeywordFrameBase
     [SerializeField]
     private Image raycastImage;
 
-    [SerializeField]
-    private Image[] frameColorImages;
 
     private KeywordController registerKeyword;
 
@@ -34,11 +32,8 @@ public class KeywordFrameController : KeywordFrameBase
         {
             frameColor = new Color(0.4f, 0.4f, 0.4f);
         }
-      
-        for(int i =0; i< frameColorImages.Length; ++i) 
-        {
-            frameColorImages[i].color = frameColor;
-        }
+
+        SetFrameColor(frameColor);
         raycastImage.raycastTarget = !isOn;
         curFrameInnerKeyword.SetLockState(isOn);
     }
@@ -47,16 +42,16 @@ public class KeywordFrameController : KeywordFrameBase
         registerKeyword = curFrameInnerKeyword;
     }
 
-    public override void ResetKeywordFrame() 
-    {
-        curFrameInnerKeyword = null;
-    }
     public void RegisterEntity(KeywordEntity entity ,KeywordWorldSlotUIController keywordWorldSlot)
     {
         this.entity = entity;
         this.keywordWorldSlot = keywordWorldSlot;
     }
-
+    public override void ResetKeywordFrame()
+    {
+        base.ResetKeywordFrame();
+        registerKeyword = null;
+    }
     public override void OnBeginDrag()
     {
         entity.KeywordSlotUiController.DragOn();
@@ -68,24 +63,20 @@ public class KeywordFrameController : KeywordFrameBase
     }
     public override void Init()
     {
-        registerKeyword = null;
-        curFrameInnerKeyword = null;
+        ResetKeywordFrame();
     }
     private void ClearLock() 
     {
-        for (int i = 0; i < frameColorImages.Length; ++i)
-        {
-            frameColorImages[i].color = Color.black;
-        }
+        SetFrameColor(Color.black);
         raycastImage.raycastTarget = true;
     }
     public void ClearForPool()
     {
         if(curFrameInnerKeyword != null) 
         {
-            curFrameInnerKeyword.ClearForPool();
-            Managers.Resource.Destroy(curFrameInnerKeyword.gameObject);
+            curFrameInnerKeyword.DestroyKeyword();
         }
+        ClearDotween();
         ClearLock();
         Managers.Resource.Destroy(transform.parent.gameObject);
     }

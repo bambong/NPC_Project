@@ -57,7 +57,9 @@ public class DebugZone : MonoBehaviour
         ClosePlayerLayout();
         for(int i = 0; i < playerSlotCount; ++i)
         {
-            playerFrames.Add(Managers.UI.MakeSubItem<PlayerKeywordFrame>(playerLayout,"KeywordPlayerSlotUI"));
+            var frame = Managers.UI.MakeSubItem<PlayerKeywordFrame>(playerLayout, "KeywordPlayerSlotUI");
+            frame.SetKeywordType(E_KEYWORD_TYPE.ALL);
+            playerFrames.Add(frame);
         }
     }
     private void InitKeywords() 
