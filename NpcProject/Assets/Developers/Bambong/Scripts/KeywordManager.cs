@@ -1,8 +1,6 @@
 using MoreMountains.Tools;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro.EditorUtilities;
-using UnityEditor.Scripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
