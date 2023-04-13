@@ -68,6 +68,25 @@ public class KeywordFrameController : KeywordFrameBase
     }
     public override void Init()
     {
-        
+        registerKeyword = null;
+        curFrameInnerKeyword = null;
+    }
+    private void ClearLock() 
+    {
+        for (int i = 0; i < frameColorImages.Length; ++i)
+        {
+            frameColorImages[i].color = Color.black;
+        }
+        raycastImage.raycastTarget = true;
+    }
+    public void ClearForPool()
+    {
+        if(curFrameInnerKeyword != null) 
+        {
+            curFrameInnerKeyword.ClearForPool();
+            Managers.Resource.Destroy(curFrameInnerKeyword.gameObject);
+        }
+        ClearLock();
+        Managers.Resource.Destroy(transform.parent.gameObject);
     }
 }

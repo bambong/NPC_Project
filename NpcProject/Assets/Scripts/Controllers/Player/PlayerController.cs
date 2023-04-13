@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rigid;
     [SerializeField]
     private ConstantForce gravityForce;
+    [SerializeField]
+    private PlayerUIController playerUIController;
 
 
     [Space(1)]
@@ -57,25 +59,18 @@ public class PlayerController : MonoBehaviour
     [Space(1)]
     [Header("MM_Feedback")]
     [SerializeField]
-    private MMFeedbacks deathFeedback;
-
-    [Space(1)]
-    [Header("Motion Effec")]
+    private MMF_Player deathFeedback;
     [SerializeField]
-    private SkeletonGhost ghost;
-    [SerializeField]
-    private SpineGhostColorController motionTrail;
+    private MMF_Player hitFeedback;
 
     private PlayerAnimationController.AnimDir curDir = PlayerAnimationController.AnimDir.Front;
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
-    private PlayerUIController playerUIController;
+
     private DeathUIController deathUIController;
 
     private RaycastHit slopeHit;
     private int slopeLayer;
-    public bool IsDebugMod { get => isDebugMod; }
-    private bool isDebugMod;
     public int Hp { get => hp; }
     public int MaxHp { get => maxHp; }
 
@@ -91,7 +86,7 @@ public class PlayerController : MonoBehaviour
         hp = maxHp;
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null, "GlitchEffect");
         slopeLayer = (1 << LayerMask.NameToLayer("Slope"));
-        playerUIController = Managers.UI.MakeWorldSpaceUI<PlayerUIController>(transform, "PlayerUI");
+       // playerUIController = Managers.UI.MakeWorldSpaceUI<PlayerUIController>(transform, "PlayerUI");
         deathUIController = Managers.UI.MakeCameraSpaceUI<DeathUIController>(1f,null, "DeathUI");
         deathUIController.DeathUIClose();
     }
@@ -120,11 +115,6 @@ public class PlayerController : MonoBehaviour
         interactionDetecter.InteractionUiDisable();
     }
 
-    public void SetMotionEffect(bool isOn) 
-    {
-        ghost.enabled = isOn;
-        motionTrail.enabled = isOn;
-    }
     #region OnStateExit
     public void InteractionExit()
     {
@@ -202,7 +192,7 @@ public class PlayerController : MonoBehaviour
 
         if (new Vector3(moveVec.x, 0, moveVec.z).magnitude > 0.02f)
         {
-            AnimMoveEnter();
+            AnimMoveEnter(new Vector3(hor, 0, ver));
             rigid.velocity = moveVec.normalized * speed + gravity;  
         }
         else
@@ -365,34 +355,30 @@ public class PlayerController : MonoBehaviour
     }
     public void EnterDebugMod()
     {
-        SetstateStop();
-        isDebugMod = true;
         Managers.Game.SetStateDebugMod();
         glitchEffectController.EnterDebugMod(() =>
         {
-            SetStateIdle();
-            SetMotionEffect(true);
+            animationController.OnEnterDebugMod();
         });
         interactionDetecter.SwitchDebugMod(true);
     }
     public void ExitDebugMod()
     {
-        SetstateStop();
+        //SetstateStop();
         glitchEffectController.ExitDebugMod(() => {
+            
             interactionDetecter.SwitchDebugMod(false);
-            SetStateIdle();
-            isDebugMod = false;
+            animationController.OnExitDebugMod();
             isDebugButton();
-            SetMotionEffect(false);
         });
     }
     public void AnimIdleEnter()
     {
         animationController.SetIdleAnim(curDir);
     }
-    public void AnimMoveEnter()
+    public void AnimMoveEnter(Vector3 moveVec)
     {
-        animationController.SetMoveAnim(curDir);
+        animationController.SetMoveAnim(curDir,moveVec);
     }
     public void ClearMoveAnim()
     {
@@ -428,7 +414,9 @@ public class PlayerController : MonoBehaviour
         if (hp <= 0)
         {
             SetstateDeath();
+            return;
         }
+        hitFeedback.PlayFeedbacks();
     }
 
     public void isDebugButton()

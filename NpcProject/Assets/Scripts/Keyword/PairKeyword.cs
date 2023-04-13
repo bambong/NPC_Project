@@ -67,9 +67,13 @@ public class PairKeyword : KeywordController
         }
         MasterEntity = null;
     }
-
+    
     private void OnDestroy()
     {
+        if(parentDebugZone == null) 
+        {
+            return;
+        }
         PairKeywords[parentDebugZone].Remove(this);
         if(PairKeywords[parentDebugZone].Count == 0) 
         {

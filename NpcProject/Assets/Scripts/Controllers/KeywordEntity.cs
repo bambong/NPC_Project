@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using UnityEditor.Searcher;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.PlayerLoop;
@@ -68,14 +70,18 @@ public class KeywordEntity : MonoBehaviour
     [SerializeField]
     private CreateKeywordOption[] keywords;
 
+    [SerializeField]
+    private string worldSlotLayoutName = "KeywordWorldSlotLayout";
+
+#region NeedClearForRespawn
     private Dictionary<string,KeywordAction> keywrodOverrideTable = new Dictionary<string,KeywordAction>();
     private Dictionary<KeywordController,KeywordAction> currentRegisterKeyword = new Dictionary<KeywordController,KeywordAction>();
-   
     private List<KeywordFrameController> keywordFrames = new List<KeywordFrameController>();
     private Action<KeywordEntity> updateAction = null;
     private Action<KeywordEntity> fixedUpdateAction = null;
+#endregion
     private Rigidbody rigidbody;
-    private BoxCollider col;
+    protected BoxCollider col;
     private KeywordSlotUiController keywordSlotUiController;
     private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
     private DebugZone parentDebugZone;
@@ -87,22 +93,36 @@ public class KeywordEntity : MonoBehaviour
     public KeywordSlotUiController KeywordSlotUiController { get => keywordSlotUiController;}
     
     private readonly float SLOT_UI_DISTANCE = 100f;
-    private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude; 
+    private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude;
+
+    protected int colisionCheckLayer;
+    private bool isInit = false;
     private void Start()
     {
+        Init();
+    }
+    public virtual void Init()
+    {
+        if(isInit)
+        {
+            return;
+        }
+        isInit = true;
+
         OriginScale = transform.lossyScale;
         Managers.Keyword.AddSceneEntity(this);
         keywordSlotUiController = Managers.UI.MakeSubItem<KeywordSlotUiController>(Managers.Keyword.KeywordEntitySlots, "KeywrodSlotController");
         keywordSlotUiController.RegisterEntity(this);
-        keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null, "KeywordWorldSlotLayout");
-        keywordWorldSlotLayout.RegisterEntity(transform,keywords.Length);
+        keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null, worldSlotLayoutName);
+        keywordWorldSlotLayout.RegisterEntity(transform, keywords.Length);
 
         InitCrateKeywordOption();
+        InitColisionLayer();
 
         if (!TryGetComponent<BoxCollider>(out col))
         {
             Collider temp;
-            if(TryGetComponent<Collider>(out temp))
+            if (TryGetComponent<Collider>(out temp))
             {
                 temp.enabled = false;
             }
@@ -111,29 +131,56 @@ public class KeywordEntity : MonoBehaviour
         TryGetComponent<Rigidbody>(out rigidbody);
         
         DecisionKeyword();
+        StartCoroutine(CheckInitDebugMod());
     }
+    IEnumerator CheckInitDebugMod() 
+    {
+        yield return null;
+        if (Managers.Game.IsDebugMod)
+        {
+            EnterDebugMod();
+        }
+    }
+
     private void Update()
     {
         updateAction?.Invoke(this);
     }
-    public void FixedUpdate()
+    public virtual void FixedUpdate()
     {
-        if (Managers.Game.IsDebugMod)
-        {
-            Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
-            var factor = SCREEN_OFFSET / new Vector2(Screen.width, Screen.height).magnitude;
-            pos.z = 0;
-            if ((Input.mousePosition - pos).magnitude * factor <= SLOT_UI_DISTANCE)
-            {
-                OpenKeywordSlot();
-            }
-            else
-            {
-                CloseKeywordSlot();
-            }
-        }
+     
         fixedUpdateAction?.Invoke(this);
     }
+    public virtual void ClearForPool() 
+    {
+        if (!isInit) 
+        {
+            return;
+        }
+        Debug.Log("Clear For Pool");
+        //keywrodOverrideTable.Clear();
+        currentRegisterKeyword.Clear();
+        foreach(var frame in keywordFrames) 
+        {
+            frame.ClearForPool();
+        }
+        keywordFrames.Clear();
+
+        updateAction = null;
+        fixedUpdateAction = null;
+        
+        Destroy(keywordWorldSlotLayout.gameObject);
+        Destroy(keywordSlotUiController.gameObject);
+        Managers.Keyword.RemoveSceneEntity(this);
+        isInit = false; 
+    }
+
+    public void DestroyKeywordEntity() 
+    {
+        ClearForPool();
+        Managers.Resource.Destroy(gameObject);
+    }
+
     private void InitCrateKeywordOption()
     {
         for (int i = 0; i < keywords.Length; ++i)
@@ -161,11 +208,33 @@ public class KeywordEntity : MonoBehaviour
     public void SetDebugZone(DebugZone zone) => parentDebugZone = zone;
     public virtual void EnterDebugMod()
     {
+        StartCoroutine(KeywordSlotUiUpdate());
         OpenWorldSlotUI();
     }
+    IEnumerator KeywordSlotUiUpdate() 
+    {
+        while (Managers.Game.IsDebugMod) 
+        {
+            Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
+            var factor = SCREEN_OFFSET / new Vector2(Screen.width, Screen.height).magnitude;
+            pos.z = 0;
+            if ((Input.mousePosition - pos).magnitude * factor <= SLOT_UI_DISTANCE)
+            {
+                OpenKeywordSlot();
+            }
+            else
+            {
+                CloseKeywordSlot();
+            }
+            yield return null;
+        }
+    }
+   
+
     public virtual void ExitDebugMod() 
     {
         CloseWorldSlotUI();
+        CloseKeywordSlot();
     }
     public void OpenWorldSlotUI()
     {
@@ -275,23 +344,25 @@ public class KeywordEntity : MonoBehaviour
             DecisionKeyword(keywordFrames[i]);
         }
     }
-
+    private void InitColisionLayer() 
+    {
+        colisionCheckLayer = 1;
+        foreach (var name in Enum.GetNames(typeof(Define.ColiiderMask)))
+        {
+            colisionCheckLayer += (1 << (LayerMask.NameToLayer(name)));
+        }
+    }
     #region Keyword_Control
     public bool ColisionCheckRotate(Vector3 vec)
     {
         var pos = col.transform.position;
         RaycastHit hit;
-        int layer = 1;
-        foreach(var name in Enum.GetNames(typeof(Define.ColiiderMask)))
-        {
-            layer += (1 << (LayerMask.NameToLayer(name)));
-        }
         var boxSize = Util.VectorMultipleScale(col.size/2,transform.lossyScale)* 0.99f;
         var rot = KeywordTransformFactor.rotation * Quaternion.Euler(vec);
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos,boxSize,rot,Color.blue);
 #endif
-        var hits = Physics.OverlapBox(pos,boxSize,rot,layer,QueryTriggerInteraction.Ignore);
+        var hits = Physics.OverlapBox(pos,boxSize,rot, colisionCheckLayer, QueryTriggerInteraction.Ignore);
         if(hits.Length > 1)
         {
             return false;
@@ -306,11 +377,7 @@ public class KeywordEntity : MonoBehaviour
         var pos = col.transform.position;
 
         RaycastHit hit;
-        int layer = 1;
-        foreach (var name in Enum.GetNames(typeof(Define.ColiiderMask)))
-        {
-            layer += (1 << (LayerMask.NameToLayer(name)));
-        }
+   
         var boxSize = Util.VectorMultipleScale(col.size / 2, transform.lossyScale);
         boxSize.y = boxSize.y * 0.99f;
         var vecXSize = Mathf.Abs(vec.x);
@@ -329,7 +396,7 @@ public class KeywordEntity : MonoBehaviour
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos + vec, boxSize, KeywordTransformFactor.rotation, Color.blue);
 #endif
-        var hits = Physics.OverlapBox(pos+vec, boxSize, KeywordTransformFactor.rotation, layer, QueryTriggerInteraction.Ignore);
+        var hits = Physics.OverlapBox(pos+vec, boxSize, KeywordTransformFactor.rotation, colisionCheckLayer, QueryTriggerInteraction.Ignore);
         
         for(int i = 0; i< hits.Length; ++i) 
         {
@@ -346,11 +413,7 @@ public class KeywordEntity : MonoBehaviour
     {
         var pos = col.transform.position;
         RaycastHit hit;
-        int layer = 1;
-        foreach(var name in Enum.GetNames(typeof(Define.ColiiderMask)))
-        {
-            layer += (1 << (LayerMask.NameToLayer(name)));
-        }
+
         var boxSize = Util.VectorMultipleScale(col.size / 2,transform.lossyScale);
         boxSize *= 0.99f;
         boxSize.y = 0;
@@ -358,7 +421,7 @@ public class KeywordEntity : MonoBehaviour
 #if UNITY_EDITOR
         ExtDebug.DrawBoxCastBox(pos,boxSize,KeywordTransformFactor.rotation, Vector3.down,rayDis,Color.red);
 #endif
-        Physics.BoxCast(pos,boxSize,Vector3.down,out hit,KeywordTransformFactor.rotation,rayDis,layer);
+        Physics.BoxCast(pos,boxSize,Vector3.down,out hit,KeywordTransformFactor.rotation,rayDis, colisionCheckLayer);
         if (hit.collider != null)
         {
             var realDis = hit.distance - col.bounds.extents.y;
@@ -446,15 +509,11 @@ public class KeywordEntity : MonoBehaviour
         var pos = col.transform.position;
 
         RaycastHit hit;
-        int layer = 1;
-        foreach (var name in Enum.GetNames(typeof(Define.ColiiderMask)))
-        {
-            layer += (1 << (LayerMask.NameToLayer(name)));
-        }
+     
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos + vec, boxSize, KeywordTransformFactor.rotation, Color.blue);
 #endif
-        var hits = Physics.OverlapBox(pos + vec, boxSize, KeywordTransformFactor.rotation, layer, QueryTriggerInteraction.Ignore);
+        var hits = Physics.OverlapBox(pos + vec, boxSize, KeywordTransformFactor.rotation, colisionCheckLayer, QueryTriggerInteraction.Ignore);
 
         for (int i = 0; i < hits.Length; ++i)
         {

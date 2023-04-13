@@ -31,7 +31,7 @@ public class ResourceManager
         if(original == null)
         {
             Debug.Log($"Failed to load prefab : {path}");
-            return null;
+            return null; 
         }
 
         if(original.GetComponent<Poolable>() != null) 

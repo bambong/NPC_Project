@@ -71,8 +71,9 @@ public class UIManager
         Canvas canvas = go.GetOrAddComponent<Canvas>();
         canvas.renderMode = RenderMode.WorldSpace;
         canvas.worldCamera = Camera.main;
-
-        return Util.GetOrAddComponent<T>(go);
+        var temp = Util.GetOrAddComponent<T>(go);
+        temp.Init();
+        return temp;
     }
 
     public T MakeCameraSpaceUI<T>(float distance ,Transform parent = null, string name = null ) where T : UI_Base
@@ -88,7 +89,9 @@ public class UIManager
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = Camera.main;
         canvas.planeDistance = distance;
-        return Util.GetOrAddComponent<T>(go);
+        var temp = Util.GetOrAddComponent<T>(go);
+        temp.Init();
+        return temp;
     }
     public T MakeSubItem<T>(Transform parent = null, string name = null) where T : UI_Base
     {

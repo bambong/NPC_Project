@@ -28,4 +28,9 @@ public class Define
         //Player,
         Interaction
     }
+    public enum EFFECT
+    {
+        EnergeItemEffect,
+        BombEffect,
+    }
 }
