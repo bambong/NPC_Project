@@ -13,14 +13,18 @@ public abstract class KeywordFrameBase : UI_Base
     [SerializeField]
     private Image[] frameColorImages;
 
+
+    
     protected KeywordController curFrameInnerKeyword;
     private E_KEYWORD_TYPE availableKeywordType;
     public KeywordController CurFrameInnerKeyword { get => curFrameInnerKeyword; }
     public bool HasKeyword { get => CurFrameInnerKeyword != null; }
     public RectTransform RectTransform { get => rectTransform; }
     public E_KEYWORD_TYPE AvailableKeywordType { get => availableKeywordType; }
-    private readonly float UNAVILABLE_COLOR_TIME = 0.15f;
+    protected KeywordEntity masterEntity;
 
+    private readonly float UNAVILABLE_COLOR_TIME = 0.15f;
+    
     public virtual void SetKeyWord(KeywordController keywordController,Action onComplete = null) 
     {
         if (keywordController == null)
@@ -30,14 +34,16 @@ public abstract class KeywordFrameBase : UI_Base
             return;
         }
 
+     
         keywordController.SetFrame(this);
         curFrameInnerKeyword = keywordController;
         keywordController.transform.SetParent(transform);
         
         keywordController.SetToKeywordFrame(rectTransform.localPosition).OnComplete(() =>
         {
-            curFrameInnerKeyword.SetMoveState(false);
             onComplete?.Invoke();
+           
+            curFrameInnerKeyword.SetMoveState(false);
         });
 
     }
@@ -67,7 +73,7 @@ public abstract class KeywordFrameBase : UI_Base
         keywordController.transform.SetParent(transform);
         keywordController.RectTransform.position = rectTransform.position;
     }
-    protected virtual void DecisionKeyword() 
+    protected virtual void DecisionKeyword(KeywordController keyword) 
     {
     }
     protected void SetFrameColor(Color color) 
@@ -112,8 +118,28 @@ public abstract class KeywordFrameBase : UI_Base
         if (IsAvailableKeyword(keywordController) && prevFrame.IsAvailableKeyword(CurFrameInnerKeyword)) 
         {
             Managers.Sound.AskSfxPlay(20010);
-            prevFrame.SetKeyWord(curFrameInnerKeyword, prevFrame.OnEndDrag);
-            SetKeyWord(keywordController, DecisionKeyword);
+            var prevCur = prevFrame.curFrameInnerKeyword;
+            var mCur = curFrameInnerKeyword;
+            prevFrame.SetKeyWord(mCur, ()=> {
+                prevFrame.OnEndDrag();
+                prevFrame.DecisionKeyword(mCur);
+
+            });
+            SetKeyWord(keywordController,
+                () => 
+                {
+                    DecisionKeyword(keywordController);
+                }
+                );
+
+            if (prevFrame.masterEntity != null)
+            {
+                prevFrame.masterEntity.RemoveAction(prevCur, mCur);
+            }
+            if (masterEntity != null)
+            {
+                masterEntity.RemoveAction(mCur, keywordController);
+            }
         }
         else 
         {

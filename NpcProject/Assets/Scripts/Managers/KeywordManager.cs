@@ -1,4 +1,5 @@
 using MoreMountains.Tools;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,9 +21,12 @@ public class KeywordManager
     private GraphicRaycaster graphicRaycaster;
 
     private DebugZone curDebugZone = null;
+    
     public Transform PlayerPanelLayout { get => playerKeywordPanel.LayoutParent; }
     public Transform KeywordEntitySlots { get; private set; } 
     public KeywordController CurDragKeyword { get; set; }
+    public Action OnEnterDebugModEvent{ get; set; }
+    public Action OnExitDebugModEvent{ get; set; }
     public void Init()
     {
         playerKeywordPanel = Managers.UI.MakeSceneUI<PlayerKeywordPanelController>(null,"PlayerKeywordPanel");
@@ -51,8 +55,9 @@ public class KeywordManager
     public void AddSceneEntity(KeywordEntity entity) => curSceneEntity.Add(entity);
     public void RemoveSceneEntity(KeywordEntity entity) => curSceneEntity.Remove(entity);
     public void EnterDebugMod() 
-    {        
-        foreach(var entity in curSceneEntity)
+    {
+       
+        foreach (var entity in curSceneEntity)
         {
             entity.EnterDebugMod();
         }
@@ -62,6 +67,8 @@ public class KeywordManager
         }
         curDebugZone.OnEnterDebugMod();
         playerKeywordPanel.Open();
+       
+        OnEnterDebugModEvent?.Invoke();
     }
     
     public void ExitDebugMod()
@@ -82,6 +89,8 @@ public class KeywordManager
         curDebugZone?.OnExitDebugMod();
        // playerKeywordPanel.Close();
         Managers.Game.SetStateNormal();
+
+        OnExitDebugModEvent?.Invoke();
     }
     public void SetDebugZone(DebugZone zone)
     {
@@ -108,6 +117,9 @@ public class KeywordManager
         debugModEffectControllers.Clear();
         curSceneEntity.Clear();
         curDebugZone = null;
+        OnExitDebugModEvent = null;
+        OnEnterDebugModEvent = null;
+
     }
 
 }

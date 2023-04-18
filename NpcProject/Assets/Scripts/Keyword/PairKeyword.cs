@@ -7,6 +7,27 @@ public class PairKeyword : KeywordController
     public static Dictionary<DebugZone, List<PairKeyword>> PairKeywords = new Dictionary<DebugZone,List<PairKeyword>>();
 
     public KeywordEntity MasterEntity { get; protected set; }
+    [SerializeField]
+    private LineRenderer lineRenderer;
+    private bool isLineOn = false;
+    private KeywordEntity lineEntity;
+
+
+    private void Start()
+    {
+        Managers.Keyword.OnEnterDebugModEvent += () => 
+        {
+            if (isLineOn) 
+            {
+                lineRenderer.enabled = true;
+            }
+        };
+        Managers.Keyword.OnExitDebugModEvent += () => 
+        {
+            lineRenderer.enabled = false;
+        };
+    }
+
 
     public static bool IsAvailablePair(KeywordEntity entity ,out KeywordEntity otherEntity) 
     {
@@ -32,6 +53,18 @@ public class PairKeyword : KeywordController
         }
         return true;
     }
+    private bool IsAvailablePair(out KeywordEntity otherEntity)
+    {
+
+        otherEntity = GetOtherPair().MasterEntity;
+
+        if (otherEntity == null || otherEntity == MasterEntity)
+        {
+            return false;
+        }
+        return true;
+    }
+
 
     public PairKeyword GetOtherPair() 
     {
@@ -58,14 +91,60 @@ public class PairKeyword : KeywordController
     public override void OnEnter(KeywordEntity entity)
     {
         MasterEntity = entity;
+
+        KeywordEntity otherEntity = null;
+        if (IsAvailablePair(out otherEntity)) 
+        {
+            OpenLineRender(otherEntity);
+            lineRenderer.SetPosition(0, MasterEntity.transform.position);
+            lineRenderer.SetPosition(1, MasterEntity.transform.position);
+        }
+        else 
+        {
+            CloseLineRender();
+        }
     }
+
+    private void OpenLineRender(KeywordEntity entity)
+    {
+        isLineOn = true;
+        lineEntity = entity;
+        lineRenderer.enabled = true;
+    }
+    private void CloseLineRender()
+    {
+        isLineOn = false;
+        lineRenderer.enabled = false;
+        lineEntity = null;
+    }
+    public override void OnFixedUpdate(KeywordEntity entity)
+    {
+        KeywordEntity otherEntity = null;
+        if (IsAvailablePair(entity, out otherEntity))
+        {
+            if (lineEntity != otherEntity) 
+            {
+                CloseLineRender();
+                return;
+            }
+            //lineRenderer.enabled = true;
+            lineRenderer.SetPosition(0, MasterEntity.transform.position);
+            lineRenderer.SetPosition(1,otherEntity.transform.position);
+        }
+        else
+        {
+            CloseLineRender();
+        }
+    }
+
     public override void OnRemove(KeywordEntity entity)
     {
-        if(entity != MasterEntity) 
-        {
-            return;
-        }
+        //if(entity != MasterEntity) 
+        //{
+        //    return;
+        //}
         MasterEntity = null;
+        lineRenderer.enabled=false;
     }
     
     private void OnDestroy()

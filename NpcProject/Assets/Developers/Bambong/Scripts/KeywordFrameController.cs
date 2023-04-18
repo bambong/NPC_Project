@@ -11,19 +11,13 @@ public class KeywordFrameController : KeywordFrameBase
     private Image raycastImage;
 
 
-    private KeywordController registerKeyword;
-
    private KeywordWorldSlotUIController keywordWorldSlot;
 
-    private KeywordEntity entity;
-    public bool IsKeywordRemoved { get { return (registerKeyword != null && curFrameInnerKeyword != registerKeyword); } }
-
-    public KeywordController RegisterKeyword { get => registerKeyword; }
     public KeywordWorldSlotUIController KeywordWorldSlot { get => keywordWorldSlot;  }
 
-    protected override void DecisionKeyword()
+    protected override void DecisionKeyword(KeywordController keyword)
     {
-        entity.DecisionKeyword(this);
+        masterEntity.DecisionKeyword(this, keyword);
     }
     public void SetLockFrame(bool isOn) 
     {
@@ -37,29 +31,23 @@ public class KeywordFrameController : KeywordFrameBase
         raycastImage.raycastTarget = !isOn;
         curFrameInnerKeyword.SetLockState(isOn);
     }
-    public void OnDecisionKeyword() 
-    {
-        registerKeyword = curFrameInnerKeyword;
-    }
 
     public void RegisterEntity(KeywordEntity entity ,KeywordWorldSlotUIController keywordWorldSlot)
     {
-        this.entity = entity;
+        this.masterEntity = entity;
         this.keywordWorldSlot = keywordWorldSlot;
     }
     public override void ResetKeywordFrame()
     {
         base.ResetKeywordFrame();
-        registerKeyword = null;
     }
     public override void OnBeginDrag()
     {
-        entity.KeywordSlotUiController.DragOn();
+        masterEntity.KeywordSlotUiController.DragOn();
     }
     public override void OnEndDrag()
     {
-        entity.KeywordSlotUiController.DragOff();
-        entity.DecisionKeyword(this);
+        masterEntity.KeywordSlotUiController.DragOff();
     }
     public override void Init()
     {

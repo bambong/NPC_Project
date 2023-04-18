@@ -140,7 +140,7 @@ public class KeywordEntity : MonoBehaviour
 
         InitCrateKeywordOption();
         
-        DecisionKeyword();
+       // DecisionKeyword();
         StartCoroutine(CheckInitDebugMod());
     }
     IEnumerator CheckInitDebugMod() 
@@ -214,6 +214,7 @@ public class KeywordEntity : MonoBehaviour
             {
                 frame.SetLockFrame(true);
             }
+            DecisionKeyword(frame, keyword);
         }
     }
     public void SetDebugZone(DebugZone zone) => parentDebugZone = zone;
@@ -278,9 +279,14 @@ public class KeywordEntity : MonoBehaviour
         updateAction += action.OnUpdate;
         currentRegisterKeyword[controller] = action;
     }
-    public void RemoveAction(KeywordFrameController keywordFrame)
+    public void RemoveAction(KeywordController registerkeyword , KeywordController newKeyword)
     {
-        if(!currentRegisterKeyword.ContainsKey(keywordFrame.RegisterKeyword))
+        if(registerkeyword == null)
+        {
+            return;
+        }
+
+        if(!currentRegisterKeyword.ContainsKey(registerkeyword))
         {
             Debug.LogError("포함되지않은 키워드 삭제 시도");
             return;
@@ -288,39 +294,26 @@ public class KeywordEntity : MonoBehaviour
         // 다른 슬롯에 들어가 있는지 확인
         for(int i = 0; i < keywordFrames.Count; ++i) 
         {
-            if(keywordFrames[i].CurFrameInnerKeyword == keywordFrame.RegisterKeyword)
+            if(keywordFrames[i].CurFrameInnerKeyword == registerkeyword)
             {
                 return;
             }
         }
-        var action = currentRegisterKeyword[keywordFrame.RegisterKeyword];
+        var action = currentRegisterKeyword[registerkeyword];
 
         fixedUpdateAction -= action.OnFixecUpdate;
         updateAction -= action.OnUpdate;
-        if (!keywordFrame.HasKeyword || keywordFrame.RegisterKeyword.KewordId != keywordFrame.CurFrameInnerKeyword.KewordId) 
+        if (newKeyword == null || registerkeyword.KewordId != newKeyword.KewordId) 
         {
-            currentRegisterKeyword[keywordFrame.RegisterKeyword]?.OnRemove(this);
+            currentRegisterKeyword[registerkeyword]?.OnRemove(this);
         }
-        currentRegisterKeyword.Remove(keywordFrame.RegisterKeyword);
+        currentRegisterKeyword.Remove(registerkeyword);
     }
-    public void DecisionKeyword(KeywordFrameController keywordFrame) 
+    public void DecisionKeyword(KeywordFrameController keywordFrame , KeywordController newKeyword) 
     {
-        // 현재 프레임 안에 들어있는 키워드
-        var curFrameInnerKeyword = keywordFrame.CurFrameInnerKeyword;
-        // 기존 프레임에 등록되어 있던 키워드
-        var frameRegisterKeyword = keywordFrame.RegisterKeyword;
-        //기존 키워드가 제거 혹은 변경됬다면 
-        if (keywordFrame.IsKeywordRemoved)
-        {
-            //키워드 Remove 이벤트 발생 
-            //Entity 에 등록된 키워드 리스트에서 키워드 제거
-            RemoveAction(keywordFrame);
-        }
-        //현재 FrameInnerKeyword 를 프레임에 등록
-        keywordFrame.OnDecisionKeyword();
 
         // 프레임안에 키워드가 없다면 
-        if (curFrameInnerKeyword == null)
+        if (newKeyword == null)
         {
             //월드 키워드 UI 를 리셋하고 다시 순회 
             keywordFrame.KeywordWorldSlot.UpdateUI(false);
@@ -331,13 +324,13 @@ public class KeywordEntity : MonoBehaviour
         //keywordFrame.KeywordWorldSlot.SetSlotUI(curFrameInnerKeyword.Image);
 
         // 이미 등록된 키워드라면 다시 순회  
-        if (currentRegisterKeyword.ContainsKey(curFrameInnerKeyword))
+        if (currentRegisterKeyword.ContainsKey(newKeyword))
         {
             return;
         }
 
-        var keywordId = curFrameInnerKeyword.KewordId;
-        var keywordAciton = new KeywordAction(curFrameInnerKeyword);
+        var keywordId = newKeyword.KewordId;
+        var keywordAciton = new KeywordAction(newKeyword);
         KeywordAction overAction;
         // 키워드가 오버라이딩 되어 있는지 확인하고 키워드 액션에 할당
         if (keywrodOverrideTable.TryGetValue(keywordId, out overAction))
@@ -345,16 +338,16 @@ public class KeywordEntity : MonoBehaviour
             keywordAciton.OverrideKeywordAction(overAction);
         }
         //키워드 액션을 추가
-        AddAction(curFrameInnerKeyword, keywordAciton);
+        AddAction(newKeyword, keywordAciton);
     }
-    public void DecisionKeyword()
-    {
-        // 키워드 프레임을 순회
-        for(int i = 0; i< keywordFrames.Count; ++i)  
-        {
-            DecisionKeyword(keywordFrames[i]);
-        }
-    }
+    //public void DecisionKeyword()
+    //{
+    //    // 키워드 프레임을 순회
+    //    for(int i = 0; i< keywordFrames.Count; ++i)  
+    //    {
+    //        DecisionKeyword(keywordFrames[i]);
+    //    }
+    //}
     private void InitColisionLayer() 
     {
         colisionCheckLayer = 1;
