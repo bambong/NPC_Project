@@ -5,6 +5,7 @@ using DG.Tweening;
 using AmazingAssets.WireframeShader;
 using MoreMountains.Feedbacks;
 using Spine.Unity.Examples;
+using System.Linq;
 
 public class PlayerController : MonoBehaviour
 {
@@ -458,9 +459,13 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
     #region WireEffect
-    public void SetWireframeMaterial(Material[] materials) 
+    public void SetWireframeMaterial(List<Material> materials) 
     {
         wireframeMaskController.materials = materials;
+    }
+    public void AddWireframeMaterial(Material material)
+    {
+        wireframeMaskController.materials.Add(material);
     }
     public void OpenWireEffect(Vector3 size)
     {

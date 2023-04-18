@@ -1,16 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
+
+
 
 public class PairKeyword : KeywordController
 {
     public static Dictionary<DebugZone, List<PairKeyword>> PairKeywords = new Dictionary<DebugZone,List<PairKeyword>>();
 
-    public KeywordEntity MasterEntity { get; protected set; }
     [SerializeField]
     private LineRenderer lineRenderer;
+
+    private E_PAIRCOLOR_MODE curPairMod;
     private bool isLineOn = false;
     private KeywordEntity lineEntity;
+    public KeywordEntity MasterEntity { get; protected set; }
 
 
     private void Start()
@@ -88,34 +93,66 @@ public class PairKeyword : KeywordController
         PairKeywords[zone].Add(this);
     }
 
-    public override void OnEnter(KeywordEntity entity)
-    {
-        MasterEntity = entity;
-
-        KeywordEntity otherEntity = null;
-        if (IsAvailablePair(out otherEntity)) 
-        {
-            OpenLineRender(otherEntity);
-            lineRenderer.SetPosition(0, MasterEntity.transform.position);
-            lineRenderer.SetPosition(1, MasterEntity.transform.position);
-        }
-        else 
-        {
-            CloseLineRender();
-        }
-    }
+  
 
     private void OpenLineRender(KeywordEntity entity)
     {
+        entity.WireColorController.Open();
+        MasterEntity.WireColorController.Open();
+        //entity.MRenderer.sharedMaterial = pairEffectMat;
+        //MasterEntity.MRenderer.sharedMaterial = pairEffectMat;
+
         isLineOn = true;
         lineEntity = entity;
         lineRenderer.enabled = true;
     }
     private void CloseLineRender()
     {
+        if (!isLineOn) 
+        {
+           return;
+        }
+
+       // var originMat = MasterEntity.OriginMat;
+        lineEntity.WireColorController.Close();
+        MasterEntity.WireColorController.Close();
+        //lineEntity.MRenderer.sharedMaterial = originMat;
+       // MasterEntity.MRenderer.sharedMaterial = originMat;
         isLineOn = false;
         lineRenderer.enabled = false;
         lineEntity = null;
+    }
+    public void ChangeLineState(E_PAIRCOLOR_MODE mod) 
+    {
+        if(curPairMod == mod) 
+        {
+            return;
+        }
+        curPairMod = mod;
+        //lineRenderer.material.color = 
+
+
+    
+    }
+    public void ClearLineState() 
+    {
+        ChangeLineState(E_PAIRCOLOR_MODE.Default);
+    }
+    public override void OnEnter(KeywordEntity entity)
+    {
+        MasterEntity = entity;
+
+        KeywordEntity otherEntity = null;
+        if (IsAvailablePair(out otherEntity))
+        {
+            OpenLineRender(otherEntity);
+            lineRenderer.SetPosition(0, MasterEntity.transform.position);
+            lineRenderer.SetPosition(1, MasterEntity.transform.position);
+        }
+        else
+        {
+            CloseLineRender();
+        }
     }
     public override void OnFixedUpdate(KeywordEntity entity)
     {
@@ -143,6 +180,9 @@ public class PairKeyword : KeywordController
         //{
         //    return;
         //}
+        var other = GetOtherPair();
+        other.CloseLineRender();
+        CloseLineRender();
         MasterEntity = null;
         lineRenderer.enabled=false;
     }

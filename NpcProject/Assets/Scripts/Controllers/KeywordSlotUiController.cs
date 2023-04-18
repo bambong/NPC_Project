@@ -41,10 +41,6 @@ public class KeywordSlotUiController : UI_Base
             Close();
             return;
         }
-        if(Managers.Keyword.CurKeywordEntity == entity) 
-        {
-            return;
-        }
         Close();
     }
     public void Open()

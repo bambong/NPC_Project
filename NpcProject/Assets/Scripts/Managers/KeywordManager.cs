@@ -5,23 +5,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+public enum E_PAIRCOLOR_MODE
+{
+    Default = 0,
+    Attach,
+    Apart,
+    Rotate,
+    
+}
 
 public class KeywordManager
 {
-    private KeywordEntity curKeywordEntity;
-
     private PlayerKeywordPanelController playerKeywordPanel;
-    public PlayerKeywordPanelController PlayerKeywordPanel { get => playerKeywordPanel;}
-    public KeywordEntity CurKeywordEntity { get => curKeywordEntity; }
-    public bool IsDebugZoneIn { get => curDebugZone != null && curDebugZone.IsDebugAble; }
-    public DebugZone CurDebugZone { get => curDebugZone;  }
 
     private List<KeywordEntity> curSceneEntity = new List<KeywordEntity>();
     private List<DebugModEffectController> debugModEffectControllers = new List<DebugModEffectController>();
     private GraphicRaycaster graphicRaycaster;
 
     private DebugZone curDebugZone = null;
-    
+    private Dictionary<E_PAIRCOLOR_MODE, Color> colorStateDic = new Dictionary<E_PAIRCOLOR_MODE, Color>();
+    public PlayerKeywordPanelController PlayerKeywordPanel { get => playerKeywordPanel;}
+    public bool IsDebugZoneIn { get => curDebugZone != null && curDebugZone.IsDebugAble; }
+    public DebugZone CurDebugZone { get => curDebugZone;  }
+
     public Transform PlayerPanelLayout { get => playerKeywordPanel.LayoutParent; }
     public Transform KeywordEntitySlots { get; private set; } 
     public KeywordController CurDragKeyword { get; set; }
@@ -33,6 +39,16 @@ public class KeywordManager
         KeywordEntitySlots = new GameObject("KeywordEntitySlots").transform;
         KeywordEntitySlots.SetParent(playerKeywordPanel.transform);
         graphicRaycaster = playerKeywordPanel.gameObject.GetOrAddComponent<GraphicRaycaster>();
+        LoadColorStateData();
+    }
+    public void LoadColorStateData() 
+    {
+        var colorData = Resources.Load<ColorStateData>("Data/ColorStateData");
+
+        foreach(var item in colorData.colorStates) 
+        {
+            colorStateDic.Add(item.mode,item.color);
+        }
     }
     public void OnSceneLoaded() 
     {
@@ -51,6 +67,10 @@ public class KeywordManager
         var raycastResults = new List<RaycastResult>();
         graphicRaycaster.Raycast(pointerEventData,raycastResults);
         return raycastResults;
+    }
+    public Color GetColorByState(E_PAIRCOLOR_MODE mod) 
+    {
+        return colorStateDic[mod];
     }
     public void AddSceneEntity(KeywordEntity entity) => curSceneEntity.Add(entity);
     public void RemoveSceneEntity(KeywordEntity entity) => curSceneEntity.Remove(entity);

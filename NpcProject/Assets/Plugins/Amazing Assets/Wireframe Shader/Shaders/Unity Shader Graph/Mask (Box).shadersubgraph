@@ -1,5 +1,5 @@
 {
-    "m_SGVersion": 2,
+    "m_SGVersion": 3,
     "m_Type": "UnityEditor.ShaderGraph.GraphData",
     "m_ObjectId": "791876371e774716a86b7700fa2f68d0",
     "m_Properties": [
@@ -17,6 +17,12 @@
         }
     ],
     "m_Keywords": [],
+    "m_Dropdowns": [],
+    "m_CategoryData": [
+        {
+            "m_Id": "6269b3495bdb4540a7a4acd3c2e80778"
+        }
+    ],
     "m_Nodes": [
         {
             "m_Id": "2433ef33b51be98e946b431d6954a428"
@@ -146,10 +152,11 @@
         "serializedMesh": {
             "m_SerializedMesh": "{\"mesh\":{\"instanceID\":0}}",
             "m_Guid": ""
-        }
+        },
+        "preventRotation": false
     },
     "m_Path": "Amazing Assets/Wireframe Shader",
-    "m_ConcretePrecision": 0,
+    "m_GraphPrecision": 0,
     "m_PreviewMode": 2,
     "m_OutputNode": {
         "m_Id": "2433ef33b51be98e946b431d6954a428"
@@ -226,9 +233,13 @@
         "m_GuidSerialized": "baf9261c-3c39-4cdb-bbc3-1502d4a4b343"
     },
     "m_Name": "Invert",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_98EDB234",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -522,6 +533,27 @@
 }
 
 {
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "6269b3495bdb4540a7a4acd3c2e80778",
+    "m_Name": "",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "93518153a762a28f8c21eb95544e2c94"
+        },
+        {
+            "m_Id": "93fc3552629b9780adb4487de139d5e1"
+        },
+        {
+            "m_Id": "8589749b646bed80babccf2dfafb484c"
+        },
+        {
+            "m_Id": "23e90bb4359855859ab091e0b8ac4170"
+        }
+    ]
+}
+
+{
     "m_SGVersion": 1,
     "m_Type": "UnityEditor.ShaderGraph.PositionNode",
     "m_ObjectId": "6d37c27fbc6cbb8286b7a7e2eeba570e",
@@ -551,7 +583,8 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     },
-    "m_Space": 4
+    "m_Space": 4,
+    "m_PositionSource": 0
 }
 
 {
@@ -562,9 +595,13 @@
         "m_GuidSerialized": "4c1755af-d938-4686-8341-d1b75d1c2058"
     },
     "m_Name": "EdgeSmooth",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_C99B3E15",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -647,9 +684,13 @@
         "m_GuidSerialized": "3d9ab294-2577-4f3f-87ca-834de4bddd71"
     },
     "m_Name": "Box TRS Matrix",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Matrix4_7F9E520A",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": false,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": true,
     "hlslDeclarationOverride": 1,
@@ -682,9 +723,13 @@
         "m_GuidSerialized": "1c05c1f9-4d01-46e8-b589-f26ccb52555b"
     },
     "m_Name": "Bounding Box",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector3_3109A2B7",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,

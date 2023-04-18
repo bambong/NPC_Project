@@ -5,7 +5,12 @@ using UnityEngine;
 public class ApartKeyword : KeywordController
 {
     [SerializeField]
-    public static float Speed = 10f; 
+    public static float Speed = 10f;
+
+    public override void OnEnter(KeywordEntity entity)
+    {
+        entity.WireColorController.AddColorState(E_PAIRCOLOR_MODE.Apart);
+    }
     public override void OnFixedUpdate(KeywordEntity entity)
     {
         //entity.ClearVelocity();
@@ -28,6 +33,6 @@ public class ApartKeyword : KeywordController
     }
     public override void OnRemove(KeywordEntity entity)
     {
-      // entity.SetKinematic(false);
+        entity.WireColorController.RemoveColorState(E_PAIRCOLOR_MODE.Apart);
     }
 }

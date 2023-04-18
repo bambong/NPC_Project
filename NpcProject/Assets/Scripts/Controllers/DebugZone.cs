@@ -27,7 +27,7 @@ public class DebugZone : MonoBehaviour
 
     [Header("Wrie Material list")]
     [SerializeField]
-    private Material[] wireMaterials;
+    private List<Material> wireMaterials;
 
     private DebugGaugeUiController debugGaugeUi;
 
@@ -36,7 +36,7 @@ public class DebugZone : MonoBehaviour
     private Vector3 boxSize;
     private bool isDebugAble = true;
     public int PlayerSlotCount { get => playerSlotCount; }
-    public Material[] WireMaterials { get => wireMaterials; }
+    public List<Material> WireMaterials { get => wireMaterials; }
     public bool IsDebugAble { get => isDebugAble; }
     private void Start()
     {
@@ -99,7 +99,7 @@ public class DebugZone : MonoBehaviour
 
     private void WireMaterialClear() 
     {
-        for (int i = 0; i < WireMaterials.Length; i++)
+        for (int i = 0; i < WireMaterials.Count; i++)
         {
             if (WireMaterials[i] == null)
                 continue;
@@ -110,6 +110,21 @@ public class DebugZone : MonoBehaviour
             WireMaterials[i].SetVector("_WireframeShaderMaskBoxBoundingBox", Vector3.zero);
         }
     }
+    public void AddWireFrameMat(Material mat) 
+    {
+        if (wireMaterials.Contains(mat) || mat.HasProperty("_WireframeShaderMaskSpherePosition")) 
+        {
+            return;
+        }
+        wireMaterials.Add(mat);
+
+        if(Managers.Keyword.CurDebugZone == this) 
+        {
+            Managers.Game.Player.AddWireframeMaterial(mat);
+        }
+
+    }
+
     public void OpenPlayerLayout() => playerLayout.gameObject.SetActive(true);
     public void ClosePlayerLayout() => playerLayout.gameObject.SetActive(false);
     public void OnEnterDebugMod() 
@@ -182,4 +197,5 @@ public class DebugZone : MonoBehaviour
             Managers.Game.RetryPanel.CloseResetButton();
         }
     }
+    
 }

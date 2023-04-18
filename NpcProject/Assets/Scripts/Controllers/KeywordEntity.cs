@@ -1,16 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using UnityEditor.Searcher;
+using System.Collections.Generic; 
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.PlayerLoop;
-using UnityEngine.Rendering;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
-using static UnityEngine.Rendering.DebugUI.Table;
+
 
 
 public class KeywordAction 
@@ -88,9 +80,14 @@ public class KeywordEntity : MonoBehaviour
    
     private Rigidbody rigidbody;
     protected BoxCollider col;
+    protected int colisionCheckLayer;
     private KeywordSlotUiController keywordSlotUiController;
     private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
     private DebugZone parentDebugZone;
+    private Color originMatWireColor;
+    private bool isInit = false;
+    private WireColorStateController wireColorController;
+
     public Dictionary<KeywordController,KeywordAction> CurrentRegisterKeyword { get => currentRegisterKeyword; }
     public virtual Transform KeywordTransformFactor { get => transform; }
     public Vector3 OriginScale { get; private set; }
@@ -100,12 +97,12 @@ public class KeywordEntity : MonoBehaviour
     public E_KEYWORD_TYPE AvailableKeywordType { get => availableKeywordType; }
     public Material OriginMat { get => originMat;}
     public Renderer MRenderer { get => mRenderer;}
+    public WireColorStateController WireColorController { get => wireColorController; }
 
     private readonly float SLOT_UI_DISTANCE = 100f;
     private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude;
+    private readonly string WIRE_FRAME_COLOR_NAME = "_Wireframe_Color";
 
-    protected int colisionCheckLayer;
-    private bool isInit = false;
     private void Start()
     {
         InitColisionLayer();
@@ -121,6 +118,9 @@ public class KeywordEntity : MonoBehaviour
         TryGetComponent<Rigidbody>(out rigidbody);
         mRenderer = GetComponent<Renderer>();
         originMat = mRenderer.material;
+        originMatWireColor = originMat.GetColor(WIRE_FRAME_COLOR_NAME);
+        wireColorController = new WireColorStateController();
+        wireColorController.Init(this);
         Init();
     }
     public virtual void Init()
@@ -137,11 +137,11 @@ public class KeywordEntity : MonoBehaviour
         keywordSlotUiController.RegisterEntity(this);
         keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null, worldSlotLayoutName);
         keywordWorldSlotLayout.RegisterEntity(transform, keywords.Length);
-
         InitCrateKeywordOption();
         
        // DecisionKeyword();
         StartCoroutine(CheckInitDebugMod());
+        ClearWireFrameColor();
     }
     IEnumerator CheckInitDebugMod() 
     {
@@ -175,7 +175,7 @@ public class KeywordEntity : MonoBehaviour
             frame.ClearForPool();
         }
         keywordFrames.Clear();
-        mRenderer.material = originMat;
+        mRenderer.sharedMaterial = originMat;
         updateAction = null;
         fixedUpdateAction = null;
         StopAllCoroutines();
@@ -217,7 +217,11 @@ public class KeywordEntity : MonoBehaviour
             DecisionKeyword(frame, keyword);
         }
     }
-    public void SetDebugZone(DebugZone zone) => parentDebugZone = zone;
+    public void SetDebugZone(DebugZone zone)
+    {
+        parentDebugZone = zone;
+        zone.AddWireFrameMat(GetComponent<Renderer>().material);
+    }
     public virtual void EnterDebugMod()
     {
         StartCoroutine(KeywordSlotUiUpdate());
@@ -311,7 +315,6 @@ public class KeywordEntity : MonoBehaviour
     }
     public void DecisionKeyword(KeywordFrameController keywordFrame , KeywordController newKeyword) 
     {
-
         // 프레임안에 키워드가 없다면 
         if (newKeyword == null)
         {
@@ -340,14 +343,15 @@ public class KeywordEntity : MonoBehaviour
         //키워드 액션을 추가
         AddAction(newKeyword, keywordAciton);
     }
-    //public void DecisionKeyword()
-    //{
-    //    // 키워드 프레임을 순회
-    //    for(int i = 0; i< keywordFrames.Count; ++i)  
-    //    {
-    //        DecisionKeyword(keywordFrames[i]);
-    //    }
-    //}
+
+    public void SetWireFrameColor(Color color) 
+    {
+        originMat.SetColor(WIRE_FRAME_COLOR_NAME, color);
+    }
+    public void ClearWireFrameColor() 
+    {
+        originMat.SetColor(WIRE_FRAME_COLOR_NAME, originMatWireColor);
+    }
     private void InitColisionLayer() 
     {
         colisionCheckLayer = 1;

@@ -2637,11 +2637,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24651d961476c7a4ca00d46866546750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  availableKeywordType: -1
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
   keywords:
   - isLock: 0
     keywordGo: {fileID: 0}
+  worldSlotLayoutName: KeywordWorldSlotLayout
 --- !u!65 &270483438
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3140,7 +3142,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 377011671}
   m_LocalRotation: {x: -0, y: 0.99999547, z: -0, w: 0.0030255977}
-  m_LocalPosition: {x: 420.3668, y: -7.689875, z: 13.741569}
+  m_LocalPosition: {x: 420.64, y: -7.636163, z: 13.6}
   m_LocalScale: {x: 9.773529, y: 3.918448, z: 10.416229}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3176,6 +3178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dae1261cdc2509f4b81c83d717c0459a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  availableKeywordType: -1
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
   keywords:
@@ -3183,6 +3186,7 @@ MonoBehaviour:
     keywordGo: {fileID: 9059506981520492944, guid: a229d9efe7e2d1b4fbe5e4354cd12089, type: 3}
   - isLock: 0
     keywordGo: {fileID: 0}
+  worldSlotLayoutName: KeywordWorldSlotLayout
 --- !u!65 &377011675
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4363,6 +4367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dae1261cdc2509f4b81c83d717c0459a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  availableKeywordType: -1
   maxHeight: 5.81
   maxScale: {x: 2, y: 2, z: 2}
   keywords:
@@ -4370,6 +4375,7 @@ MonoBehaviour:
     keywordGo: {fileID: 0}
   - isLock: 0
     keywordGo: {fileID: 0}
+  worldSlotLayoutName: KeywordWorldSlotLayout
 --- !u!54 &544268682
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6202,11 +6208,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24651d961476c7a4ca00d46866546750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  availableKeywordType: -1
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
   keywords:
   - isLock: 0
     keywordGo: {fileID: 9059506981520492944, guid: 70ee77ae61459f643b87f6cae22de398, type: 3}
+  worldSlotLayoutName: KeywordWorldSlotLayout
 --- !u!65 &733383095
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10234,7 +10242,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5894186153558330794, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
       propertyPath: wireMaterials.Array.size
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5894186153558330794, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
       propertyPath: childEntitys.Array.data[0]
@@ -10263,17 +10271,25 @@ PrefabInstance:
     - target: {fileID: 5894186153558330794, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
       propertyPath: wireMaterials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: a8018e2cc9046b343b66bf70cb42800d, type: 2}
+      objectReference: {fileID: 2100000, guid: a2ef1b368e0c4d344821f0b2997d2665, type: 2}
     - target: {fileID: 5894186153558330794, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
       propertyPath: wireMaterials.Array.data[2]
       value: 
-      objectReference: {fileID: 2100000, guid: a2ef1b368e0c4d344821f0b2997d2665, type: 2}
+      objectReference: {fileID: 2100000, guid: 80478f00374744147a166b3ff16126e1, type: 2}
     - target: {fileID: 5894186153558330794, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
       propertyPath: wireMaterials.Array.data[3]
       value: 
-      objectReference: {fileID: 2100000, guid: 7f4d6d69c0dff78478b712369a61c3e7, type: 2}
+      objectReference: {fileID: 2100000, guid: 635c5a9c58dedda42a7dda7d3a6c6a80, type: 2}
     - target: {fileID: 5894186153558330794, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
       propertyPath: wireMaterials.Array.data[4]
+      value: 
+      objectReference: {fileID: 2100000, guid: 635c5a9c58dedda42a7dda7d3a6c6a80, type: 2}
+    - target: {fileID: 5894186153558330794, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
+      propertyPath: wireMaterials.Array.data[5]
+      value: 
+      objectReference: {fileID: 2100000, guid: 635c5a9c58dedda42a7dda7d3a6c6a80, type: 2}
+    - target: {fileID: 5894186153558330794, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
+      propertyPath: wireMaterials.Array.data[6]
       value: 
       objectReference: {fileID: 2100000, guid: 80478f00374744147a166b3ff16126e1, type: 2}
     - target: {fileID: 7893893709234455981, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
@@ -13128,11 +13144,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24651d961476c7a4ca00d46866546750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  availableKeywordType: -1
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
   keywords:
   - isLock: 0
     keywordGo: {fileID: 0}
+  worldSlotLayoutName: KeywordWorldSlotLayout
 --- !u!65 &1592296192
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15411,6 +15429,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dae1261cdc2509f4b81c83d717c0459a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  availableKeywordType: -1
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
   keywords:
@@ -15418,6 +15437,7 @@ MonoBehaviour:
     keywordGo: {fileID: 0}
   - isLock: 0
     keywordGo: {fileID: 0}
+  worldSlotLayoutName: KeywordWorldSlotLayout
 --- !u!65 &1941268063
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18785,6 +18805,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dae1261cdc2509f4b81c83d717c0459a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  availableKeywordType: -1
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
   keywords:
@@ -18792,6 +18813,7 @@ MonoBehaviour:
     keywordGo: {fileID: 9059506981520492944, guid: a229d9efe7e2d1b4fbe5e4354cd12089, type: 3}
   - isLock: 0
     keywordGo: {fileID: 9059506981520492944, guid: 70ee77ae61459f643b87f6cae22de398, type: 3}
+  worldSlotLayoutName: KeywordWorldSlotLayout
 --- !u!54 &4212857254325584569
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -18935,11 +18957,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24651d961476c7a4ca00d46866546750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  availableKeywordType: -1
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
   keywords:
   - isLock: 0
     keywordGo: {fileID: 0}
+  worldSlotLayoutName: KeywordWorldSlotLayout
 --- !u!1 &4212857254512145440
 GameObject:
   m_ObjectHideFlags: 0
@@ -19165,11 +19189,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24651d961476c7a4ca00d46866546750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  availableKeywordType: -1
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
   keywords:
   - isLock: 0
     keywordGo: {fileID: 0}
+  worldSlotLayoutName: KeywordWorldSlotLayout
 --- !u!4 &4266472900245517440
 Transform:
   m_ObjectHideFlags: 0
