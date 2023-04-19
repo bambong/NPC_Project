@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,25 +34,12 @@ public class ResolutionController : MonoBehaviour
     void Start()
     {
         InitUI();
-
-        /*
-#if !UNITY_EDITOR
-        Invoke(nameof(SetResolution), 0.1f);
-#endif
-        */
     }
 
     void InitUI()
     {
         for(int i=0; i<Screen.resolutions.Length; i++)
         {
-            /*
-            if (is16v9)
-            {
-                resolutions = resolutions.FindAll(x => (float)x.width / x.height == 16f / 9);
-            }
-            */
-
             if (Screen.resolutions[i].refreshRate == 60)
             {
                 resolutions.Add(Screen.resolutions[i]);
@@ -69,8 +55,6 @@ public class ResolutionController : MonoBehaviour
             TMP_Dropdown.OptionData option = new TMP_Dropdown.OptionData();
             option.text = item.width + "x" + item.height;
             resolutionDropdown.options.Add(option);
-
-            //Debug.Log(item.width + "x" + item.height + " " + item.refreshRate);
 
             if (item.width == Screen.width && item.height == Screen.height)
             {
@@ -96,6 +80,11 @@ public class ResolutionController : MonoBehaviour
     public void OkBtnClick()
     {
         Screen.SetResolution(resolutions[resolutionNum].width, resolutions[resolutionNum].height, screenMode);
+    }
+
+    public void InAndOut()
+    {
+        //animation here
     }
 
     /*
