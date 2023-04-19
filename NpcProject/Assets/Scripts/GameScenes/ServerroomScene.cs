@@ -15,11 +15,6 @@ public class ServerroomScene : BaseScene
     [SerializeField]
     private Vector3 playerSpawnSpot;
 
-    [SerializeField]
-    private PlayableDirector playableDirector;
-
-    private CutSceneEvent cutScene;
-
     public override void Clear()
     {
       
@@ -33,10 +28,5 @@ public class ServerroomScene : BaseScene
         player.transform.position = playerSpawnSpot;
         Managers.Camera.InitCamera(new CameraInfo(vircam, player.transform));
         Managers.Talk.LoadTalkData(tutorialSceneTalkData);
-
-        cutScene = new CutSceneEvent(playableDirector);        
-        cutScene.OnStart(() => Managers.Game.Player.SetstateStop());
-        cutScene.OnComplete(() => Managers.Game.Player.SetStateIdle());
-        cutScene.Play();
     }
 }

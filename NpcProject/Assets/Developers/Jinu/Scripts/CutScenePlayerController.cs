@@ -25,17 +25,9 @@ public class CutScenePlayerController : MonoBehaviour
         cutAnims.Add(backIdleSpineAnim.gameObject);
         cutAnims.Add(frontBackMoveframeAnim.gameObject);
     }
-
-    public void Update()
-    {
-        var rot = Camera.main.transform.rotation.eulerAngles;
-        rot.x = 0;
-        cutScenePlayer.transform.rotation = Quaternion.Euler(rot);
-    }
-
+    
     public void CutScenePlayerSpawn()
     {
-        //cutScenePlayer.SetActive(true);
         cutScenePlayer.transform.position = Managers.Game.Player.gameObject.transform.position;
         Managers.Game.Player.gameObject.SetActive(false);
     }
@@ -44,7 +36,6 @@ public class CutScenePlayerController : MonoBehaviour
     {
         Managers.Game.Player.gameObject.SetActive(true);
         Managers.Game.Player.gameObject.transform.position = cutScenePlayer.transform.position;
-        //cutScenePlayer.SetActive(false);
     }
 
     #region CutScenePlayerAnim
@@ -97,7 +88,6 @@ public class CutScenePlayerController : MonoBehaviour
         EnableAnim(frontBackMoveframeAnim.gameObject);
         frontBackMoveframeAnim.SetBool("IsFront", false);
     }
-
     private void EnableAnim(GameObject target)
     {
         for (int i = 0; i < cutAnims.Count; ++i)

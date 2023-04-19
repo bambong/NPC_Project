@@ -6,7 +6,6 @@ using System;
 public class CutSceneEvent : GameEvent
 {
     private PlayableDirector timelineDirector;
-
     public CutSceneEvent(PlayableDirector timeline)
     {
         timelineDirector = timeline;

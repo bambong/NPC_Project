@@ -28,6 +28,7 @@ public class ChoiceButtonController : UI_Base
 
     public void AddButtonEvent()
     {
+        Debug.Log("Add Button Event");
         choiceA.onClick.AddListener(ChoiceSelected);
         choiceB.onClick.AddListener(ChoiceSelected);
         choiceC.onClick.AddListener(ChoiceSelected);
