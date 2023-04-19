@@ -9,19 +9,15 @@ public class ApartKeyword : KeywordController
 
     public override void OnEnter(KeywordEntity entity)
     {
-        entity.WireColorController.AddColorState(E_PAIRCOLOR_MODE.Apart);
+        entity.WireColorController.AddColorState(WireColorStateController.E_WIRE_STATE.PAIR,E_WIRE_COLOR_MODE.Apart);
     }
     public override void OnFixedUpdate(KeywordEntity entity)
     {
-        //entity.ClearVelocity();
-       // entity.SetKinematic(true);
-
         KeywordEntity otherEntity;
         if(!PairKeyword.IsAvailablePair(entity,out otherEntity)) 
         {
             return;
         }
-    
         var dir = entity.KeywordTransformFactor.position -otherEntity.KeywordTransformFactor.position;
         dir.y = 0;
         if(new Vector3(dir.x,0,dir.z).magnitude <= 0) 
@@ -33,6 +29,6 @@ public class ApartKeyword : KeywordController
     }
     public override void OnRemove(KeywordEntity entity)
     {
-        entity.WireColorController.RemoveColorState(E_PAIRCOLOR_MODE.Apart);
+        entity.WireColorController.RemoveColorState(WireColorStateController.E_WIRE_STATE.PAIR, E_WIRE_COLOR_MODE.Apart);
     }
 }

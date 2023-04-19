@@ -40,7 +40,6 @@ public class KeywordAction
             return;
         }
         origin = overAction;
-
     }
 }
 
@@ -84,7 +83,6 @@ public class KeywordEntity : MonoBehaviour
     private KeywordSlotUiController keywordSlotUiController;
     private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
     private DebugZone parentDebugZone;
-    private Color originMatWireColor;
     private bool isInit = false;
     private WireColorStateController wireColorController;
 
@@ -118,7 +116,6 @@ public class KeywordEntity : MonoBehaviour
         TryGetComponent<Rigidbody>(out rigidbody);
         mRenderer = GetComponent<Renderer>();
         originMat = mRenderer.material;
-        originMatWireColor = originMat.GetColor(WIRE_FRAME_COLOR_NAME);
         wireColorController = new WireColorStateController();
         wireColorController.Init(this);
         Init();
@@ -137,11 +134,12 @@ public class KeywordEntity : MonoBehaviour
         keywordSlotUiController.RegisterEntity(this);
         keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null, worldSlotLayoutName);
         keywordWorldSlotLayout.RegisterEntity(transform, keywords.Length);
+        ClearWireFrameColor();
         InitCrateKeywordOption();
         
        // DecisionKeyword();
         StartCoroutine(CheckInitDebugMod());
-        ClearWireFrameColor();
+      
     }
     IEnumerator CheckInitDebugMod() 
     {
@@ -350,7 +348,7 @@ public class KeywordEntity : MonoBehaviour
     }
     public void ClearWireFrameColor() 
     {
-        originMat.SetColor(WIRE_FRAME_COLOR_NAME, originMatWireColor);
+        originMat.SetColor(WIRE_FRAME_COLOR_NAME, Managers.Keyword.GetColorByState(E_WIRE_COLOR_MODE.Default));
     }
     private void InitColisionLayer() 
     {
@@ -359,6 +357,17 @@ public class KeywordEntity : MonoBehaviour
         {
             colisionCheckLayer += (1 << (LayerMask.NameToLayer(name)));
         }
+    }
+    public bool HasKeyword(string id) 
+    {
+        foreach(var item in currentRegisterKeyword) 
+        {
+            if(item.Key.KewordId == id) 
+            {
+                return true;
+            }
+        }
+        return false;
     }
     #region Keyword_Control
     public bool ColisionCheckRotate(Vector3 vec)

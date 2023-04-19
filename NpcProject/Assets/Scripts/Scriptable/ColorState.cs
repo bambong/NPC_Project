@@ -7,7 +7,7 @@ using UnityEngine;
 [Serializable]
 public class ColorState
 {
-    public E_PAIRCOLOR_MODE mode;
+    public E_WIRE_COLOR_MODE mode;
     [ColorUsage(true,true)]
     public Color color;
 }

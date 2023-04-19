@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-public enum E_PAIRCOLOR_MODE
+public enum E_WIRE_COLOR_MODE
 {
     Default = 0,
-    Attach,
+    Pair_Default ,
     Apart,
-    Rotate,
+    Attach,
+    Float, 
+    Revolution = 5,
     
 }
 
@@ -23,7 +25,7 @@ public class KeywordManager
     private GraphicRaycaster graphicRaycaster;
 
     private DebugZone curDebugZone = null;
-    private Dictionary<E_PAIRCOLOR_MODE, Color> colorStateDic = new Dictionary<E_PAIRCOLOR_MODE, Color>();
+    private Dictionary<E_WIRE_COLOR_MODE, Color> colorStateDic = new Dictionary<E_WIRE_COLOR_MODE, Color>();
     public PlayerKeywordPanelController PlayerKeywordPanel { get => playerKeywordPanel;}
     public bool IsDebugZoneIn { get => curDebugZone != null && curDebugZone.IsDebugAble; }
     public DebugZone CurDebugZone { get => curDebugZone;  }
@@ -55,9 +57,7 @@ public class KeywordManager
         curSceneEntity.Clear();
         Init();
     }
-    public void OnSceneLoadComplete() 
-    {
-    }
+
     public void AddKeywordMakerGauge(int amount)
     {
         playerKeywordPanel.AddKeywordMakerGauge(amount);
@@ -68,7 +68,7 @@ public class KeywordManager
         graphicRaycaster.Raycast(pointerEventData,raycastResults);
         return raycastResults;
     }
-    public Color GetColorByState(E_PAIRCOLOR_MODE mod) 
+    public Color GetColorByState(E_WIRE_COLOR_MODE mod) 
     {
         return colorStateDic[mod];
     }
@@ -136,6 +136,7 @@ public class KeywordManager
     {
         debugModEffectControllers.Clear();
         curSceneEntity.Clear();
+        colorStateDic.Clear();
         curDebugZone = null;
         OnExitDebugModEvent = null;
         OnEnterDebugModEvent = null;

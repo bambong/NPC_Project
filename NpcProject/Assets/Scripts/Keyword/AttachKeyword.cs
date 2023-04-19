@@ -9,12 +9,10 @@ public class AttachKeyword : KeywordController
 
     public override void OnEnter(KeywordEntity entity)
     {
-        entity.WireColorController.AddColorState(E_PAIRCOLOR_MODE.Attach);
+        entity.WireColorController.AddColorState(WireColorStateController.E_WIRE_STATE.PAIR, E_WIRE_COLOR_MODE.Attach);
     }
     public override void OnFixedUpdate(KeywordEntity entity)
     {
-        //entity.ClearVelocity();
-        //entity.SetKinematic(true);
         KeywordEntity otherEntity;
         if (!PairKeyword.IsAvailablePair(entity, out otherEntity))
         {
@@ -33,7 +31,6 @@ public class AttachKeyword : KeywordController
     }
     public override void OnRemove(KeywordEntity entity)
     {
-        entity.WireColorController.RemoveColorState(E_PAIRCOLOR_MODE.Attach);
-       // entity.SetKinematic(false);
+        entity.WireColorController.RemoveColorState(WireColorStateController.E_WIRE_STATE.PAIR, E_WIRE_COLOR_MODE.Attach);
     }
 }

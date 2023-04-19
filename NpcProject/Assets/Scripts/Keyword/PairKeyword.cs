@@ -12,28 +12,21 @@ public class PairKeyword : KeywordController
     [SerializeField]
     private LineRenderer lineRenderer;
 
-    private E_PAIRCOLOR_MODE curPairMod;
+    private E_WIRE_COLOR_MODE curPairMod;
     private bool isLineOn = false;
     private KeywordEntity lineEntity;
     public KeywordEntity MasterEntity { get; protected set; }
 
-
+    private const string MAT_FLOW_PROPERTY_NAME = "_BoardTill";
+    private const int FLOW_TILL_COUNT = 20;
+    private static readonly string[] FLOW_KEYWORD_IDS = new string[]{ "AttachKeyword", "ApartKeyword",};
+ 
     private void Start()
     {
-        Managers.Keyword.OnEnterDebugModEvent += () => 
-        {
-            if (isLineOn) 
-            {
-                lineRenderer.enabled = true;
-            }
-        };
-        Managers.Keyword.OnExitDebugModEvent += () => 
-        {
-            lineRenderer.enabled = false;
-        };
+        Managers.Keyword.OnEnterDebugModEvent += LineEnable;
+        Managers.Keyword.OnExitDebugModEvent += LineDisable;
     }
-
-
+    
     public static bool IsAvailablePair(KeywordEntity entity ,out KeywordEntity otherEntity) 
     {
         PairKeyword pairKeyword = null;
@@ -50,7 +43,12 @@ public class PairKeyword : KeywordController
         {
             return false;
         }
-        otherEntity = pairKeyword.GetOtherPair().MasterEntity;
+        var pair = pairKeyword.GetOtherPair();
+        if (pair == null)
+        {
+            return false;
+        }
+        otherEntity = pair.MasterEntity;
 
         if (otherEntity == null || pairKeyword.MasterEntity == null || otherEntity == pairKeyword.MasterEntity)
         {
@@ -60,8 +58,14 @@ public class PairKeyword : KeywordController
     }
     private bool IsAvailablePair(out KeywordEntity otherEntity)
     {
+        var pair = GetOtherPair();
+        otherEntity = null;
+        if (pair == null) 
+        {
+            return false;
+        }
 
-        otherEntity = GetOtherPair().MasterEntity;
+        otherEntity = pair.MasterEntity;
 
         if (otherEntity == null || otherEntity == MasterEntity)
         {
@@ -99,8 +103,6 @@ public class PairKeyword : KeywordController
     {
         entity.WireColorController.Open();
         MasterEntity.WireColorController.Open();
-        //entity.MRenderer.sharedMaterial = pairEffectMat;
-        //MasterEntity.MRenderer.sharedMaterial = pairEffectMat;
 
         isLineOn = true;
         lineEntity = entity;
@@ -112,42 +114,53 @@ public class PairKeyword : KeywordController
         {
            return;
         }
-
-       // var originMat = MasterEntity.OriginMat;
         lineEntity.WireColorController.Close();
         MasterEntity.WireColorController.Close();
-        //lineEntity.MRenderer.sharedMaterial = originMat;
-       // MasterEntity.MRenderer.sharedMaterial = originMat;
+
         isLineOn = false;
         lineRenderer.enabled = false;
         lineEntity = null;
     }
-    public void ChangeLineState(E_PAIRCOLOR_MODE mod) 
+    private void LineEnable()
     {
-        if(curPairMod == mod) 
+        if (isLineOn)
         {
-            return;
+            lineRenderer.enabled = true;
         }
-        curPairMod = mod;
-        //lineRenderer.material.color = 
-
-
-    
     }
-    public void ClearLineState() 
+    private void LineDisable()
     {
-        ChangeLineState(E_PAIRCOLOR_MODE.Default);
+        lineRenderer.enabled = false;
     }
+    public bool ChangeLineState(KeywordEntity first , KeywordEntity second) 
+    {
+       for(int i = 0; i < FLOW_KEYWORD_IDS.Length; ++i) 
+       {
+            if (first.HasKeyword(FLOW_KEYWORD_IDS[i])) 
+            {
+                lineRenderer.material.SetInt(MAT_FLOW_PROPERTY_NAME, FLOW_TILL_COUNT);
+                switch (FLOW_KEYWORD_IDS[i]) 
+                {
+                    case "AttachKeyword":
+                        LineSetPos(second, first);
+                        return true;
+                    case "ApartKeyword":
+                        LineSetPos(first, second);
+                        return true;
+                }
+            }
+       }
+       return false;
+    }
+ 
     public override void OnEnter(KeywordEntity entity)
     {
         MasterEntity = entity;
-
         KeywordEntity otherEntity = null;
         if (IsAvailablePair(out otherEntity))
         {
             OpenLineRender(otherEntity);
-            lineRenderer.SetPosition(0, MasterEntity.transform.position);
-            lineRenderer.SetPosition(1, MasterEntity.transform.position);
+            LinePosUpdate(MasterEntity, otherEntity);
         }
         else
         {
@@ -156,24 +169,39 @@ public class PairKeyword : KeywordController
     }
     public override void OnFixedUpdate(KeywordEntity entity)
     {
-        KeywordEntity otherEntity = null;
-        if (IsAvailablePair(entity, out otherEntity))
+        if (!isLineOn)
         {
-            if (lineEntity != otherEntity) 
-            {
-                CloseLineRender();
-                return;
-            }
-            //lineRenderer.enabled = true;
-            lineRenderer.SetPosition(0, MasterEntity.transform.position);
-            lineRenderer.SetPosition(1,otherEntity.transform.position);
+            return;
+        }
+
+        KeywordEntity otherEntity = null;
+        if (IsAvailablePair(out otherEntity))
+        {
+            LinePosUpdate(MasterEntity, otherEntity);
         }
         else
         {
             CloseLineRender();
         }
     }
-
+    private void LineSetPos(KeywordEntity first, KeywordEntity second) 
+    {
+        lineRenderer.SetPosition(0, first.transform.position);
+        lineRenderer.SetPosition(1, second.transform.position);
+    }
+    private void LinePosUpdate(KeywordEntity master, KeywordEntity other) 
+    {
+        if(ChangeLineState(master, other)) 
+        {
+            return;        
+        }
+        if(ChangeLineState(other, master)) 
+        {
+            return;
+        }
+        lineRenderer.material.SetInt(MAT_FLOW_PROPERTY_NAME, 0);
+        LineSetPos(master, other);
+    }
     public override void OnRemove(KeywordEntity entity)
     {
         //if(entity != MasterEntity) 
@@ -181,7 +209,10 @@ public class PairKeyword : KeywordController
         //    return;
         //}
         var other = GetOtherPair();
-        other.CloseLineRender();
+        if(other != null) 
+        {
+            other.CloseLineRender();
+        }
         CloseLineRender();
         MasterEntity = null;
         lineRenderer.enabled=false;
@@ -189,7 +220,9 @@ public class PairKeyword : KeywordController
     
     private void OnDestroy()
     {
-        if(parentDebugZone == null) 
+        Managers.Keyword.OnEnterDebugModEvent -= LineEnable;
+        Managers.Keyword.OnExitDebugModEvent -= LineDisable;
+        if (parentDebugZone == null) 
         {
             return;
         }
