@@ -1,10 +1,10 @@
-using DG.Tweening;
-using MoreMountains.Feedbacks;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Searcher;
+//using DG.Tweening;
+//using MoreMountains.Feedbacks;
+//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEditor.Searcher;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI.Table;
+//using static UnityEngine.Rendering.DebugUI.Table;
 
 public class EnergeItemController : MonoBehaviour , ISpawnAble
 {
