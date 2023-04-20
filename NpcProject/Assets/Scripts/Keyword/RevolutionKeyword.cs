@@ -6,10 +6,14 @@ public class RevolutionKeyword : KeywordController
 {
     [SerializeField]
     private float speed = 10f;
+    public override void OnEnter(KeywordEntity entity)
+    {
+        entity.WireColorController.AddColorState(WireColorStateController.E_WIRE_STATE.PAIR, E_WIRE_COLOR_MODE.Revolution);
+    }
     public override void OnFixedUpdate(KeywordEntity entity)
     {
-        entity.ClearVelocity();
-        entity.SetKinematic(true);
+        //entity.ClearVelocity();
+        //entity.SetKinematic(true);
         
         KeywordEntity otherEntity;
         if (!PairKeyword.IsAvailablePair(entity, out otherEntity))
@@ -29,6 +33,7 @@ public class RevolutionKeyword : KeywordController
     }
     public override void OnRemove(KeywordEntity entity)
     {
-        entity.SetKinematic(false);
+        //entity.SetKinematic(false);
+        entity.WireColorController.RemoveColorState(WireColorStateController.E_WIRE_STATE.PAIR, E_WIRE_COLOR_MODE.Revolution);
     }
 }

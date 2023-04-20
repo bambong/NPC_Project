@@ -9,7 +9,11 @@ public struct BgmType
     public AudioClip file;
     public float volume;
 }
-
+public struct SoundData
+{
+    public AudioClip clip;
+    public float volume;
+}
 
 public class SoundManager
 {    
@@ -18,15 +22,28 @@ public class SoundManager
     private BgmZone currentBgmZone;
 
     private Dictionary<string, BgmType> bgmDatas = new Dictionary<string, BgmType>();
-    
+    private Dictionary<int, SoundData> sfxDatas = new Dictionary<int, SoundData>();
 
     public void Init()
     {
         var soundPrefab = Managers.Resource.Instantiate("SoundSource");
+        Object.DontDestroyOnLoad(soundPrefab.gameObject);
         soundPrefab.name = "@SoundSource";
         soundController = soundPrefab.GetComponent<SoundController>();
-    }
 
+        var lists = Resources.Load<SoundLists>("SoundLists");
+        for (int i = 0; i < lists.SoundEvents.Count; ++i) 
+        {
+            sfxDatas.Add(lists.SoundEvents[i].Id, ReadSfxData(lists.SoundEvents[i]));
+        }
+    }
+    private SoundData ReadSfxData(SoundEvent eventData) 
+    {
+        SoundData data = new SoundData();
+        data.clip = Resources.Load<AudioClip>($"Sounds/SFX/{eventData.Name}");
+        data.volume = eventData.Vol;
+        return data;
+    }
     public void LoadBgmDatas(BgmType[] bgmTypes)
     {
        for(int i = 0; i < bgmTypes.Length; ++i)
@@ -40,10 +57,14 @@ public class SoundManager
     {
         soundController.BgmPlay(bgm); 
     }
-
+    
     public void AskSfxPlay(AudioClip sfxClip)
     {
         soundController.SfxPlay(sfxClip);
+    }
+    public void AskSfxPlay(int id)
+    {
+        soundController.SfxPlay(sfxDatas[id].clip, sfxDatas[id].volume);
     }
 
     public void CheckBgmZone(BgmZone zone)

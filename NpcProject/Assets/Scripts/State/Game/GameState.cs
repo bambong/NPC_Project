@@ -71,3 +71,26 @@ public class GameDebugModState : Singleton<GameDebugModState>, IState<GameManage
     {
     }
 }
+
+public class GameOverState : Singleton<GameOverState>, IState<GameManager>
+{
+    public void Init()
+    {
+    }
+    public void Enter(GameManager stateController)
+    {
+        stateController.RetryPanel.OpenRetryPanel();
+    }
+    public void Exit(GameManager stateController)
+    {
+    }
+
+    public void FixedUpdateActive(GameManager stateController)
+    {
+    }
+
+    public void UpdateActive(GameManager stateController)
+    {
+    }
+}
+

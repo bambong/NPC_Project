@@ -1,5 +1,5 @@
 {
-    "m_SGVersion": 2,
+    "m_SGVersion": 3,
     "m_Type": "UnityEditor.ShaderGraph.GraphData",
     "m_ObjectId": "dabd2ca615fc4e2fa9932630d327309d",
     "m_Properties": [
@@ -49,6 +49,12 @@
     "m_Keywords": [
         {
             "m_Id": "7a5062423bbb41dd81e1706b59519a09"
+        }
+    ],
+    "m_Dropdowns": [],
+    "m_CategoryData": [
+        {
+            "m_Id": "52d281e93f034298875532339b90a613"
         }
     ],
     "m_Nodes": [
@@ -603,10 +609,11 @@
         "serializedMesh": {
             "m_SerializedMesh": "{\"mesh\":{\"instanceID\":0}}",
             "m_Guid": ""
-        }
+        },
+        "preventRotation": false
     },
     "m_Path": "Amazing Assets/Wireframe Shader",
-    "m_ConcretePrecision": 0,
+    "m_GraphPrecision": 0,
     "m_PreviewMode": 2,
     "m_OutputNode": {
         "m_Id": ""
@@ -965,9 +972,13 @@
         "m_GuidSerialized": "4a1b037c-4c68-45f5-a4a7-003eb9941dae"
     },
     "m_Name": "Mask Box TRS",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "",
     "m_OverrideReferenceName": "_WireframeShaderMaskBoxMatrixTRS",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": true,
     "hlslDeclarationOverride": 2,
@@ -1017,9 +1028,13 @@
         "m_GuidSerialized": "10b9474e-0402-49bc-b3cd-b9686ee66787"
     },
     "m_Name": "Wireframe Diameter",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_376D25C4",
     "m_OverrideReferenceName": "_WireframeShader_Diameter",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -1111,9 +1126,13 @@
         "m_GuidSerialized": "125c1f6c-e2ee-46a4-9b0c-0b0df4009c11"
     },
     "m_Name": "Smoothness",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_CF184A9E",
     "m_OverrideReferenceName": "_Smoothness",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -1134,9 +1153,13 @@
         "m_GuidSerialized": "374a859a-62d7-40e3-8f2c-4a099de5d873"
     },
     "m_Name": "Mask Box Bounds",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "",
     "m_OverrideReferenceName": "_WireframeShaderMaskBoxBoundingBox",
     "m_GeneratePropertyBlock": false,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": true,
     "hlslDeclarationOverride": 2,
@@ -1503,7 +1526,9 @@
         -1816106364,
         -1678901798,
         -1559984310
-    ]
+    ],
+    "m_Dropdowns": [],
+    "m_DropdownSelectedEntries": []
 }
 
 {
@@ -1719,6 +1744,60 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "52d281e93f034298875532339b90a613",
+    "m_Name": "",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "a765dd6db198808898c9ab10d704dedc"
+        },
+        {
+            "m_Id": "24e346a9184c1d87894cadf4fee66684"
+        },
+        {
+            "m_Id": "dcf791e459907a88990ae9af44277e23"
+        },
+        {
+            "m_Id": "63fe0fee3a83a880b8087e6918f77a00"
+        },
+        {
+            "m_Id": "b156af030994d284ba0276e67d731728"
+        },
+        {
+            "m_Id": "5df7b3b027c6be8d8db5a42391078e90"
+        },
+        {
+            "m_Id": "15deb4234395418cbf0e2183ed2879a6"
+        },
+        {
+            "m_Id": "786ee378c5880a8b93bbcc58cf562119"
+        },
+        {
+            "m_Id": "81d3379363c05b87a133ba65bb0c079d"
+        },
+        {
+            "m_Id": "5eccc66dbc699284989cb5a3457a462f"
+        },
+        {
+            "m_Id": "f389773814a3e18abda4207debfbb4c6"
+        },
+        {
+            "m_Id": "8767cfc06c0e1f85938367702d7e23b7"
+        },
+        {
+            "m_Id": "113f999d2aa5d48bba087c077554790e"
+        },
+        {
+            "m_Id": "26194214694788899b445c8693eb696b"
+        },
+        {
+            "m_Id": "7a5062423bbb41dd81e1706b59519a09"
+        }
+    ]
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
     "m_ObjectId": "532a42f08c29c987a07c63b28d34777e",
     "m_Id": -1559984310,
@@ -1889,9 +1968,13 @@
         "m_GuidSerialized": "76a85b0f-b829-4cf5-90db-571238057dea"
     },
     "m_Name": "Wireframe Smoothness",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_68720F48",
     "m_OverrideReferenceName": "_WireframeShader_Smoothness",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -1912,9 +1995,13 @@
         "m_GuidSerialized": "b5cb8114-2618-40de-a1ac-ce1a51578b58"
     },
     "m_Name": "Mask Plane Normal",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "",
     "m_OverrideReferenceName": "_WireframeShaderMaskPlaneNormal",
     "m_GeneratePropertyBlock": false,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": true,
     "hlslDeclarationOverride": 2,
@@ -1959,9 +2046,13 @@
         "m_GuidSerialized": "fb0889c9-3c87-45be-9f59-2a28ce09276e"
     },
     "m_Name": "Wireframe Map",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Texture2D_18452F8F",
     "m_OverrideReferenceName": "_Wireframe_ColorTexture",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -1970,6 +2061,8 @@
         "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
         "m_Guid": ""
     },
+    "isMainTexture": false,
+    "useTilingAndOffset": false,
     "m_Modifiable": true,
     "m_DefaultType": 0
 }
@@ -2301,9 +2394,13 @@
         "m_GuidSerialized": "f8a90f46-1bd6-4361-81f2-d0e00019f7e5"
     },
     "m_Name": "Wireframe Color Emission",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_F9538946",
     "m_OverrideReferenceName": "_Wireframe_ColorEmissionStrength",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -2332,19 +2429,24 @@
 }
 
 {
-    "m_SGVersion": 0,
+    "m_SGVersion": 1,
     "m_Type": "UnityEditor.ShaderGraph.ShaderKeyword",
     "m_ObjectId": "7a5062423bbb41dd81e1706b59519a09",
     "m_Guid": {
         "m_GuidSerialized": "aeecc5bf-afb0-49cb-9be3-5e1c4fbe0652"
     },
     "m_Name": "Dynamic Mask",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "ENUM_5312DE06",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_KeywordType": 1,
     "m_KeywordDefinition": 0,
     "m_KeywordScope": 0,
+    "m_KeywordStages": 63,
     "m_Entries": [
         {
             "id": 1,
@@ -2450,9 +2552,13 @@
         "m_GuidSerialized": "ec4e2613-a9ee-4e21-99c0-49a162e1cfa9"
     },
     "m_Name": "Mask Plane Position",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "",
     "m_OverrideReferenceName": "_WireframeShaderMaskPlanePosition",
     "m_GeneratePropertyBlock": false,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": true,
     "hlslDeclarationOverride": 2,
@@ -2574,9 +2680,13 @@
         "m_GuidSerialized": "a3a397bf-3501-499f-b7ae-050cb46799f9"
     },
     "m_Name": "Mask Sphere Radius",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "",
     "m_OverrideReferenceName": "_WireframeShaderMaskSphereRadius",
     "m_GeneratePropertyBlock": false,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": true,
     "hlslDeclarationOverride": 2,
@@ -2957,7 +3067,8 @@
         "m_SerializableColors": []
     },
     "m_TextureType": 0,
-    "m_NormalMapSpace": 0
+    "m_NormalMapSpace": 0,
+    "m_EnableGlobalMipBias": true
 }
 
 {
@@ -2968,9 +3079,13 @@
         "m_GuidSerialized": "2ad0f12f-c2b3-45e6-b1ef-ac82438dfc0c"
     },
     "m_Name": "Metallic",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_C691CA19",
     "m_OverrideReferenceName": "_Metallic",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -3072,7 +3187,9 @@
         -1816106364,
         1728774837,
         -390647606
-    ]
+    ],
+    "m_Dropdowns": [],
+    "m_DropdownSelectedEntries": []
 }
 
 {
@@ -3133,9 +3250,13 @@
         "m_GuidSerialized": "0268ef6d-fb2c-43fd-8a6c-02745398fdbc"
     },
     "m_Name": "Wireframe Thickness",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_C3981CFF",
     "m_OverrideReferenceName": "_WireframeShader_Thickness",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -3655,7 +3776,9 @@
         -1210096421,
         588110360,
         647995045
-    ]
+    ],
+    "m_Dropdowns": [],
+    "m_DropdownSelectedEntries": []
 }
 
 {
@@ -3712,9 +3835,13 @@
         "m_GuidSerialized": "a47f6ef1-488a-4639-9488-fab667b05edb"
     },
     "m_Name": "Wireframe Color",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Color_B31C18C",
     "m_OverrideReferenceName": "_Wireframe_Color",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -3725,6 +3852,7 @@
         "b": 0.0,
         "a": 1.0
     },
+    "isMainColor": false,
     "m_ColorMode": 0
 }
 
@@ -3797,7 +3925,9 @@
         -1816106364,
         -914509396,
         -1725233781
-    ]
+    ],
+    "m_Dropdowns": [],
+    "m_DropdownSelectedEntries": []
 }
 
 {
@@ -4008,9 +4138,13 @@
         "m_GuidSerialized": "223d71de-1f07-4525-acd6-be51f649c463"
     },
     "m_Name": "Mask Sphere Position",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "",
     "m_OverrideReferenceName": "_WireframeShaderMaskSpherePosition",
     "m_GeneratePropertyBlock": false,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": true,
     "hlslDeclarationOverride": 2,
@@ -4084,17 +4218,23 @@
 }
 
 {
-    "m_SGVersion": 0,
+    "m_SGVersion": 1,
     "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalTarget",
     "m_ObjectId": "f7a5a4c173ac4e0fbfcf14a71d6c6f90",
     "m_ActiveSubTarget": {
         "m_Id": "7631adc809f64f2384675a91b971fe3d"
     },
+    "m_AllowMaterialOverride": false,
     "m_SurfaceType": 0,
+    "m_ZTestMode": 4,
+    "m_ZWriteControl": 0,
     "m_AlphaMode": 0,
-    "m_TwoSided": false,
+    "m_RenderFace": 2,
     "m_AlphaClip": true,
-    "m_CustomEditorGUI": ""
+    "m_CastShadows": true,
+    "m_ReceiveShadows": true,
+    "m_CustomEditorGUI": "",
+    "m_SupportVFX": false
 }
 
 {

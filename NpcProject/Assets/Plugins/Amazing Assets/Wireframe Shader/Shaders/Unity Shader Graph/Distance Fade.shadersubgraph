@@ -1,5 +1,5 @@
 {
-    "m_SGVersion": 2,
+    "m_SGVersion": 3,
     "m_Type": "UnityEditor.ShaderGraph.GraphData",
     "m_ObjectId": "02f09c6e54124649803857dc41160f04",
     "m_Properties": [
@@ -11,6 +11,12 @@
         }
     ],
     "m_Keywords": [],
+    "m_Dropdowns": [],
+    "m_CategoryData": [
+        {
+            "m_Id": "b9e6ba0ab6f0430795a824fef1579290"
+        }
+    ],
     "m_Nodes": [
         {
             "m_Id": "2433ef33b51be98e946b431d6954a428"
@@ -123,10 +129,11 @@
         "serializedMesh": {
             "m_SerializedMesh": "{\"mesh\":{\"instanceID\":0}}",
             "m_Guid": ""
-        }
+        },
+        "preventRotation": false
     },
     "m_Path": "Amazing Assets/Wireframe Shader",
-    "m_ConcretePrecision": 0,
+    "m_GraphPrecision": 0,
     "m_PreviewMode": 2,
     "m_OutputNode": {
         "m_Id": "2433ef33b51be98e946b431d6954a428"
@@ -186,9 +193,13 @@
         "m_GuidSerialized": "baf9261c-3c39-4cdb-bbc3-1502d4a4b343"
     },
     "m_Name": "End",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_98EDB234",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -469,7 +480,8 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     },
-    "m_Space": 4
+    "m_Space": 4,
+    "m_PositionSource": 0
 }
 
 {
@@ -524,9 +536,13 @@
         "m_GuidSerialized": "4c1755af-d938-4686-8341-d1b75d1c2058"
     },
     "m_Name": "Start",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_C99B3E15",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -632,6 +648,21 @@
         "X",
         "Y",
         "Z"
+    ]
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "b9e6ba0ab6f0430795a824fef1579290",
+    "m_Name": "",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "86403be7f088cf8b91b299d0f5e4370a"
+        },
+        {
+            "m_Id": "1095110e79ca708087e7c545539fb1d9"
+        }
     ]
 }
 

@@ -38,6 +38,7 @@ public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
+      
     }
 
     public void Exit(PlayerController stateController)
@@ -133,7 +134,10 @@ public class PlayerDeath : Singleton<PlayerDeath>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
+        Managers.Sound.AskSfxPlay(20008);
         stateController.PlayDeathFeedback();
+        Managers.Keyword.PlayerKeywordPanel.Close();
+        Managers.Game.SetStateGameOver();
     }
 
     public void Exit(PlayerController stateController)

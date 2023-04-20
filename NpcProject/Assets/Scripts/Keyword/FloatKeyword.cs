@@ -6,6 +6,11 @@ public class FloatKeyword : KeywordController
 {
     [SerializeField]
     private float speed = 10;
+
+    public override void OnEnter(KeywordEntity entity)
+    {
+        entity.WireColorController.AddColorState(WireColorStateController.E_WIRE_STATE.NORMAL, E_WIRE_COLOR_MODE.Float);
+    }
     public override void OnFixedUpdate(KeywordEntity entity)
     {
         entity.SetGravity(false);
@@ -19,7 +24,8 @@ public class FloatKeyword : KeywordController
     {
         entity.SetGravity(true);
         entity.SetKinematic(false);
-     
+        entity.WireColorController.RemoveColorState(WireColorStateController.E_WIRE_STATE.NORMAL, E_WIRE_COLOR_MODE.Float);
+
     }
 
 }

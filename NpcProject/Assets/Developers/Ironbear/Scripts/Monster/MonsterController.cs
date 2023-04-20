@@ -50,13 +50,17 @@ public class MonsterController : KeywordEntity , ISpawnAble
     [Tooltip("공격 거리 몇 퍼센트에서 브레이크를 잡을지 ")]
     [Range(0,1),SerializeField]
     private float attackAutoBreakingAmount = 0.2f;
-
+    [Tooltip("EffectMat")]
+    [SerializeField]
+    private Material hitMaterial;
 
     private float waitTime = 2f;
     private int curHealth = 0;
     private float curChaseTime = 0;
     private float curWaitTime = 0;
     private float curAttackTime = 0;
+
+    
 
     private MonsterStateController monsterStateController;
     private Vector3 spawnPos;
@@ -66,7 +70,8 @@ public class MonsterController : KeywordEntity , ISpawnAble
     private readonly int IDLE_PRIORITY = 99;
     private readonly int REVERT_PRIORITY = 50;
     private readonly int CHASE_PRIORITY = 30;
-    
+
+    private readonly float HIT_EFFECT_TIME = 0.5f;
     private void Awake()
     {
         monsterStateController = new MonsterStateController(this);
@@ -118,14 +123,23 @@ public class MonsterController : KeywordEntity , ISpawnAble
         curHealth--;
         if (curHealth <= 0)
         {
-            SetStateDeath();
+            Managers.Sound.AskSfxPlay(20004);
+            Managers.Effect.PlayEffect(Define.EFFECT.MonsterDeathEffect , transform);
+            DestroyKeywordEntity();
+            return;
         }
+        Managers.Sound.AskSfxPlay(20003);
+        StartCoroutine(PlayHitEffect());
+        KnockBack();
     }
     public void KnockBack()
     {
+        //monsterNav.isStopped = true;
         var playerPos = Managers.Game.Player.transform.position;
-        Vector3 knockbackDirection = (transform.position - playerPos).normalized;
-        monsterRigid.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);
+        Vector3 knockbackDirection = (transform.position - playerPos);
+        knockbackDirection.y = 0;
+        transform.DOMove(transform.position + knockbackDirection.normalized * knockbackForce,0.1f).SetEase(Ease.OutCirc);
+        //monsterRigid.AddForce(knockbackDirection.normalized * knockbackForce, ForceMode.Impulse);
     }
 
 
@@ -244,6 +258,7 @@ public class MonsterController : KeywordEntity , ISpawnAble
 
     public void Attack() 
     {
+        Managers.Sound.AskSfxPlay(20001);
         var rayDis = (monsterNav.destination - transform.position);
         rayDis.y = 0;
         rayDis = rayDis.normalized;
@@ -262,7 +277,12 @@ public class MonsterController : KeywordEntity , ISpawnAble
         }
         Managers.Game.Player.GetDamage(attackDamage);
     }
-
+    IEnumerator PlayHitEffect() 
+    {
+        MRenderer.material = hitMaterial;
+        yield return new WaitForSeconds(HIT_EFFECT_TIME);
+        MRenderer.material = OriginMat;
+    }
     public void AttackAnimDone()
     {
         SetStateIdle();

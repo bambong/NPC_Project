@@ -25,6 +25,11 @@ public class KeywordMakerGaugeController : MonoBehaviour
 
     private int curCount = 0;
     private bool isOpne = false;
+    private void Start()
+    {
+        Managers.Scene.OnSceneUnload += () => { 
+            StopAllCoroutines(); };
+    }
     public void AddCount(int amount)
     {
         for( int i = 0; i< amount; ++i) 
