@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class ResolutionController : MonoBehaviour
 {
@@ -13,9 +14,14 @@ public class ResolutionController : MonoBehaviour
     Toggle fullscreenToggle;
     [SerializeField]
     TMP_Dropdown resolutionDropdown;
+    [SerializeField]
+    private GameObject resolutionPanel;
 
     List<Resolution> resolutions = new List<Resolution>();
 
+    private Animator animator;
+
+    private bool isOut = false;
     private int resolutionNum;
     FullScreenMode screenMode;
 
@@ -33,6 +39,8 @@ public class ResolutionController : MonoBehaviour
 
     void Start()
     {
+        animator = GetComponent<Animator>();
+
         InitUI();
     }
 
@@ -82,9 +90,19 @@ public class ResolutionController : MonoBehaviour
         Screen.SetResolution(resolutions[resolutionNum].width, resolutions[resolutionNum].height, screenMode);
     }
 
+    //ui panel animation
     public void InAndOut()
     {
-        //animation here
+        if(!isOut)
+        {
+            animator.SetBool("isOut", true);
+            isOut = true;
+        }
+        else if(isOut)
+        {
+            animator.SetBool("isOut", false);
+            isOut = false;
+        }
     }
 
     /*
