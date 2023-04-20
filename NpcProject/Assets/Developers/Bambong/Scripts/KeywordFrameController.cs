@@ -10,22 +10,14 @@ public class KeywordFrameController : KeywordFrameBase
     [SerializeField]
     private Image raycastImage;
 
-    [SerializeField]
-    private Image[] frameColorImages;
-
-    private KeywordController registerKeyword;
 
    private KeywordWorldSlotUIController keywordWorldSlot;
 
-    private KeywordEntity entity;
-    public bool IsKeywordRemoved { get { return (registerKeyword != null && curFrameInnerKeyword != registerKeyword); } }
-
-    public KeywordController RegisterKeyword { get => registerKeyword; }
     public KeywordWorldSlotUIController KeywordWorldSlot { get => keywordWorldSlot;  }
 
-    protected override void DecisionKeyword()
+    protected override void DecisionKeyword(KeywordController keyword)
     {
-        entity.DecisionKeyword(this);
+        masterEntity.DecisionKeyword(this, keyword);
     }
     public void SetLockFrame(bool isOn) 
     {
@@ -34,58 +26,45 @@ public class KeywordFrameController : KeywordFrameBase
         {
             frameColor = new Color(0.4f, 0.4f, 0.4f);
         }
-      
-        for(int i =0; i< frameColorImages.Length; ++i) 
-        {
-            frameColorImages[i].color = frameColor;
-        }
+
+        SetFrameColor(frameColor);
         raycastImage.raycastTarget = !isOn;
-        curFrameInnerKeyword.SetLock(isOn);
-    }
-    public void OnDecisionKeyword() 
-    {
-        registerKeyword = curFrameInnerKeyword;
+        curFrameInnerKeyword.SetLockState(isOn);
     }
 
-    public override void ResetKeywordFrame() 
-    {
-        curFrameInnerKeyword = null;
-    }
     public void RegisterEntity(KeywordEntity entity ,KeywordWorldSlotUIController keywordWorldSlot)
     {
-        this.entity = entity;
+        this.masterEntity = entity;
         this.keywordWorldSlot = keywordWorldSlot;
     }
-
+    public override void ResetKeywordFrame()
+    {
+        base.ResetKeywordFrame();
+    }
     public override void OnBeginDrag()
     {
-        entity.KeywordSlotUiController.DragOn();
+        masterEntity.KeywordSlotUiController.DragOn();
     }
     public override void OnEndDrag()
     {
-        entity.KeywordSlotUiController.DragOff();
-        entity.DecisionKeyword(this);
+        masterEntity.KeywordSlotUiController.DragOff();
     }
     public override void Init()
     {
-        registerKeyword = null;
-        curFrameInnerKeyword = null;
+        ResetKeywordFrame();
     }
     private void ClearLock() 
     {
-        for (int i = 0; i < frameColorImages.Length; ++i)
-        {
-            frameColorImages[i].color = Color.black;
-        }
+        SetFrameColor(Color.black);
         raycastImage.raycastTarget = true;
     }
     public void ClearForPool()
     {
         if(curFrameInnerKeyword != null) 
         {
-            curFrameInnerKeyword.ClearForPool();
-            Managers.Resource.Destroy(curFrameInnerKeyword.gameObject);
+            curFrameInnerKeyword.DestroyKeyword();
         }
+        ClearDotween();
         ClearLock();
         Managers.Resource.Destroy(transform.parent.gameObject);
     }

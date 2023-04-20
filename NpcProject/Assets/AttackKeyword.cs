@@ -8,6 +8,9 @@ public class AttackKeyword : KeywordController
 {
     [SerializeField]
     private Material bombMat;
+    [SerializeField]
+    private Material bombSpriteMat;
+
     private readonly float BOMB_TIME = 3f;
     public override void OnEnter(KeywordEntity entity)
     {
@@ -18,16 +21,19 @@ public class AttackKeyword : KeywordController
             StartCoroutine(CountAttack(entity));
         }
     }
-    IEnumerator CountAttack(KeywordEntity entity)
+    public IEnumerator CountAttack(KeywordEntity entity)
     {
-        var render = entity.GetComponent<Renderer>();
-        var originMat = render.material;
+        var render = entity.MRenderer;
+        var originMat = entity.OriginMat;
         float curTime = 0;
         float blinkFactorTime = BOMB_TIME/6;
         float curBlinkTime = 0;
         float curNormalTime = 0;
         bool blinkOn = true;
-        render.material = bombMat;
+        var effectMat = render is SpriteRenderer ? bombSpriteMat : bombMat;
+        render.material = effectMat;
+       
+
         while(curTime < BOMB_TIME) 
         {
             var delTime = Managers.Time.GetDeltaTime(TIME_TYPE.NONE_PLAYER);
@@ -52,7 +58,7 @@ public class AttackKeyword : KeywordController
                 {
                     blinkOn = true;
                     curNormalTime = 0;
-                    render.material = bombMat;
+                    render.material = effectMat;
                 }
             }
             yield return null;

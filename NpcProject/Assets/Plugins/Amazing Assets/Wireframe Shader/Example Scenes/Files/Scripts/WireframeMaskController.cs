@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 
 namespace AmazingAssets.WireframeShader
@@ -12,14 +13,14 @@ namespace AmazingAssets.WireframeShader
 
         public MaskType maskType;
         public Transform maskObject;
-        public Material[] materials;
+        public List<Material> materials = new List<Material>();
 
 
         void Update()
         {
             if (maskObject != null && materials != null)
             {
-                for (int i = 0; i < materials.Length; i++)
+                for (int i = 0; i < materials.Count; i++)
                 {
                     if (materials[i] == null)
                         continue;

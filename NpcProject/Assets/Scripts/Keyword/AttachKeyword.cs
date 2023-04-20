@@ -5,11 +5,14 @@ using UnityEngine;
 public class AttachKeyword : KeywordController
 {
     [SerializeField]
-    public static float Speed = 10f; 
+    public static float Speed = 10f;
+
+    public override void OnEnter(KeywordEntity entity)
+    {
+        entity.WireColorController.AddColorState(WireColorStateController.E_WIRE_STATE.PAIR, E_WIRE_COLOR_MODE.Attach);
+    }
     public override void OnFixedUpdate(KeywordEntity entity)
     {
-        //entity.ClearVelocity();
-        //entity.SetKinematic(true);
         KeywordEntity otherEntity;
         if (!PairKeyword.IsAvailablePair(entity, out otherEntity))
         {
@@ -28,6 +31,6 @@ public class AttachKeyword : KeywordController
     }
     public override void OnRemove(KeywordEntity entity)
     {
-       // entity.SetKinematic(false);
+        entity.WireColorController.RemoveColorState(WireColorStateController.E_WIRE_STATE.PAIR, E_WIRE_COLOR_MODE.Attach);
     }
 }

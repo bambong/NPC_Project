@@ -1,47 +1,63 @@
 using MoreMountains.Tools;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro.EditorUtilities;
-using UnityEditor.Scripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+public enum E_WIRE_COLOR_MODE
+{
+    Default = 0,
+    Pair_Default ,
+    Apart,
+    Attach,
+    Float, 
+    Revolution = 5,
+    
+}
 
 public class KeywordManager
 {
-    private KeywordEntity curKeywordEntity;
-
     private PlayerKeywordPanelController playerKeywordPanel;
-    public PlayerKeywordPanelController PlayerKeywordPanel { get => playerKeywordPanel;}
-    public KeywordEntity CurKeywordEntity { get => curKeywordEntity; }
-    public bool IsDebugZoneIn { get => curDebugZone != null && curDebugZone.IsDebugAble; }
-    public DebugZone CurDebugZone { get => curDebugZone;  }
 
     private List<KeywordEntity> curSceneEntity = new List<KeywordEntity>();
     private List<DebugModEffectController> debugModEffectControllers = new List<DebugModEffectController>();
     private GraphicRaycaster graphicRaycaster;
 
     private DebugZone curDebugZone = null;
+    private Dictionary<E_WIRE_COLOR_MODE, Color> colorStateDic = new Dictionary<E_WIRE_COLOR_MODE, Color>();
+    public PlayerKeywordPanelController PlayerKeywordPanel { get => playerKeywordPanel;}
+    public bool IsDebugZoneIn { get => curDebugZone != null && curDebugZone.IsDebugAble; }
+    public DebugZone CurDebugZone { get => curDebugZone;  }
+
     public Transform PlayerPanelLayout { get => playerKeywordPanel.LayoutParent; }
     public Transform KeywordEntitySlots { get; private set; } 
     public KeywordController CurDragKeyword { get; set; }
+    public Action OnEnterDebugModEvent{ get; set; }
+    public Action OnExitDebugModEvent{ get; set; }
     public void Init()
     {
         playerKeywordPanel = Managers.UI.MakeSceneUI<PlayerKeywordPanelController>(null,"PlayerKeywordPanel");
         KeywordEntitySlots = new GameObject("KeywordEntitySlots").transform;
         KeywordEntitySlots.SetParent(playerKeywordPanel.transform);
         graphicRaycaster = playerKeywordPanel.gameObject.GetOrAddComponent<GraphicRaycaster>();
+        LoadColorStateData();
+    }
+    public void LoadColorStateData() 
+    {
+        var colorData = Resources.Load<ColorStateData>("Data/ColorStateData");
+
+        foreach(var item in colorData.colorStates) 
+        {
+            colorStateDic.Add(item.mode,item.color);
+        }
     }
     public void OnSceneLoaded() 
     {
-        playerKeywordPanel = Managers.UI.MakeSceneUI<PlayerKeywordPanelController>(null, "PlayerKeywordPanel");
-        KeywordEntitySlots = new GameObject("KeywordEntitySlots").transform;
-        KeywordEntitySlots.SetParent(playerKeywordPanel.transform);
-        graphicRaycaster = playerKeywordPanel.gameObject.GetOrAddComponent<GraphicRaycaster>();
+        curSceneEntity.Clear();
+        Init();
     }
-    public void OnSceneLoadComplete() 
-    {
-    }
+
     public void AddKeywordMakerGauge(int amount)
     {
         playerKeywordPanel.AddKeywordMakerGauge(amount);
@@ -52,11 +68,16 @@ public class KeywordManager
         graphicRaycaster.Raycast(pointerEventData,raycastResults);
         return raycastResults;
     }
+    public Color GetColorByState(E_WIRE_COLOR_MODE mod) 
+    {
+        return colorStateDic[mod];
+    }
     public void AddSceneEntity(KeywordEntity entity) => curSceneEntity.Add(entity);
     public void RemoveSceneEntity(KeywordEntity entity) => curSceneEntity.Remove(entity);
     public void EnterDebugMod() 
-    {        
-        foreach(var entity in curSceneEntity)
+    {
+       
+        foreach (var entity in curSceneEntity)
         {
             entity.EnterDebugMod();
         }
@@ -66,6 +87,8 @@ public class KeywordManager
         }
         curDebugZone.OnEnterDebugMod();
         playerKeywordPanel.Open();
+       
+        OnEnterDebugModEvent?.Invoke();
     }
     
     public void ExitDebugMod()
@@ -84,8 +107,10 @@ public class KeywordManager
             CurDragKeyword = null;
         }
         curDebugZone?.OnExitDebugMod();
-        playerKeywordPanel.Close();
+       // playerKeywordPanel.Close();
         Managers.Game.SetStateNormal();
+
+        OnExitDebugModEvent?.Invoke();
     }
     public void SetDebugZone(DebugZone zone)
     {
@@ -111,7 +136,11 @@ public class KeywordManager
     {
         debugModEffectControllers.Clear();
         curSceneEntity.Clear();
+        colorStateDic.Clear();
         curDebugZone = null;
+        OnExitDebugModEvent = null;
+        OnEnterDebugModEvent = null;
+
     }
 
 }

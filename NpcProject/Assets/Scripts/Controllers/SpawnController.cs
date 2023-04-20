@@ -13,17 +13,23 @@ class RespawnData
     public Transform spot;
     public float time;
 }
+interface ISpawnAble 
+{
+    public void SetSpawnController(Transform spot , SpawnController controller);
 
 
-public class ItemSpawnController : MonoBehaviour
+}
+
+
+public class SpawnController : MonoBehaviour
 {
     [SerializeField]
-    private string itemName = "EnergeItem";
+    private string targetItemName = "EnergeItem";
 
     [SerializeField]
     private List<Transform> spawnSpots;
     [SerializeField]
-    private float itemRespawnTime = 5f;
+    private float respawnTime = 5f;
 
     private List<RespawnData> respawns = new List<RespawnData>();
     private void Start()
@@ -35,28 +41,30 @@ public class ItemSpawnController : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if(respawns.Count <= 0) 
+        {
+            return;
+        }
 
         var lists = respawns.ToList();
         foreach (var item  in lists) 
         {
             item.time += Time.deltaTime;
-            if (item.time >= itemRespawnTime)
+            if (item.time >= respawnTime)
             {
                 CreateItem(item.spot);
                 respawns.Remove(item);
             }
         }
     }
-    private void CreateItem(Transform spot)
+    public virtual void CreateItem(Transform spot)
     {
-        var item  =  Managers.Resource.Instantiate(itemName, spot).GetComponent<EnergeItemController>();
-        item.transform.position = spot.position;
-        item.Init(this);
+        var item  =  Managers.Resource.Instantiate(targetItemName, spot).GetComponent<ISpawnAble>();
+        item.SetSpawnController(spot, this);
     }
-    public void RemoveItem(EnergeItemController item) 
+    public virtual void RemoveItem(Transform spot) 
     {
-        respawns.Add(new RespawnData(item.transform.parent));
-        Managers.Resource.Destroy(item.gameObject);
+        respawns.Add(new RespawnData(spot));
     }
 
 

@@ -19,6 +19,11 @@ public class DebugModGlitchEffectController : UI_Base
     private readonly float EffectTime = 0.3f;
     public bool IsPlaying { get => isPlaying;}
 
+    private void Start()
+    {
+        Managers.Scene.OnSceneUnload += () => { StopAllCoroutines(); };
+    }
+
     public void EnterDebugMod(Action completeAction = null)
     {
         volume.weight = 0;
@@ -45,6 +50,42 @@ public class DebugModGlitchEffectController : UI_Base
         //    tonemapping = tone;
         //}
         Managers.UI.SetCanvas(gameObject);
+    }
+
+    public void PlayOnlyEffectGlitch()
+    {
+        effect.gameObject.SetActive(true);
+        StartCoroutine(OnlyEffect());
+    }
+
+    IEnumerator OnlyEffect() 
+    {
+        var intensity = glitch.intensity;
+        intensity.value = 1;
+        glitch.intensity = intensity;
+        float progress = 0;
+        var thirdTime = (EffectTime / 3);
+        var effectFactor = 1 / thirdTime;
+        while (progress < 1)
+        {
+            progress += Time.deltaTime * effectFactor;
+            volume.weight = progress;
+            yield return null;
+
+        }
+        progress = 1;
+        volume.weight = 1;
+        // tonemapping.active = true;
+        yield return new WaitForSeconds(thirdTime);
+        while (progress > 0)
+        {
+            progress -= Time.deltaTime * effectFactor;
+            intensity.value = progress;
+            glitch.intensity = intensity;
+            yield return null;
+        }
+        intensity.value = 0;
+        glitch.intensity = intensity;
     }
     IEnumerator GlitchOnEffect(Action completeAction)
     {

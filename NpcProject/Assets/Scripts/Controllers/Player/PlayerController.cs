@@ -1,19 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Spine;
-using Spine.Unity;
-using UnityEditor.ShaderGraph.Internal;
-using static UnityEditor.PlayerSettings;
-using UnityEditor.Animations;
-using UnityEditor.Rendering.Utilities;
-using System;
 using DG.Tweening;
 using AmazingAssets.WireframeShader;
-using UnityEngine.UIElements;
-using System.Runtime.CompilerServices;
 using MoreMountains.Feedbacks;
 using Spine.Unity.Examples;
+using System.Linq;
 
 public class PlayerController : MonoBehaviour
 {
@@ -69,6 +61,8 @@ public class PlayerController : MonoBehaviour
     [Header("MM_Feedback")]
     [SerializeField]
     private MMF_Player deathFeedback;
+    [SerializeField]
+    private MMF_Player hitFeedback;
 
     private PlayerAnimationController.AnimDir curDir = PlayerAnimationController.AnimDir.Front;
     private DebugModGlitchEffectController glitchEffectController;
@@ -170,7 +164,7 @@ public class PlayerController : MonoBehaviour
             rigid.velocity = Vector3.zero;
             return;
         }
-
+        
         var moveVec = new Vector3(hor, 0, ver).normalized;
         moveVec = rotater.transform.TransformDirection(moveVec);
         Vector3 gravity = Vector3.down * Mathf.Abs(rigid.velocity.y);
@@ -421,7 +415,10 @@ public class PlayerController : MonoBehaviour
         if (hp <= 0)
         {
             SetstateDeath();
+            return;
         }
+        Managers.Sound.AskSfxPlay(20007);
+        hitFeedback.PlayFeedbacks();
     }
 
     public void isDebugButton()
@@ -462,9 +459,13 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
     #region WireEffect
-    public void SetWireframeMaterial(Material[] materials) 
+    public void SetWireframeMaterial(List<Material> materials) 
     {
         wireframeMaskController.materials = materials;
+    }
+    public void AddWireframeMaterial(Material material)
+    {
+        wireframeMaskController.materials.Add(material);
     }
     public void OpenWireEffect(Vector3 size)
     {

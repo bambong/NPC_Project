@@ -90,9 +90,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29fc0421cffd6a64abe3440c7d48f137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clickSound: {fileID: 8300000, guid: ca4ddfb46835e194d97e40d1f2f04b8d, type: 3}
   rectTransform: {fileID: 9059506981520492945}
   image: {fileID: 9059506981520493038}
+  keywordType: 2
   bombMat: {fileID: 2100000, guid: 06dff6542f36fc04cbce96e4b24cfb5f, type: 2}
+  bombSpriteMat: {fileID: 2100000, guid: 364021b4e0f2d114ab8a168a37ea77f3, type: 2}
 --- !u!114 &3783293237825253650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,3 +109,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsUsing: 0
+  onCreate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 663869873847587425}
+        m_TargetAssemblyTypeName: KeywordController, Assembly-CSharp
+        m_MethodName: Init
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onReturn:
+    m_PersistentCalls:
+      m_Calls: []

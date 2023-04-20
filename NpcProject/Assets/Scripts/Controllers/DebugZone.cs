@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
-using DG.Tweening;
-using static AmazingAssets.WireframeShader.WireframeMaskController;
-using Unity.Services.Analytics.Platform;
-using UnityEditorInternal;
+//using Cinemachine;
+//using DG.Tweening;
+//using static AmazingAssets.WireframeShader.WireframeMaskController;
+//using Unity.Services.Analytics.Platform;
+//using UnityEditorInternal;
 
 [RequireComponent(typeof(Collider))]
 public class DebugZone : MonoBehaviour
@@ -27,7 +27,7 @@ public class DebugZone : MonoBehaviour
 
     [Header("Wrie Material list")]
     [SerializeField]
-    private Material[] wireMaterials;
+    private List<Material> wireMaterials;
 
     private DebugGaugeUiController debugGaugeUi;
 
@@ -36,7 +36,7 @@ public class DebugZone : MonoBehaviour
     private Vector3 boxSize;
     private bool isDebugAble = true;
     public int PlayerSlotCount { get => playerSlotCount; }
-    public Material[] WireMaterials { get => wireMaterials; }
+    public List<Material> WireMaterials { get => wireMaterials; }
     public bool IsDebugAble { get => isDebugAble; }
     private void Start()
     {
@@ -57,14 +57,15 @@ public class DebugZone : MonoBehaviour
         ClosePlayerLayout();
         for(int i = 0; i < playerSlotCount; ++i)
         {
-            playerFrames.Add(Managers.UI.MakeSubItem<PlayerKeywordFrame>(playerLayout,"KeywordPlayerSlotUI"));
+            var frame = Managers.UI.MakeSubItem<PlayerKeywordFrame>(playerLayout, "KeywordPlayerSlotUI");
+            frame.SetKeywordType(E_KEYWORD_TYPE.ALL);
+            playerFrames.Add(frame);
         }
     }
     private void InitKeywords() 
     { 
         for(int i = 0; i< keywords.Length; ++i) 
         {
-            var keyword =Managers.UI.MakeSubItem<KeywordController>(null,"KeywordPrefabs/" + keywords[i].name);
             if(MakeKeyword(keywords[i].name) == null) 
             {
                 Debug.LogError($" DebugZone : {gameObject.name} 슬롯 갯수 이상의 키워드 생성");
@@ -98,7 +99,7 @@ public class DebugZone : MonoBehaviour
 
     private void WireMaterialClear() 
     {
-        for (int i = 0; i < WireMaterials.Length; i++)
+        for (int i = 0; i < WireMaterials.Count; i++)
         {
             if (WireMaterials[i] == null)
                 continue;
@@ -109,6 +110,21 @@ public class DebugZone : MonoBehaviour
             WireMaterials[i].SetVector("_WireframeShaderMaskBoxBoundingBox", Vector3.zero);
         }
     }
+    public void AddWireFrameMat(Material mat) 
+    {
+        if (wireMaterials.Contains(mat) || mat.HasProperty("_WireframeShaderMaskSpherePosition")) 
+        {
+            return;
+        }
+        wireMaterials.Add(mat);
+
+        if(Managers.Keyword.CurDebugZone == this) 
+        {
+            Managers.Game.Player.AddWireframeMaterial(mat);
+        }
+
+    }
+
     public void OpenPlayerLayout() => playerLayout.gameObject.SetActive(true);
     public void ClosePlayerLayout() => playerLayout.gameObject.SetActive(false);
     public void OnEnterDebugMod() 
@@ -168,6 +184,7 @@ public class DebugZone : MonoBehaviour
         {
             Managers.Keyword.SetDebugZone(this);
             Managers.Game.Player.isDebugButton();
+            Managers.Game.RetryPanel.OpenResetButton();
         }
     }
 
@@ -177,6 +194,8 @@ public class DebugZone : MonoBehaviour
         {
             Managers.Keyword.SetDebugZone(null);
             Managers.Game.Player.isDebugButton();
+            Managers.Game.RetryPanel.CloseResetButton();
         }
     }
+    
 }
