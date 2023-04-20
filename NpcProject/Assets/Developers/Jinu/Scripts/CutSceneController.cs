@@ -31,6 +31,7 @@ public class CutSceneController : MonoBehaviour
 
     public void SkipCutScene()
     {
+        Debug.Log("SkipCutScene");
         cutSceneprogress = true;
         StartCoroutine(InputSkipKey());
     }
@@ -57,7 +58,7 @@ public class CutSceneController : MonoBehaviour
     private void JumpToTime()
     {
         curCutScene.Pause();
-        //curCutScene.time = curCutScene.duration - 1.0f;        
+        curCutScene.time = curCutScene.duration - 1.0f;
         curCutScene.Evaluate();
         curCutScene.Resume();
     }
