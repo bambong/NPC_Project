@@ -52,6 +52,7 @@ class CreateKeywordOption
 
 public class KeywordEntity : MonoBehaviour
 {
+    [Header("Keyword Stat")]
     [SerializeField]
     private E_KEYWORD_TYPE availableKeywordType = E_KEYWORD_TYPE.ALL;
 
@@ -59,7 +60,8 @@ public class KeywordEntity : MonoBehaviour
     private float maxHeight = 3;
     [SerializeField]
     private Vector3 maxScale = Vector3.one * 2;
-
+    [SerializeField]
+    private float revAbleDistance = 1000f;
     [Header("Make Keyword")]
     [SerializeField]
     private CreateKeywordOption[] keywords;
@@ -96,6 +98,7 @@ public class KeywordEntity : MonoBehaviour
     public Material OriginMat { get => originMat;}
     public Renderer MRenderer { get => mRenderer;}
     public WireColorStateController WireColorController { get => wireColorController; }
+    public float RevAbleDistance { get => revAbleDistance; }
 
     private readonly float SLOT_UI_DISTANCE = 100f;
     private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude;
