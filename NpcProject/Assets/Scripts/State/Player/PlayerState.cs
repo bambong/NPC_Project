@@ -79,28 +79,7 @@ public class PlayerStop : Singleton<PlayerStop>, IState<PlayerController>
     {
     }
 }
-public class PlayerDebugMod : Singleton<PlayerDebugMod>, IState<PlayerController>
-{
-    public void Init()
-    {
-    }
-    public void Enter(PlayerController stateController)
-    {
-    }
 
-    public void Exit(PlayerController stateController)
-    {
-    }
-
-    public void FixedUpdateActive(PlayerController stateController)
-    {
-    }
-
-    public void UpdateActive(PlayerController stateController)
-    {
-        stateController.DebugModEnterInputCheck();
-    }
-}
 
 public class PlayerInteraction : Singleton<PlayerInteraction>, IState<PlayerController>
 {

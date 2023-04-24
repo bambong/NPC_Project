@@ -137,7 +137,7 @@ public class KeywordEntity : MonoBehaviour
         keywordSlotUiController.RegisterEntity(this);
         keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null, worldSlotLayoutName);
         keywordWorldSlotLayout.RegisterEntity(transform, keywords.Length);
-        ClearWireFrameColor();
+        //ClearWireFrameColor();
         InitCrateKeywordOption();
         
        // DecisionKeyword();
@@ -176,7 +176,7 @@ public class KeywordEntity : MonoBehaviour
             frame.ClearForPool();
         }
         keywordFrames.Clear();
-        mRenderer.sharedMaterial = originMat;
+        mRenderer.material = originMat;
         updateAction = null;
         fixedUpdateAction = null;
         StopAllCoroutines();
@@ -347,10 +347,18 @@ public class KeywordEntity : MonoBehaviour
 
     public void SetWireFrameColor(Color color) 
     {
+        if (!originMat.HasProperty(WIRE_FRAME_COLOR_NAME))
+        {
+            return;
+        }
         originMat.SetColor(WIRE_FRAME_COLOR_NAME, color);
     }
     public void ClearWireFrameColor() 
     {
+        if (!originMat.HasProperty(WIRE_FRAME_COLOR_NAME))
+        {
+            return;
+        }
         originMat.SetColor(WIRE_FRAME_COLOR_NAME, Managers.Keyword.GetColorByState(E_WIRE_COLOR_MODE.Default));
     }
     private void InitColisionLayer() 

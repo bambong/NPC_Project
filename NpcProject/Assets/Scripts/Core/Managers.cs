@@ -66,6 +66,7 @@ public class Managers : MonoBehaviour
     {
         Keyword.OnSceneLoaded();
         Game.OnSceneLoaded();
+        Talk.OnSceneLoaded();
     }
     public static void Clear()
     {

@@ -26,13 +26,14 @@ public class GameNormalState : Singleton<GameNormalState>,IState<GameManager>
         
     }
 }
-public class GameDialogState : Singleton<GameDialogState>, IState<GameManager>
+public class GameEventState : Singleton<GameEventState>, IState<GameManager>
 {
     public void Init()
     {
     }
     public void Enter(GameManager stateController)
     {
+        Managers.Game.Player.SetstateStop();
     }
 
     public void Exit(GameManager stateController)

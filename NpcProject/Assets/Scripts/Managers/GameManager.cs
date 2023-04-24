@@ -46,7 +46,7 @@ public class GameManager
     }
     #region SetState
     public void SetStateNormal() => gameStateController.ChangeState(GameNormalState.Instance);
-    public void SetStateDialog() => gameStateController.ChangeState(GameDialogState.Instance);
+    public void SetStateEvent() => gameStateController.ChangeState(GameEventState.Instance);
     public void SetStateDebugMod() => gameStateController.ChangeState(GameDebugModState.Instance);
     public void SetStateGameOver() => gameStateController.ChangeState(GameOverState.Instance);
     #endregion

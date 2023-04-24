@@ -16,11 +16,13 @@ public class CutSceneEvent : GameEvent
     {
         onStart?.Invoke();
         timelineDirector.Play();
+        Managers.Game.SetStateEvent();
         Managers.Scene.CurrentScene.StartCoroutine(CutSceneUnload());
     }
 
     public void Complete()
     {
+        Managers.Game.SetStateNormal();
         onComplete?.Invoke();
     }
 
