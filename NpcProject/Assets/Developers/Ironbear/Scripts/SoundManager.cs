@@ -30,12 +30,12 @@ public class SoundManager
         Object.DontDestroyOnLoad(soundPrefab.gameObject);
         soundPrefab.name = "@SoundSource";
         soundController = soundPrefab.GetComponent<SoundController>();
-
-        var lists = Resources.Load<SoundLists>("SoundLists");
-        for (int i = 0; i < lists.SoundEvents.Count; ++i) 
-        {
-            sfxDatas.Add(lists.SoundEvents[i].Id, ReadSfxData(lists.SoundEvents[i]));
-        }
+        
+        //var lists = Resources.Load<SoundLists>("SoundLists");
+        //for (int i = 0; i < lists.SoundEvents.Count; ++i) 
+        //{
+        //    sfxDatas.Add(lists.SoundEvents[i].Id, ReadSfxData(lists.SoundEvents[i]));
+        //}
     }
     private SoundData ReadSfxData(SoundEvent eventData) 
     {
@@ -43,6 +43,29 @@ public class SoundManager
         data.clip = Resources.Load<AudioClip>($"Sounds/SFX/{eventData.Name}");
         data.volume = eventData.Vol;
         return data;
+    }
+
+    public void LoadSoundData(SoundExcel soundExcel)
+    {
+        for(int i = 0; i < soundExcel.datas.Count; i++)
+        {
+            var data = soundExcel.datas[i];
+
+            if(data.soundType == "SFX")
+            {
+                SoundData soundData = new SoundData();
+                soundData.clip = Resources.Load<AudioClip>($"Sounds/SFX/{data.soundName}");
+                soundData.volume = data.soundVol;
+
+                sfxDatas.Add(data.soundID, soundData);
+            }
+            else
+            {
+                //BgmType bgmType = new BgmType();
+                //bgmType.name = data.soundName;
+                //bgmType.file = data.
+            }
+        }
     }
     public void LoadBgmDatas(BgmType[] bgmTypes)
     {
