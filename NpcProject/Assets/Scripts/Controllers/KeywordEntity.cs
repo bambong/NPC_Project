@@ -117,10 +117,14 @@ public class KeywordEntity : MonoBehaviour
             col = Util.GetOrAddComponent<BoxCollider>(gameObject);
         }
         TryGetComponent<Rigidbody>(out rigidbody);
-        mRenderer = GetComponent<Renderer>();
-        originMat = mRenderer.material;
         wireColorController = new WireColorStateController();
         wireColorController.Init(this);
+        //mRenderer = GetComponent<Renderer>();
+        //if (originMat == null)
+        //{
+        //    originMat = mRenderer.material;
+        //}
+
         Init();
     }
     public virtual void Init()
@@ -130,6 +134,12 @@ public class KeywordEntity : MonoBehaviour
             return;
         }
         isInit = true;
+        
+        mRenderer = GetComponent<Renderer>();
+        if (originMat == null)
+        {
+            originMat = mRenderer.material;
+        }
 
         OriginScale = transform.lossyScale;
         Managers.Keyword.AddSceneEntity(this);
@@ -137,7 +147,7 @@ public class KeywordEntity : MonoBehaviour
         keywordSlotUiController.RegisterEntity(this);
         keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null, worldSlotLayoutName);
         keywordWorldSlotLayout.RegisterEntity(transform, keywords.Length);
-        //ClearWireFrameColor();
+        ClearWireFrameColor();
         InitCrateKeywordOption();
         
        // DecisionKeyword();

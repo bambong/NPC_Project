@@ -35,8 +35,6 @@ public class TestCutGameScene: BaseScene
         Managers.Talk.LoadTalkData(tutorialSceneTalkData);
 
         cutScene = new CutSceneEvent(playableDirector);
-        //cutScene.OnStart(() => Managers.Game.Player.SetstateStop());
-        //cutScene.OnComplete(() => Managers.Game.Player.SetStateIdle());
         cutScene.Play();
     }
 }

@@ -356,7 +356,7 @@ public class PlayerController : MonoBehaviour
     }
     public void EnterDebugMod()
     {
-        Managers.Game.SetStateDebugMod();
+        Managers.Game.SetEnableDebugMod();
         glitchEffectController.EnterDebugMod(() =>
         {
             animationController.OnEnterDebugMod();
