@@ -24,8 +24,8 @@ public class ServerroomPuzzleController : MonoBehaviour ,IInteraction
     [SerializeField]
     private GameObject potal;
 
-    [SerializeField]
-    private AudioClip lightOnSound;
+    //[SerializeField]
+    //private AudioClip lightOnSound;
 
     public GameObject Go => gameObject;
 
@@ -64,7 +64,7 @@ public class ServerroomPuzzleController : MonoBehaviour ,IInteraction
         DynamicGI.UpdateEnvironment();
 
         Managers.Talk.PlayCurrentSceneTalk(clearTalk);
-        Managers.Sound.AskSfxPlay(lightOnSound);
+        //Managers.Sound.AskSfxPlay(lightOnSound);
         potal.gameObject.SetActive(true);
     }
 

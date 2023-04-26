@@ -20,9 +20,6 @@ public class TestCutGameScene: BaseScene
 
     public CutSceneEvent cutScene;
 
-    [SerializeField]
-    private SoundExcel soundExcel;
-
     public override void Clear()
     {
 
@@ -41,8 +38,11 @@ public class TestCutGameScene: BaseScene
         cutScene.OnStart(() => Managers.Game.Player.SetstateStop());
         cutScene.OnComplete(() => Managers.Game.Player.SetStateIdle());
         cutScene.Play();
+    }
 
-        Managers.Sound.LoadSoundData(soundExcel);
-
+    private void Start()
+    {
+        Managers.Sound.AskBgmPlay(20100);
+        Managers.Sound.AskBgmPlay(20100);
     }
 }
