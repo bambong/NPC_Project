@@ -12,8 +12,13 @@ public class SoundController : MonoBehaviour
     [SerializeField]
     private AudioMixer audioMixer;
 
+    AudioMixerSnapshot defaultSnapshot;
+
     private string currentBgmName = "";
+    private string currentSfxName = "";
     private string area = null;
+    
+    private int sfxCount = -2;
 
     public void GetAreaName(string areaName)
     {
@@ -57,42 +62,25 @@ public class SoundController : MonoBehaviour
             bgmSource.Play();
             currentBgmName = bgmClip.name;
         }
-
-
-        //if (currentBgmName.Equals(name))
-        //{
-        //    return;
-        //}
-        //else
-        //{
-        //    bgmSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Bgm")[0];
-        //    bgmSource.clip = bgmClip;
-        //    bgmSource.volume = vol;
-        //    bgmSource.loop = true;
-        //    bgmSource.Play();
-        //    currentBgmName = name;
-        //}
     }
 
     public void SfxPlay(AudioClip sfxClip = null , float vol = 1)
     {
-        sfxSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Sfx")[0];
-        sfxSource.PlayOneShot(sfxClip, vol);
+        if (sfxSource.GetComponent<AudioSource>().isPlaying && currentSfxName == sfxClip.name)
+        {
+            sfxSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Sfx")[0];
+            float curVol = Mathf.Pow(2, sfxCount);
+            Debug.Log(curVol);
 
-        //if (sfxSource && sfxClip)
-        //{
-        //    if (sfxSource.GetComponent<AudioSource>().isPlaying) return;
-        //    else
-        //    {
-        //        sfxSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Sfx")[0];
-        //        //sfxSource.clip = sfxClip;
-        //        //sfxSource.volume = vol;
-        //        sfxSource.PlayOneShot(sfxClip, vol);
-        //    }
-        //}
-        //sfxSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Sfx")[0];
-        //sfxSource.clip = sfxClip;
-        //sfxSource.volume = vol;
-        //sfxSource.PlayOneShot(sfxClip);
+            sfxSource.PlayOneShot(sfxClip, Mathf.Pow(2, sfxCount));
+            sfxCount--;
+        }
+        else
+        {
+            sfxCount = -5;
+            sfxSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Sfx")[0];
+            sfxSource.PlayOneShot(sfxClip, vol);
+            currentSfxName = sfxClip.name;
+        }
     }
 }
