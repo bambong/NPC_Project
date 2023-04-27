@@ -5,7 +5,7 @@ using Cinemachine;
 public class GameScene : BaseScene
 {
     [SerializeField]
-    private BgmType[] bgm;
+    private BgmData[] bgm;
 
     [SerializeField]
     private Vector3 playerSpawnSpot;
@@ -30,7 +30,6 @@ public class GameScene : BaseScene
         //StartBgm();
         Invoke("StartTalk", 2f);
         Managers.Talk.LoadTalkData(gamaSceneTalkData);
-        Managers.Sound.LoadBgmDatas(bgm);
     }
 
     public void StartTalk()
@@ -41,10 +40,6 @@ public class GameScene : BaseScene
         Managers.Talk.PlayCurrentSceneTalk(startTalk);
     }
     
-    public void StartBgm()
-    {
-        Managers.Sound.AskBgmPlay(bgm);
-    }
 
     public override void Clear()
     {

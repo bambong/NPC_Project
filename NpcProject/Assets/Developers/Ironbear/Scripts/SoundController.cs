@@ -72,7 +72,7 @@ public class SoundController : MonoBehaviour
             float curVol = Mathf.Pow(2, sfxCount);
             Debug.Log(curVol);
 
-            sfxSource.PlayOneShot(sfxClip, Mathf.Pow(2, sfxCount));
+            sfxSource.PlayOneShot(sfxClip, curVol);
             sfxCount--;
         }
         else
