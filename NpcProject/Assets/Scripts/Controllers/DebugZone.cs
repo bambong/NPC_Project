@@ -42,13 +42,14 @@ public class DebugZone : MonoBehaviour
     {
         MakeFrame();
         InitKeywords();
-        WireMaterialClear();
+       
         MakeDebugGaugeUi();
         
         for (int i = 0; i< childEntitys.Count; ++i) 
         {
             childEntitys[i].SetDebugZone(this);
         }
+        WireMaterialClear();
         boxSize = GetComponent<BoxCollider>().bounds.size;
     }
     private void MakeFrame() 
@@ -105,14 +106,13 @@ public class DebugZone : MonoBehaviour
                 continue;
 
             WireMaterials[i].SetVector("_WireframeShaderMaskSpherePosition",Vector3.zero);
-
             WireMaterials[i].SetFloat("_WireframeShaderMaskSphereRadius", 0);
             WireMaterials[i].SetVector("_WireframeShaderMaskBoxBoundingBox", Vector3.zero);
         }
     }
     public void AddWireFrameMat(Material mat) 
     {
-        if (wireMaterials.Contains(mat) || mat.HasProperty("_WireframeShaderMaskSpherePosition")) 
+        if (wireMaterials.Contains(mat) || (!mat.HasProperty("_Wireframe_Color"))) 
         {
             return;
         }

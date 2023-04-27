@@ -52,6 +52,7 @@ class CreateKeywordOption
 
 public class KeywordEntity : MonoBehaviour
 {
+    [Header("Keyword Stat")]
     [SerializeField]
     private E_KEYWORD_TYPE availableKeywordType = E_KEYWORD_TYPE.ALL;
 
@@ -59,7 +60,8 @@ public class KeywordEntity : MonoBehaviour
     private float maxHeight = 3;
     [SerializeField]
     private Vector3 maxScale = Vector3.one * 2;
-
+    [SerializeField]
+    private float revAbleDistance = 1000f;
     [Header("Make Keyword")]
     [SerializeField]
     private CreateKeywordOption[] keywords;
@@ -96,6 +98,7 @@ public class KeywordEntity : MonoBehaviour
     public Material OriginMat { get => originMat;}
     public Renderer MRenderer { get => mRenderer;}
     public WireColorStateController WireColorController { get => wireColorController; }
+    public float RevAbleDistance { get => revAbleDistance; }
 
     private readonly float SLOT_UI_DISTANCE = 100f;
     private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude;
@@ -114,10 +117,14 @@ public class KeywordEntity : MonoBehaviour
             col = Util.GetOrAddComponent<BoxCollider>(gameObject);
         }
         TryGetComponent<Rigidbody>(out rigidbody);
-        mRenderer = GetComponent<Renderer>();
-        originMat = mRenderer.material;
         wireColorController = new WireColorStateController();
         wireColorController.Init(this);
+        //mRenderer = GetComponent<Renderer>();
+        //if (originMat == null)
+        //{
+        //    originMat = mRenderer.material;
+        //}
+
         Init();
     }
     public virtual void Init()
@@ -127,6 +134,12 @@ public class KeywordEntity : MonoBehaviour
             return;
         }
         isInit = true;
+        
+        mRenderer = GetComponent<Renderer>();
+        if (originMat == null)
+        {
+            originMat = mRenderer.material;
+        }
 
         OriginScale = transform.lossyScale;
         Managers.Keyword.AddSceneEntity(this);
@@ -173,7 +186,7 @@ public class KeywordEntity : MonoBehaviour
             frame.ClearForPool();
         }
         keywordFrames.Clear();
-        mRenderer.sharedMaterial = originMat;
+        mRenderer.material = originMat;
         updateAction = null;
         fixedUpdateAction = null;
         StopAllCoroutines();
@@ -344,10 +357,18 @@ public class KeywordEntity : MonoBehaviour
 
     public void SetWireFrameColor(Color color) 
     {
+        if (!originMat.HasProperty(WIRE_FRAME_COLOR_NAME))
+        {
+            return;
+        }
         originMat.SetColor(WIRE_FRAME_COLOR_NAME, color);
     }
     public void ClearWireFrameColor() 
     {
+        if (!originMat.HasProperty(WIRE_FRAME_COLOR_NAME))
+        {
+            return;
+        }
         originMat.SetColor(WIRE_FRAME_COLOR_NAME, Managers.Keyword.GetColorByState(E_WIRE_COLOR_MODE.Default));
     }
     private void InitColisionLayer() 

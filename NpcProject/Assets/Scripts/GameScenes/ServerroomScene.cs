@@ -2,6 +2,7 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class ServerroomScene : BaseScene
 {
@@ -23,11 +24,9 @@ public class ServerroomScene : BaseScene
     {
         base.Init();
 
-        var player = Managers.Game.Spawn(Define.WorldObject.Player,"Player");
+        var player = Managers.Game.Spawn(Define.WorldObject.Player, "Player");
         player.transform.position = playerSpawnSpot;
-        Managers.Camera.InitCamera(new CameraInfo(vircam,player.transform));
+        Managers.Camera.InitCamera(new CameraInfo(vircam, player.transform));
         Managers.Talk.LoadTalkData(tutorialSceneTalkData);
-
     }
 }
-

@@ -25,6 +25,11 @@ public class RevolutionKeyword : KeywordController
         var _worldRotationAxis = Vector3.up;
         var dir = entity.KeywordTransformFactor.position - _orbitCenter;
 
+        if (dir.magnitude > entity.RevAbleDistance) 
+        {
+            return;
+        }
+
         // var _radius = dir.magnitude * Vector3.Normalize(dir);
         var _newRotation = Quaternion.AngleAxis(Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER) * speed,_worldRotationAxis);
         var _desiredOrbitPosition = _orbitCenter + _newRotation * dir;

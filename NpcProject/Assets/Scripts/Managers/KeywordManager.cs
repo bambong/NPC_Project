@@ -108,7 +108,7 @@ public class KeywordManager
         }
         curDebugZone?.OnExitDebugMod();
        // playerKeywordPanel.Close();
-        Managers.Game.SetStateNormal();
+        Managers.Game.SetDisableDebugMod();
 
         OnExitDebugModEvent?.Invoke();
     }

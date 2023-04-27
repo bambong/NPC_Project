@@ -66,6 +66,12 @@ public class TalkManager
         talkPanel = Managers.UI.MakeSceneUI<TalkPanelController>(null, "DialoguePanel");
         LoadSpeakerData();
     }
+    public void OnSceneLoaded()
+    {
+        talkPanel = Managers.UI.MakeSceneUI<TalkPanelController>(null, "DialoguePanel");
+    }
+
+
     private void LoadSpeakerData() 
     {
         var speakers =  Resources.LoadAll<Speaker>("Data/SpeakerData/");
@@ -109,7 +115,7 @@ public class TalkManager
  
     public void PlayTalk(TalkEvent talk) 
     {
-        Managers.Game.SetStateDialog();
+        Managers.Game.SetStateEvent();
         
         curTalkEvent = talk;
        
@@ -146,11 +152,7 @@ public class TalkManager
         {
             if((Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.TALK_KEY)) && talkPanel.IsNext == true && !talkPanel.IsChoice) || talkPanel.GetIsSelect()) 
             {
-                if(!talkPanel.GetIsSelect())
-                {
-                    yield return new WaitForSeconds(0.3f);
-                }
-                talkPanel.InputIsSelect(false);                
+                talkPanel.InputIsSelect(false);
 
                 if(curTalkEvent.MoveNext())
                 {
