@@ -41,9 +41,9 @@ public abstract class KeywordFrameBase : UI_Base
         
         keywordController.SetToKeywordFrame(rectTransform.localPosition).OnComplete(() =>
         {
+            curFrameInnerKeyword.SetMoveState(false);
             onComplete?.Invoke();
            
-            curFrameInnerKeyword.SetMoveState(false);
         });
 
     }

@@ -356,7 +356,7 @@ public class PlayerController : MonoBehaviour
     }
     public void EnterDebugMod()
     {
-        Managers.Game.SetStateDebugMod();
+        Managers.Game.SetEnableDebugMod();
         glitchEffectController.EnterDebugMod(() =>
         {
             animationController.OnEnterDebugMod();
@@ -386,7 +386,10 @@ public class PlayerController : MonoBehaviour
         AnimIdleEnter();
         rigid.velocity = Vector3.zero;
     }
-
+    private bool PlayerIsStopState()
+    {
+        return playerStateController.CurState == PlayerStop.Instance;
+    }
 
     public bool IsOnSlope(Vector3 dir)
     {
@@ -410,6 +413,10 @@ public class PlayerController : MonoBehaviour
 
     public void GetDamage(int damage)
     {
+        if (PlayerIsStopState()) 
+        {
+            return;
+        }
         hp = hp - damage;
         playerUIController.SetHp(damage);
         if (hp <= 0)
@@ -445,16 +452,17 @@ public class PlayerController : MonoBehaviour
     {
         playerStateController.ChangeState(PlayerIdle.Instance);
     }
-    public void SetStateDebugMod()
-    {
-        playerStateController.ChangeState(PlayerDebugMod.Instance);
-    }
+
     public void SetstateStop()
     {
         playerStateController.ChangeState(PlayerStop.Instance);
     }
     public void SetstateDeath()
     {
+        if (PlayerIsStopState())
+        {
+            return;
+        }
         playerStateController.ChangeState(PlayerDeath.Instance);
     }
     #endregion

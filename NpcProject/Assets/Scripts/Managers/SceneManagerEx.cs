@@ -41,16 +41,21 @@ public class SceneManagerEx
         async.allowSceneActivation = false;
         async.completed += (async) => { Managers.OnSceneLoad(); };
         
-        while (async.progress < 0.9f)
+        while (progress < 1 || async.progress < 0.9f)
         {
             progress += Time.deltaTime;
             sceneTransition.canvasGroup.alpha = Mathf.Lerp(alpha, 1, progress);
             yield return null;
         }
+        //sceneTransition.canvasGroup.alpha = 1;
         Managers.Clear();
         DOTween.KillAll();
         async.allowSceneActivation = true;
         progress = 0;
+        while (!async.isDone)
+        {
+            yield return null;
+        }
         while (progress < 1)
         {
             progress += Time.deltaTime;

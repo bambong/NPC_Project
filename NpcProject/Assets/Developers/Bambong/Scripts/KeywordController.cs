@@ -226,6 +226,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         isInit = false;
         curFrame.ResetKeywordFrame();
         StopAllCoroutines();
+        //rectTransform.DOKill();
     }
     public void DestroyKeyword() 
     {
