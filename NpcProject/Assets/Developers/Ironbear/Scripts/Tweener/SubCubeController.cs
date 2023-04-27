@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
@@ -10,8 +8,6 @@ public class SubCubeController : MonoBehaviour
 
     [SerializeField]
     private GameObject core;
-    [SerializeField]
-    private int breathCycle = 3;
 
     private Vector3 curVec;
     private Vector3 coreVec;
@@ -21,7 +17,9 @@ public class SubCubeController : MonoBehaviour
     private Tweener floatTweener;
     private Tweener turnTweener;
     private Sequence sequence;
-    private float turnDelay = 3f;
+
+    private float turnInterval = 1.5f;
+    private int breathCycle = 2;
 
     void Start()
     {
@@ -32,17 +30,21 @@ public class SubCubeController : MonoBehaviour
 
         //breathTweener = transform.DOMove(vec * 2, breathCycle).SetRelative().SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutQuad);
         floatTweener = transform.DOLocalMoveY(distance, floatDuration).SetRelative().SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutQuad);
-        turnTweener = transform.DORotate(new Vector3(0, 0, 360), 3, RotateMode.FastBeyond360);
+        //turnTweener = transform.DORotate(new Vector3(0, 0, 360), 3, RotateMode.FastBeyond360);
 
         sequence = DOTween.Sequence();
+        sequence.AppendInterval(turnInterval);
         sequence.SetAutoKill(false);
-        sequence.Append(floatTweener);
-        InvokeRepeating(nameof(PlayTurnTweener), turnDelay, turnDelay);
+        sequence.Append(transform.DORotate(new Vector3(0, 0, 360), 3, RotateMode.FastBeyond360));
+        sequence.SetLoops(-1);
+        DOVirtual.DelayedCall(turnInterval, CallTurnTweenerRecursive);
+        sequence.Play();
     }
 
-    private void PlayTurnTweener()
+    private void CallTurnTweenerRecursive()
     {
-        sequence.Insert(sequence.Duration(), turnTweener);
-        sequence.Play();
+        sequence.Append(turnTweener);
+        //sequence.AppendCallback(CallTurnTweenerRecursive).SetDelay(turnInterval);
+        DOVirtual.DelayedCall(turnInterval, CallTurnTweenerRecursive);
     }
 }

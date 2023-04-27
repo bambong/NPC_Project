@@ -42,11 +42,6 @@ public class CoreCubeController : MonoBehaviour
         //CallRandomAnimation();
     }
 
-    private void Turning()
-    {
-        turnTweener = selectedGameObject.transform.DORotate(new Vector3(0, 0, 360), 3, RotateMode.FastBeyond360);
-    }
-
     private void CallRandomAnimation()
     {
         float delay = Random.Range(minDelay, maxDelay);
