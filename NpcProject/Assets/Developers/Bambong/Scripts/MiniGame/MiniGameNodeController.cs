@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 
-public class MiniGameNodeController : UI_Base ,IPointerEnterHandler ,IPointerClickHandler ,IPointerExitHandler , IPointerDownHandler
+public class MiniGameNodeController : UI_Base ,IPointerEnterHandler ,IPointerClickHandler ,IPointerExitHandler 
 {
     [SerializeField]
     private TextMeshProUGUI text;
@@ -37,8 +37,6 @@ public class MiniGameNodeController : UI_Base ,IPointerEnterHandler ,IPointerCli
     private bool isAbailable = true;
     private bool isDelete = false;
 
-    private Material myMat;
-    private readonly string GLOW_COLOR_PROPERTY = "_GlowColor";
     public Vector2Int PosIndex { get => posIndex; }
     public string AnswerKey { get => answerKey;  }
     public override void Init()
@@ -47,15 +45,7 @@ public class MiniGameNodeController : UI_Base ,IPointerEnterHandler ,IPointerCli
         rectTransform.localScale = Vector3.zero;
         
     }
-    public void OpenAnim(float interval) 
-    {
-        isDelete = false;
-        Sequence sequence = DOTween.Sequence();
-        sequence.AppendInterval(interval);
-        sequence.Append(rectTransform.DOScale(1, 0.2f));
-        sequence.Play();
-        SetImageColor(enableColor);
-    }
+ 
     
     public void SetLookUpmod() 
     {
@@ -105,6 +95,16 @@ public class MiniGameNodeController : UI_Base ,IPointerEnterHandler ,IPointerCli
             SetImageColor(disableColor);
         }
 
+    }
+
+    public void OpenAnim(float interval)
+    {
+        isDelete = false;
+        Sequence sequence = DOTween.Sequence();
+        sequence.AppendInterval(interval);
+        sequence.Append(rectTransform.DOScale(1, 0.2f));
+        sequence.Play();
+        SetImageColor(enableColor);
     }
     public void CloseAnim(float interval)
     {
@@ -156,7 +156,4 @@ public class MiniGameNodeController : UI_Base ,IPointerEnterHandler ,IPointerCli
         UpdateAvailableColor();
     }
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
-    }
 }

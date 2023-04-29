@@ -10,6 +10,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Analytics;
 using UnityEngine.UI;
+
 using Random = UnityEngine.Random;
 
 public class MiniGameManager : MonoBehaviour
@@ -37,12 +38,8 @@ public class MiniGameManager : MonoBehaviour
 
     [SerializeField]
     private CanvasGroup timePanelGroup;
-
     [SerializeField]
-    private TextMeshProUGUI gamePanelText;
-    [SerializeField]
-    private TextMeshProUGUI orderPanelText;
-
+    private CanvasGroup backGround;
     [Header("Time Gauge")]
     [SerializeField]
     private Image timeFillGauge;
@@ -62,11 +59,15 @@ public class MiniGameManager : MonoBehaviour
     [SerializeField]
     private float childSize =1;
 
-
-
     [Header("MMF Effect")]
     [SerializeField]
     private MMF_Player timeLimitEffect;
+
+    [SerializeField]
+    private MiniGamePanelController gamePanel;
+
+    [SerializeField]
+    private MiniGamePanelController orderPanel;
 
     private int curResultIndex = 0;
     private string[] curGameKeys;
@@ -84,25 +85,26 @@ public class MiniGameManager : MonoBehaviour
         {
             nodeMap.Add(new List<MiniGameNodeController>());
         }
+        DOTween.SetTweensCapacity(200, 100);
         InitOrderNode();
         InitResultNode();
         InitLayOut();
         InitNode();
         SetStateInit();
-        gamePanelText.text = "";
-        orderPanelText.text = "";
         timePanelGroup.alpha = 0;
-        Sequence seq = DOTween.Sequence();
-        seq.AppendInterval(1.8f);
-        seq.AppendCallback(() => { OpenNodes(); OpenPanelTexts(); });
-        seq.Play();
+        Sequence s = DOTween.Sequence();
+        s.AppendInterval(2f);
+        s.Append(backGround.DOFade(0, 2f));
+        s.Play();
+        orderPanel.Open(2f, () => { OpenOrderNode(); OpenResultNode(); });
+        gamePanel.Open(1.8f, () =>
+        {
+            Sequence seq = DOTween.Sequence();
+            seq.AppendCallback(() => { OpenGameNodes(); timePanelGroup.DOFade(1, 1f); });
+            seq.Play();
+        });
     }
-    private void OpenPanelTexts() 
-    {
-        timePanelGroup.DOFade(1, 1f);
-        gamePanelText.DOText("코드 배열", 1.5f);
-        orderPanelText.DOText("만들어야 할 코드 조합", 1.5f);
-    }
+
     public void InitOrderNode()
     {
         var splitStrs = orderString.Split(',');
@@ -306,14 +308,26 @@ public class MiniGameManager : MonoBehaviour
     {
         timeFillGauge.fillAmount = curTime / timeLimit;
     }
-    private void OpenNodes() 
+    private void OpenGameNodes() 
     {
         float interval = 0;
+        for (int i = 0; i < row - 1; i++)
+        {
+            var temp = i;
+            for (int j = 0; temp >= 0; j++)
+            {
+                nodeMap[temp][j].OpenAnim(interval);
+                temp--;
+            }
+            interval += 0.1f;
+        }
         for (int i = 0; i < row; i++)
         {
-            for (int j = 0; j < column; j++)
+            var temp = i;
+            for (int j = row-1 ; temp < row; j--)
             {
-                nodeMap[i][j].OpenAnim(interval);  
+                nodeMap[temp][j].OpenAnim(interval);
+                temp++;
             }
             interval += 0.1f;
         }
@@ -324,17 +338,46 @@ public class MiniGameManager : MonoBehaviour
             resultNodes[i].OpneAnim(interval);
             interval += 0.1f;
         }
-
+    }
+    public void OpenOrderNode() 
+    {
+        float interval = 0;
+        for (int i = 0; i < orderNodes.Count; i++)
+        {
+            orderNodes[i].OpneAnim(interval);
+            interval += 0.1f;
+        }
+    }
+    public void OpenResultNode() 
+    {
+        float interval = 0;
+        for (int i = 0; i < orderNodes.Count; i++)
+        {
+            resultNodes[i].OpneAnim(interval);
+            interval += 0.1f;
+        }
     }
     private void CloseNodes() 
     {
 
         float interval = 0;
+        for (int i = 0; i < row - 1; i++)
+        {
+            var temp = i;
+            for (int j = 0; temp >= 0; j++)
+            {
+                nodeMap[temp][j].CloseAnim(interval);
+                temp--;
+            }
+            interval += 0.1f;
+        }
         for (int i = 0; i < row; i++)
         {
-            for (int j = 0; j < column; j++)
+            var temp = i;
+            for (int j = row - 1; temp < row; j--)
             {
-                nodeMap[i][j].CloseAnim(interval);
+                nodeMap[temp][j].CloseAnim(interval);
+                temp++;
             }
             interval += 0.1f;
         }
@@ -345,9 +388,18 @@ public class MiniGameManager : MonoBehaviour
             resultNodes[i].CloseAnim(interval);
             interval += 0.1f;
         }
+        //Sequence seq = DOTween.Sequence();
+        //seq.AppendInterval(row * 0.1f + 0.2f);
+        //seq.AppendCallback(() => { gamePanel.Close(); orderPanel.Close(); });
+        //seq.Play();
     }
     public void SetStateGameOver() 
     {
+        if(isGameEnd)
+        {
+            return;
+        }
+
         isGameEnd = true;
         if (timeLimitEffect.IsPlaying)
         {
