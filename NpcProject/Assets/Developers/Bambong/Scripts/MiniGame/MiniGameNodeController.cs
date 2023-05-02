@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Globalization;
 
 
 public class MiniGameNodeController : UI_Base ,IPointerEnterHandler ,IPointerClickHandler ,IPointerExitHandler 
@@ -59,11 +60,21 @@ public class MiniGameNodeController : UI_Base ,IPointerEnterHandler ,IPointerCli
     }
     public void SetData(MiniGameManager manager , Vector2Int pos , string key) 
     {
-        answerKey = key;
-        text.text = key;
+        SetKey(key);
         miniGameManager = manager;
         posIndex = pos;
     }
+    public void TestAnswerMod() 
+    {
+        text.color = Color.red;
+    }
+    public void SetKey(string key)
+    {
+        text.color = Color.white;
+        answerKey = key;
+        text.text = key;
+    }
+
     public void EnableNode()
     {
         if (isDelete) 

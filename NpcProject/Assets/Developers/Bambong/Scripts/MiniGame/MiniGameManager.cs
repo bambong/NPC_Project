@@ -90,6 +90,7 @@ public class MiniGameManager : MonoBehaviour
         InitResultNode();
         InitLayOut();
         InitNode();
+        InitPuzzle();
         SetStateInit();
         timePanelGroup.alpha = 0;
         Sequence s = DOTween.Sequence();
@@ -149,6 +150,118 @@ public class MiniGameManager : MonoBehaviour
          var node = Managers.UI.MakeSubItem<MiniGameNodeController>(gridLayoutGroup.transform , "MiniGame/MiniGameNode") ;
         node.SetData(this, pos, curGameKeys[Random.Range(0, curGameKeys.Length)]);
         return node;
+    }
+    public void ResetPuzzle() 
+    {
+        for (int i = 0; i < row; i++)
+        {
+            for (int j = 0; j < column; j++)
+            {
+                nodeMap[i][j].SetKey(curGameKeys[Random.Range(0, curGameKeys.Length)]);
+            }
+        }
+        InitPuzzle();
+    }
+    public void InitPuzzle() 
+    {
+        //r * c 짝수인지 홀수인지 확인
+        int maxCount = (row * column) % 2 == 0 ? row * column : row * column - 2;
+        if (orderNodes.Count > maxCount) 
+        {
+            Debug.LogError("현재 노드 갯수로 불가능한 퍼즐 길이입니다.");
+            return;
+        }
+        //int[][] a = new int[row][column];
+        bool[,] puzzle = new bool[row, column];
+        //for(int i =0; i < row; ++i) 
+        //{
+        //    puzzle.Add(new List<int>());
+        //    for (int j = 0; j < column; ++j)
+        //    {
+        //        puzzle[j].Add(0);
+        //    }
+        //}
+
+        SELECT_TYPE curType = curSelectType;
+        int randomX = Random.Range(0, row);
+        int randomY = Random.Range(0, column);
+
+        Stack<Vector2Int> puzzleStack = new Stack<Vector2Int>();
+        puzzleStack.Push(new Vector2Int(randomX, randomY));
+        puzzle[randomX, randomY] = true;
+        List<Vector2Int> clearList = new List<Vector2Int>();
+        
+        while (puzzleStack.Count < orderNodes.Count)
+        {   
+            if(curType == SELECT_TYPE.Row)
+            {
+                List<int> pickIndex = new List<int>();
+                for(int i=0; i < row; ++i) 
+                {
+                    if (puzzle[i, randomY] == false) 
+                    {
+                        pickIndex.Add(i);    
+                    }
+                }
+                if(pickIndex.Count <= 0) 
+                {
+                    if(puzzleStack.Count <= 0)
+                    {
+                        Debug.LogError("퍼즐 구성 실패!!");
+                        return;
+                    }
+                    for(int i =0; i < clearList.Count; ++i) 
+                    {
+                        puzzle[clearList[i].x, clearList[i].y] = false;
+                    }
+                    clearList.Clear();
+                    clearList.Add(puzzleStack.Peek());
+                    puzzleStack.Pop();
+                    continue;
+                }
+                randomX = pickIndex.RemoveRandom();
+            }
+            else 
+            {
+                List<int> pickIndex = new List<int>();
+                for (int i = 0; i < column; ++i)
+                {
+                    if (puzzle[randomX, i] == false)
+                    {
+                        pickIndex.Add(i);
+                    }
+                }
+                if (pickIndex.Count <= 0)
+                {
+                    if (puzzleStack.Count <= 0)
+                    {
+                        Debug.LogError("퍼즐 구성 실패!!");
+                        return;
+                    }
+                    for (int i = 0; i < clearList.Count; ++i)
+                    {
+                        puzzle[clearList[i].x, clearList[i].y] = false;
+                    }
+                    clearList.Clear();
+                    clearList.Add(puzzleStack.Peek());
+                    puzzleStack.Pop();
+                    continue;
+                }
+                randomY = pickIndex.RemoveRandom();
+
+            }
+            curType = (SELECT_TYPE)(-(int)curType);
+
+            puzzleStack.Push(new Vector2Int(randomX, randomY));
+            puzzle[randomX, randomY] = true;
+        } 
+        for(int i =0; i < orderNodes.Count; ++i) 
+        {
+            var peek = puzzleStack.Peek();
+            puzzleStack.Pop();
+            nodeMap[peek.x][peek.y].SetKey(orderNodes[i].AnswerKey);
+            nodeMap[peek.x][peek.y].TestAnswerMod();
+        }
     }
     public ResultNodeController CreateResultNode(Transform parent)
     {
@@ -291,8 +404,6 @@ public class MiniGameManager : MonoBehaviour
                     timeLimitEffect.PlayFeedbacks();
                 }
             }
-               
-
            
             TimeTextUpdate();
             TimeBarUpdate();
@@ -359,7 +470,6 @@ public class MiniGameManager : MonoBehaviour
     }
     private void CloseNodes() 
     {
-
         float interval = 0;
         for (int i = 0; i < row - 1; i++)
         {
