@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Globalization;
-
+using System;
 
 public class MiniGameNodeController : UI_Base ,IPointerEnterHandler ,IPointerClickHandler ,IPointerExitHandler 
 {
@@ -46,8 +46,6 @@ public class MiniGameNodeController : UI_Base ,IPointerEnterHandler ,IPointerCli
         rectTransform.localScale = Vector3.zero;
         
     }
- 
-    
     public void SetLookUpmod() 
     {
         text.color = Color.white;
@@ -117,7 +115,12 @@ public class MiniGameNodeController : UI_Base ,IPointerEnterHandler ,IPointerCli
         sequence.Play();
         SetImageColor(enableColor);
     }
-    public void CloseAnim(float interval)
+    public void ResetNode() 
+    {
+        isDelete = false;
+        EnableNode();
+    }
+    public void CloseAnim(float interval ,Action action = null)
     {
         if(isDelete)
         {
@@ -129,6 +132,7 @@ public class MiniGameNodeController : UI_Base ,IPointerEnterHandler ,IPointerCli
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(interval);
         sequence.Append(rectTransform.DOScale(0, 0.2f));
+        sequence.OnComplete(() => { action?.Invoke(); });
         sequence.Play();
     }
     private void SetImageColor(Color color) 

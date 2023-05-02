@@ -42,7 +42,7 @@ public class MiniGamePanelController : MonoBehaviour
     private bool isOpen = false;
     public void Open(float openTime, Action action = null) 
     {
-        if (isOpen) 
+        if(isOpen)
         {
             return;
         }
@@ -50,7 +50,13 @@ public class MiniGamePanelController : MonoBehaviour
         if (CloseSeq != null && CloseSeq.IsPlaying())
         {
             CloseSeq.Kill();
+            CloseSeq = null;
         }
+        //if(openSeq != null && openSeq.IsPlaying())
+        //{
+        //    openSeq.Kill();
+        //    openSeq = null;
+        //}
         header.color = Color.black;
         body.color = Color.black;
         headMinmumSize = new Vector2(0, headerDesireSize.y);
@@ -72,14 +78,20 @@ public class MiniGamePanelController : MonoBehaviour
     }
     public void Close(Action action = null) 
     {
-        if (!isOpen)
+        if(!isOpen)
         {
             return;
         }
         isOpen = false;
-        if (openSeq != null && openSeq.IsPlaying() )
+        //if(CloseSeq != null && CloseSeq.IsPlaying())
+        //{
+        //    CloseSeq.Kill();
+        //    CloseSeq = null;
+        //}
+        if(openSeq != null && openSeq.IsPlaying())
         {
             openSeq.Kill();
+            openSeq = null;
         }
 
         textTitle.text = "";

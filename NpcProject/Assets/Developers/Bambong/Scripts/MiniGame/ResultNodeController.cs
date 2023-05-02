@@ -62,6 +62,12 @@ public class ResultNodeController : UI_Base
         sequence.Append(rectTransform.DOScale(0, 0.2f));
         sequence.Play();
     }
+    public void ResetNode()
+    {
+        SetKey("");
+        isSuccess = false;
+        outImage.color = Color.white;
+    }
     public override void Init()
     {
   
