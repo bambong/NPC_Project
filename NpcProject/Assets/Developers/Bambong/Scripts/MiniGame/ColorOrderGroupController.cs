@@ -40,7 +40,7 @@ public class ColorOrderGroupController : UI_Base
                 return;
             }
 
-            miniGameManager.SetStateGameOver();
+            miniGameManager.SetStateGameReset();
             //orderNodes[curIndex].SetIsSuccess(fa);
             return;
         }
@@ -109,6 +109,28 @@ public class ColorOrderGroupController : UI_Base
         }
     }
 
+    public void PointerEnter(string key) 
+    {
+        if (IsEnd)
+        {
+            return;
+        }
+        if (CompareKey(key)) 
+        {
+            orderNodes[curIndex].SetOutline(true);
+        }
+    }
+    public void PointerExit(string key) 
+    {
+        if (IsEnd)
+        {
+            return;
+        }
+        if (CompareKey(key))
+        {
+            orderNodes[curIndex].SetOutline(false);
+        }
+    }
     public override void Init()
     {
         transform.localScale = Vector3.one;

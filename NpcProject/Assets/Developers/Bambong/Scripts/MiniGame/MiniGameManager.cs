@@ -83,7 +83,11 @@ public class MiniGameManager : MonoBehaviour
 
     [SerializeField]
     private MiniGamePanelController orderPanel;
+    [SerializeField]
+    private MiniGamePanelController rulePanel;
 
+    [SerializeField]
+    private CanvasGroup ruleTextGroup;
 
     private List<ColorOrderGroupController> orderColorGroups = new List<ColorOrderGroupController>();
     private List<ResultColorNodeController> resultColorNodes = new List<ResultColorNodeController>();
@@ -113,28 +117,31 @@ public class MiniGameManager : MonoBehaviour
         InitPuzzle();
         SetStateInit();
         timePanelGroup.alpha = 0;
-        Sequence s = DOTween.Sequence();
-        s.AppendInterval(2f);
-        s.Append(backGround.DOFade(0, 2f));
-        s.Play();
+        //Sequence s = DOTween.Sequence();
+        //s.AppendInterval(2f);
+        //s.Append(backGround.DOFade(0, 2f));
+        //s.Play();
         OpenPanel(1.8f);
     }
     public void OpenPanel(float interval) 
     {
+        ruleTextGroup.alpha = 0;
         orderPanel.Open(interval+0.2f,() => { OpenOrderNode(); OpenResultNode(); });
+        rulePanel.Open(interval + 0.4f, () => { ruleTextGroup.DOFade(1, 0.5f); });
         gamePanel.Open(interval,() =>
         {
+            backGround.DOFade(0, 2f);
             Sequence seq = DOTween.Sequence();
             seq.AppendCallback(() => { OpenGameNodes(); timePanelGroup.DOFade(1,1f); });
             seq.Play();
         });
     }
-    public void ClosePanel() 
+    public void ClosePanel(Action action) 
     {
         CloseNodes();
         Sequence seq = DOTween.Sequence();
         seq.AppendInterval((2*(row-1)+1) * 0.1f + 0.2f);
-        seq.AppendCallback(() => { gamePanel.Close(); orderPanel.Close(); });
+        seq.AppendCallback(() => { gamePanel.Close(); ruleTextGroup.DOFade(0,0.2f).OnComplete(()=> { rulePanel.Close(); }); orderPanel.Close(action); });
         seq.Play();
     }
 
@@ -359,6 +366,11 @@ public class MiniGameManager : MonoBehaviour
     }
     public void PointEnter(Vector2Int point)
     {
+        for(int i = 0; i < orderColorGroups.Count; ++i) 
+        {
+            orderColorGroups[i].PointerEnter(nodeMap[point.x][point.y].AnswerKey);
+        }
+
         SELECT_TYPE type = (SELECT_TYPE)(-(int)curSelectType);
         for (int i = 0; i < row; i++)
         {
@@ -387,6 +399,10 @@ public class MiniGameManager : MonoBehaviour
     }
     public void PointExit(Vector2Int point)
     {
+        for (int i = 0; i < orderColorGroups.Count; ++i)
+        {
+            orderColorGroups[i].PointerExit(nodeMap[point.x][point.y].AnswerKey);
+        }
         SELECT_TYPE type = (SELECT_TYPE)(-(int)curSelectType);
         for (int i = 0; i < row; i++)
         {
@@ -564,6 +580,49 @@ public class MiniGameManager : MonoBehaviour
 
     }
     public Color GetOrderKeyColor(int key) => orderKeyColors[key];
+
+    public void SetStateGameReset()
+    {
+        if (isGameEnd)
+        {
+            return;
+        }
+
+        isGameEnd = true;
+        iSGameStart = false;
+        isTimeLimit = false;
+        curSelectType = SELECT_TYPE.Row;
+        curResultIndex = 0;
+
+        if (timeLimitEffect.IsPlaying)
+        {
+            timeLimitEffect.StopFeedbacks();
+        }
+        
+        for (int i = 0; i < orderColorGroups.Count; i++)
+        {
+            orderColorGroups[i].ResetOrderGroup();
+        }
+        for (int i = 0; i < resultColorNodes.Count; i++)
+        {
+            resultColorNodes[i].ResetNode();
+        }
+        CloseNodes();
+        Sequence seq = DOTween.Sequence();
+        seq.AppendInterval(((2 * (row - 1) + 1) * 0.1f + 0.2f)/2);
+        seq.AppendCallback(() => {
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column; j++)
+                {
+                    nodeMap[i][j].ResetNode();
+                }
+            }
+            OpenGameNodes();
+            isGameEnd = false;
+        });
+        seq.Play();
+    }
     public void SetStateGameOver() 
     {
         if(isGameEnd)
@@ -572,25 +631,31 @@ public class MiniGameManager : MonoBehaviour
         }
 
         isGameEnd = true;
+        iSGameStart = false;
+        isTimeLimit = false;
         if (timeLimitEffect.IsPlaying)
         {
             timeLimitEffect.StopFeedbacks();
         }
-        SetResultText(false);
+      
         CloseNodes();
-        ClosePanel();
+        ClosePanel(() => { SetResultText(false); });
     }
     public void SetStateGameClear()
     {
+        if (isGameEnd)
+        {
+            return;
+        }
         isGameEnd = true;
 
         if (timeLimitEffect.IsPlaying)
         {
             timeLimitEffect.StopFeedbacks();
         }
-        SetResultText(true);
+        //SetResultText(true);
         CloseNodes();
-        ClosePanel();
+        ClosePanel(() => { SetResultText(true); });
     }
     public void SetStateGamePlay() 
     {
@@ -629,8 +694,13 @@ public class MiniGameManager : MonoBehaviour
             resultText.color = Color.red;
         }
         Sequence seq = DOTween.Sequence();
-        seq.AppendInterval(orderColorGroups.Count * 0.1f );
+        seq.Append(backGround.DOFade(1, 1f));
+        seq.Join(timePanelGroup.DOFade(0, 1f));
         seq.Append(resultText.DOText(targetText, 0.5f));
+        seq.Append(resultText.DOFade(0, 0));
+        seq.Append(resultText.DOFade(1,0.2f).SetLoops(2));
+        //seq.AppendInterval(1);
+        //seq.Append(resultText.DOText("PRESS ENTER", 0.5f));
         seq.Play();
     }
 
