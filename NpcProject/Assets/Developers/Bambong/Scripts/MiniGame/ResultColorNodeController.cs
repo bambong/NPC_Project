@@ -6,35 +6,35 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class ResultNodeController : UI_Base
+public class ResultColorNodeController : UI_Base
 {
-
     [SerializeField]
-    private TextMeshProUGUI text;
+    private Image innerImage;
     [SerializeField]
     private Image outImage;
 
     [SerializeField]
     private RectTransform rectTransform;
-    private string answerKey;
+
+    private int answerKey;
     private bool isSuccess = false;
-    public string AnswerKey { get => answerKey;}
+    public int AnswerKey { get => answerKey;}
     public bool IsSuccess { get => isSuccess; }
 
     public void ClearSize() 
     {
-        rectTransform.localScale = Vector2.zero;
+        rectTransform.localScale = Vector3.zero;
         rectTransform.localPosition = Vector3.zero;
     }
 
-    public void SetKey(string key) 
+    public void SetKey(int key , Color color) 
     {
         answerKey = key;
-        SetTextUI(key);
+        SetInnerColor(color);
     }
-    public void SetTextUI(string txt) 
+    public void SetInnerColor(Color color) 
     {
-        text.text = txt;
+        innerImage.DOColor(color,0.5f);
     }
     public void SetIsSuccess(bool isOn)
     {
@@ -48,7 +48,7 @@ public class ResultNodeController : UI_Base
             outImage.color = Color.red;
         }
     }
-    public void OpneAnim(float interval)
+    public void OpenAnim(float interval)
     {
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(interval);
@@ -64,12 +64,12 @@ public class ResultNodeController : UI_Base
     }
     public void ResetNode()
     {
-        //SetKey("");
+        innerImage.color = new Color(0,0,0,0);
         isSuccess = false;
         outImage.color = Color.white;
     }
     public override void Init()
     {
-  
+        innerImage.color = new Color(0, 0, 0, 0);
     }
 }
