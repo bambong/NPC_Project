@@ -38,6 +38,7 @@ public class EnergeItemController : MonoBehaviour , ISpawnAble
         {
             isOn = false;
             Managers.Effect.PlayEffect(Define.EFFECT.EnergeItemEffect,transform);
+            Managers.Sound.AskSfxPlay(20020);
             Managers.Keyword.AddKeywordMakerGauge(gaugeAmount);
             parentSpawner.RemoveItem(spawnSpot);
             Managers.Resource.Destroy(gameObject);
