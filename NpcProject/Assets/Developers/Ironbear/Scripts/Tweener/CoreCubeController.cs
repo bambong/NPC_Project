@@ -15,45 +15,8 @@ public class CoreCubeController : MonoBehaviour
 
     void Start()
     {
-        var sequence = DOTween.Sequence();
-
         PlayRandomAnimation();
-        //PlayRandomScale();
     }
-    
-    /*
-    private void CallRandomAnimation()
-    {
-        float delay = Random.Range(minDelay, maxDelay);
-
-        DOVirtual.DelayedCall(delay, () =>
-        {
-            turnTweener.OnComplete(CallRandomAnimation);
-        });
-    }
-
-    
-    private void PlayRandomScale()
-    {
-        int randomIndex = Random.Range(0, cubes.Length);
-        selectedGameObject = cubes[randomIndex];
-
-        Vector3 initialScale = selectedGameObject.transform.localScale;
-        Vector3 targetScale = new Vector3(Random.Range(minScale, maxScale), Random.Range(minScale, maxScale), Random.Range(minScale, maxScale));
-
-        selectedGameObject.transform.DOScale(targetScale, scaleDuration)
-            .SetEase(Ease.OutQuad)
-            .OnComplete(() =>
-            {
-                selectedGameObject.transform.DOScale(initialScale, scaleDuration)
-                .SetEase(Ease.OutQuad)
-                .OnComplete(() =>
-                {
-                    PlayRandomScale();
-                });
-            });
-    }
-    */
 
     private void PlayRandomAnimation()
     {
@@ -108,7 +71,8 @@ public class CoreCubeController : MonoBehaviour
     private void PlayScaleAnimation(GameObject target)
     {
         Vector3 initialScale = target.transform.localScale;
-        Vector3 targetScale = new Vector3(Random.Range(minScale, maxScale), Random.Range(minScale, maxScale), Random.Range(minScale, maxScale));
+        float scales = Random.Range(minScale, maxScale);
+        Vector3 targetScale = new Vector3(scales, scales, scales);
 
         target.transform.DOScale(targetScale, scaleDuration)
             .SetEase(Ease.OutQuad)
