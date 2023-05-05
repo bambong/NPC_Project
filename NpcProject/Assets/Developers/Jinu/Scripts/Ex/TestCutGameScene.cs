@@ -37,4 +37,10 @@ public class TestCutGameScene: BaseScene
         cutScene = new CutSceneEvent(playableDirector);
         cutScene.Play();
     }
+
+    private void Start()
+    {
+        Managers.Sound.AskBgmPlay(20100);
+        Managers.Sound.AskBgmPlay(20100);
+    }
 }
