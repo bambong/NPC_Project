@@ -313,7 +313,7 @@ public class MiniGameManager : MonoBehaviour
             puzzleStack.Push(new Vector2Int(randomX, randomY));
             puzzle[randomX, randomY] = true;
         } 
-        for(int i =0; i < answerKey.Length; ++i) 
+        for(int i = answerKey.Length-1; i >= 0; --i) 
         {
             var peek = puzzleStack.Peek();
             puzzleStack.Pop();
@@ -330,14 +330,14 @@ public class MiniGameManager : MonoBehaviour
     {
         if (answerColorKey[curResultIndex] != key)
         {
-            SetStateGameOver();
+            SetStateGameReset();
             return;
         }
         resultColorNodes[curResultIndex].SetInnerColor(orderKeyColors[key]);
         resultColorNodes[curResultIndex].SetIsSuccess(true);
         curResultIndex++;
 
-        if(curResultIndex >= orderColorGroups.Count) 
+        if(curResultIndex >= answerColorKey.Length) 
         {
             SetStateGameClear();
         }
@@ -520,7 +520,7 @@ public class MiniGameManager : MonoBehaviour
             interval += 0.1f;
         }
         interval = 0;
-        for (int i = 0; i < orderColorGroups.Count; i++)
+        for (int i = 0; i < answerColorKey.Length; i++)
         {
             resultColorNodes[i].OpenAnim(interval);
             interval += 0.1f;
@@ -540,7 +540,7 @@ public class MiniGameManager : MonoBehaviour
     public void OpenResultNode() 
     {
         float interval = 0;
-        for (int i = 0; i < orderColorGroups.Count; i++)
+        for (int i = 0; i < resultColorNodes.Count; i++)
         {
             resultColorNodes[i].OpenAnim(interval);
             interval += 0.1f;
@@ -573,10 +573,15 @@ public class MiniGameManager : MonoBehaviour
         for (int i = 0; i < orderColorGroups.Count; i++)
         {
             orderColorGroups[i].CloseAnim(interval);
+            interval += 0.1f;
+        }
+        interval = 0;
+        for (int i = 0; i < resultColorNodes.Count; i++)
+        {
             resultColorNodes[i].CloseAnim(interval);
             interval += 0.1f;
         }
-        
+
 
     }
     public Color GetOrderKeyColor(int key) => orderKeyColors[key];
