@@ -113,7 +113,7 @@ public class PlayerDeath : Singleton<PlayerDeath>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-        Managers.Sound.AskSfxPlay(20008);
+        //Managers.Sound.AskSfxPlay(20008);
         stateController.PlayDeathFeedback();
         Managers.Keyword.PlayerKeywordPanel.Close();
         Managers.Game.SetStateGameOver();

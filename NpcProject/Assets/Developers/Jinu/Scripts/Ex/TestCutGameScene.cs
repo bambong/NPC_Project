@@ -35,12 +35,13 @@ public class TestCutGameScene: BaseScene
         Managers.Talk.LoadTalkData(tutorialSceneTalkData);
 
         cutScene = new CutSceneEvent(playableDirector);
-        cutScene.Play();
+        cutScene.Play();        
+        
     }
 
     private void Start()
     {
-        Managers.Sound.AskBgmPlay(20100);
-        Managers.Sound.AskBgmPlay(20100);
+        //Managers.Sound.AskBgmPlay(20100);
+        //Managers.Sound.AskBgmPlay(20100);
     }
 }
