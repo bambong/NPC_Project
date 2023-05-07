@@ -904,6 +904,7 @@ GameObject:
   m_Component:
   - component: {fileID: 361565570}
   - component: {fileID: 361565569}
+  - component: {fileID: 361565571}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -944,6 +945,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &361565571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 361565568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1753545256
+      Data2: 1119189321
+      Data3: 1235436197
+      Data4: 1176875781
+    Path: event:/BGM
+  Event: 
+  PlayEvent: 1
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &364671292
 GameObject:
   m_ObjectHideFlags: 0
@@ -3537,7 +3569,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1695435703}
-  m_LocalRotation: {x: 0.00006614696, y: 0.9812626, z: -0.19267486, w: 0.00033687608}
+  m_LocalRotation: {x: 0.00006615028, y: 0.9812626, z: -0.19267486, w: 0.00033689296}
   m_LocalPosition: {x: 256.8, y: 19.72, z: 67.59}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4329,6 +4361,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2037239311}
   - component: {fileID: 2037239309}
+  - component: {fileID: 2037239313}
+  - component: {fileID: 2037239312}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -4364,6 +4398,38 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2037239312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2037239308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0e04e2572f9a940a47465f6f3c2f00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: Player
+  Parameter: OMG
+  TriggerEvent: 4
+  Value: 0
+--- !u!114 &2037239313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2037239308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0e04e2572f9a940a47465f6f3c2f00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: Player
+  Parameter: OMG
+  TriggerEvent: 3
+  Value: 1
 --- !u!1 &2063722753
 GameObject:
   m_ObjectHideFlags: 0
