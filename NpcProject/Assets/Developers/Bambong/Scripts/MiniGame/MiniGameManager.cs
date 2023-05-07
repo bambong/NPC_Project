@@ -44,7 +44,7 @@ public class MiniGameManager : MonoBehaviour
    
    
     [SerializeField]
-    private ResultTextController resultText;
+    private ResultPanelController resultText;
     [SerializeField]
     private OrderColorLayoutController orderColorLayout;
     [SerializeField]
@@ -464,6 +464,7 @@ public class MiniGameManager : MonoBehaviour
          
             if(curTime > timeLimit) 
             {
+                timeText.text = "00.00";
                 SetStateGameOver();
                 yield break;
             }
