@@ -19,7 +19,7 @@ public class Managers : MonoBehaviour
     private KeywordManager keyword = new KeywordManager();
     private SoundManager sound = new SoundManager();
     private TimeManager time = new TimeManager();
-
+    private EffectManager effect = new EffectManager();
     public static KeywordManager Keyword { get => Instance.keyword; }
     public static CameraManager Camera { get => Instance.cam; }
     public static PoolManager Pool { get => Instance.pool; }
@@ -30,6 +30,7 @@ public class Managers : MonoBehaviour
     public static TalkManager Talk { get => Instance.talk; }
     public static SoundManager Sound { get => Instance.sound; }
     public static TimeManager Time { get => Instance.time; }
+    public static EffectManager Effect { get => Instance.effect; }
     #endregion
 
     void Start()
@@ -61,8 +62,12 @@ public class Managers : MonoBehaviour
         }
 
     }
-
-
+    public static void OnSceneLoad() 
+    {
+        Keyword.OnSceneLoaded();
+        Game.OnSceneLoaded();
+        Talk.OnSceneLoaded();
+    }
     public static void Clear()
     {
         UI.Clear();

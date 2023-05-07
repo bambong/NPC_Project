@@ -53,7 +53,10 @@ public class TimeManager
     {
         return Time.fixedDeltaTime * timeScale[type];
     }
-
+    public float GetTimeSacle(TIME_TYPE type)
+    {
+        return timeScale[type];
+    }
     public void TimeScaleClear(float scale)
     {
         foreach (var temp in timeScale) 

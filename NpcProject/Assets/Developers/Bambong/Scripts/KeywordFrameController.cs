@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,30 +8,16 @@ using UnityEngine.UI;
 public class KeywordFrameController : KeywordFrameBase
 {
     [SerializeField]
-    private GameObject parentObj;
-    [SerializeField]
-    private RectTransform rectTransform;
-    [SerializeField]
     private Image raycastImage;
 
-    [SerializeField]
-    private Image[] frameColorImages;
 
-    private KeywordController registerKeyword;
-    private KeywordController curFrameInnerKeyword;
-    public bool HasKeyword { get => CurFrameInnerKeyword != null; }
-    public bool IsKeywordRemoved { get { return (registerKeyword != null && curFrameInnerKeyword != registerKeyword); } }
+   private KeywordWorldSlotUIController keywordWorldSlot;
 
-    public KeywordController CurFrameInnerKeyword { get => curFrameInnerKeyword; }
-    public KeywordController RegisterKeyword { get => registerKeyword; }
+    public KeywordWorldSlotUIController KeywordWorldSlot { get => keywordWorldSlot;  }
 
-
-    public override bool IsAvailable{ get => curFrameInnerKeyword == null; }
-    public override void SetKeyWord(KeywordController keywordController) 
+    protected override void DecisionKeyword(KeywordController keyword)
     {
-        curFrameInnerKeyword = keywordController;
-        keywordController.transform.SetParent(transform);
-        keywordController.SetToKeywordFrame(rectTransform.position);
+        masterEntity.DecisionKeyword(this, keyword);
     }
     public void SetLockFrame(bool isOn) 
     {
@@ -39,39 +26,46 @@ public class KeywordFrameController : KeywordFrameBase
         {
             frameColor = new Color(0.4f, 0.4f, 0.4f);
         }
-      
-        for(int i =0; i< frameColorImages.Length; ++i) 
-        {
-            frameColorImages[i].color = frameColor;
-        }
+
+        SetFrameColor(frameColor);
         raycastImage.raycastTarget = !isOn;
-        curFrameInnerKeyword.SetLock(isOn);
-    }
-    public void OnDecisionKeyword() 
-    {
-        registerKeyword = curFrameInnerKeyword;
+        curFrameInnerKeyword.SetLockState(isOn);
     }
 
-    public override void ResetKeywordFrame() 
+    public void RegisterEntity(KeywordEntity entity ,KeywordWorldSlotUIController keywordWorldSlot)
     {
-        curFrameInnerKeyword = null;
+        this.masterEntity = entity;
+        this.keywordWorldSlot = keywordWorldSlot;
     }
- 
-    public void Open() 
+    public override void ResetKeywordFrame()
     {
-        parentObj.SetActive(true);
+        base.ResetKeywordFrame();
     }
-    public void Close() 
+    public override void OnBeginDrag()
     {
-        parentObj.SetActive(false);
+        masterEntity.KeywordSlotUiController.DragOn();
     }
-    public void SetScale(Vector3 scale) 
+    public override void OnEndDrag()
     {
-        parentObj.transform.localScale = scale;
+        masterEntity.KeywordSlotUiController.DragOff();
     }
-
     public override void Init()
     {
-        
+        ResetKeywordFrame();
+    }
+    private void ClearLock() 
+    {
+        SetFrameColor(Color.black);
+        raycastImage.raycastTarget = true;
+    }
+    public void ClearForPool()
+    {
+        if(curFrameInnerKeyword != null) 
+        {
+            curFrameInnerKeyword.DestroyKeyword();
+        }
+        ClearDotween();
+        ClearLock();
+        Managers.Resource.Destroy(transform.parent.gameObject);
     }
 }

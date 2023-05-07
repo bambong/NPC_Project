@@ -5,32 +5,20 @@ using UnityEngine;
 public class AttachKeyword : KeywordController
 {
     [SerializeField]
-    public static float Speed = 10f; 
-    public override void KeywordAction(KeywordEntity entity)
-    {
-        //entity.ClearVelocity();
-        //entity.SetKinematic(true);
-        PairKeyword pairKeyword = null;
-        foreach(var keyword in entity.CurrentRegisterKeyword)
-        {
-            if(keyword.Key is PairKeyword) 
-            {
-                pairKeyword = keyword.Key as PairKeyword;
-                break;            
-            }
-            
-        }
-        if(pairKeyword == null) 
-        {
-            return;
-        }
-        var target = pairKeyword.GetOtherPair().MasterEntity;
+    public static float Speed = 10f;
 
-        if(target == null)
+    public override void OnEnter(KeywordEntity entity)
+    {
+        entity.WireColorController.AddColorState(WireColorStateController.E_WIRE_STATE.PAIR, E_WIRE_COLOR_MODE.Attach);
+    }
+    public override void OnFixedUpdate(KeywordEntity entity)
+    {
+        KeywordEntity otherEntity;
+        if (!PairKeyword.IsAvailablePair(entity, out otherEntity))
         {
             return;
         }
-        var dir = target.KeywordTransformFactor.position - entity.KeywordTransformFactor.position;
+        var dir = otherEntity.KeywordTransformFactor.position - entity.KeywordTransformFactor.position;
         dir.y = 0;
         if(dir.magnitude <= Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER)) 
         {
@@ -43,6 +31,6 @@ public class AttachKeyword : KeywordController
     }
     public override void OnRemove(KeywordEntity entity)
     {
-       // entity.SetKinematic(false);
+        entity.WireColorController.RemoveColorState(WireColorStateController.E_WIRE_STATE.PAIR, E_WIRE_COLOR_MODE.Attach);
     }
 }

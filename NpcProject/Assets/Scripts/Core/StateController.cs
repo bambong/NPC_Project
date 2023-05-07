@@ -18,6 +18,10 @@ using UnityEngine;
 
         public void ChangeState(IState<T> state)
         {
+                if(state == curState) 
+                {
+                    return;
+                }
 #if DEBUG
                 Debug.Log($"상태 전환 {curState} => {state}");
 #endif

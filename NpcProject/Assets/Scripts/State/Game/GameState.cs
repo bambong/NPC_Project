@@ -26,13 +26,14 @@ public class GameNormalState : Singleton<GameNormalState>,IState<GameManager>
         
     }
 }
-public class GameDialogState : Singleton<GameDialogState>, IState<GameManager>
+public class GameEventState : Singleton<GameEventState>, IState<GameManager>
 {
     public void Init()
     {
     }
     public void Enter(GameManager stateController)
     {
+        Managers.Game.Player.SetstateStop();
     }
 
     public void Exit(GameManager stateController)
@@ -56,9 +57,11 @@ public class GameDebugModState : Singleton<GameDebugModState>, IState<GameManage
     }
     public void Enter(GameManager stateController)
     {
+        stateController.OnDebugModStateEnter();
     }
     public void Exit(GameManager stateController)
     {
+        stateController.OnDebugModStateExit();
     }
 
     public void FixedUpdateActive(GameManager stateController)
@@ -69,21 +72,18 @@ public class GameDebugModState : Singleton<GameDebugModState>, IState<GameManage
     {
     }
 }
-public class GameKeywordModState : Singleton<GameKeywordModState>, IState<GameManager>
+
+public class GameOverState : Singleton<GameOverState>, IState<GameManager>
 {
     public void Init()
     {
     }
     public void Enter(GameManager stateController)
     {
-        Time.timeScale = 0;
-        stateController.Player.SetStatekeywordMod();
+        stateController.RetryPanel.OpenRetryPanel();
     }
-
     public void Exit(GameManager stateController)
     {
-        Time.timeScale = 1;
-        stateController.Player.SetStateDebugMod();
     }
 
     public void FixedUpdateActive(GameManager stateController)
@@ -94,3 +94,4 @@ public class GameKeywordModState : Singleton<GameKeywordModState>, IState<GameMa
     {
     }
 }
+

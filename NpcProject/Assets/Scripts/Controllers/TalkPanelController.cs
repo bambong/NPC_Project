@@ -6,10 +6,14 @@ using TMPro;
 using System;
 using DG.Tweening;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 public class TalkPanelController : UI_Base
-{ 
+{
+    private const string PATTERN = "@(.*?)@";
     private readonly float TEXT_SPEED = 0.05f;
+    private readonly float SKIP_DELAY_TIME = 0.1f;
     
     [SerializeField]
     private Image speakImage;
@@ -20,8 +24,12 @@ public class TalkPanelController : UI_Base
     [SerializeField]
     private Transform talkPanelInner;
 
+    [SerializeField]
+    private ChoiceButtonController choiceButton;
+
     public Transform TalkPanelInner { get => talkPanelInner; }
     public bool IsNext { get => isNext;}
+    public bool IsChoice { get => isChoice; }
 
     private Dialogue curDialogue;
 
@@ -29,66 +37,157 @@ public class TalkPanelController : UI_Base
     private System.Random random;
     
     private string textDialogue = null;
-    private string textStore = null;
 
+    private bool isSkip = false;
     private bool isNext = false;
     private bool isTrans = false;
-    private bool inputKey = false;
+    private bool isChoice = false;
+    private int buttonCount;
 
     public override void Init()
     {
+        choiceButton.AddButtonEvent();
     }
 
     public void SetDialogue(Dialogue dialogue)
     {
         speakImage.sprite = dialogue.speaker.sprite;
         spekerName.text = dialogue.speaker.name;
+        choiceButton.Inactive();
         dialogueText.text = "";
     }
     public void PlayDialogue(Dialogue dialogue) 
     {
         dialogueText.text = "";
-        isNext = false;
+        isNext = false;        
         curDialogue = dialogue;
         speakImage.sprite = dialogue.speaker.sprite;
         spekerName.text = dialogue.speaker.name;
-        StartCoroutine(TransText());
-
+        StartCoroutine(SkipDelayTime());
+        StartCoroutine(PlayTextAnimation());
     }
 
-    private void DotweenTextani()
+    #region TextAnimation
+    IEnumerator PlayTextAnimation()
     {
-        textDialogue = curDialogue.text;
+        int randomSize = 0;
+        string textStore = null;
+        textDialogue = null;
+
+        SettingTextAnimation();
+
+        if (isChoice)
+        {
+            textDialogue = TextExtraction(textDialogue);
+        }
+
+        int textSize = ClcTextLength(textDialogue, textDialogue.Length);
+        typingTime = textSize * TEXT_SPEED;
+
+        if (isTrans == true)
+        {
+            StartCoroutine(SkipTextani());
+
+            for (int i = 0; i < textDialogue.Length; i++)
+            {
+                if (isTrans == false)
+                {
+                    yield break;
+                }
+                if (textDialogue[i] == '<')
+                {
+                    for (int j = i; !(textDialogue[j] == '>'); j++)
+                    {
+                        textStore += textDialogue[i];
+                        i++;
+                    }
+                    i--;
+                }
+                else
+                {
+                    randomSize++;
+                    textStore += textDialogue[i];
+                    dialogueText.text = textStore + RandomText(textSize - randomSize);
+                }
+                yield return new WaitForSeconds(TEXT_SPEED);
+            }
+
+            if (isChoice == true)
+            {
+                choiceButton.Active(buttonCount);
+                StartCoroutine(ChoiceSelect());
+            }
+
+            isTrans = false;
+            isNext = true; 
+        }
+        else
+        {
+            DotweenTextAnimation(textDialogue);
+        }
+    }
+
+    private void DotweenTextAnimation(string text)
+    {
+        textDialogue = text;
         typingTime = textDialogue.Length * TEXT_SPEED;
 
         dialogueText.text = "";
         dialogueText.DOKill();
-        dialogueText.DOText(textDialogue, typingTime).OnStart(()=>
+        dialogueText.DOText(textDialogue, typingTime).OnStart(() =>
         {
             StartCoroutine(SkipTextani());
         })
-     
-        .OnComplete(()=>
+        .OnComplete(() =>
         {
-            isNext = true;
+            if (isChoice == true)
+            {
+                choiceButton.Active(buttonCount);
+                StartCoroutine(ChoiceSelect());
+            }
         });
     }
 
-    private string RandomText(int length)
+    IEnumerator SkipTextani()
     {
-        random = new System.Random();
-        string charcters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        return new string(Enumerable.Repeat(charcters, length).Select(s => s[random.Next(s.Length)]).ToArray());
+        while (!isNext)
+        {
+            if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY)) && isSkip == true)
+            {
+                if (isChoice == true)
+                {
+                    choiceButton.Active(buttonCount);
+                    StartCoroutine(ChoiceSelect());
+                }
+                if (isTrans == false)
+                {
+                    dialogueText.DOKill();
+                    dialogueText.text = textDialogue;
+                    yield return new WaitForSeconds(0.3f);
+                    isSkip = false;
+                    isNext = true;
+                    break;                    
+                }
+                if (isTrans == true)
+                {
+                    dialogueText.text = "";
+                    dialogueText.text = textDialogue;
+                    isTrans = false;
+                    yield return new WaitForSeconds(0.3f);
+                    isSkip = false;
+                    isNext = true;
+                    break;
+                }
+            }
+            yield return null;
+        }
+        isSkip = false;
     }
 
-    IEnumerator TransText()
+    private void SettingTextAnimation()
     {
-        inputKey = false;
-        textStore = null;
-        textDialogue = null;
-        typingTime = curDialogue.text.Length * TEXT_SPEED;
+        char[] sep = { '#', '#' };
 
-        char[] sep = { '<', '>' };
         string[] result = curDialogue.text.Split(sep);
 
         foreach (var item in result)
@@ -96,72 +195,122 @@ public class TalkPanelController : UI_Base
             if (item == "dummy")
             {
                 isTrans = true;
-            }            
-            else
-            {
-                textDialogue += item;
+                continue;
             }
-        }
-
-        if (isTrans == true)
-        {
-            StartCoroutine(SkipTextani());
-            
-            for (int i = 0; i < textDialogue.Length; i++)
+            if (item == "choice")
             {
-                textStore += textDialogue[i];
-                dialogueText.text = textStore + RandomText(textDialogue.Length - (i + 1));
-                yield return new WaitForSeconds(TEXT_SPEED);
-
-                              
-                if (isTrans == false)
-                {
-                    dialogueText.text = textDialogue;
-                    yield break;
-                }
-                inputKey = true;
-            }
-            isTrans = false;
-            isNext = true;
-        }
-        else
-        {
-            DotweenTextani();
-            inputKey = true;
+                isChoice = true;
+                continue;
+            }     
+            textDialogue += item;
         }
     }
 
-    IEnumerator SkipTextani()
+    IEnumerator SkipDelayTime()
     {
-        while(!isNext)
-        {
+        yield return new WaitForSeconds(SKIP_DELAY_TIME);
+        isSkip = true;
+    }
+    #endregion
 
-            if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY)))
+    #region TextParsing
+    private string TextExtraction(string textDialogue)
+    {
+        MatchCollection matches = Regex.Matches(textDialogue, PATTERN);
+
+        List<string> matchedStrings = new List<string>();
+        StringBuilder replacedStrings = new StringBuilder();        
+
+        int lastIndex = 0;
+        foreach(Match match in matches)
+        {
+            string value = match.Groups[1].Value;
+            int index = match.Index;
+            int length = match.Length;
+
+            matchedStrings.Add(value);
+
+            string replacedString = textDialogue.Substring(lastIndex, index - lastIndex);
+            replacedStrings.Append(replacedString);
+
+            lastIndex = index + length;
+        }
+
+        string lastString = textDialogue.Substring(lastIndex);
+        replacedStrings.Append(lastString);
+
+        textDialogue = replacedStrings.ToString();
+
+        buttonCount = matchedStrings.Count;
+        SetChoiceText(matchedStrings);
+
+        return textDialogue;
+    }
+
+    private void SetChoiceText(List<string> matchedStrings)
+    {
+        if (buttonCount == 2)
+        {
+            choiceButton.choiceTextA.text = matchedStrings[0];
+            choiceButton.choiceTextB.text = matchedStrings[1];
+        }
+        if (buttonCount == 3)
+        {
+            choiceButton.choiceTextA.text = matchedStrings[0];
+            choiceButton.choiceTextB.text = matchedStrings[1];
+            choiceButton.choiceTextC.text = matchedStrings[2];
+        }
+    }
+    #endregion
+
+    #region TextFunction
+    private int ClcTextLength(string text, int length)
+    {
+        int textLength = length;
+        for (int i = 0; i < length; i++)
+        {
+            if (text[i] == '<')
             {
-                if(isTrans == false && inputKey == true)
+                for (int j = i; !(text[j] == '>'); j++)
                 {
-                    Debug.Log("skipdialog");
-                    dialogueText.DOKill();
-                    dialogueText.text = textDialogue;
-                    yield return new WaitForSeconds(0.1f);
-                    isNext = true;
-                    inputKey = false;
-                    yield break;
+                    textLength--;
+                    i++;
                 }
-                if(isTrans == true && inputKey == true)
-                {
-                    dialogueText.text = "";
-                    dialogueText.text = textDialogue;
-                    yield return new WaitForSeconds(0.1f);
-                    isNext = true;
-                    isTrans = false;
-                    inputKey = false;
-                    yield break;
-                }
+                i--;
             }
+        }
+        return textLength;
+    }
+    private string RandomText(int length)
+    {
+        random = new System.Random();
+        string charcters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        return "<color=black>" + new string(Enumerable.Repeat(charcters, length).Select(s => s[random.Next(s.Length)]).ToArray()) + "</color>";
+    }
+    #endregion
+
+    IEnumerator ChoiceSelect()
+    {
+        while (choiceButton.IsSelect == false)
+        {
             yield return null;
         }
+        if(isTrans == true)
+        {
+            isChoice = false;
+        }        
+        isNext = true;
     }
 
-   
+    public void InputIsSelect(bool value)
+    {
+        choiceButton.SetisSelect(value);
+        choiceButton.Inactive();
+        isChoice = false;
+    }
+
+    public bool GetIsSelect()
+    {
+        return choiceButton.IsSelect;
+    }
 }

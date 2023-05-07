@@ -6,6 +6,6 @@ using UnityEngine;
 public class Speaker : ScriptableObject
 {
     public int Id;
-    public string name;
+    public string charName;
     public Sprite sprite;
 }

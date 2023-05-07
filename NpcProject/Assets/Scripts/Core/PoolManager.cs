@@ -12,13 +12,13 @@ public class PoolManager
 
         Stack<Poolable> _poolStack = new Stack<Poolable>();
 
-        public void Init(GameObject original,int count = 5)
+        public void Init(GameObject original, int count = 5)
         {
             Original = original;
             Root = new GameObject().transform;
             Root.name = $"{original.name}_Root";
 
-            for(int i = 0; i < count; i++) 
+            for (int i = 0; i < count; i++)
             {
                 Push(Create());
             }
@@ -33,12 +33,18 @@ public class PoolManager
 
         public void Push(Poolable poolable)
         {
-            if(poolable == null) 
+            if (poolable == null)
             {
                 return;
             }
+            
 
-            poolable.transform.parent = Root;
+            if (_poolStack.Contains(poolable)) 
+            {
+                Debug.LogError("Pool Error");
+            }
+            poolable.transform.SetParent(Root);
+            poolable.Return();
             poolable.gameObject.SetActive(false);
             poolable.IsUsing = false;
 
@@ -49,11 +55,11 @@ public class PoolManager
         {
             Poolable poolable;
 
-            if(_poolStack.Count > 0)
+            if (_poolStack.Count > 0)
             {
                 poolable = _poolStack.Pop();
             }
-            else 
+            else
             {
                 poolable = Create();
             }
@@ -61,14 +67,15 @@ public class PoolManager
             poolable.gameObject.SetActive(true);
 
             // DontDestroyOnLoad 해제 용도
-            if(parent == null) 
+            if (parent == null)
             {
-                poolable.transform.parent = Managers.Scene.CurrentScene.transform;
+                poolable.transform.SetParent(Managers.Scene.CurrentScene.transform);
             }
-
-            poolable.transform.parent = parent;
+     
+            poolable.transform.SetParent(parent);
             poolable.IsUsing = true;
-
+            poolable.Init();
+            
             return poolable;
         }
     }
@@ -90,7 +97,7 @@ public class PoolManager
     {
         Pool pool = new Pool();
         pool.Init(original,count);
-        pool.Root.parent = _root;
+        pool.Root.SetParent(_root);
 
         _pool.Add(original.name,pool);
     }

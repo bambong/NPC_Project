@@ -10,7 +10,8 @@ public enum KEY_TYPE
     DEBUGMOD_KEY,
     INTERACTION_KEY,
     TALK_KEY,
-    SKIP_KEY
+    SKIP_KEY,
+    RETRY_KEY
 }
 
 public class KeyMappingController
@@ -22,6 +23,7 @@ public class KeyMappingController
         {KEY_TYPE.INTERACTION_KEY, KeyCode.F},
         {KEY_TYPE.TALK_KEY, KeyCode.X},
         {KEY_TYPE.SKIP_KEY, KeyCode.X},
+        {KEY_TYPE.RETRY_KEY, KeyCode.Return}
     };
 
     public KeyCode ReturnKey(KEY_TYPE keyType)

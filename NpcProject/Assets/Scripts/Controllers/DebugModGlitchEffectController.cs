@@ -12,12 +12,17 @@ public class DebugModGlitchEffectController : UI_Base
     public GameObject effect;
     [SerializeField]
     DigitalGlitchVolume glitch;
-    Tonemapping tonemapping;
+    //Tonemapping tonemapping;
 
     private Volume volume;
     private bool isPlaying = false;
     private readonly float EffectTime = 0.3f;
     public bool IsPlaying { get => isPlaying;}
+
+    private void Start()
+    {
+        Managers.Scene.OnSceneUnload += () => { StopAllCoroutines(); };
+    }
 
     public void EnterDebugMod(Action completeAction = null)
     {
@@ -39,12 +44,48 @@ public class DebugModGlitchEffectController : UI_Base
         {
             glitch = tmp;
         }
-        Tonemapping tone;
-        if (volume.profile.TryGet<Tonemapping>(out tone))
-        {
-            tonemapping = tone;
-        }
+       // Tonemapping tone;
+        //if (volume.profile.TryGet<Tonemapping>(out tone))
+        //{
+        //    tonemapping = tone;
+        //}
         Managers.UI.SetCanvas(gameObject);
+    }
+
+    public void PlayOnlyEffectGlitch()
+    {
+        effect.gameObject.SetActive(true);
+        StartCoroutine(OnlyEffect());
+    }
+
+    IEnumerator OnlyEffect() 
+    {
+        var intensity = glitch.intensity;
+        intensity.value = 1;
+        glitch.intensity = intensity;
+        float progress = 0;
+        var thirdTime = (EffectTime / 3);
+        var effectFactor = 1 / thirdTime;
+        while (progress < 1)
+        {
+            progress += Time.deltaTime * effectFactor;
+            volume.weight = progress;
+            yield return null;
+
+        }
+        progress = 1;
+        volume.weight = 1;
+        // tonemapping.active = true;
+        yield return new WaitForSeconds(thirdTime);
+        while (progress > 0)
+        {
+            progress -= Time.deltaTime * effectFactor;
+            intensity.value = progress;
+            glitch.intensity = intensity;
+            yield return null;
+        }
+        intensity.value = 0;
+        glitch.intensity = intensity;
     }
     IEnumerator GlitchOnEffect(Action completeAction)
     {
@@ -66,7 +107,7 @@ public class DebugModGlitchEffectController : UI_Base
         progress = 1;
         volume.weight = 1;
         Managers.Keyword.EnterDebugMod();
-        tonemapping.active = true;
+       // tonemapping.active = true;
         yield return new WaitForSeconds(thirdTime);
         while(progress > 0)
         {
@@ -101,7 +142,7 @@ public class DebugModGlitchEffectController : UI_Base
         intensity.value = 1;
         glitch.intensity = intensity;
         Managers.Keyword.ExitDebugMod();
-        tonemapping.active = false;
+        //tonemapping.active = false;
         yield return new WaitForSeconds(thirdTime);
 
         progress = 0;

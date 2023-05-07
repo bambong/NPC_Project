@@ -12,33 +12,28 @@ public class KeywordWorldSlotUIController : UI_Base
     [SerializeField]
     private Image image;
 
-    [SerializeField]
-    private Sprite defaultSprite;
-    [SerializeField]
-    private GameObject defaultTextGo;
+
     public override void Init()
     {
         
     }
-    public void SetSlotUI(Image image) 
+    public void UpdateUI(bool hasKeyword) 
     {
-        this.image.sprite = image.sprite;
-        defaultTextGo.SetActive(false);
+        if (hasKeyword) 
+        {
+            this.image.color = Color.green;
+        }
+        else 
+        {
+            this.image.color = Color.white;
+        }
     }
-
     public void Open()
     {
         gameObject.SetActive(true);
     }
-    public void Close() 
+    public void Close()
     {
         parent.gameObject.SetActive(false);
-    }
-
-
-    public void ResetSlotUI() 
-    {
-        image.sprite = defaultSprite;
-        defaultTextGo.SetActive(true);
     }
 }

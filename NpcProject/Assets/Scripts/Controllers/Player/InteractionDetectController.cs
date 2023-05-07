@@ -11,12 +11,12 @@ public class InteractionDetectController : MonoBehaviour
     private IInteraction curIteraction;
     public IInteraction CurIteraction { get => curIteraction; }
 
-    private readonly string INTERACTION_TAG = "Interaction";
-
     public void Init()
     {
         interactionUi = Managers.UI.MakeWorldSpaceUI<InteractionUiController>(Managers.Scene.CurrentScene.transform,"InteractionUI");
-     
+        interactionUi.gameObject.SetActive(false);
+
+
     }
     public void SwitchDebugMod(bool isOn)
     {
