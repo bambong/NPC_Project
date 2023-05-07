@@ -44,7 +44,7 @@ public class MiniGameManager : MonoBehaviour
    
    
     [SerializeField]
-    private TextMeshProUGUI resultText;
+    private ResultTextController resultText;
     [SerializeField]
     private OrderColorLayoutController orderColorLayout;
     [SerializeField]
@@ -682,31 +682,29 @@ public class MiniGameManager : MonoBehaviour
         isTimeLimit = false;
         timeText.text = timeLimit.ToString("00.00");
         timeFillGauge.fillAmount = 0;
-        resultText.text = "";
+        resultText.ClearText();
     }
   
     public void SetResultText(bool isSuccess) 
     {
-        string targetText;
-        if (isSuccess)
-        {
-            targetText = "SUCCESS";
-            resultText.color = Color.green;
-        }
-        else 
-        {
-            targetText = "FAIL";
-            resultText.color = Color.red;
-        }
+ 
         Sequence seq = DOTween.Sequence();
         seq.Append(backGround.DOFade(1, 1f));
         seq.Join(timePanelGroup.DOFade(0, 1f));
-        seq.Append(resultText.DOText(targetText, 0.5f));
-        seq.Append(resultText.DOFade(0, 0));
-        seq.Append(resultText.DOFade(1,0.2f).SetLoops(2));
+        seq.Play();
+
+        if (isSuccess)
+        {
+            resultText.OnSuccess(1f);
+        }
+        else 
+        {
+            resultText.OnFail(1f);
+        }
+       
         //seq.AppendInterval(1);
         //seq.Append(resultText.DOText("PRESS ENTER", 0.5f));
-        seq.Play();
+       
     }
 
 }
