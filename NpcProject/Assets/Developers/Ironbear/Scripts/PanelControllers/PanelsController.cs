@@ -15,17 +15,39 @@ public class PanelsController : MonoBehaviour
 
     private float fadeDuration = 1f;
 
+    private bool isLogo = false;
+    private bool isStart = false;
+    private bool isPuzzle = false;
+
     private void Start()
     {
-        
+        logoPanel.SetActive(true);
+        isLogo = true;
     }
 
     public void CanvasFadeOut()
     {
         canvas.alpha = 1f;
         canvas.DOFade(0f, fadeDuration).SetEase(Ease.OutQuad).OnComplete(() => {
-            logoPanel.SetActive(false);
-            startPanel.SetActive(true);
+            if(isLogo)
+            {
+                logoPanel.SetActive(false);
+                startPanel.SetActive(true);
+                isLogo = false;
+                isStart = true;
+            }
+            else if(isStart)
+            {
+                startPanel.SetActive(false);
+                puzzlePanel.SetActive(true);
+                isStart = false;
+                isPuzzle = true;
+            }
+            else if(isPuzzle)
+            {
+                //load next scene
+            }
+            
             CanvasFadeIn(); });
     }
 
