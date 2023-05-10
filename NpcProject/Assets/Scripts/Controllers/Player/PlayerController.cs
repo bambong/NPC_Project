@@ -206,8 +206,8 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 MoveRayCheck(Vector3 moveVec, bool isSlope )
     {
-        var pos = transform.position + (Vector3.down* box.size.y * 0.5f) + (Vector3.down*stepHeight* 0.5f);
-        var boxHalfSize = box.size.x * 0.5f;
+        var pos = transform.position + (Vector3.down* box.size.y * 0.4f) + (Vector3.down*stepHeight* 0.5f);
+        var boxHalfSize = box.size.x * 0.6f;
         var checkWidth = box.size.x * CHECK_RAY_WIDTH;
         float moveEnableWidth = box.size.x * 0.25f;
         float boxHeight = (stepHeight / 2);
