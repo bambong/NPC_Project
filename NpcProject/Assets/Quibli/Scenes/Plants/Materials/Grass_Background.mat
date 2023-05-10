@@ -15,29 +15,26 @@ MonoBehaviour:
   version: 6
 --- !u!21 &2100000
 Material:
-  serializedVersion: 7
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Grass_Background
-  m_Shader: {fileID: -6465566751694194690, guid: 55d33328ab3ba4efca3c7706d97d8ee8,
-    type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ShaderKeywords: 
+  m_Shader: {fileID: -6465566751694194690, guid: 55d33328ab3ba4efca3c7706d97d8ee8, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 53a27931bed2949c3b8820f709878013, type: 3}
+        m_Texture: {fileID: 2800000, guid: 517c53dde3ce34841ad75c5d0348a61d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -121,9 +118,10 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _PatchesBluriness: 0.2
-    - _PatchesEnabled: 0
+    - _PatchesEnabled: 1
     - _PatchesScale: 0.5
     - _PatchesThreshold: 0.5
+    - _QueueControl: -1
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _ShadowStrength: 0
@@ -133,7 +131,7 @@ Material:
     - _SrcBlend: 1
     - _Surface: 0
     - _WindDirection: 0
-    - _WindEnabled: 1
+    - _WindEnabled: 0
     - _WindFrequency: 1
     - _WindIntensity: 0.25
     - _WindNoise: 1
@@ -141,15 +139,14 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_fa7bfd953c0f468faf964c3a5545c86d: {r: 0.053755786, g: 0.053755786, b: 0.0754717,
-        a: 1}
+    - Color_fa7bfd953c0f468faf964c3a5545c86d: {r: 0.09534956, g: 0.2735849, b: 0.07097722, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorBottom: {r: 0.076495215, g: 0.076495215, b: 0.084905684, a: 1}
-    - _ColorTop: {r: 0.06016376, g: 0.06016376, b: 0.0754717, a: 1}
+    - _ColorBottom: {r: 0.27100393, g: 0.6242164, b: 0.6603774, a: 1}
+    - _ColorTop: {r: 0.5538003, g: 0.8962264, b: 0.5645608, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _GustColor: {r: 0.9450981, g: 0.8274511, b: 0.7803922, a: 1}
-    - _PatchesColor: {r: 0.937255, g: 0.7568628, b: 0.24705875, a: 1}
+    - _PatchesColor: {r: 0.6978557, g: 1, b: 0.6367924, a: 1}
     - _PatchesOffset: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
