@@ -4,6 +4,7 @@ using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
 using UnityEngine.SceneManagement;
+using System;
 
 public class SoundManager
 {    
@@ -11,9 +12,10 @@ public class SoundManager
     private Bus bgmBus;
     private Bus sfxBus;
 
-    public EventInstance bgmInstance;
+    //public EventInstance bgmInstance;
     public EventInstance sfxInstance;
 
+    public StudioEventEmitter bgmEmitter;
     private int bgmTime;
 
     public void Init()
@@ -22,62 +24,39 @@ public class SoundManager
         bgmBus = RuntimeManager.GetBus("bus:/Master/BGM");
         sfxBus = RuntimeManager.GetBus("bus:/Master/SFX");
 
-        //SceneManager.activeSceneChanged += SceneManagerOnactiveSceneChanged;
-        //SceneManagerOnactiveSceneChanged(SceneManager.GetSceneByName("NULL"), SceneManager.GetActiveScene());
+        CreateBGMEmitter();        
+
+        SceneManager.activeSceneChanged += SceneManagerOnactiveSceneChanged;
+        SceneManagerOnactiveSceneChanged(SceneManager.GetSceneByName("NULL"), SceneManager.GetActiveScene());
     }
 
-    public void BGMPlay()
+    private void CreateBGMEmitter()
     {
-        bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
-        bgmInstance.start();
-    }    
+        GameObject bgmPrefab = Resources.Load<GameObject>("Prefabs/BGM");
+        GameObject instance = UnityEngine.Object.Instantiate(bgmPrefab);
+        UnityEngine.Object.DontDestroyOnLoad(instance);
+
+        bgmEmitter = instance.GetComponent<StudioEventEmitter>();
+    }
+
 
     /// <summary>
     /// BGM 파라미터 값을 바꿉니다.
     /// </summary>
     /// <param name="name">파라미터 이름</param>
     /// <param name="value">파라미터 값</param>
-    public void BGMChange(string name, float value)
-    {
-        bgmInstance.getTimelinePosition(out bgmTime);
-        bgmInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        bgmInstance.setTimelinePosition(bgmTime);
-        bgmInstance.setParameterByName(name, 1.0f);
-        bgmInstance.start();
-    }
+    //public void BGMChange(string name, float value)
+    //{
+    //    bgmInstance.getTimelinePosition(out bgmTime);
+    //    bgmInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+    //    bgmInstance.setTimelinePosition(bgmTime);
+    //    bgmInstance.setParameterByName(name, 1.0f);
+    //    bgmInstance.start();
+    //}
 
     private void SceneManagerOnactiveSceneChanged(Scene arg0, Scene arg1)
     {
         LoadBank(arg1);
-
-        if (CompareScene(arg1, "Unknown"))
-        {
-            ChangeBGM(Define.Scene.Unknown);
-        }
-        else if (CompareScene(arg1, "Clear"))
-        {
-            ChangeBGM(Define.Scene.Clear);
-        }
-        else if (CompareScene(arg1, "Chapter_01"))
-        {
-            ChangeBGM(Define.Scene.Chapter_01);
-        }
-        else if (CompareScene(arg1, "Chapter_01_Puzzle_01"))
-        {
-            ChangeBGM(Define.Scene.Chapter_01_Puzzle_01);
-        }        
-        else if (CompareScene(arg1, "Chapter_01_Puzzle_02"))
-        {
-            ChangeBGM(Define.Scene.Chapter_01_Puzzle_02);
-        }        
-        else if (CompareScene(arg1, "Chapter_01_Puzzle_03"))
-        {
-            ChangeBGM(Define.Scene.Chapter_01_Puzzle_02);
-        }
-        else if (CompareScene(arg1, "Serverroom"))
-        {
-            ChangeBGM(Define.Scene.Serverroom);
-        }
     }
 
     public bool CompareScene(Scene scene, string sceneName)
@@ -90,37 +69,7 @@ public class SoundManager
         Debug.Log(scene.name + "Bank Load");
         RuntimeManager.LoadBank(scene.name);
     }
-
-    public void ChangeBGM(Define.Scene stage)
-    {
-        int index = (int)stage;
-        switch(stage)
-        {
-            case Define.Scene.Unknown:
-                bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
-                break;
-            case Define.Scene.Clear:
-                bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
-                break;
-            case Define.Scene.Chapter_01:
-                bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
-                break;
-            case Define.Scene.Chapter_01_Puzzle_01:
-                bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
-                break;
-            case Define.Scene.Chapter_01_Puzzle_02:
-                bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
-                break;
-            case Define.Scene.Chapter_01_Puzzle_03:
-                bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
-                break;
-            case Define.Scene.Serverroom:
-                bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
-                break;
-        }
-        bgmInstance.start();
-    }
-
+    public void PlayBGM() => bgmEmitter.Play();
 
     public void PlaySFX(string eventpath)
     {
@@ -128,7 +77,17 @@ public class SoundManager
         sfxInstance.start();
     }
 
-    //public void SetPauseBGM(bool pause) => BGMEmitter.SetPause(pause);
+    public void ChangeBGM(EventReference bgm)
+    {
+        bgmEmitter.ChangeEvent(bgm);
+    }
+
+    public void ChangeBGM(string param, float value)
+    {
+        bgmEmitter.SetParameter(param, value);
+    }
+
+    public void SetPauseBGM(bool pause) => bgmEmitter.SetPause(pause);
 
     public void SetMasterVolume(float value) => masterBus.setVolume(value);
 
@@ -138,7 +97,9 @@ public class SoundManager
 
     public void Clear()
     {
-        bgmInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-        bgmInstance.release();
+        bgmEmitter.Stop();
+
+        //bgmInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        //bgmInstance.release();
     }
 }

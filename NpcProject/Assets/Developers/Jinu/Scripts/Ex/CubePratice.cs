@@ -8,7 +8,7 @@ public class CubePratice : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            Managers.Sound.BGMChange("OMG", 1.0f);
+            Managers.Sound.ChangeBGM("OMG", 1.0f);
         }
     }
 
@@ -16,7 +16,7 @@ public class CubePratice : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            Managers.Sound.BGMChange("OMG", 0.0f);
+            Managers.Sound.ChangeBGM("OMG", 0.0f);
         }
     }
 }
