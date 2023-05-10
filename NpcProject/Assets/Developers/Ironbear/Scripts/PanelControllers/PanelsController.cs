@@ -1,7 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
 
-public class PanelsController : MonoBehaviour
+public class PanelsController : UI_Base
 {
     [SerializeField]
     private CanvasGroup canvas;
@@ -18,6 +18,11 @@ public class PanelsController : MonoBehaviour
     private bool isLogo = false;
     private bool isStart = false;
     private bool isPuzzle = false;
+
+
+    public override void Init()
+    {
+    }
 
     private void Start()
     {

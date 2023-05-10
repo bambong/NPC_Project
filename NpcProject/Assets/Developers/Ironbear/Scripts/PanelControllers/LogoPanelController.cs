@@ -1,7 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
 
-public class LogoPanelController : MonoBehaviour
+public class LogoPanelController : UI_Base
 {
     [SerializeField]
     private GameObject logos;
@@ -11,6 +11,11 @@ public class LogoPanelController : MonoBehaviour
     private GameObject bar;
 
     private float moveDuration = 0.8f;
+
+
+    public override void Init()
+    {
+    }
 
     private void Start()
     {
