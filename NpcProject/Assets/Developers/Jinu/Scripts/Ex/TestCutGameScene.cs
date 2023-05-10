@@ -41,6 +41,9 @@ public class TestCutGameScene: BaseScene
 
     private void Start()
     {
+        Managers.Sound.SetBGMVolume(0.1f);
+        Managers.Sound.BGMPlay();
+        Managers.Sound.SetSFXVolume(0.5f);
         //Managers.Sound.AskBgmPlay(20100);
         //Managers.Sound.AskBgmPlay(20100);
     }

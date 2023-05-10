@@ -1,116 +1,144 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-[System.Serializable]
-public struct BgmData
-{
-    public string name;
-    public AudioClip clip;
-    public float volume;
-    public bool load;
-}
-public struct SoundData
-{
-    public string name;
-    public AudioClip clip;
-    public float volume;
-    public bool load;
-}
+using FMODUnity;
+using FMOD.Studio;
+using UnityEngine.SceneManagement;
 
 public class SoundManager
 {    
+    private Bus masterBus;
+    private Bus bgmBus;
+    private Bus sfxBus;
 
-    private SoundController soundController;
-    private BgmZone currentBgmZone;
+    public EventInstance bgmInstance;
+    public EventInstance sfxInstance;
 
-    private Dictionary<int, BgmData> bgmDatas = new Dictionary<int, BgmData>();
-    private Dictionary<int, SoundData> sfxDatas = new Dictionary<int, SoundData>();
+    private int bgmTime;
 
-    private SoundExcel soundExcel;
     public void Init()
     {
-        var soundPrefab = Managers.Resource.Instantiate("SoundSource");
-        Object.DontDestroyOnLoad(soundPrefab.gameObject);
-        soundPrefab.name = "@SoundSource";
-        soundController = soundPrefab.GetComponent<SoundController>();
-        soundExcel = Resources.Load<SoundExcel>($"Data/SoundData/SoundExcel");
-        LoadSoundData();
+        masterBus = RuntimeManager.GetBus("bus:/Master");
+        bgmBus = RuntimeManager.GetBus("bus:/Master/BGM");
+        sfxBus = RuntimeManager.GetBus("bus:/Master/SFX");
+
+        //SceneManager.activeSceneChanged += SceneManagerOnactiveSceneChanged;
+        //SceneManagerOnactiveSceneChanged(SceneManager.GetSceneByName("NULL"), SceneManager.GetActiveScene());
     }
 
-    private SoundData ReadSfxData(SoundEvent eventData) 
+    public void BGMPlay()
     {
-        SoundData data = new SoundData();
-        data.clip = Resources.Load<AudioClip>($"Sounds/SFX/{eventData.Name}");
-        data.volume = eventData.Vol;
-        return data;
+        bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
+        bgmInstance.start();
+    }    
+
+    /// <summary>
+    /// BGM 파라미터 값을 바꿉니다.
+    /// </summary>
+    /// <param name="name">파라미터 이름</param>
+    /// <param name="value">파라미터 값</param>
+    public void BGMChange(string name, float value)
+    {
+        bgmInstance.getTimelinePosition(out bgmTime);
+        bgmInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        bgmInstance.setTimelinePosition(bgmTime);
+        bgmInstance.setParameterByName(name, 1.0f);
+        bgmInstance.start();
     }
 
-    public void LoadSoundData()
+    private void SceneManagerOnactiveSceneChanged(Scene arg0, Scene arg1)
     {
+        LoadBank(arg1);
 
-        for(int i = 0; i < soundExcel.datas.Count; i++)
+        if (CompareScene(arg1, "Unknown"))
         {
-            var data = soundExcel.datas[i];
-
-            if(data.soundType == "SFX")
-            {
-                SoundData soundData = new SoundData();
-                soundData.name = data.soundName;
-                soundData.volume = data.soundVol;
-                soundData.load = false;
-                sfxDatas.Add(data.soundID, soundData);
-            }
-            else
-            {
-                BgmData bgmData = new BgmData();
-                bgmData.name = data.soundName;
-                bgmData.volume = data.soundVol;
-                bgmData.load = false;
-                bgmDatas.Add(data.soundID, bgmData);
-            }
+            ChangeBGM(Define.Scene.Unknown);
+        }
+        else if (CompareScene(arg1, "Clear"))
+        {
+            ChangeBGM(Define.Scene.Clear);
+        }
+        else if (CompareScene(arg1, "Chapter_01"))
+        {
+            ChangeBGM(Define.Scene.Chapter_01);
+        }
+        else if (CompareScene(arg1, "Chapter_01_Puzzle_01"))
+        {
+            ChangeBGM(Define.Scene.Chapter_01_Puzzle_01);
+        }        
+        else if (CompareScene(arg1, "Chapter_01_Puzzle_02"))
+        {
+            ChangeBGM(Define.Scene.Chapter_01_Puzzle_02);
+        }        
+        else if (CompareScene(arg1, "Chapter_01_Puzzle_03"))
+        {
+            ChangeBGM(Define.Scene.Chapter_01_Puzzle_02);
+        }
+        else if (CompareScene(arg1, "Serverroom"))
+        {
+            ChangeBGM(Define.Scene.Serverroom);
         }
     }
 
-    public void AskBgmPlay(int id)
+    public bool CompareScene(Scene scene, string sceneName)
     {
-        if(bgmDatas[id].load == false)
+        return scene.name.Equals(sceneName);
+    }
+
+    public void LoadBank(Scene scene)
+    {
+        Debug.Log(scene.name + "Bank Load");
+        RuntimeManager.LoadBank(scene.name);
+    }
+
+    public void ChangeBGM(Define.Scene stage)
+    {
+        int index = (int)stage;
+        switch(stage)
         {
-            Debug.Log("Load Sound ID: " + id);
-            BgmData bgmData = new BgmData();
-            bgmData.clip = Resources.Load<AudioClip>($"Sounds/BGM/{bgmDatas[id].name}");
-            bgmData.name = bgmDatas[id].name;
-            bgmData.volume = bgmDatas[id].volume;
-            bgmData.load = true;
-
-            bgmDatas[id] = bgmData;
+            case Define.Scene.Unknown:
+                bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
+                break;
+            case Define.Scene.Clear:
+                bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
+                break;
+            case Define.Scene.Chapter_01:
+                bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
+                break;
+            case Define.Scene.Chapter_01_Puzzle_01:
+                bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
+                break;
+            case Define.Scene.Chapter_01_Puzzle_02:
+                bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
+                break;
+            case Define.Scene.Chapter_01_Puzzle_03:
+                bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
+                break;
+            case Define.Scene.Serverroom:
+                bgmInstance = RuntimeManager.CreateInstance("event:/BGM/OMG");
+                break;
         }
-        soundController.BgmPlay(bgmDatas[id].clip, bgmDatas[id].volume);
+        bgmInstance.start();
     }
 
-    public void AskSfxPlay(int id)
+
+    public void PlaySFX(string eventpath)
     {
-        if(sfxDatas[id].load == false)
-        {
-            Debug.Log("Load Sound ID:" + id);
-            SoundData soundData = new SoundData();
-            soundData.clip = Resources.Load<AudioClip>($"Sounds/SFX/{sfxDatas[id].name}");
-            soundData.name = sfxDatas[id].name;
-            soundData.volume = sfxDatas[id].volume;
-            soundData.load = true;
-
-            sfxDatas[id] = soundData;
-        }
-        soundController.SfxPlay(sfxDatas[id].clip, sfxDatas[id].volume);
+        sfxInstance = RuntimeManager.CreateInstance("event:/SFX/" + eventpath);
+        sfxInstance.start();
     }
 
-    public void CheckBgmZone(BgmZone zone)
-    {
-        currentBgmZone = zone;
-    }
+    //public void SetPauseBGM(bool pause) => BGMEmitter.SetPause(pause);
+
+    public void SetMasterVolume(float value) => masterBus.setVolume(value);
+
+    public void SetBGMVolume(float value) => bgmBus.setVolume(value);
+
+    public void SetSFXVolume(float value) => sfxBus.setVolume(value);
 
     public void Clear()
     {
-        bgmDatas.Clear();
+        bgmInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        bgmInstance.release();
     }
 }

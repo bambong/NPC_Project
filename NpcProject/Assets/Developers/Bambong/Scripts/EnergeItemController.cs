@@ -9,8 +9,6 @@ using FMODUnity;
 
 public class EnergeItemController : MonoBehaviour , ISpawnAble
 {
-    [SerializeField]    
-    private EventReference getitemSFX;
 
     [SerializeField]
     private float rotateSpeed = 100f;
@@ -42,8 +40,7 @@ public class EnergeItemController : MonoBehaviour , ISpawnAble
         {
             isOn = false;
             Managers.Effect.PlayEffect(Define.EFFECT.EnergeItemEffect,transform);
-            //Managers.Sound.AskSfxPlay(20020);
-            RuntimeManager.PlayOneShot(getitemSFX);
+            Managers.Sound.PlaySFX("Item");
             Managers.Keyword.AddKeywordMakerGauge(gaugeAmount);
             parentSpawner.RemoveItem(spawnSpot);
             Managers.Resource.Destroy(gameObject);

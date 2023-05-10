@@ -123,12 +123,12 @@ public class MonsterController : KeywordEntity , ISpawnAble
         curHealth--;
         if (curHealth <= 0)
         {
-            Managers.Sound.AskSfxPlay(20004);
+            Managers.Sound.PlaySFX("Death Monster");
             Managers.Effect.PlayEffect(Define.EFFECT.MonsterDeathEffect , transform);
             DestroyKeywordEntity();
             return;
         }
-        Managers.Sound.AskSfxPlay(20003);
+        Managers.Sound.PlaySFX("Hit Monster");
         StartCoroutine(PlayHitEffect());
         KnockBack();
     }
@@ -258,7 +258,7 @@ public class MonsterController : KeywordEntity , ISpawnAble
 
     public void Attack() 
     {
-        Managers.Sound.AskSfxPlay(20001);
+        Managers.Sound.PlaySFX("Attack Monster");
         var rayDis = (monsterNav.destination - transform.position);
         rayDis.y = 0;
         rayDis = rayDis.normalized;
