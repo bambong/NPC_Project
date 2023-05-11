@@ -1,5 +1,5 @@
 ﻿// Toony Colors Pro+Mobile 2
-// (c) 2014-2022 Jean Moreno
+// (c) 2014-2023 Jean Moreno
 
 Shader "Toony Colors Pro 2/Examples/SG2/Stylized Water"
 {
@@ -37,7 +37,9 @@ Shader "Toony Colors Pro 2/Examples/SG2/Stylized Water"
 		_FoamColor ("Foam Color (RGB) Opacity (A)", Color) = (0.9,0.9,0.9,1)
 		_FoamTex ("Foam Texture Custom", 2D) = "black" {}
 		
-		// Avoid compile error if the properties are ending with a drawer
+		_CustomTime ("Custom Time", Vector) = (0.05, 1, 2, 3)
+
+		//Avoid compile error if the properties are ending with a drawer
 		[HideInInspector] __dummy__ ("unused", Float) = 0
 	}
 
@@ -53,20 +55,14 @@ Shader "Toony Colors Pro 2/Examples/SG2/Stylized Water"
 		#include "UnityCG.cginc"
 		#include "UnityLightingCommon.cginc"	// needed for LightColor
 
-		// Texture/Sampler abstraction
-		#define TCP2_TEX2D_WITH_SAMPLER(tex)						UNITY_DECLARE_TEX2D(tex)
-		#define TCP2_TEX2D_NO_SAMPLER(tex)							UNITY_DECLARE_TEX2D_NOSAMPLER(tex)
-		#define TCP2_TEX2D_SAMPLE(tex, samplertex, coord)			UNITY_SAMPLE_TEX2D_SAMPLER(tex, samplertex, coord)
-		#define TCP2_TEX2D_SAMPLE_LOD(tex, samplertex, coord, lod)	UNITY_SAMPLE_TEX2D_SAMPLER_LOD(tex, samplertex, coord, lod)
-
 		// Custom time variable overriding the built-in one
 		#define _Time _CustomTime
 
 		float4 _CustomTime;
 		
 		// Shader Properties
-		TCP2_TEX2D_WITH_SAMPLER(_MainTex);
-		TCP2_TEX2D_WITH_SAMPLER(_FoamTex);
+		sampler2D _MainTex;
+		sampler2D _FoamTex;
 		
 		// Shader Properties
 		float _WavesFrequency;
@@ -103,7 +99,7 @@ Shader "Toony Colors Pro 2/Examples/SG2/Stylized Water"
 		//================================================================
 		// STRUCTS
 
-		// Vertex input
+		//Vertex input
 		struct appdata_tcp2
 		{
 			float4 vertex : POSITION;
@@ -125,36 +121,6 @@ Shader "Toony Colors Pro 2/Examples/SG2/Stylized Water"
 			float4 screenPosition;
 			float2 sinUvAnimVertexWorldPos;
 			float2 texcoord0;
-		};
-
-		//================================================================
-
-		// Custom SurfaceOutput
-		struct SurfaceOutputCustom
-		{
-			half atten;
-			half3 Albedo;
-			half3 Normal;
-			half3 worldNormal;
-			half3 Emission;
-			half Specular;
-			half Gloss;
-			half Alpha;
-			half ndv;
-			half ndvRaw;
-
-			Input input;
-
-			// Shader Properties
-			float __rampThreshold;
-			float __rampSmoothing;
-			float3 __highlightColor;
-			float3 __shadowColor;
-			float __ambientIntensity;
-			float __rimMin;
-			float __rimMax;
-			float3 __rimColor;
-			float __rimStrength;
 		};
 
 		//================================================================
@@ -189,12 +155,42 @@ Shader "Toony Colors Pro 2/Examples/SG2/Stylized Water"
 			v.vertex.y += (waveFactorX + waveFactorZ);
 			float4 clipPos = UnityObjectToClipPos(v.vertex);
 
-			// Screen Position
+			//Screen Position
 			float4 screenPos = ComputeScreenPos(clipPos);
 			output.screenPosition = screenPos;
 			COMPUTE_EYEDEPTH(output.screenPosition.z);
 
 		}
+
+		//================================================================
+
+		//Custom SurfaceOutput
+		struct SurfaceOutputCustom
+		{
+			half atten;
+			half3 Albedo;
+			half3 Normal;
+			half3 worldNormal;
+			half3 Emission;
+			half Specular;
+			half Gloss;
+			half Alpha;
+			half ndv;
+			half ndvRaw;
+
+			Input input;
+			
+			// Shader Properties
+			float __rampThreshold;
+			float __rampSmoothing;
+			float3 __highlightColor;
+			float3 __shadowColor;
+			float __ambientIntensity;
+			float __rimMin;
+			float __rimMax;
+			float3 __rimColor;
+			float __rimStrength;
+		};
 
 		//================================================================
 		// SURFACE FUNCTION
@@ -204,7 +200,7 @@ Shader "Toony Colors Pro 2/Examples/SG2/Stylized Water"
 			float2 uvSinAnim__MainTex = (input.sinUvAnimVertexWorldPos * _MainTex_SinAnimParams.z) + (_Time.yy * _MainTex_SinAnimParams.x);
 			// Shader Properties Sampling
 			float __depthViewCorrectionBias = ( 2.0 );
-			float4 __albedo = (  lerp(float4(1,1,1,1), _WaterColor.rgba, TCP2_TEX2D_SAMPLE(_MainTex, _MainTex, input.worldPos.xz * _MainTex_ST.xy + _MainTex_ST.zw + (((sin(0.9 * uvSinAnim__MainTex + _MainTex_SinAnimParams.w) + sin(1.33 * uvSinAnim__MainTex + 3.14 * _MainTex_SinAnimParams.w) + sin(2.4 * uvSinAnim__MainTex + 5.3 * _MainTex_SinAnimParams.w)) / 3) * _MainTex_SinAnimParams.y)).a) );
+			float4 __albedo = (  lerp(float4(1,1,1,1), _WaterColor.rgba, tex2D(_MainTex, input.worldPos.xz * _MainTex_ST.xy + _MainTex_ST.zw + (((sin(0.9 * uvSinAnim__MainTex + _MainTex_SinAnimParams.w) + sin(1.33 * uvSinAnim__MainTex + 3.14 * _MainTex_SinAnimParams.w) + sin(2.4 * uvSinAnim__MainTex + 5.3 * _MainTex_SinAnimParams.w)) / 3) * _MainTex_SinAnimParams.y)).a) );
 			float4 __mainColor = ( float4(1,1,1,1) );
 			float __alpha = ( __albedo.a * __mainColor.a );
 			float3 __depthColor = ( _DepthColor.rgb );
@@ -212,7 +208,7 @@ Shader "Toony Colors Pro 2/Examples/SG2/Stylized Water"
 			float __foamSpread = ( _FoamSpread );
 			float __foamStrength = ( _FoamStrength );
 			float4 __foamColor = ( _FoamColor.rgba );
-			float3 __foamTextureCustom = ( TCP2_TEX2D_SAMPLE(_FoamTex, _FoamTex, input.texcoord0.xy * _FoamTex_ST.xy + _FoamTex_ST.zw).rgb );
+			float3 __foamTextureCustom = ( tex2D(_FoamTex, input.texcoord0.xy * _FoamTex_ST.xy + _FoamTex_ST.zw).rgb );
 			float __foamMask = ( .0 );
 			output.__rampThreshold = ( _RampThreshold );
 			output.__rampSmoothing = ( _RampSmoothing );
@@ -256,7 +252,7 @@ Shader "Toony Colors Pro 2/Examples/SG2/Stylized Water"
 
 			output.Albedo = __albedo.rgb;
 			output.Alpha = __alpha;
-
+			
 			output.Albedo *= __mainColor.rgb;
 			
 			// Depth-based color
@@ -274,7 +270,6 @@ Shader "Toony Colors Pro 2/Examples/SG2/Stylized Water"
 			half foamTerm = (step(foam.rgb, saturate(foamStrength - foamDepth)) * saturate(foamStrength - foamDepth)) * foamColor.a;
 			output.Albedo.rgb = lerp(output.Albedo.rgb, foamColor.rgb, foamTerm);
 			output.Alpha = lerp(output.Alpha, foamColor.a, foamTerm);
-
 		}
 
 		//================================================================
@@ -282,14 +277,13 @@ Shader "Toony Colors Pro 2/Examples/SG2/Stylized Water"
 
 		inline half4 LightingToonyColorsCustom(inout SurfaceOutputCustom surface, half3 viewDir, UnityGI gi)
 		{
-
 			half ndv = surface.ndv;
 			half3 lightDir = gi.light.dir;
 			#if defined(UNITY_PASS_FORWARDBASE)
 				half3 lightColor = _LightColor0.rgb;
 				half atten = surface.atten;
 			#else
-				// extract attenuation from point/spot lights
+				//extract attenuation from point/spot lights
 				half3 lightColor = _LightColor0.rgb;
 				half atten = max(gi.light.color.r, max(gi.light.color.g, gi.light.color.b)) / max(_LightColor0.r, max(_LightColor0.g, _LightColor0.b));
 			#endif
@@ -302,18 +296,19 @@ Shader "Toony Colors Pro 2/Examples/SG2/Stylized Water"
 			#define		RAMP_SMOOTH		surface.__rampSmoothing
 			ndl = saturate(ndl);
 			ramp = smoothstep(RAMP_THRESHOLD - RAMP_SMOOTH*0.5, RAMP_THRESHOLD + RAMP_SMOOTH*0.5, ndl);
+			half3 rampGrayscale = ramp;
 
-			// Apply attenuation (shadowmaps & point/spot lights attenuation)
+			//Apply attenuation (shadowmaps & point/spot lights attenuation)
 			ramp *= atten;
 
-			// Highlight/Shadow Colors
+			//Highlight/Shadow Colors
 			#if !defined(UNITY_PASS_FORWARDBASE)
 				ramp = lerp(half3(0,0,0), surface.__highlightColor, ramp);
 			#else
 				ramp = lerp(surface.__shadowColor, surface.__highlightColor, ramp);
 			#endif
 
-			// Output color
+			//Output color
 			half4 color;
 			color.rgb = surface.Albedo * lightColor.rgb * ramp;
 			color.a = surface.Alpha;
@@ -346,7 +341,7 @@ Shader "Toony Colors Pro 2/Examples/SG2/Stylized Water"
 		{
 			half3 normal = surface.Normal;
 
-			// GI without reflection probes
+			//GI without reflection probes
 			gi = UnityGlobalIllumination(data, 1.0, normal); // occlusion is applied in the lighting function, if necessary
 
 			surface.atten = data.atten; // transfer attenuation to lighting function
@@ -361,5 +356,5 @@ Shader "Toony Colors Pro 2/Examples/SG2/Stylized Water"
 	CustomEditor "ToonyColorsPro.ShaderGenerator.MaterialInspector_SG2"
 }
 
-/* TCP_DATA u config(ver:"2.9.4";unity:"2021.3.12f1";tmplt:"SG2_Template_Default";features:list["UNITY_5_4","UNITY_5_5","UNITY_5_6","UNITY_2017_1","UNITY_2018_1","UNITY_2018_2","UNITY_2018_3","CUSTOM_TIME","RIM","VSW_WORLDPOS","VERTEX_SIN_WAVES","DEPTH_VIEW_CORRECTION","DEPTH_BUFFER_COLOR","DEPTH_BUFFER_FOAM","UNITY_2019_1","UNITY_2019_2","UNITY_2019_3","UNITY_2019_4","UNITY_2020_1","UNITY_2021_1","UNITY_2021_2"];flags:list[];flags_extra:dict[];keywords:dict[RENDER_TYPE="Opaque",RampTextureDrawer="[TCP2Gradient]",RampTextureLabel="Ramp Texture",SHADER_TARGET="3.0",RIM_LABEL="Rim Lighting"];shaderProperties:list[sp(name:"Albedo";imps:list[imp_customcode(prepend_type:Disabled;prepend_code:"";prepend_file:"";prepend_file_block:"";preprend_params:dict[];code:"lerp(float4(1,1,1,1), {3}.rgba, {2}.a)";guid:"ba58c624-ecf3-47ca-a874-7e22e0d7a0e2";op:Multiply;lbl:"Albedo";gpu_inst:False;locked:False;impl_index:-1),imp_mp_texture(uto:True;tov:"";tov_lbl:"";gto:True;sbt:False;scr:False;scv:"";scv_lbl:"";gsc:False;roff:False;goff:False;sin_anm:True;sin_anmv:"";sin_anmv_lbl:"";gsin:False;notile:False;triplanar_local:False;def:"white";locked_uv:False;uv:5;cc:4;chan:"AAAA";mip:-1;mipprop:False;ssuv_vert:False;ssuv_obj:False;uv_type:WorldPosition;uv_chan:"XZ";tpln_scale:1;uv_shaderproperty:__NULL__;uv_cmp:__NULL__;sep_sampler:__NULL__;prop:"_MainTex";md:"";gbv:False;custom:False;refs:"";pnlock:False;guid:"fd326b54-3683-4e3b-a22d-e384770978ae";op:Multiply;lbl:"Water Texture";gpu_inst:False;locked:False;impl_index:0),imp_mp_color(def:RGBA(1, 1, 1, 1);hdr:False;cc:4;chan:"RGBA";prop:"_WaterColor";md:"";gbv:False;custom:False;refs:"";pnlock:False;guid:"67e9afdc-7793-4680-93be-07de7c23b028";op:Multiply;lbl:"Water Color";gpu_inst:False;locked:False;impl_index:-1)];layers:list[];unlocked:list[];clones:dict[];isClone:False),sp(name:"Main Color";imps:list[imp_constant(type:color_rgba;fprc:float;fv:1;f2v:(1, 1);f3v:(1, 1, 1);f4v:(1, 1, 1, 1);cv:RGBA(1, 1, 1, 1);guid:"83fe16ef-ebbd-4fc1-8e4a-15d640c48b7e";op:Multiply;lbl:"Color";gpu_inst:False;locked:False;impl_index:-1)];layers:list[];unlocked:list[];clones:dict[];isClone:False)];customTextures:list[];codeInjection:codeInjection(injectedFiles:list[];mark:False);matLayers:list[]) */
-/* TCP_HASH faff79ad3b5e9090405804ef2bcefad0 */
+/* TCP_DATA u config(unity:"2018.4.11f1";ver:"2.6.0";tmplt:"SG2_Template_Default";features:list["UNITY_5_4","UNITY_5_5","UNITY_5_6","UNITY_2017_1","UNITY_2018_1","UNITY_2018_2","UNITY_2018_3","CUSTOM_TIME","RIM","VSW_WORLDPOS","VERTEX_SIN_WAVES","DEPTH_VIEW_CORRECTION","DEPTH_BUFFER_COLOR","DEPTH_BUFFER_FOAM"];flags:list[];flags_extra:dict[];keywords:dict[RENDER_TYPE="Opaque",RampTextureDrawer="[TCP2Gradient]",RampTextureLabel="Ramp Texture",SHADER_TARGET="3.0",RIM_LABEL="Rim Lighting"];shaderProperties:list[sp(name:"Albedo";imps:list[imp_customcode(prepend_type:Disabled;prepend_code:"";prepend_file:"";prepend_file_block:"";preprend_params:dict[];code:"lerp(float4(1,1,1,1), {3}.rgba, {2}.a)";guid:"ba58c624-ecf3-47ca-a874-7e22e0d7a0e2";op:Multiply;lbl:"Albedo";gpu_inst:False;locked:False;impl_index:-1),imp_mp_texture(uto:True;tov:"";tov_lbl:"";gto:True;sbt:False;scr:False;scv:"";scv_lbl:"";gsc:False;roff:False;goff:False;sin_anm:True;sin_anmv:"";sin_anmv_lbl:"";gsin:False;notile:False;triplanar_local:False;def:"white";locked_uv:False;uv:5;cc:4;chan:"AAAA";mip:-1;mipprop:False;ssuv_vert:False;ssuv_obj:False;uv_type:WorldPosition;uv_chan:"XZ";uv_shaderproperty:__NULL__;prop:"_MainTex";md:"";custom:False;refs:"";guid:"fd326b54-3683-4e3b-a22d-e384770978ae";op:Multiply;lbl:"Water Texture";gpu_inst:False;locked:False;impl_index:0),imp_mp_color(def:RGBA(1, 1, 1, 1);hdr:False;cc:4;chan:"RGBA";prop:"_WaterColor";md:"";custom:False;refs:"";guid:"67e9afdc-7793-4680-93be-07de7c23b028";op:Multiply;lbl:"Water Color";gpu_inst:False;locked:False;impl_index:-1)];layers:list[];unlocked:list[];clones:dict[];isClone:False),sp(name:"Main Color";imps:list[imp_constant(type:color_rgba;fprc:float;fv:1;f2v:(1, 1);f3v:(1, 1, 1);f4v:(1, 1, 1, 1);cv:RGBA(1, 1, 1, 1);guid:"83fe16ef-ebbd-4fc1-8e4a-15d640c48b7e";op:Multiply;lbl:"Color";gpu_inst:False;locked:False;impl_index:-1)];layers:list[];unlocked:list[];clones:dict[];isClone:False)];customTextures:list[];codeInjection:codeInjection(injectedFiles:list[];mark:False);matLayers:list[]) */
+/* TCP_HASH 1dbf06e7ab17ebdf94acf27d98aa14a1 */

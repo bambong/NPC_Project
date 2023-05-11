@@ -1,5 +1,5 @@
 // Toony Colors Pro+Mobile 2
-// (c) 2014-2022 Jean Moreno
+// (c) 2014-2023 Jean Moreno
 
 // Shader Generator Module: Reflection
 // NOTE: 'REFLECTION_SHADER_FEATURE' has to be defined in the Template file
@@ -46,6 +46,9 @@ sngl	lbl="Fresnel Reflections"		kw=REFLECTION_FRESNEL		needsOr=PLANAR_REFLECTION
 /// IF PLANAR_REFLECTION
 	feature_on		USE_SCREEN_POSITION_FRAGMENT
 ///
+/// IF BUMP && PLANAR_REFLECTION
+	feature_on		USE_NORMAL_TANGENT_SPACE_LIGHTING
+///
 #END
 
 //================================================================
@@ -73,7 +76,7 @@ sngl	lbl="Fresnel Reflections"		kw=REFLECTION_FRESNEL		needsOr=PLANAR_REFLECTION
 
 //================================================================
 
-#VARIABLES
+#VARIABLES_OUTSIDE_CBUFFER
 /// IF REFLECTION_CUBEMAP
 	samplerCUBE _Cube;
 ///

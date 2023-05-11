@@ -1,5 +1,5 @@
 // Toony Colors Pro 2
-// (c) 2014-2022 Jean Moreno
+// (c) 2014-2023 Jean Moreno
 
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ namespace ToonyColorsPro
 		{
 			public static bool DebugMode = false;
 
-			internal const string TCP2_VERSION = "2.9.4";
+			internal const string TCP2_VERSION = "2.9.6";
 			internal const string DOCUMENTATION_URL = "https://jeanmoreno.com/unity/toonycolorspro/doc/shader_generator_2";
 			internal const string OUTPUT_PATH = "/JMO Assets/Toony Colors Pro/Shaders Generated/";
 
@@ -2590,7 +2590,7 @@ namespace ToonyColorsPro
 											if (isOutsideCBuffer)
 											{
 												string declarations = sp.PrintVariableDeclareOutsideCBuffer(indent);
-												if (!string.IsNullOrEmpty(declarations))
+												if (!string.IsNullOrWhiteSpace(declarations))
 												{
 													tempString += declarations + "\n";
 												}
@@ -2598,7 +2598,7 @@ namespace ToonyColorsPro
 											else
 											{
 												string declarations = sp.PrintVariableDeclare(false, indent);
-												if (!string.IsNullOrEmpty(declarations) && !cgIncludeShaderProperties.Contains(sp))
+												if (!string.IsNullOrWhiteSpace(declarations) && !cgIncludeShaderProperties.Contains(sp))
 												{
 													tempString += declarations + "\n";
 													cgIncludeShaderProperties.Add(sp);
@@ -2619,7 +2619,7 @@ namespace ToonyColorsPro
 												}
 
 												var prop = sp.PrintVariableDeclare(false, indent);
-												if (!string.IsNullOrEmpty(prop))
+												if (!string.IsNullOrWhiteSpace(prop))
 												{
 													tempString += prop + "\n";
 												}
@@ -2720,7 +2720,7 @@ namespace ToonyColorsPro
 										foreach (var sp in allUsedShaderProperties)
 										{
 											var prop = sp.PrintVariableDeclare(true, indentPlusOne);
-											if (!string.IsNullOrEmpty(prop) && !cgIncludeShaderProperties.Contains(sp))
+											if (!string.IsNullOrWhiteSpace(prop) && !cgIncludeShaderProperties.Contains(sp))
 											{
 												tempString += indentPlusOne + prop + "\n";
 												cgIncludeShaderProperties.Add(sp);
@@ -2740,7 +2740,7 @@ namespace ToonyColorsPro
 												}
 
 												var prop = sp.PrintVariableDeclare(true, indentPlusOne);
-												if (!string.IsNullOrEmpty(prop))
+												if (!string.IsNullOrWhiteSpace(prop))
 												{
 													tempString += indentPlusOne + prop + "\n";
 												}

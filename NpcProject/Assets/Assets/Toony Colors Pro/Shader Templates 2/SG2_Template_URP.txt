@@ -1,5 +1,5 @@
 // Toony Colors Pro+Mobile 2
-// (c) 2014-2022 Jean Moreno
+// (c) 2014-2023 Jean Moreno
 
 #NAME=Default (Universal Pipeline)
 #ID=TEMPLATE_URP
@@ -99,6 +99,7 @@ dd_start	lbl="SURFACE"
 [[MODULE:FEATURES:AlbedoHSV]]
 ---
 [[MODULE:FEATURES:Normal Mapping]]
+sngl	lbl="Sample Normal Map first"	kw=WORLD_NORMAL_FROM_BUMP		needs=BUMP	indent		tt="Sample the Normal Map before other Shader Properties, so that the ones using the 'World Normal' value will use the normal mapped version"
 ---
 [[MODULE:FEATURES:Texture Blending]]
 ---
@@ -719,6 +720,7 @@ Shader "@%SHADER_NAME%@"
 		// Uniforms
 
 		[[VARIABLES_OUTSIDE_CBUFFER_INCLUDE]]
+		[[MODULE:VARIABLES_OUTSIDE_CBUFFER]]
 		[[INJECTION_POINT:Variables/Outside CBuffer]]
 
 		CBUFFER_START(UnityPerMaterial)
@@ -1386,8 +1388,7 @@ Shader "@%SHADER_NAME%@"
 
 			// -------------------------------------
 			// Universal Render Pipeline keywords
-			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS
-			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
 			#pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
 			#pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
 			#pragma multi_compile_fragment _ _SHADOWS_SOFT
@@ -1818,7 +1819,8 @@ Shader "@%SHADER_NAME%@"
 				[[MODULE:FRAGMENT:Normal Mapping:BUILD_TANGENT_MATRIX(tangentWS.xyz, bitangentWS.xyz, normalWS.xyz)]]
 				[[MODULE:FRAGMENT:Normal Mapping:PARALLAX_SRP(viewDirWS, input.[[INPUT_VALUE:texcoord0]])]]
 	/// IF WORLD_NORMAL_FROM_BUMP
-				[[MODULE:FRAGMENT:Normal Mapping:BUMP_SAMPLE_BEFORE(normalWS)]]
+				[[MODULE:FRAGMENT:Normal Mapping:BUMP_SAMPLE_BEFORE_URP()]]
+				[[MODULE:FRAGMENT:Normal Mapping:APPLY_BUMP_SRP(normalWS, normalTS)]]
 	///
 	/// IF BUMP_SHADER_FEATURE
 				#endif
@@ -2214,7 +2216,7 @@ Shader "@%SHADER_NAME%@"
 							#if defined(_LIGHT_LAYERS)
 								half3 lightDir = half3(0, 1, 0);
 								half3 lightColor = half3(0, 0, 0);
-								if (IsMatchingLightLayer(mainLight.layerMask, meshRenderingLayers))
+								if (IsMatchingLightLayer(light.layerMask, meshRenderingLayers))
 								{
 									lightColor = light.color.rgb;
 									lightDir = light.direction;
@@ -2263,11 +2265,11 @@ Shader "@%SHADER_NAME%@"
 							ramp = lerp(half3(0,0,0), [[VALUE:Highlight Color]], ramp);
 			///
 							[[MODULE:FRAGMENT:NdotL Stylization:AFTER_RAMP(ndl, ramp)]]
-		#					[[MODULE:FRAGMENT:Sketch(ramp)]]
+#							[[MODULE:FRAGMENT:Sketch(ramp)]]
 
 							// output color
 							color += albedo * lightColor.rgb * ramp;
-		#					[[MODULE:FRAGMENT:Sketch:APPLY(color.rgb)]]
+#							[[MODULE:FRAGMENT:Sketch:APPLY(color.rgb)]]
 		/// ELSE
 							[[MODULE:FRAGMENT:NdotL Stylization:AFTER_RAMP(ndl, ramp)]]
 							accumulatedRamp += ramp * max(lightColor.r, max(lightColor.g, lightColor.b));
@@ -2329,7 +2331,7 @@ Shader "@%SHADER_NAME%@"
 					#if defined(_LIGHT_LAYERS)
 						half3 lightDir = half3(0, 1, 0);
 						half3 lightColor = half3(0, 0, 0);
-						if (IsMatchingLightLayer(mainLight.layerMask, meshRenderingLayers))
+						if (IsMatchingLightLayer(light.layerMask, meshRenderingLayers))
 						{
 							lightColor = light.color.rgb;
 							lightDir = light.direction;
@@ -2566,6 +2568,7 @@ Shader "@%SHADER_NAME%@"
 	#start_not_empty_block
 			[[MODULE:SHADER_FEATURES_BLOCK:Wind]]
 			[[MODULE:SHADER_FEATURES_BLOCK:Dissolve]]
+			[[MODULE:SHADER_FEATURES_BLOCK:Vertex Displacement]]
 	#end_not_empty_block
 	#end_not_empty
 
@@ -2945,6 +2948,7 @@ Shader "@%SHADER_NAME%@"
 	#start_not_empty_block
 			[[MODULE:SHADER_FEATURES_BLOCK:Wind]]
 			[[MODULE:SHADER_FEATURES_BLOCK:Dissolve]]
+			[[MODULE:SHADER_FEATURES_BLOCK:Vertex Displacement]]
 	#end_not_empty_block
 	#end_not_empty
 
@@ -3003,6 +3007,7 @@ Shader "@%SHADER_NAME%@"
 	#start_not_empty_block
 			[[MODULE:SHADER_FEATURES_BLOCK:Wind]]
 			[[MODULE:SHADER_FEATURES_BLOCK:Dissolve]]
+			[[MODULE:SHADER_FEATURES_BLOCK:Vertex Displacement]]
 	#end_not_empty_block
 	#end_not_empty
 

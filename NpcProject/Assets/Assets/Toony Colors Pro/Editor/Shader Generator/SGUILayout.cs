@@ -1,5 +1,5 @@
 ﻿// Toony Colors Pro 2
-// (c) 2014-2022 Jean Moreno
+// (c) 2014-2023 Jean Moreno
 
 using System;
 using System.Collections.Generic;

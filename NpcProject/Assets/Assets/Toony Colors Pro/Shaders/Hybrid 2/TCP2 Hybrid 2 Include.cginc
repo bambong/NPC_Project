@@ -1,5 +1,5 @@
 ﻿// Toony Colors Pro+Mobile 2
-// (c) 2014-2022 Jean Moreno
+// (c) 2014-2023 Jean Moreno
 
 /// #define fixed half
 /// #define fixed2 half2
@@ -1099,7 +1099,9 @@ half4 Fragment (
 				}
 
 				// Data with dummy struct used in Forward+ macro (LIGHT_LOOP_BEGIN)
-				float2 normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.pos);
+				#if !defined(_SCREEN_SPACE_OCCLUSION)
+					float2 normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.pos);
+				#endif
 				InputDataForwardPlusDummy inputData;
 				inputData.normalizedScreenSpaceUV = normalizedScreenSpaceUV;
 				inputData.positionWS = positionWS;
@@ -1236,8 +1238,6 @@ half4 Fragment (
 	// Premultiply blending
 	#if defined(_ALPHAPREMULTIPLY_ON)
 		color.rgb *= alpha;
-	#else
-		alpha = 1;
 	#endif
 
 	// Rendering Debugger
@@ -1660,7 +1660,9 @@ float4 fragment_outline (Varyings_Outline input) : SV_Target
 					}
 
 					// Data with dummy struct used in Forward+ macro (LIGHT_LOOP_BEGIN)
-					float2 normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.pos);
+					#if !defined(_SCREEN_SPACE_OCCLUSION)
+						float2 normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.pos);
+					#endif
 					InputDataForwardPlusDummy inputData;
 					inputData.normalizedScreenSpaceUV = normalizedScreenSpaceUV;
 					inputData.positionWS = positionWS;
