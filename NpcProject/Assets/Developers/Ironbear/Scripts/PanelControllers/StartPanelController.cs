@@ -30,11 +30,14 @@ public class StartPanelController : UI_Base
         for (int j = 0; j < texts.Length; j++)
         {
             seq.Append(tmpText.DOText(texts[j], texts[j].Length * typeSpeed));
-            seq.AppendInterval(1.0f);
-            seq.OnComplete(() =>
+            if (j < texts.Length - 1)
             {
-                tmpText.text = " ";
-            });
+                seq.AppendCallback(() =>
+                {
+                    tmpText.text = " ";
+                });
+            }
+            seq.AppendInterval(0.3f);
         }
         seq.Play();
     }

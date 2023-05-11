@@ -27,6 +27,8 @@ public class PanelsController : UI_Base
     private void Start()
     {
         logoPanel.SetActive(true);
+        startPanel.SetActive(false);
+        puzzlePanel.SetActive(false);
         isLogo = true;
     }
 
