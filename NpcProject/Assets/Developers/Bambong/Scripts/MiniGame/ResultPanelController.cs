@@ -79,9 +79,6 @@ public class ResultPanelController : MonoBehaviour
             curStr.Append('\n');
             if(i >= maxShowCount) 
             {
-                //var pos = rect.anchoredPosition;
-                //pos.y += moveHight;
-                //rect.anchoredPosition = pos;
                 rect.DOAnchorPosY(rect.anchoredPosition.y + moveHight, moveTime).SetEase(Ease.Linear);
             }
             codeText.DOText(curStr.ToString(), textTime).SetEase(Ease.Linear);

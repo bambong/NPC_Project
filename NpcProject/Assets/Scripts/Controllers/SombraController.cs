@@ -12,7 +12,8 @@ public class SombraController : MonoBehaviour
     {
         spriteRenderer.sprite = sprite;
         spriteRenderer.color = color;
-        spriteRenderer.DOFade(0, time).OnComplete(() => { Managers.Resource.Destroy(gameObject); });
+        spriteRenderer.DOColor(Color.black, time).OnComplete(() => { Managers.Resource.Destroy(gameObject); });
+        //spriteRenderer.DOFade(0, time).OnComplete(() => { Managers.Resource.Destroy(gameObject); });
     }
 
    
