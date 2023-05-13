@@ -96,6 +96,7 @@ public class PlayerController : MonoBehaviour
     {
         var rot = Camera.main.transform.rotation.eulerAngles;
         rot.x = 0;
+        rot.y += 180;
         rotater.rotation = Quaternion.Euler(rot);
         playerStateController.Update();
         if (transform.lossyScale != Vector3.one)
@@ -128,7 +129,7 @@ public class PlayerController : MonoBehaviour
     {
 
         var moveVec = new Vector3(hor, 0, ver).normalized;
-        moveVec =rotater.transform.TransformDirection(moveVec);
+        moveVec = rotater.transform.TransformDirection(-moveVec);
 
         var boxHalfSize = box.size.x * 0.5f;
         var checkWidth = box.size.x * CHECK_RAY_WIDTH;
@@ -166,7 +167,7 @@ public class PlayerController : MonoBehaviour
         }
         
         var moveVec = new Vector3(hor, 0, ver).normalized;
-        moveVec = rotater.transform.TransformDirection(moveVec);
+        moveVec = rotater.transform.TransformDirection(-moveVec);
         Vector3 gravity = Vector3.down * Mathf.Abs(rigid.velocity.y);
 
         var pos = transform.position;
@@ -266,7 +267,7 @@ public class PlayerController : MonoBehaviour
     }
     private void CurrentAnimDirUpdtae(Vector3 moveVec) 
     {
-        var moveDotVer = Vector3.Dot(rotater.transform.forward.normalized, moveVec.normalized);
+        var moveDotVer = Vector3.Dot(-rotater.transform.forward.normalized, moveVec.normalized);
         var factor = PLAYER_ANIM_COS;
         if(curDir == PlayerAnimationController.AnimDir.Front || curDir == PlayerAnimationController.AnimDir.Back) 
         {

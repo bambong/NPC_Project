@@ -1,12 +1,18 @@
 using System.Collections; 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Managers : MonoBehaviour
 {
-
+    static bool isQuit = false;
     static Managers instance; // ���ϼ��� ����ȴ�
-    static Managers Instance { get { Init(); return instance; } } // ������ �Ŵ����� �����´�
+    static Managers Instance { get {
+            if (!isQuit) 
+            {
+                Init();
+            }
+            return instance; } } // ������ �Ŵ����� �����´�
     
     #region CoreManager
     private PoolManager pool = new PoolManager();
@@ -75,5 +81,18 @@ public class Managers : MonoBehaviour
         Pool.Clear();
         Keyword.Clear();
         Sound.Clear();
+    }
+    private void OnApplicationQuit()
+    {
+        isQuit = true;
+        //// DontDestroyOnLoad로 표시된 모든 게임 오브젝트를 찾아서 배열에 저장합니다.
+        //GameObject[] dontDestroyObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.transform.parent == null && obj.scene.name == null).ToArray();
+
+        //// 배열에 저장된 모든 게임 오브젝트의 이름을 출력합니다.
+        //foreach (GameObject obj in dontDestroyObjects)
+        //{
+        //    Debug.Log(obj.name);
+        //    Destroy(obj);
+        //}
     }
 }
