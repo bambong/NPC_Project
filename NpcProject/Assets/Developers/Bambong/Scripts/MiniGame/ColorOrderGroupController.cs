@@ -60,13 +60,13 @@ public class ColorOrderGroupController : UI_Base
         orderNodes.Add(node);
         return node;
     }
-    public void InitData(MiniGameManager manager , MiniGameColorGroupData data)
+    public void InitData(MiniGameManager manager , MiniGameManager.ColorOrder data , int answerIndex)
     {
-        image.color = manager.GetOrderKeyColor(data.Key);
+        image.color = data.color;
         imageGroup.alpha = 0;
         miniGameManager = manager;
-        string[] splitKey = data.OrderKey.Split(',');
-        answerKey = data.Key;
+        string[] splitKey = data.forMakeKeys.Split(',');
+        answerKey = answerIndex;
         for (int i =0; i < splitKey.Length; ++i) 
         {
             var temp = CreateResultNode();

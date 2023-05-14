@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Analytics;
@@ -13,36 +14,27 @@ using UnityEngine.UI;
 
 using Random = UnityEngine.Random;
 
-[Serializable]
-public class MiniGameColorGroupData 
-{
-    public int Key;
-    public string OrderKey;
-}
+
 
 public class MiniGameManager : MonoBehaviour
 {
-    public enum SELECT_TYPE 
+
+    [Serializable]
+    public struct ColorOrder
     {
-        Row = 1 ,
-        Column = -1
+        public Color color;
+        public string forMakeKeys;
     }
 
+    public enum SELECT_TYPE
+    {
+        Row = 1,
+        Column = -1
+    }
+    [Header("LEVEL_DATA")]
     [SerializeField]
-    private List<MiniGameColorGroupData> miniGameColorGroupDatas;
-    [SerializeField]
-    private List<Color> orderKeyColors;
+    private MiniGameLevelData miniGameLevelData;
 
-    [SerializeField]
-    private int[] answerColorKey;
-
-    [SerializeField]
-    private string[] answerKey;
-
-    [SerializeField]
-    private string[] curGameKeys;
-   
-   
     [SerializeField]
     private ResultPanelController resultText;
     [SerializeField]
@@ -65,14 +57,11 @@ public class MiniGameManager : MonoBehaviour
 
     [SerializeField]
     private GridLayoutGroup gridLayoutGroup;
-    [SerializeField]
-    private int row = 1; 
-    [SerializeField]
-    private int column =1;
+
     [SerializeField]
     private float space = 10f;
     [SerializeField]
-    private float childSize =1;
+    private float childSize = 1;
 
     [Header("MMF Effect")]
     [SerializeField]
@@ -93,15 +82,18 @@ public class MiniGameManager : MonoBehaviour
     private List<ResultColorNodeController> resultColorNodes = new List<ResultColorNodeController>();
 
     private List<List<MiniGameNodeController>> nodeMap = new List<List<MiniGameNodeController>>();
-    
-    private Vector2Int pointIndex;
 
+    private List<string> curGameKeys;
+    private Vector2Int pointIndex;
     private SELECT_TYPE curSelectType = SELECT_TYPE.Row;
     private int curResultIndex = 0;
     private bool iSGameStart = false;
     private bool isGameEnd = false;
     private bool isTimeLimit = false;
     private float curTime;
+    private int row {get=>miniGameLevelData.row;}
+    private int column {get=>miniGameLevelData.column;}
+
     private void Start()
     {
         for (int i = 0; i < row; i++)
@@ -109,7 +101,8 @@ public class MiniGameManager : MonoBehaviour
             nodeMap.Add(new List<MiniGameNodeController>());
         }
         DOTween.SetTweensCapacity(200, 100);
-        orderColorLayout.Init(answerColorKey, this);
+        orderColorLayout.Init(miniGameLevelData.answerColorKey, this);
+        InitCurGameKeys();
         InitOrderNode();
         InitResultNode();
         InitLayOut();
@@ -122,6 +115,18 @@ public class MiniGameManager : MonoBehaviour
         //s.Append(backGround.DOFade(0, 2f));
         //s.Play();
         OpenPanel(1.8f);
+    }
+    private void InitCurGameKeys() 
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < miniGameLevelData.colorOrders.Count; ++i) 
+        {
+            stringBuilder.Append(miniGameLevelData.colorOrders[i].forMakeKeys);
+            stringBuilder.Append(',');
+        }
+        stringBuilder.Length--; // 마지막 문자 제거
+        //stringBuilder.Remove(stringBuilder.Length - 1, 1);
+        curGameKeys = stringBuilder.ToString().Split(',').Distinct().ToList();
     }
     public void OpenPanel(float interval) 
     {
@@ -140,24 +145,31 @@ public class MiniGameManager : MonoBehaviour
     {
         CloseNodes();
         Sequence seq = DOTween.Sequence();
-        seq.AppendInterval((2*(row-1)+1) * 0.1f + 0.2f);
+        seq.AppendInterval((2*(row - 1)+1) * 0.1f + 0.2f);
         seq.AppendCallback(() => { gamePanel.Close(); ruleTextGroup.DOFade(0,0.2f).OnComplete(()=> { rulePanel.Close(); }); orderPanel.Close(action); });
         seq.Play();
     }
 
     public void InitOrderNode()
     {
-        for (int i =0; i < miniGameColorGroupDatas.Count; i++) 
+        for (int i =0; i < miniGameLevelData.colorOrders.Count; i++) 
         {
             var temp = CreateColorOrder(orderParent);
-            temp.InitData(this, miniGameColorGroupDatas[i]);
+            temp.InitData(this, miniGameLevelData.colorOrders[i],i);
             orderColorGroups.Add(temp);
            // temp.SetKey(splitStrs[i]);
-        }  
+        }
+        orderColorGroups.Shuffle();
+
+        for( int i = 0; i < orderColorGroups.Count; ++i) 
+        {
+            orderColorGroups[i].transform.SetSiblingIndex(i);
+        }
+
     }
     public void InitResultNode()
     {
-        for (int i = 0; i < answerColorKey.Length; i++)
+        for (int i = 0; i < miniGameLevelData.answerColorKey.Length; i++)
         {
             var temp = CreateResultColorNode(resultParent);
             resultColorNodes.Add(temp);
@@ -170,13 +182,13 @@ public class MiniGameManager : MonoBehaviour
         gridLayoutGroup.cellSize = new Vector2(childSize,childSize);
         gridLayoutGroup.spacing = new Vector2(space,space);
         gridLayoutGroup.constraint = GridLayoutGroup.Constraint.FixedRowCount;
-        gridLayoutGroup.constraintCount = row;
+        gridLayoutGroup.constraintCount = miniGameLevelData.row;
     }
     public void InitNode() 
     {
-        for (int i = 0; i < row; i++)
+        for (int i = 0; i < miniGameLevelData.row; i++)
         {
-            for (int j = 0; j < column; j++)
+            for (int j = 0; j < miniGameLevelData.column; j++)
             {
                 nodeMap[i].Add(CreateNode(new Vector2Int(i, j)));
             }
@@ -185,7 +197,7 @@ public class MiniGameManager : MonoBehaviour
     public MiniGameNodeController CreateNode(Vector2Int pos) 
     {
          var node = Managers.UI.MakeSubItem<MiniGameNodeController>(gridLayoutGroup.transform , "MiniGame/MiniGameNode") ;
-        node.SetData(this, pos, curGameKeys[Random.Range(0, curGameKeys.Length)]);
+        node.SetData(this, pos, curGameKeys[Random.Range(0, curGameKeys.Count)]);
         return node;
     }
     public ColorOrderGroupController CreateColorOrder(Transform parent)
@@ -198,12 +210,12 @@ public class MiniGameManager : MonoBehaviour
 
         StopAllCoroutines();
         SetStateInit();
-        for (int i = 0; i < row; i++)
+        for (int i = 0; i <row; i++)
         {
             for (int j = 0; j < column; j++)
             {
                 nodeMap[i][j].ResetNode();
-                nodeMap[i][j].SetKey(curGameKeys[Random.Range(0, curGameKeys.Length)]);
+                nodeMap[i][j].SetKey(curGameKeys[Random.Range(0, curGameKeys.Count)]);
             }
         }
         for (int i = 0; i < orderColorGroups.Count; i++)
@@ -222,7 +234,7 @@ public class MiniGameManager : MonoBehaviour
     {
         //r * c 짝수인지 홀수인지 확인
         int maxCount = (row * column) % 2 == 0 ? row * column : row * column - 2;
-        if (answerKey.Length > maxCount) 
+        if (miniGameLevelData.answerKey.Length > maxCount) 
         {
             Debug.LogError("현재 노드 갯수로 불가능한 퍼즐 길이입니다.");
             return;
@@ -247,7 +259,7 @@ public class MiniGameManager : MonoBehaviour
         puzzle[randomX, randomY] = true;
         List<Vector2Int> clearList = new List<Vector2Int>();
         
-        while (puzzleStack.Count < answerKey.Length)
+        while (puzzleStack.Count < miniGameLevelData.answerKey.Length)
         {   
             if(curType == SELECT_TYPE.Row)
             {
@@ -313,11 +325,11 @@ public class MiniGameManager : MonoBehaviour
             puzzleStack.Push(new Vector2Int(randomX, randomY));
             puzzle[randomX, randomY] = true;
         } 
-        for(int i = answerKey.Length-1; i >= 0; --i) 
+        for(int i = miniGameLevelData.answerKey.Length-1; i >= 0; --i) 
         {
             var peek = puzzleStack.Peek();
             puzzleStack.Pop();
-            nodeMap[peek.x][peek.y].SetKey(answerKey[i]);
+            nodeMap[peek.x][peek.y].SetKey(miniGameLevelData.answerKey[i]);
             nodeMap[peek.x][peek.y].TestAnswerMod();
         }
     }
@@ -328,16 +340,16 @@ public class MiniGameManager : MonoBehaviour
     }
     public void PushColorNode(int key)
     {
-        if (answerColorKey[curResultIndex] != key)
+        if (miniGameLevelData.answerColorKey[curResultIndex] != key)
         {
             SetStateGameReset();
             return;
         }
-        resultColorNodes[curResultIndex].SetInnerColor(orderKeyColors[key]);
+        resultColorNodes[curResultIndex].SetInnerColor(miniGameLevelData.colorOrders[key].color);
         resultColorNodes[curResultIndex].SetIsSuccess(true);
         curResultIndex++;
 
-        if(curResultIndex >= answerColorKey.Length) 
+        if(curResultIndex >= miniGameLevelData.answerColorKey.Length) 
         {
             SetStateGameClear();
         }
@@ -521,7 +533,7 @@ public class MiniGameManager : MonoBehaviour
             interval += 0.1f;
         }
         interval = 0;
-        for (int i = 0; i < answerColorKey.Length; i++)
+        for (int i = 0; i < miniGameLevelData.answerColorKey.Length; i++)
         {
             resultColorNodes[i].OpenAnim(interval);
             interval += 0.1f;
@@ -585,7 +597,7 @@ public class MiniGameManager : MonoBehaviour
 
 
     }
-    public Color GetOrderKeyColor(int key) => orderKeyColors[key];
+    public Color GetOrderKeyColor(int key) => miniGameLevelData.colorOrders[key].color;
 
     public void SetStateGameReset()
     {

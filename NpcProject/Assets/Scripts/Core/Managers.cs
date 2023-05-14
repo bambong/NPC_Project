@@ -26,6 +26,7 @@ public class Managers : MonoBehaviour
     private SoundManager sound = new SoundManager();
     private TimeManager time = new TimeManager();
     private EffectManager effect = new EffectManager();
+    private DataManager data = new DataManager();
     public static KeywordManager Keyword { get => Instance.keyword; }
     public static CameraManager Camera { get => Instance.cam; }
     public static PoolManager Pool { get => Instance.pool; }
@@ -37,6 +38,7 @@ public class Managers : MonoBehaviour
     public static SoundManager Sound { get => Instance.sound; }
     public static TimeManager Time { get => Instance.time; }
     public static EffectManager Effect { get => Instance.effect; }
+    public static DataManager Data { get => Instance.data; }
     #endregion
 
     void Start()
@@ -65,6 +67,7 @@ public class Managers : MonoBehaviour
             instance.keyword.Init();
             instance.scene.Init();
             instance.sound.Init();
+            instance.data.Init();
         }
 
     }

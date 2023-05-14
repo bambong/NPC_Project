@@ -8,10 +8,12 @@ public class Define
     {
         Unknown,
         Clear,
+        DataPuzzle,
         Chapter_01,
         Chapter_01_Puzzle_01, 
         Chapter_01_Puzzle_02,
         Chapter_01_Puzzle_03,
+        Chapter_01_Puzzle_04,
         Serverroom
     }
     public enum WorldObject

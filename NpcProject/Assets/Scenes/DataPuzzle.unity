@@ -535,12 +535,11 @@ MonoBehaviour:
   resultText: {fileID: 729294779}
   successText: " .../Scripts/MiniGame/ColorOrderGroupController.cs  |  140 ++\r\n.../MiniGame/ColorOrderGroupController.cs.meta    
     |   11 +\r\n .../Bambong/Scripts/MiniGame/MiniGameManager.cs    |  465 +++-\r\n.../Scripts/MiniGame/MiniGameNodeController.cs    
-    |   52 +-\r\n.../Scripts/MiniGame/MiniGamePanelController.cs    |  106 +\r\n
-    .../MiniGame/MiniGamePanelController.cs.meta       |   11 +\r\n.../Scripts/MiniGame/OrderColorLayoutController.cs
-    |   25 +\r\n.../MiniGame/OrderColorLayoutController.cs.meta    |   11 +\r\n .../Scripts/MiniGame/ResultColorNodeController.cs 
-    |   75 +\r\n.../MiniGame/ResultColorNodeController.cs.meta     |   11 +\r\n.../Scripts/MiniGame/ResultNodeController.cs      
-    |   25 +\r\n .../Bambong/Shaders/BoardFlowHalfColor.mat.meta    |    4 +-\r\n.../Bambong/Shaders/New
-    Shader Graph.shadergraph   |  642 ------\r\n.../Bambong/Shaders/OnlyGlowColor.shadergraph     
+    |   52 +-\r\n.../Scripts/MiniGame/MiniGamePanelController.cs    |  106 +\r\n.../MiniGame/MiniGamePanelController.cs.meta      
+    |   11 +\r\n.../Scripts/MiniGame/OrderColorLayoutController.cs |   25 +\r\n.../MiniGame/OrderColorLayoutController.cs.meta   
+    |   11 +\r\n .../Scripts/MiniGame/ResultColorNodeController.cs  |   75 +\r\n.../MiniGame/ResultColorNodeController.cs.meta    
+    |   11 +\r\n.../Scripts/MiniGame/ResultNodeController.cs       |   25 +\r\n .../Bambong/Shaders/BoardFlowHalfColor.mat.meta   
+    |    4 +-\r\n.../Bambong/Shaders/New Shader Graph.shadergraph   |  642 ------\r\n.../Bambong/Shaders/OnlyGlowColor.shadergraph     
     | 1255 +++++++++++\r\n ...ergraph.meta => OnlyGlowColor.shadergraph.meta} |   
     2 +-\r\n .../Shaders/Shader Graphs_OnlyGlowColor.mat        |   44 +\r\n .../Shaders/Shader
     Graphs_OnlyGlowColor.mat.meta   |    8 +\r\nNpcProject/Assets/Fonts/LINESeedKR-Bd
@@ -551,14 +550,12 @@ MonoBehaviour:
     |   78 +\r\nNpcProject/Assets/Prefabs/ColorKeyGo.prefab.meta   |    7 +\r\n NpcProject/Assets/Prefabs/GamePanel.prefab        
     |  546 +++++\r\nNpcProject/Assets/Prefabs/GamePanel.prefab.meta    |    7 +\r\nNpcProject/Assets/Prefabs/OrderPanel.prefab       
     |  508 +++++\r\n NpcProject/Assets/Prefabs/OrderPanel.prefab.meta   |    7 +\r\n.../UI/SubItem/KeywordSlotController.prefab       
-    |  972 +++++++++\r\n...efab.meta => KeywordSlotController.prefab.meta} |    0\r\n
-    .../Prefabs/UI/SubItem/KeywordSlotUI.prefab        |  167 +-\r\n .../UI/SubItem/KeywrodSlotController.prefab       
-    |  264 ---\r\n.../UI/SubItem/MiniGame/ColorOrderGroup.prefab     |  305 +++\r\n
-    .../SubItem/MiniGame/ColorOrderGroup.prefab.meta   |    7 +\r\n.../UI/SubItem/MiniGame/ResultColorNode.prefab    
-    |  171 ++\r\n.../SubItem/MiniGame/ResultColorNode.prefab.meta   |    7 +\r\n
-    .../Prefabs/UI/SubItem/MiniGame/ResultNode.prefab  |  161 +-\r\n.../UI/WorldSpace/KeywordWorldSlotLayout.prefab   
-    |    2 +-\r\n.../Assets/Scripts/Controllers/KeywordEntity.cs    |    5 +-\r\n
-    .../Scripts/Controllers/KeywordSlotUiController.cs |  150 +-\r\nNpcProject/Assets/Scripts/Utils/Extension.cs      
+    |  972 +++++++++\r\n...efab.meta => KeywordSlotController.prefab.meta} |    0\r\n.../Prefabs/UI/SubItem/KeywordSlotUI.prefab       
+    |  167 +-\r\n .../UI/SubItem/KeywrodSlotController.prefab        |  264 ---\r\n.../UI/SubItem/MiniGame/ColorOrderGroup.prefab    
+    |  305 +++\r\n.../SubItem/MiniGame/ColorOrderGroup.prefab.meta   |    7 +\r\n.../UI/SubItem/MiniGame/ResultColorNode.prefab    
+    |  171 ++\r\n.../SubItem/MiniGame/ResultColorNode.prefab.meta   |    7 +\r\n.../Prefabs/UI/SubItem/MiniGame/ResultNode.prefab 
+    |  161 +-\r\n.../UI/WorldSpace/KeywordWorldSlotLayout.prefab    |    2 +-\r\n.../Assets/Scripts/Controllers/KeywordEntity.cs   
+    |    5 +-\r\n.../Scripts/Controllers/KeywordSlotUiController.cs |  150 +-\r\nNpcProject/Assets/Scripts/Utils/Extension.cs      
     |   24 +-\r\n.../Assets/Textures/Icons/debug-icon-panel.png     |  Bin 0 -> 16768
     bytes\r\n.../Textures/Icons/debug-icon-panel.png.meta       |  159 ++\r\n ...Image-CodePanel(Body)-DataPuzzle(Test).png.meta
     |    8 +-\r\n.../Image-CodePanel(Icon)-DataPuzzle(Test).png     |  Bin 0 -> 1025
@@ -2526,35 +2523,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 235574aee78685f458758b9fb996ac94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  miniGameColorGroupDatas:
-  - Key: 3
-    OrderKey: DB,BT
-  - Key: 2
-    OrderKey: BT,AW,C5
-  - Key: 1
-    OrderKey: AW,C5,HP
-  - Key: 0
-    OrderKey: HP,QC
-  orderKeyColors:
-  - {r: 0.2783019, g: 1, b: 0.49471304, a: 1}
-  - {r: 1, g: 0.3066038, b: 0.3066038, a: 1}
-  - {r: 0.25943398, g: 1, b: 0.97656494, a: 1}
-  - {r: 1, g: 0.98936427, b: 0.2216981, a: 1}
-  answerColorKey: 03000000020000000100000000000000
-  answerKey:
-  - DB
-  - BT
-  - AW
-  - C5
-  - HP
-  - QC
-  curGameKeys:
-  - DB
-  - BT
-  - AW
-  - C5
-  - HP
-  - QC
+  miniGameLevelData: {fileID: 11400000, guid: 15bc5b6f2b273a84ea9481c7e812e783, type: 2}
   resultText: {fileID: 171131082}
   orderColorLayout: {fileID: 799554117}
   orderParent: {fileID: 980701532}
@@ -2565,8 +2534,6 @@ MonoBehaviour:
   timeText: {fileID: 1408023333}
   timeLimit: 5
   gridLayoutGroup: {fileID: 1966352180}
-  row: 5
-  column: 5
   space: 20
   childSize: 100
   timeLimitEffect: {fileID: 2020106187}
