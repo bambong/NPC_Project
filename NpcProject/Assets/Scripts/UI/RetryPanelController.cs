@@ -24,6 +24,7 @@ public class RetryPanelController : UI_Base
     }
     public void ButtonActive()
     {
+        Managers.Sound.StopBGM(); // BGM FadeOUT
         resetButton.interactable = false;
         Managers.Scene.ReLoadCurrentScene();
     }
@@ -74,6 +75,7 @@ public class RetryPanelController : UI_Base
         {
             if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.RETRY_KEY)))
             {
+                Managers.Sound.StopBGM();
                 Managers.Scene.ReLoadCurrentScene();
                 //  Close();
                 yield break;

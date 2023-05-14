@@ -12,11 +12,9 @@ public class SoundManager
     private Bus bgmBus;
     private Bus sfxBus;
 
-    //public EventInstance bgmInstance;
     public EventInstance sfxInstance;
-
     public StudioEventEmitter bgmEmitter;
-    private int bgmTime;
+
 
     public void Init()
     {
@@ -24,10 +22,7 @@ public class SoundManager
         bgmBus = RuntimeManager.GetBus("bus:/Master/BGM");
         sfxBus = RuntimeManager.GetBus("bus:/Master/SFX");
 
-        CreateBGMEmitter();        
-
-        SceneManager.activeSceneChanged += SceneManagerOnactiveSceneChanged;
-        SceneManagerOnactiveSceneChanged(SceneManager.GetSceneByName("NULL"), SceneManager.GetActiveScene());
+        CreateBGMEmitter();
     }
 
     private void CreateBGMEmitter()
@@ -39,52 +34,51 @@ public class SoundManager
         bgmEmitter = instance.GetComponent<StudioEventEmitter>();
     }
 
-
-    /// <summary>
-    /// BGM 파라미터 값을 바꿉니다.
-    /// </summary>
-    /// <param name="name">파라미터 이름</param>
-    /// <param name="value">파라미터 값</param>
-    //public void BGMChange(string name, float value)
-    //{
-    //    bgmInstance.getTimelinePosition(out bgmTime);
-    //    bgmInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-    //    bgmInstance.setTimelinePosition(bgmTime);
-    //    bgmInstance.setParameterByName(name, 1.0f);
-    //    bgmInstance.start();
-    //}
-
-    private void SceneManagerOnactiveSceneChanged(Scene arg0, Scene arg1)
-    {
-        LoadBank(arg1);
-    }
-
-    public bool CompareScene(Scene scene, string sceneName)
-    {
-        return scene.name.Equals(sceneName);
-    }
-
     public void LoadBank(Scene scene)
     {
-        Debug.Log(scene.name + "Bank Load");
         RuntimeManager.LoadBank(scene.name);
     }
+
+    #region BGMControl
     public void PlayBGM() => bgmEmitter.Play();
+
+    public void StopBGM(float fadeoutTime = 1.0f)
+    {
+        Managers.Scene.CurrentScene.StartCoroutine(Stop(fadeoutTime));
+    }
+
+    public void ChangeBGM(EventReference bgm, string param = null, float value = 0)
+    {
+        if (param == null)
+        {
+            bgmEmitter.ChangeEvent(bgm);
+        }
+        else
+        {
+            bgmEmitter.SetParameter(param, value);
+        }
+    }
+
+    private IEnumerator Stop(float fadeOutDuration)
+    {
+        float startVolume;
+
+        bgmEmitter.EventInstance.getParameterByName("Volume", out startVolume);
+        for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / fadeOutDuration)
+        {
+            float volume = Mathf.Lerp(1.0f, 0.0f, t);
+            bgmEmitter.EventInstance.setParameterByName("Volume", volume);
+            yield return null;
+        }
+        bgmEmitter.Stop();
+    }
+    #endregion
+
 
     public void PlaySFX(string eventpath)
     {
         sfxInstance = RuntimeManager.CreateInstance("event:/SFX/" + eventpath);
         sfxInstance.start();
-    }
-
-    public void ChangeBGM(EventReference bgm)
-    {
-        bgmEmitter.ChangeEvent(bgm);
-    }
-
-    public void ChangeBGM(string param, float value)
-    {
-        bgmEmitter.SetParameter(param, value);
     }
 
     public void SetPauseBGM(bool pause) => bgmEmitter.SetPause(pause);
@@ -97,9 +91,7 @@ public class SoundManager
 
     public void Clear()
     {
-        bgmEmitter.Stop();
-
-        //bgmInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-        //bgmInstance.release();
+        StopBGM();
     }
+
 }
