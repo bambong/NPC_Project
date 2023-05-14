@@ -143,8 +143,9 @@ public class KeywordEntity : MonoBehaviour
 
         OriginScale = transform.lossyScale;
         Managers.Keyword.AddSceneEntity(this);
-        keywordSlotUiController = Managers.UI.MakeSubItem<KeywordSlotUiController>(Managers.Keyword.KeywordEntitySlots, "KeywrodSlotController");
+        keywordSlotUiController = Managers.UI.MakeSubItem<KeywordSlotUiController>(Managers.Keyword.KeywordEntitySlots, "KeywordSlotController");
         keywordSlotUiController.RegisterEntity(this);
+        keywordSlotUiController.SetKeywordsLength(keywords.Length);
         keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null, worldSlotLayoutName);
         keywordWorldSlotLayout.RegisterEntity(transform, keywords.Length);
         ClearWireFrameColor();
@@ -251,7 +252,7 @@ public class KeywordEntity : MonoBehaviour
             }
             else
             {
-                CloseKeywordSlot();
+               CloseKeywordSlot();
             }
             yield return null;
         }

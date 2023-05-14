@@ -13,6 +13,9 @@ public class ResultNodeController : UI_Base
     private TextMeshProUGUI text;
     [SerializeField]
     private Image outImage;
+    [SerializeField]
+    private Image outlineImage;
+
 
     [SerializeField]
     private RectTransform rectTransform;
@@ -62,6 +65,30 @@ public class ResultNodeController : UI_Base
         sequence.Append(rectTransform.DOScale(0, 0.2f));
         sequence.Play();
     }
+    public void ResetNode()
+    {
+        //SetKey("");
+        isSuccess = false;
+        outlineImage.DOKill();
+        outlineImage.DOFade(0, 0);
+        outImage.color = Color.white;
+    }
+
+    public void SetOutline(bool isOn) 
+    {
+        outlineImage.DOKill();
+        if (isOn) 
+        {
+            outlineImage.gameObject.SetActive(true);
+            outlineImage.DOFade(0, 0);
+            outlineImage.DOFade(1, 0.5f).SetLoops(-1, LoopType.Yoyo);
+        }
+        else 
+        {
+            outlineImage.gameObject.SetActive(false);
+        }
+    }
+
     public override void Init()
     {
   
