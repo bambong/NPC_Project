@@ -1,12 +1,14 @@
 using DG.Tweening;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
 
-public class ResultTextController : MonoBehaviour
+public class ResultPanelController : MonoBehaviour
 {
-
+    [SerializeField]
+    private MiniGameManager miniGameManager;
 
     [SerializeField]
     private RectTransform rect;
@@ -30,6 +32,14 @@ public class ResultTextController : MonoBehaviour
     private float successTextTime = 2f;
     [SerializeField]
     private float failTextTime = 2f;
+
+    [SerializeField]
+    private List<ResultButtonController> resultButtons;
+
+    [SerializeField]
+    private string retrybutText;
+    [SerializeField]
+    private string exitbutText;
 
     private float height;
    
@@ -69,9 +79,6 @@ public class ResultTextController : MonoBehaviour
             curStr.Append('\n');
             if(i >= maxShowCount) 
             {
-                //var pos = rect.anchoredPosition;
-                //pos.y += moveHight;
-                //rect.anchoredPosition = pos;
                 rect.DOAnchorPosY(rect.anchoredPosition.y + moveHight, moveTime).SetEase(Ease.Linear);
             }
             codeText.DOText(curStr.ToString(), textTime).SetEase(Ease.Linear);
@@ -79,25 +86,62 @@ public class ResultTextController : MonoBehaviour
         }
         Sequence seq = DOTween.Sequence();
         seq.Append(codeText.DOFade(0, 0.5f));
-        seq.Append(resultText.DOText("SUCCESS", 0.5f)); ;
-        seq.Append(resultText.DOFade(0, 0)); ;
+        seq.Append(resultText.DOText("..", 1f));
+        seq.Append(resultText.DOText("...", 0.5f).SetLoops(3,LoopType.Yoyo));
+        seq.Append(resultText.DOText("...Progress success.", 1.5f));
+        seq.Append(resultText.DOFade(0, 0));
+        seq.AppendCallback(() => { OnSuccessButtonSet();  });
         seq.Append(resultText.DOFade(1, 0.2f).SetLoops(2));
         seq.Play();
     }
-
+    private void OnSuccessButtonSet() 
+    {
+        resultButtons[0].Open(0.2f, exitbutText, () => { OnExitButtonClick(true); });
+        resultButtons[1].Clear();
+    }
+    private void OnFailButtonSet()
+    {
+        resultButtons[0].Open(0.2f, retrybutText, () => { OnRetryButtonClick(); });
+        resultButtons[1].Open(0.3f, exitbutText, () => { OnExitButtonClick(false); });
+      
+    }
+    public void OnRetryButtonClick() 
+    {
+        resultButtons[0].Close(0);
+        resultButtons[1].Close(0.1f, miniGameManager.ResetPuzzle);
+    }
+    public void OnExitButtonClick(bool isSuccess)
+    {
+        resultButtons[0].Close(0);
+        resultButtons[1].Close(0.1f, () => 
+        {
+            if (isSuccess)
+            {
+                Managers.Data.ClearOnceEvent(miniGameManager.MiniGameLevelData.eventId);
+            }
+            var data = Managers.Data.LastSaveData;
+            Managers.Scene.LoadScene(data.sceneName);
+        });
+    }
     public void OnFail(float interval) 
     {
         Sequence seq = DOTween.Sequence();
         resultText.color = Color.red;
+        resultText.text = "    ";
         seq.AppendInterval(interval);
+        seq.Append(resultText.DOText("    ..", 1f));
+        seq.Append(resultText.DOText("    ...", 0.5f).SetLoops(3, LoopType.Yoyo));
         seq.Append(resultText.DOText(failText, failTextTime));
         seq.Append(resultText.DOFade(0, 0));
+        seq.AppendCallback(() => { OnFailButtonSet(); });
         seq.Append(resultText.DOFade(1, 0.2f).SetLoops(2));
         seq.Play();
        ;
     }
     public void ClearText() 
     {
+        rect.anchoredPosition = Vector2.zero;
+        codeText.DOFade(1, 0);
         resultText.text = "";
         codeText.text = "";
     }

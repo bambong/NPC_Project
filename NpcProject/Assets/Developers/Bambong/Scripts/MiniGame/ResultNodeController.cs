@@ -69,6 +69,8 @@ public class ResultNodeController : UI_Base
     {
         //SetKey("");
         isSuccess = false;
+        outlineImage.DOKill();
+        outlineImage.DOFade(0, 0);
         outImage.color = Color.white;
     }
 

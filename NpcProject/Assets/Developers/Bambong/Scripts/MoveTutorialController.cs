@@ -11,7 +11,7 @@ public class MoveTutorialController : MonoBehaviour, IInteraction
     [SerializeField]
     private MMFeedbacks feedbacks;
     public GameObject Go => gameObject;
-
+    public bool IsInteractAble => true;
     public void OnInteraction()
     {
         feedbacks.PlayFeedbacks();
