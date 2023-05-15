@@ -96,13 +96,13 @@ public class ResultPanelController : MonoBehaviour
     }
     private void OnSuccessButtonSet() 
     {
-        resultButtons[0].Open(0.2f, exitbutText, () => { OnRetryButtonClick(); });
+        resultButtons[0].Open(0.2f, exitbutText, () => { OnExitButtonClick(true); });
         resultButtons[1].Clear();
     }
     private void OnFailButtonSet()
     {
         resultButtons[0].Open(0.2f, retrybutText, () => { OnRetryButtonClick(); });
-        resultButtons[1].Open(0.3f, exitbutText, () => { OnExitButtonClick(); });
+        resultButtons[1].Open(0.3f, exitbutText, () => { OnExitButtonClick(false); });
       
     }
     public void OnRetryButtonClick() 
@@ -110,10 +110,18 @@ public class ResultPanelController : MonoBehaviour
         resultButtons[0].Close(0);
         resultButtons[1].Close(0.1f, miniGameManager.ResetPuzzle);
     }
-    public void OnExitButtonClick()
+    public void OnExitButtonClick(bool isSuccess)
     {
         resultButtons[0].Close(0);
-        resultButtons[1].Close(0.1f, miniGameManager.ResetPuzzle);
+        resultButtons[1].Close(0.1f, () => 
+        {
+            if (isSuccess)
+            {
+                Managers.Data.ClearOnceEvent(miniGameManager.MiniGameLevelData.eventId);
+            }
+            var data = Managers.Data.LastSaveData;
+            Managers.Scene.LoadScene(data.sceneName);
+        });
     }
     public void OnFail(float interval) 
     {

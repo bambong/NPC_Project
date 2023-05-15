@@ -16,6 +16,10 @@ public class Define
         Chapter_01_Puzzle_04,
         Serverroom
     }
+    public enum EventIdType
+    {
+        DataPuzzle = 90,
+    }
     public enum WorldObject
     {
         Player

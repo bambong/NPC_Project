@@ -20,6 +20,10 @@ public class SceneManagerEx
     {
         sceneTransition.StartCoroutine(LoadSceneCo(GetSceneName(type), onComplete));
     }
+    public void LoadScene(string sceneName, Action onComplete = null)
+    {
+        sceneTransition.StartCoroutine(LoadSceneCo(sceneName, onComplete));
+    }
 
     public void ReLoadCurrentScene(Action onComplete = null) 
     {
@@ -76,7 +80,6 @@ public class SceneManagerEx
 
     public void Clear()
     {
-        
         OnSceneUnload?.Invoke();
         OnSceneUnload = null;
         CurrentScene.Clear();

@@ -16,7 +16,7 @@ using Random = UnityEngine.Random;
 
 
 
-public class MiniGameManager : MonoBehaviour
+public class MiniGameManager : BaseScene
 {
 
     [Serializable]
@@ -93,9 +93,11 @@ public class MiniGameManager : MonoBehaviour
     private float curTime;
     private int row {get=>miniGameLevelData.row;}
     private int column {get=>miniGameLevelData.column;}
+    public MiniGameLevelData MiniGameLevelData { get => miniGameLevelData; }
 
     private void Start()
     {
+        LoadLevelData();
         for (int i = 0; i < row; i++)
         {
             nodeMap.Add(new List<MiniGameNodeController>());
@@ -115,6 +117,11 @@ public class MiniGameManager : MonoBehaviour
         //s.Append(backGround.DOFade(0, 2f));
         //s.Play();
         OpenPanel(1.8f);
+    }
+    private void LoadLevelData() 
+    {
+        miniGameLevelData = Managers.Data.DataPuzzleLevel;
+            //Managers.Resource.Load<MiniGameLevelData>($"Data/MiniGameLevelData/Level_{}");
     }
     private void InitCurGameKeys() 
     {
@@ -720,4 +727,8 @@ public class MiniGameManager : MonoBehaviour
        
     }
 
+    public override void Clear()
+    {
+        
+    }
 }

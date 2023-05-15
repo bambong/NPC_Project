@@ -6,6 +6,9 @@ using UnityEngine;
 [CreateAssetMenu( fileName = "MiniGameLevelData", menuName = "Scriptable Data/MiniGameLevelData", order = 2)]
 public class MiniGameLevelData : ScriptableObject
 {
+    public int progress = 0;
+    public int eventId = 0;
+
     public int row = 5;
     public int column = 5;
     public List<MiniGameManager.ColorOrder> colorOrders;

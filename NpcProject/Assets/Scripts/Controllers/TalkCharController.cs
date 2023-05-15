@@ -12,6 +12,7 @@ public class TalkCharController : MonoBehaviour, IInteraction
 
     public GameObject Go => gameObject;
 
+    public bool IsInteractAble => true;
 
     private bool isPlay = false;
 
