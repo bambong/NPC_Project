@@ -50,4 +50,17 @@ public static class Extension
 	{
 		return go != null && go.activeSelf;
 	}
+    public static void AddOrUpdateValue<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+    {
+        if (dictionary.ContainsKey(key))
+        {
+            // 키가 이미 존재하는 경우 값 덮어쓰기
+            dictionary[key] = value;
+        }
+        else
+        {
+            // 키가 존재하지 않는 경우 새로운 키와 값을 추가
+            dictionary.Add(key, value);
+        }
+    }
 }

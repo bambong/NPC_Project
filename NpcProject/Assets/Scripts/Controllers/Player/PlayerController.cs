@@ -6,8 +6,9 @@ using AmazingAssets.WireframeShader;
 using MoreMountains.Feedbacks;
 using Spine.Unity.Examples;
 using System.Linq;
+using UnityEngine.Playables;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour , IDataHandler
 {
     [Header("Player Element")]
     [Space(1)]
@@ -425,7 +426,7 @@ public class PlayerController : MonoBehaviour
             SetstateDeath();
             return;
         }
-        Managers.Sound.AskSfxPlay(20007);
+        //Managers.Sound.AskSfxPlay(20007);
         hitFeedback.PlayFeedbacks();
     }
 
@@ -498,6 +499,15 @@ public class PlayerController : MonoBehaviour
         rigid.velocity = Vector3.zero;
         gameObject.SetActive(false);
     }
-    #endregion
 
+    #endregion
+    public void LoadData(GameData gamedata)
+    {
+        transform.position = gamedata.playerPos;
+    }
+
+    public void SaveData(GameData gameData)
+    {
+        gameData.playerPos = transform.position;
+    }
 }

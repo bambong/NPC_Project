@@ -44,6 +44,7 @@ public class Managers : MonoBehaviour
     void Start()
     {
         Init();
+        
     }
 
     static void Init()

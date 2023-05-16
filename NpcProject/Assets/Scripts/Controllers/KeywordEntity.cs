@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -52,6 +52,17 @@ class CreateKeywordOption
 
 public class KeywordEntity : MonoBehaviour
 {
+
+    [Header("GUID")]
+    [SerializeField]
+    private string guId;
+    [ContextMenu("Generate GUID")]
+    private void GenerateGuid() 
+    {
+        guId = System.Guid.NewGuid().ToString();
+    }
+
+    [Space(10)]
     [Header("Keyword Stat")]
     [SerializeField]
     private E_KEYWORD_TYPE availableKeywordType = E_KEYWORD_TYPE.ALL;
@@ -577,5 +588,6 @@ public class KeywordEntity : MonoBehaviour
     }
     public void ClearVelocity()=> rigidbody.velocity = Vector3.zero;
     #endregion
+
 
 }

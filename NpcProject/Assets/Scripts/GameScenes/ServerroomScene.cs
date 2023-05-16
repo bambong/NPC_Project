@@ -20,16 +20,18 @@ public class ServerroomScene : BaseScene
     private int progress = 1;
     public override void Clear()
     {
-      
+        Managers.Data.SaveGame(SceneManager.GetActiveScene().name);
     }
 
     protected override void Init()
     {
         base.Init();
-        Managers.Data.SaveData(new SaveData(progress, SceneManager.GetActiveScene().name, playerSpawnSpot));
         var player = Managers.Game.Spawn(Define.WorldObject.Player, "Player");
         player.transform.position = playerSpawnSpot;
         Managers.Camera.InitCamera(new CameraInfo(vircam, player.transform));
         Managers.Talk.LoadTalkData(tutorialSceneTalkData);
+
+        Managers.Data.SaveData(new SaveData(progress, SceneManager.GetActiveScene().name, playerSpawnSpot));
+        Managers.Data.LoadGame(SceneManager.GetActiveScene().name);
     }
 }

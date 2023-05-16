@@ -8,8 +8,17 @@ using UnityEngine;
 //using UnityEditorInternal;
 
 [RequireComponent(typeof(Collider))]
-public class DebugZone : MonoBehaviour
+public class DebugZone : MonoBehaviour ,IDataHandler
 {
+    [Header("GUID")]
+    [SerializeField]
+    private string guId;
+    [ContextMenu("Generate GUID")]
+    private void GenerateGuid()
+    {
+        guId = System.Guid.NewGuid().ToString();
+    }
+    [Space(10)]
     [Header("디버그 모드 제한 시간 -1  = Infinity")]
     [SerializeField]
     private float debugAbleTime = -1f;
@@ -197,5 +206,42 @@ public class DebugZone : MonoBehaviour
             Managers.Game.RetryPanel.CloseResetButton();
         }
     }
+
+    public void LoadData(GameData gameData)
+    {
+        if(!gameData.playerKeywords.ContainsKey(guId)) 
+        {
+            return;
+        }
+        var frameDatas = gameData.playerKeywords[guId].playerFramDatas;
+        List<GameObject> temp = new List<GameObject>();
+        for(int i =0; i < frameDatas.Count; ++i) 
+        {
+            //if (frameDatas[i] == "") 
+            //{
+            //    temp.Add(null);
+            //    continue;
+            //}
+
+            temp.Add(Managers.Resource.Load<GameObject>($"Prefabs/UI/SubItem/KeywordPrefabs/{frameDatas[i]}"));
+        }
+        keywords = temp.ToArray();
+    }
     
+
+    public void SaveData(GameData gameData)
+    {
+        var data = new DebugZoneData();
+
+        for (int i = 0; i < playerFrames.Count; ++i)
+        {
+            if (playerFrames[i].HasKeyword)
+            {
+                data.playerFramDatas.Add(playerFrames[i].CurFrameInnerKeyword.KewordId);
+                continue;
+            }
+           // data.playerFramDatas.Add("");
+        }
+        gameData.playerKeywords.AddOrUpdateValue(guId, data);
+    }
 }

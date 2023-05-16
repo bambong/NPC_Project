@@ -1,0 +1,34 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+
+
+
+[Serializable]
+public class GameData
+{
+   public string sceneName;
+   public Vector3 playerPos;
+   public Dictionary<string, DebugZoneData> playerKeywords = new Dictionary<string, DebugZoneData>();
+   public Dictionary<string, KeywordEntityData> keywordEntityDatas = new Dictionary<string, KeywordEntityData>();
+}
+
+public class KeywordEntityData 
+{
+    public class KeywordFrameData 
+    {
+        public bool isLock;
+        public string id;
+    }
+    public bool isEnable;
+    public Vector3 pos;
+    public Vector3 rot;
+    public Vector3 scale;
+    public List<KeywordFrameData> keywordFrameDatas = new List<KeywordFrameData>();
+}
+public class DebugZoneData
+{
+    public List<string> playerFramDatas = new List<string>(); 
+}

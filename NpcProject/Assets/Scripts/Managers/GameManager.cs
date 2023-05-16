@@ -37,6 +37,7 @@ public class GameManager
     {
         gameStateController = new GameStateController(this);
         retryPanel = Managers.UI.MakeSceneUI<RetryPanelController>(null, "RetryPanelUI");
+        prevGravity = Physics.gravity;
         SetStateNormal();
 
     }
