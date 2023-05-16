@@ -65,6 +65,7 @@ public class AttackKeyword : KeywordController
         }
         render.material = originMat;
         Managers.Effect.PlayEffect(Define.EFFECT.BombEffect,entity.transform);
+        Managers.Sound.PlaySFX("Error Effect Keyword");
         entity.DestroyKeywordEntity();
     }
 }

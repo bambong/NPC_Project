@@ -87,7 +87,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         {
             return;
         }
-        Managers.Sound.AskSfxPlay(20009);
+        Managers.Sound.PlaySFX("Click Keyword");
 
         SetDragState(true);
         SetMoveState(true);
@@ -144,7 +144,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
 #endif
             }
         }
-        Managers.Sound.AskSfxPlay(20011);
+        Managers.Sound.PlaySFX("ToDrop Keyword");
         ResetKeyword();
     }
 
@@ -200,7 +200,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         {
             if (!Input.GetMouseButton(0))
             {
-                Managers.Sound.AskSfxPlay(20011);
+                Managers.Sound.PlaySFX("ToDrop Keyword");
                 DragReset();
                 Debug.Log("유니티 드래그 버그 발생!");
                 yield break;

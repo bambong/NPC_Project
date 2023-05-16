@@ -4,8 +4,6 @@ using UnityEngine;
 using Cinemachine;
 public class GameScene : BaseScene
 {
-    [SerializeField]
-    private BgmData[] bgm;
 
     [SerializeField]
     private Vector3 playerSpawnSpot;
