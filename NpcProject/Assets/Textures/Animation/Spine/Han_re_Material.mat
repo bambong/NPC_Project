@@ -12,10 +12,10 @@ Material:
   m_ValidKeywords:
   - PIXELSNAP_ON
   - _ALPHABLEND_ON
+  - _EMISSION
   - _FIXED_NORMALS_MODELSPACE_BACKFACE
   - _OLD_HARD_RAMP
   - _RECEIVE_SHADOWS_OFF
-  - _RIM_LIGHTING
   - _STRAIGHT_ALPHA_INPUT
   m_InvalidKeywords:
   - _LIGHT_AFFECTS_ADDITIVE
@@ -64,17 +64,17 @@ Material:
     m_Floats:
     - PixelSnap: 1
     - _BlendAmount: 0
-    - _Brightness: 1
+    - _Brightness: 1.139
     - _BumpScale: 1
     - _Cull: 0
     - _CustomRenderQueue: 1
     - _Cutoff: 1
     - _DoubleSidedLighting: 0
     - _DstBlend: 10
-    - _EmissionPower: 0.29
+    - _EmissionPower: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
-    - _Hue: 0
+    - _Hue: -0.213
     - _LightAffectsAdditive: 1
     - _Metallic: 0
     - _OutlineMipLevel: 0
@@ -83,8 +83,8 @@ Material:
     - _OutlineWidth: 3
     - _ReceiveShadows: 0
     - _RenderQueue: 0
-    - _RimPower: 1
-    - _Saturation: 1
+    - _RimPower: 1.06
+    - _Saturation: 1.056
     - _ShadowAlphaCutoff: 0.8
     - _SrcBlend: 1
     - _StencilComp: 8
@@ -95,9 +95,9 @@ Material:
     - _ZWrite: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0.49411765, g: 0.49411765, b: 0.49411765, a: 1}
     - _FixedNormal: {r: 0, g: 0, b: 1, a: 1}
     - _OutlineColor: {r: 1, g: 1, b: 0, a: 1}
-    - _OverlayColor: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 0}
-    - _RimColor: {r: 0, g: 0, b: 0, a: 0}
+    - _OverlayColor: {r: 0.35377356, g: 0.6637641, b: 1, a: 1}
+    - _RimColor: {r: 1, g: 1, b: 1, a: 0.03529412}
   m_BuildTextureStacks: []
