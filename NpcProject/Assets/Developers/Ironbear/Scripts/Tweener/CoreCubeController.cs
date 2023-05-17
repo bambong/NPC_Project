@@ -4,7 +4,7 @@ using DG.Tweening;
 public class CoreCubeController : MonoBehaviour
 {
     [SerializeField]
-    private GameObject[] cubes;
+    private SubCubeController[] cubes;
     [SerializeField]
     private Vector3 targetScale;
 
@@ -18,10 +18,41 @@ public class CoreCubeController : MonoBehaviour
         PlayRandomAnimation();
     }
 
+    public void OpenAll() 
+    { 
+        for(int i =0; i < cubes.Length; i++) 
+        {
+            cubes[i].OpenAnim();
+        }
+    }
+    public void CloseAll() 
+    {
+       
+        for (int i = 0; i < cubes.Length; i++)
+        {
+            cubes[i].CloseAnim();
+        }
+    }
+    public void SuccessAll() 
+    {
+        //var pos = transform.position;
+        //pos.y = -15f;
+        //Sequence seq = DOTween.Sequence();
+        //seq.AppendInterval(1f);
+        //seq.Append(transform.DOMove(pos, 3.5f));
+        //seq.Play();
+        for (int i = 0; i < cubes.Length; i++)
+        {
+            cubes[i].SuccessAnim();
+        }
+
+    }
+
+
     private void PlayRandomAnimation()
     {
         int randomIndex = Random.Range(0, cubes.Length);
-        GameObject selectedGameObject = cubes[randomIndex];
+        GameObject selectedGameObject = cubes[randomIndex].gameObject;
 
         int randomAnimationIndex = Random.Range(1, 4);
         

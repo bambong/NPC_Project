@@ -8,16 +8,8 @@ using UnityEngine;
 //using UnityEditorInternal;
 
 [RequireComponent(typeof(Collider))]
-public class DebugZone : MonoBehaviour ,IDataHandler
+public class DebugZone : GuIdBehaviour, IDataHandler
 {
-    [Header("GUID")]
-    [SerializeField]
-    private string guId;
-    [ContextMenu("Generate GUID")]
-    private void GenerateGuid()
-    {
-        guId = System.Guid.NewGuid().ToString();
-    }
     [Space(10)]
     [Header("디버그 모드 제한 시간 -1  = Infinity")]
     [SerializeField]
@@ -209,11 +201,11 @@ public class DebugZone : MonoBehaviour ,IDataHandler
 
     public void LoadData(GameData gameData)
     {
-        if(!gameData.playerKeywords.ContainsKey(guId)) 
+        if(!gameData.playerKeywords.ContainsKey(GuId)) 
         {
             return;
         }
-        var frameDatas = gameData.playerKeywords[guId].playerFramDatas;
+        var frameDatas = gameData.playerKeywords[GuId].playerFramDatas;
         List<GameObject> temp = new List<GameObject>();
         for(int i =0; i < frameDatas.Count; ++i) 
         {

@@ -120,7 +120,10 @@ public class MiniGameManager : BaseScene
     }
     private void LoadLevelData() 
     {
-        miniGameLevelData = Managers.Data.DataPuzzleLevel;
+        if (Managers.Data.DataPuzzleLevel != null)
+        {
+            miniGameLevelData = Managers.Data.DataPuzzleLevel;
+        }
             //Managers.Resource.Load<MiniGameLevelData>($"Data/MiniGameLevelData/Level_{}");
     }
     private void InitCurGameKeys() 
@@ -131,7 +134,7 @@ public class MiniGameManager : BaseScene
             stringBuilder.Append(miniGameLevelData.colorOrders[i].forMakeKeys);
             stringBuilder.Append(',');
         }
-        stringBuilder.Length--; // ¸¶Áö¸· ¹®ÀÚ Á¦°Å
+        stringBuilder.Length--; // ë§ˆì§€ë§‰ ë¬¸ì ì œê±°
         //stringBuilder.Remove(stringBuilder.Length - 1, 1);
         curGameKeys = stringBuilder.ToString().Split(',').Distinct().ToList();
     }
@@ -239,11 +242,11 @@ public class MiniGameManager : BaseScene
     }
     public void InitPuzzle() 
     {
-        //r * c Â¦¼öÀÎÁö È¦¼öÀÎÁö È®ÀÎ
+        //r * c ì§ìˆ˜ì¸ì§€ í™€ìˆ˜ì¸ì§€ í™•ì¸
         int maxCount = (row * column) % 2 == 0 ? row * column : row * column - 2;
         if (miniGameLevelData.answerKey.Length > maxCount) 
         {
-            Debug.LogError("ÇöÀç ³ëµå °¹¼ö·Î ºÒ°¡´ÉÇÑ ÆÛÁñ ±æÀÌÀÔ´Ï´Ù.");
+            Debug.LogError("í˜„ì¬ ë…¸ë“œ ê°¯ìˆ˜ë¡œ ë¶ˆê°€ëŠ¥í•œ í¼ì¦ ê¸¸ì´ì…ë‹ˆë‹¤.");
             return;
         }
         //int[][] a = new int[row][column];
@@ -282,7 +285,7 @@ public class MiniGameManager : BaseScene
                 {
                     if(puzzleStack.Count <= 0)
                     {
-                        Debug.LogError("ÆÛÁñ ±¸¼º ½ÇÆĞ!!");
+                        Debug.LogError("í¼ì¦ êµ¬ì„± ì‹¤íŒ¨!!");
                         return;
                     }
                     for(int i =0; i < clearList.Count; ++i) 
@@ -311,7 +314,7 @@ public class MiniGameManager : BaseScene
                 {
                     if (puzzleStack.Count <= 0)
                     {
-                        Debug.LogError("ÆÛÁñ ±¸¼º ½ÇÆĞ!!");
+                        Debug.LogError("í¼ì¦ êµ¬ì„± ì‹¤íŒ¨!!");
                         return;
                     }
                     for (int i = 0; i < clearList.Count; ++i)

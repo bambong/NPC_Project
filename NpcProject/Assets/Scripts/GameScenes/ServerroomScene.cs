@@ -20,7 +20,7 @@ public class ServerroomScene : BaseScene
     private int progress = 1;
     public override void Clear()
     {
-       Managers.Data.SaveGame(SceneManager.GetActiveScene().name);
+      // Managers.Data.SaveGame(SceneManager.GetActiveScene().name);
     }
 
     protected override void Init()
