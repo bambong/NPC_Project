@@ -11,7 +11,10 @@ public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBe
 
     [SerializeField]
     private RectTransform rectTransform;
+    [SerializeField]
+    private Canvas canvas;
 
+    private CanvasGroup canvasGroup;
     private int prevSibilintIndex;
     private Transform startParent;
     private Vector3 startDragPoint;
@@ -30,6 +33,7 @@ public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBe
     private void Start()
     {
         startDragPoint = GetComponent<RectTransform>().localPosition;
+        canvasGroup = GetComponent<CanvasGroup>();
     }
 
     public override void Init()
@@ -58,6 +62,7 @@ public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBe
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        canvasGroup.blocksRaycasts = false;
         startParent = transform.parent;
         transform.SetParent(GameObject.FindGameObjectWithTag("UI Canvas").transform);
 
@@ -109,6 +114,8 @@ public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBe
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        canvasGroup.blocksRaycasts = true;
+
         SetDragState(false);
         transform.SetParent(startParent);
         //transform.localPosition = startDragPoint;

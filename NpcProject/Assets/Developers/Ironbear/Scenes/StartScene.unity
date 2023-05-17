@@ -358,7 +358,7 @@ RectTransform:
   - {fileID: 814507984}
   - {fileID: 1739624838}
   m_Father: {fileID: 1915654076}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1494,6 +1494,7 @@ GameObject:
   - component: {fileID: 801175620}
   - component: {fileID: 801175619}
   - component: {fileID: 801175621}
+  - component: {fileID: 801175622}
   m_Layer: 5
   m_Name: puzzle_box_1
   m_TagString: Untagged
@@ -1573,6 +1574,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 801175618}
+  canvas: {fileID: 0}
+--- !u!225 &801175622
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801175617}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &801567379
 GameObject:
   m_ObjectHideFlags: 0
@@ -1759,6 +1773,7 @@ GameObject:
   - component: {fileID: 825374963}
   - component: {fileID: 825374962}
   - component: {fileID: 825374964}
+  - component: {fileID: 825374965}
   m_Layer: 5
   m_Name: WordPuzzleKeyword
   m_TagString: Untagged
@@ -1838,6 +1853,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 825374960}
+  canvas: {fileID: 1915654075}
+--- !u!225 &825374965
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 825374959}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &852132908
 GameObject:
   m_ObjectHideFlags: 0
@@ -1972,68 +2000,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 852132908}
   m_CullTransparentMesh: 1
---- !u!4 &868077847 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 473778, guid: 9931950f6db1a004b9396666b8e72eb8, type: 3}
-  m_PrefabInstance: {fileID: 912392643}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &912392643
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1915654076}
-    m_Modifications:
-    - target: {fileID: 194508, guid: 9931950f6db1a004b9396666b8e72eb8, type: 3}
-      propertyPath: m_Name
-      value: TB_GrowAndDropBounce
-      objectReference: {fileID: 0}
-    - target: {fileID: 473778, guid: 9931950f6db1a004b9396666b8e72eb8, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 473778, guid: 9931950f6db1a004b9396666b8e72eb8, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1.7655828
-      objectReference: {fileID: 0}
-    - target: {fileID: 473778, guid: 9931950f6db1a004b9396666b8e72eb8, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 3.3125424
-      objectReference: {fileID: 0}
-    - target: {fileID: 473778, guid: 9931950f6db1a004b9396666b8e72eb8, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 473778, guid: 9931950f6db1a004b9396666b8e72eb8, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 473778, guid: 9931950f6db1a004b9396666b8e72eb8, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 473778, guid: 9931950f6db1a004b9396666b8e72eb8, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 473778, guid: 9931950f6db1a004b9396666b8e72eb8, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 473778, guid: 9931950f6db1a004b9396666b8e72eb8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 473778, guid: 9931950f6db1a004b9396666b8e72eb8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 473778, guid: 9931950f6db1a004b9396666b8e72eb8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9931950f6db1a004b9396666b8e72eb8, type: 3}
 --- !u!1 &1085163753
 GameObject:
   m_ObjectHideFlags: 0
@@ -2071,7 +2037,7 @@ RectTransform:
   - {fileID: 1409459906}
   - {fileID: 801567380}
   m_Father: {fileID: 1915654076}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2164,7 +2130,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1915654076}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2318,6 +2284,7 @@ GameObject:
   - component: {fileID: 1229717519}
   - component: {fileID: 1229717518}
   - component: {fileID: 1229717520}
+  - component: {fileID: 1229717521}
   m_Layer: 5
   m_Name: puzzle_box_2
   m_TagString: Untagged
@@ -2397,6 +2364,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 1229717517}
+  canvas: {fileID: 0}
+--- !u!225 &1229717521
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1229717516}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1269876410
 GameObject:
   m_ObjectHideFlags: 0
@@ -2544,6 +2524,7 @@ GameObject:
   - component: {fileID: 1271016143}
   - component: {fileID: 1271016142}
   - component: {fileID: 1271016144}
+  - component: {fileID: 1271016145}
   m_Layer: 5
   m_Name: puzzle_box_3
   m_TagString: Untagged
@@ -2623,6 +2604,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 1271016141}
+  canvas: {fileID: 0}
+--- !u!225 &1271016145
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1271016140}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1299499786
 GameObject:
   m_ObjectHideFlags: 0
@@ -3938,7 +3932,7 @@ RectTransform:
   - {fileID: 245960158}
   - {fileID: 1576233658}
   m_Father: {fileID: 1915654076}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -4248,7 +4242,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 868077847}
   - {fileID: 1085163754}
   - {fileID: 1830804294}
   - {fileID: 210937672}

@@ -34,10 +34,11 @@ public class StartPanelController : UI_Base
             {
                 seq.AppendCallback(() =>
                 {
+                    seq.AppendInterval(0.3f);
                     tmpText.text = " ";
                 });
             }
-            seq.AppendInterval(0.3f);
+            seq.AppendInterval(0.1f);
         }
         seq.Play();
     }

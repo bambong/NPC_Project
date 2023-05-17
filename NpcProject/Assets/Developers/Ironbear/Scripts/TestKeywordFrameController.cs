@@ -12,17 +12,9 @@ public class TestKeywordFrameController : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        GameObject draggedObject = eventData.pointerDrag;
-
-        if (draggedObject != null)
-        {
-            draggedObject.transform.position = transform.position;
-        }
-        /*
         if (eventData.pointerDrag != null)
         {
             eventData.pointerDrag.GetComponent<RectTransform>().anchoredPosition = GetComponent<RectTransform>().anchoredPosition;
         }
-        */
     }
 }

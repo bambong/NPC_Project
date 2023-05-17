@@ -28,8 +28,7 @@ public class InputFieldController : UI_Base
     private bool isRestrict = false;
 
     public override void Init()
-    {
-        
+    {        
     }
 
     private void Awake()
