@@ -43,7 +43,7 @@ public class LogoPanelController : UI_Base
         for (int i = 0; i < btnsList.Length; i++)
         {
             GameObject btn = btnsList[i];
-            float delay = i * moveDelay;
+            float delay = i * moveDelay * 0.5f;
 
             btn.transform.DOLocalMoveX(btn.transform.localPosition.x + 380, moveDuration).SetEase(Ease.OutQuad).SetDelay(delay);
         }

@@ -12,7 +12,7 @@ public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBe
     [SerializeField]
     private RectTransform rectTransform;
     [SerializeField]
-    private Canvas canvas;
+    private Transform canvas;
 
     private CanvasGroup canvasGroup;
     private int prevSibilintIndex;
@@ -27,8 +27,6 @@ public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBe
     private bool isDrag = false;
     private bool isLock = false;
 
-    public KeywordFrameBase CurFrame { get => curFrame; }
-    public RectTransform RectTransform { get => rectTransform; }
 
     private void Start()
     {
@@ -62,11 +60,14 @@ public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBe
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        canvasGroup.blocksRaycasts = false;
         startParent = transform.parent;
-        transform.SetParent(GameObject.FindGameObjectWithTag("UI Canvas").transform);
 
-        prevSibilintIndex = rectTransform.GetSiblingIndex();
+        transform.SetParent(canvas);
+        transform.SetAsLastSibling();
+
+        canvasGroup.blocksRaycasts = false;
+
+        //prevSibilintIndex = rectTransform.GetSiblingIndex();
         /*
         if(IsDragable(eventData)||isMove)
         {
@@ -114,12 +115,26 @@ public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBe
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (transform.parent == canvas)
+        {
+            //transform.SetParent(startParent);
+            //rectTransform.position = startParent.GetComponent<RectTransform>().position;
+
+            transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
+        }
+        else
+        {
+            transform.SetParent(startParent);
+            //rectTransform.position = startParent.GetComponent<RectTransform>().position;
+        }
+
         canvasGroup.blocksRaycasts = true;
 
         SetDragState(false);
-        transform.SetParent(startParent);
-        //transform.localPosition = startDragPoint;
-        transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
+        //transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
+
+        Debug.Log(CheckOverlap());
+
         /*
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, results);
@@ -198,5 +213,22 @@ public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBe
         SetMoveState(false);
         SetDragState(false);
         curFrame.OnEndDrag();
+    }
+
+    public bool CheckOverlap()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity, LayerMask.GetMask("UI"));
+
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if(hits[i].collider.gameObject.CompareTag(KEYWORD_FRAME_TAG))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
