@@ -58,7 +58,7 @@ public class InputFieldController : UI_Base
     public void LoadNextScene()
     {
         SaveUserName();
-        SceneManager.LoadScene("Chapter_01");
+        Transitioner.Instance.TransitionToScene(2);
     }   
 
     public void StringCheck()
