@@ -24,7 +24,7 @@ public class KeywordEntityData
     }
     public bool isEnable;
     public Vector3 pos;
-    public Vector3 rot;
+    public Quaternion rot;
     public Vector3 scale;
     public List<KeywordFrameData> keywordFrameDatas = new List<KeywordFrameData>();
 }

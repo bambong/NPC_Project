@@ -12,21 +12,20 @@ public class DataPuzzleEventTrigger : MonoBehaviour, IInteraction
     {
         get
         {
-            return (!Managers.Data.isClearEvent(miniGameLevel.eventId) && Managers.Data.isAvaildProgress(miniGameLevel.progress));
+            return (!Managers.Data.IsClearEvent(miniGameLevel.guId) && Managers.Data.isAvaildProgress(miniGameLevel.progress));
         }
     }
 
     public void OnInteraction()
     {
-        if (Managers.Data.isClearEvent(miniGameLevel.eventId)) // ÀÌ¹Ì Å¬¸®¾î µÈ ÀÌº¥Æ®ÀÎÁö È®ÀÎ
+        if (Managers.Data.IsClearEvent(miniGameLevel.guId)) // ì´ë¯¸ í´ë¦¬ì–´ ëœ ì´ë²¤íŠ¸ì¸ì§€ í™•ì¸
         {
             return;
         }
-        if (!Managers.Data.isAvaildProgress(miniGameLevel.progress)) // ÀÌ¹Ì ÁøÇàµµ¸¦ ¹ş¾î³­ °ÍÀÎÁö
+        if (!Managers.Data.isAvaildProgress(miniGameLevel.progress)) // ì´ë¯¸ ì§„í–‰ë„ë¥¼ ë²—ì–´ë‚œ ê²ƒì¸ì§€
         {
             return;
         }
-        Managers.Data.AddOnceEvent(miniGameLevel.eventId);
         Managers.Data.UpdateDataPuzzleLevel(miniGameLevel);
         Managers.Game.Player.SetstateStop();
         Managers.Scene.LoadScene(Define.Scene.DataPuzzle);

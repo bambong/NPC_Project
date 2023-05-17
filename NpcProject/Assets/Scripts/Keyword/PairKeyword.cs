@@ -12,7 +12,6 @@ public class PairKeyword : KeywordController
     [SerializeField]
     private LineRenderer lineRenderer;
 
-    private E_WIRE_COLOR_MODE curPairMod;
     private bool isLineOn = false;
     private KeywordEntity lineEntity;
     public KeywordEntity MasterEntity { get; protected set; }
@@ -106,7 +105,10 @@ public class PairKeyword : KeywordController
 
         isLineOn = true;
         lineEntity = entity;
-        lineRenderer.enabled = true;
+        if (Managers.Game.IsDebugMod) 
+        {
+            lineRenderer.enabled = true;
+        }
     }
     private void CloseLineRender()
     {

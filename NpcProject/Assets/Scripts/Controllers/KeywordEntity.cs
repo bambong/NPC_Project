@@ -2,9 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
-
 public class KeywordAction 
 {
     private Action<KeywordEntity> onEnter;
@@ -50,7 +47,7 @@ class CreateKeywordOption
     public GameObject keywordGo;
 }
 
-public class KeywordEntity : MonoBehaviour
+public class KeywordEntity : MonoBehaviour , IDataHandler
 {
 
     [Header("GUID")]
@@ -587,7 +584,53 @@ public class KeywordEntity : MonoBehaviour
         rigidbody.isKinematic = isOn;
     }
     public void ClearVelocity()=> rigidbody.velocity = Vector3.zero;
+
     #endregion
 
+
+    public void SaveData(GameData gameData)
+    {
+        var data = new KeywordEntityData();
+        data.isEnable = gameObject.activeSelf;
+        data.pos = transform.position;
+        data.rot = transform.rotation;
+        data.scale = transform.localScale;
+        
+        for(int i =0; i < keywordFrames.Count; ++i) 
+        {
+            var frameData = new KeywordEntityData.KeywordFrameData();
+            data.keywordFrameDatas.Add(frameData);
+            if (keywordFrames[i].HasKeyword) 
+            {
+                frameData.isLock = keywordFrames[i].CurFrameInnerKeyword.IsLock;
+                frameData.id = keywordFrames[i].CurFrameInnerKeyword.KewordId;
+            }
+        }
+        gameData.keywordEntityDatas.AddOrUpdateValue(guId, data);
+    }
+    public void LoadData(GameData gameData)
+    {
+        if (!gameData.keywordEntityDatas.ContainsKey(guId)) 
+        {
+            return;
+        }
+        var data = gameData.keywordEntityDatas[guId];
+        gameObject.SetActive(data.isEnable);
+        transform.position = data.pos;
+        transform.rotation = data.rot;
+        transform.localScale = data.scale;
+        var optionList = new List<CreateKeywordOption>();
+        for (int i = 0; i < data.keywordFrameDatas.Count; ++i)
+        {
+            var option = new CreateKeywordOption();
+            if (data.keywordFrameDatas[i].id != "")
+            {
+                option.isLock = data.keywordFrameDatas[i].isLock;
+                option.keywordGo = Managers.Resource.Load<GameObject>($"Prefabs/UI/SubItem/KeywordPrefabs/{data.keywordFrameDatas[i].id}");
+            }
+            optionList.Add(option);
+        }
+        keywords = optionList.ToArray();
+    }
 
 }

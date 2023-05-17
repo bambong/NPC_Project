@@ -6,37 +6,20 @@ using System.Linq;
 using UnityEngine;
 
 
-public class SaveData
-{
-    public SaveData(int progress , string sceneName , Vector3 playerPos) 
-    {
-        this.progress = progress;
-        this.sceneName = sceneName;
-        this.playerPos = playerPos;
-    }
-    public int progress;
-    public string sceneName;
-    public Vector3 playerPos;
-}
 
 public class DataManager
 {
     private int progress = 0;
     private MiniGameLevelData dataPuzzleLevel;
-    private SaveData lastSaveData;
     private GameData lastGameData;
     private Dictionary<string, GameData> sceneGameData = new Dictionary<string, GameData>();
+    private Dictionary<string, bool> clearEventData= new Dictionary<string, bool>();
     public int Progress { get => progress; }
-    public MiniGameLevelData DataPuzzleLevel { get => dataPuzzleLevel; }
-    public SaveData LastSaveData { get => lastSaveData;}
     public GameData LastGameData { get => lastGameData;  }
+    public MiniGameLevelData DataPuzzleLevel { get => dataPuzzleLevel; }
     public Dictionary<string, GameData> SceneGameData { get => sceneGameData;  }
+    public Dictionary<string, bool> ClearEventData { get => clearEventData;  }
 
-
-    // 진행도 타입, 진행 정도
-    //ublic Dictionary<ProgressType, int> progressDict = new Dictionary<ProgressType, int>();
-    // event ID , isClear
-    private Dictionary<int, bool> eventDict = new Dictionary<int, bool>();
     public bool isAvaildProgress(int progress) => progress >= this.progress; 
     public bool UpdateProgress(int progress) 
     {
@@ -47,44 +30,21 @@ public class DataManager
         this.progress = progress;   
         return true;
     }
-    public bool AddOnceEvent(int id)
+    public bool IsClearEvent(string id)
     {
-        if (eventDict.ContainsKey(id)) 
+        if (!ClearEventData.ContainsKey(id)) 
         {
             return false;
         }
-        eventDict.Add(id, false);
-        return true;
+        return ClearEventData[id];
     }
-    public bool ClearOnceEvent(int id) 
+    public void ClearEvent(string id) 
     {
-        if (!eventDict.ContainsKey(id))
-        {
-            Debug.LogError($"등록되지않은 이벤트 클리어요청 {id}");
-            return false;
-        }
-        eventDict[id] = true;
-        return true; 
-    }
-    public bool isClearEvent(int id)
-    {
-        if (!eventDict.ContainsKey(id))
-        {    
-            return false;
-        }
-        return eventDict[id];
+        ClearEventData.AddOrUpdateValue(id, true);
     }
     public void UpdateDataPuzzleLevel(MiniGameLevelData level) 
     {
         dataPuzzleLevel = level;
-    }
-    public void SaveData(SaveData save) 
-    {
-        if (!isAvaildProgress(save.progress)) 
-        {
-            return;
-        }
-        lastSaveData = save;
     }
     public void Init() 
     {
@@ -113,6 +73,7 @@ public class DataManager
             tempData = new GameData();
             SceneGameData.Add(sceneName, tempData);
         }
+        tempData.sceneName = sceneName;
         var dataHandlers = FindAllDataHandler();
         foreach (var data in dataHandlers)
         {

@@ -43,6 +43,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     public KeywordFrameBase CurFrame { get => curFrame;}
     public RectTransform RectTransform { get => rectTransform;  }
     public E_KEYWORD_TYPE KeywordType { get => keywordType;  }
+    public bool IsLock { get => isLock; }
 
     private Color originColor;
     private readonly Color LOCK_COLOR = new Color(0.45f, 0.45f, 0.45f);
@@ -202,7 +203,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
             {
                 Managers.Sound.PlaySFX("ToDrop Keyword");
                 DragReset();
-                Debug.Log("À¯´ÏÆ¼ µå·¡±× ¹ö±× ¹ß»ı!");
+                Debug.Log("ìœ ë‹ˆí‹° ë“œë˜ê·¸ ë²„ê·¸ ë°œìƒ!");
                 yield break;
             }
             yield return null;

@@ -117,9 +117,9 @@ public class ResultPanelController : MonoBehaviour
         {
             if (isSuccess)
             {
-                Managers.Data.ClearOnceEvent(miniGameManager.MiniGameLevelData.eventId);
+                Managers.Data.ClearEvent(miniGameManager.MiniGameLevelData.guId);
             }
-            var data = Managers.Data.LastSaveData;
+            var data = Managers.Data.LastGameData;
             Managers.Scene.LoadScene(data.sceneName);
         });
     }
