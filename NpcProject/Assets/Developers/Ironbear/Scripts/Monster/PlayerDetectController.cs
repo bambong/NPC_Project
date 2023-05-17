@@ -21,7 +21,7 @@ public class PlayerDetectController : MonoBehaviour
     {
         if(other.CompareTag(detectionTag))
         {
-            Managers.Sound.PlaySFX("Find Monster");
+            Managers.Sound.PlaySFX(Define.SOUND.FindMonster);
             monsterController.SetStateChase();
         }        
     }

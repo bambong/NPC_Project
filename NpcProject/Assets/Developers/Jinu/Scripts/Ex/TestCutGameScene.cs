@@ -38,8 +38,8 @@ public class TestCutGameScene: BaseScene
         Managers.Camera.InitCamera(new CameraInfo(vircam, player.transform));
         Managers.Talk.LoadTalkData(tutorialSceneTalkData);
 
-        cutScene = new CutSceneEvent(playableDirector);
-        cutScene.Play();        
+        //cutScene = new CutSceneEvent(playableDirector);
+        //cutScene.Play();        
         
     }
 

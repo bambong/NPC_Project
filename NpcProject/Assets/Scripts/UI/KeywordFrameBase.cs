@@ -117,7 +117,7 @@ public abstract class KeywordFrameBase : UI_Base
         var prevFrame = keywordController.CurFrame;
         if (IsAvailableKeyword(keywordController) && prevFrame.IsAvailableKeyword(CurFrameInnerKeyword)) 
         {
-            Managers.Sound.PlaySFX("Assignment Keyword");
+            Managers.Sound.PlaySFX(Define.SOUND.AssignmentKeyword);
             var prevCur = prevFrame.curFrameInnerKeyword;
             var mCur = curFrameInnerKeyword;
             prevFrame.SetKeyWord(mCur, ()=> {
@@ -143,7 +143,7 @@ public abstract class KeywordFrameBase : UI_Base
         }
         else 
         {
-            Managers.Sound.PlaySFX("Click Keyword");
+            Managers.Sound.PlaySFX(Define.SOUND.ClickKeyword);
             keywordController.ResetKeyword();
         }
     }

@@ -424,7 +424,7 @@ public class PlayerController : MonoBehaviour
             SetstateDeath();
             return;
         }
-        Managers.Sound.PlaySFX("Hit Player");
+        Managers.Sound.PlaySFX(Define.SOUND.HitPlayer);
         hitFeedback.PlayFeedbacks();
     }
 

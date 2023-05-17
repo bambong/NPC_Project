@@ -42,28 +42,70 @@ public class SoundManager
     #region BGMControl
     public void PlayBGM() => bgmEmitter.Play();
 
+    public void RestartBGM(float fadeoutTime = 1.0f)
+    {
+        Managers.Scene.CurrentScene.StartCoroutine(Restart(fadeoutTime));
+    }
     public void StopBGM(float fadeoutTime = 1.0f)
     {
-        Managers.Scene.CurrentScene.StartCoroutine(Stop(fadeoutTime));
+        Managers.Scene.CurrentScene.StartCoroutine(Pause(fadeoutTime));
     }
 
     public void ChangeBGM(EventReference bgm, string param = null, float value = 0)
     {
         if (param == null)
         {
-            bgmEmitter.ChangeEvent(bgm);
+            bgmEmitter.ChangeEvent(bgm);            
         }
         else
         {
             bgmEmitter.SetParameter(param, value);
         }
     }
+    private IEnumerator Start(float fadeOutDuration)
+    {
+        float startVolume;
+        bgmEmitter.EventInstance.getParameterByName("Volume", out startVolume);
 
-    private IEnumerator Stop(float fadeOutDuration)
+        bgmEmitter.Play();
+        for (float t = 1.0f; t > 0.0f; t -= Time.deltaTime / fadeOutDuration)
+        {
+            float volume = Mathf.Lerp(1.0f, 0.0f, t);
+            bgmEmitter.EventInstance.setParameterByName("Volume", volume);
+            yield return null;
+        }
+    }
+    private IEnumerator Restart(float fadeOutDuration)
     {
         float startVolume;
 
         bgmEmitter.EventInstance.getParameterByName("Volume", out startVolume);
+
+        for (float t = 1.0f; t > 0.0f; t -= Time.deltaTime / fadeOutDuration)
+        {
+            float volume = Mathf.Lerp(1.0f, 0.0f, t);
+            bgmEmitter.EventInstance.setParameterByName("Volume", volume);
+            yield return null;
+        }
+        
+    }
+    private IEnumerator Pause(float fadeOutDuration)
+    {
+        float startVolume;
+        bgmEmitter.EventInstance.getParameterByName("Volume", out startVolume);
+
+        for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / fadeOutDuration)
+        {
+            float volume = Mathf.Lerp(1.0f, 0.0f, t);
+            bgmEmitter.EventInstance.setParameterByName("Volume", volume);
+            yield return null;
+        }
+    }
+    private IEnumerator Stop(float fadeOutDuration)
+    {
+        float startVolume;
+        bgmEmitter.EventInstance.getParameterByName("Volume", out startVolume);
+
         for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / fadeOutDuration)
         {
             float volume = Mathf.Lerp(1.0f, 0.0f, t);
@@ -75,9 +117,9 @@ public class SoundManager
     #endregion
 
 
-    public void PlaySFX(string eventpath)
+    public void PlaySFX(Enum eventpath)
     {
-        sfxInstance = RuntimeManager.CreateInstance("event:/SFX/" + eventpath);
+        sfxInstance = RuntimeManager.CreateInstance("event:/SFX/" + eventpath.ToString());
         sfxInstance.start();
     }
 

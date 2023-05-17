@@ -38,7 +38,7 @@ public class MonsterController : KeywordEntity , ISpawnAble
     [Header("Attack Stat")]
     [SerializeField]
     private float attackDistance = 0.5f;
-    [Tooltip("X Y = ±âº» Box Size ¹èÀ² Z ´Â ½ÇÁ¦ Attack Range ")]
+    [Tooltip("X Y = ê¸°ë³¸ Box Size ë°°ìœ¨ Z ëŠ” ì‹¤ì œ Attack Range ")]
     [SerializeField]
     private Vector3 attackBound = new Vector3(1,1,2);
     [SerializeField]
@@ -47,7 +47,7 @@ public class MonsterController : KeywordEntity , ISpawnAble
     private float attackCoolTime = 0.5f;
     [SerializeField]
     private int attackDamage = 1;
-    [Tooltip("°ø°İ °Å¸® ¸î ÆÛ¼¾Æ®¿¡¼­ ºê·¹ÀÌÅ©¸¦ ÀâÀ»Áö ")]
+    [Tooltip("ê³µê²© ê±°ë¦¬ ëª‡ í¼ì„¼íŠ¸ì—ì„œ ë¸Œë ˆì´í¬ë¥¼ ì¡ì„ì§€ ")]
     [Range(0,1),SerializeField]
     private float attackAutoBreakingAmount = 0.2f;
     [Tooltip("EffectMat")]
@@ -123,12 +123,12 @@ public class MonsterController : KeywordEntity , ISpawnAble
         curHealth--;
         if (curHealth <= 0)
         {
-            Managers.Sound.PlaySFX("Death Monster");
+            Managers.Sound.PlaySFX(Define.SOUND.DeathMonster);
             Managers.Effect.PlayEffect(Define.EFFECT.MonsterDeathEffect , transform);
             DestroyKeywordEntity();
             return;
         }
-        Managers.Sound.PlaySFX("Hit Monster");
+        Managers.Sound.PlaySFX(Define.SOUND.HitMonster);
         StartCoroutine(PlayHitEffect());
         KnockBack();
     }
@@ -258,7 +258,7 @@ public class MonsterController : KeywordEntity , ISpawnAble
 
     public void Attack() 
     {
-        Managers.Sound.PlaySFX("Attack Monster");
+        Managers.Sound.PlaySFX(Define.SOUND.AttackMonster);
         var rayDis = (monsterNav.destination - transform.position);
         rayDis.y = 0;
         rayDis = rayDis.normalized;

@@ -34,4 +34,28 @@ public class Define
         BombEffect,
         MonsterDeathEffect
     }
+
+    public enum SOUND
+    {
+        AssignmentKeyword,
+        AttackMonster,
+        ClickKeyword,
+        DeathMonster,
+        DeathPlayer,
+        EnlargementKeyword,
+        ErrorEffectKeyword,
+        FairKeyword,
+        FindMonster,
+        FloatingKeyword,
+        HitMonster,
+        HitPlayer,
+        Item,
+        MoveKeyword,
+        RevolutionKeyword,
+        RotatingKeyword,
+        RunPlayer,
+        ToBounceKeyword,
+        ToDropKeyword,
+        WalkPlayer
+    }
 }
