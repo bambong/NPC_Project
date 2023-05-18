@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 9059506981520492945}
   - component: {fileID: 9059506981520493039}
   - component: {fileID: 9059506981520493038}
-  - component: {fileID: 663869873847587425}
   - component: {fileID: 3783293237825253650}
+  - component: {fileID: 8011978006474646169}
   m_Layer: 5
   m_Name: AttackKeyword
   m_TagString: Untagged
@@ -78,24 +78,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &663869873847587425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9059506981520492944}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29fc0421cffd6a64abe3440c7d48f137, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clickSound: {fileID: 8300000, guid: ca4ddfb46835e194d97e40d1f2f04b8d, type: 3}
-  rectTransform: {fileID: 9059506981520492945}
-  image: {fileID: 9059506981520493038}
-  keywordType: 2
-  bombMat: {fileID: 2100000, guid: 06dff6542f36fc04cbce96e4b24cfb5f, type: 2}
-  bombSpriteMat: {fileID: 2100000, guid: 364021b4e0f2d114ab8a168a37ea77f3, type: 2}
 --- !u!114 &3783293237825253650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,7 +94,7 @@ MonoBehaviour:
   onCreate:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 663869873847587425}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: KeywordController, Assembly-CSharp
         m_MethodName: Init
         m_Mode: 1
@@ -127,3 +109,18 @@ MonoBehaviour:
   onReturn:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8011978006474646169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9059506981520492944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b20f6e8eabd9314b86005be2517a675, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rectTransform: {fileID: 9059506981520492945}
+  image: {fileID: 9059506981520493038}
+  keywordType: 2
