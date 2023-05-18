@@ -6,7 +6,7 @@
  
 Temp/
  
-Obj/
+[Oo]bj/
  
 UnityGenerated/
  
@@ -74,19 +74,47 @@ Demo/
 Layouts/
 
 # Never ignore DLLs in the FMOD subfolder, so make sure that the FMOD-folder is in the correct path.
-!/[Aa]ssets/Plugins/FMOD/**/*.dll
-!/NpcProject/Assets/Plugins/FMOD/**/*.dll
+!**/[Aa]ssets/Plugins/FMOD/**/*.dll
+!**/NpcProject/Assets/Plugins/FMOD/**/*.dll
 
 # Don't ignore images and gizmos used by FMOD in the Unity Editor
-!/[Aa]ssets/Gizmos/FMOD/*
-!/[Aa]ssets/Editor Default Resources/FMOD/*
+!**/[Aa]ssets/Gizmos/FMOD/*
+!**/[Aa]ssets/Editor Default Resources/FMOD/*
 
 # Ignore the Cache-file since it is updated locally either way
 **/[Aa]ssets/**/FMODStudioCache.asset
 **/[Aa]ssets/**/FMODStudioCache.asset.meta
 **/[Aa]ssets/Plugins/FMOD/Cache.meta
-**/[Aa]ssets/Plugins/FMOD/Cache/Editor.meta
+**/[Aa]ssets/Plugins/FMOD/Cache/*
+**/[Aa]ssets/Plugins/FMOD/platforms/
+**/FMOD/.unsaved
+**/FMOD/.user
+**/[Aa]ssets/StreamingAssets//.bank
+**/[Aa]ssets/StreamingAssets//.bank.meta
 
 # Log-files
 fmod.log
 fmod_editor.log
+
+#Add New
+**/StreamingAssets/build_info
+**/StreamingAssets/build_info.meta
+**/StreamingAssets.meta
+**/.vs/
+.vsconfig
+*.unitypackage
+*.pidb.meta
+sysinfo.txt
+Unity-Logs-Viewer/
+NpcProject/Assets/Plugins/FMODStudioCache.asset
+NpcProject/Assets/Plugins/FMODSettings.asset
+NpcProject/Assets/Plugins/FMODAsset
+NpcProject/Assets/Plugins/FMODStudioCache.asset.meta
+NpcProject/Assets/Plugins/FMODSettings.asset.meta
+NpcProject/Assets/Plugins/FMODAsset.meta
+UnityPlayground_Data/
+UnityCrashHandler*
+UnityPlayer.dll
+UnityPlayground*
+MonoBleedingEdge/
+*.log
