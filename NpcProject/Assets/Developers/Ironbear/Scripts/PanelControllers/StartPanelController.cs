@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class StartPanelController : UI_Base
 {
@@ -8,6 +9,8 @@ public class StartPanelController : UI_Base
     private string[] texts;
     [SerializeField]
     private TMP_Text tmpText;
+    [SerializeField]
+    private Button btn;
 
     private float typeSpeed = 0.1f;
     private Sequence seq;
@@ -21,6 +24,8 @@ public class StartPanelController : UI_Base
     private void Start()
     {
         seq = DOTween.Sequence();
+
+        btn.interactable = false;
 
         TypeAnimation();
     }
@@ -40,6 +45,9 @@ public class StartPanelController : UI_Base
             }
             seq.AppendInterval(0.1f);
         }
+
+        seq.OnComplete(() => { btn.interactable = true; });
+
         seq.Play();
     }
 
