@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
-public class TestKeywordFrameController : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
+public class IntroKeywordFrameController : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
     private Image image;
     private RectTransform rect;
@@ -28,7 +28,6 @@ public class TestKeywordFrameController : MonoBehaviour, IDropHandler, IPointerE
             eventData.pointerDrag.transform.SetParent(transform);
             eventData.pointerDrag.GetComponent<RectTransform>().localScale = Vector3.one;
             eventData.pointerDrag.GetComponent<RectTransform>().localPosition = Vector3.zero;
-            //eventData.pointerDrag.GetComponent<RectTransform>().anchoredPosition = GetComponent<RectTransform>().anchoredPosition;
         }
     }
 
