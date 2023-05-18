@@ -29,7 +29,7 @@ public class ButtonHighlightController : UI_Base, IPointerEnterHandler, IPointer
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (highlightTween != null && highlightTween.IsPlaying())
+        if (highlightTween != null)
         {
             highlightTween.Kill();
         }
@@ -39,7 +39,7 @@ public class ButtonHighlightController : UI_Base, IPointerEnterHandler, IPointer
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (highlightTween != null && highlightTween.IsPlaying())
+        if (highlightTween != null)
         {
             highlightTween.Kill();
         }

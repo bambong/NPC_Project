@@ -2,9 +2,8 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
 using DG.Tweening;
-using System.Collections.Generic;
 
-public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler, IPointerExitHandler, IPointerEnterHandler
+public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler, IPointerExitHandler, IPointerEnterHandler
 {
     private readonly float START_END_ANIM_TIME = 0.2f;
     private readonly string KEYWORD_FRAME_TAG = "KeywordFrame";
@@ -66,29 +65,6 @@ public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBe
         transform.SetAsLastSibling();
 
         canvasGroup.blocksRaycasts = false;
-
-        //prevSibilintIndex = rectTransform.GetSiblingIndex();
-        /*
-        if(IsDragable(eventData)||isMove)
-        {
-            return;
-        }
-        //Managers.Sound.AskSfxPlay(20009); -> 자꾸 씬 로딩 화면이 뜸
-
-        SetDragState(true);
-        SetMoveState(true);
-
-        //Managers.Keyword.CurDragKeyword = this;
-        curFrame.OnBeginDrag();
-
-        prevSibilintIndex = rectTransform.GetSiblingIndex();
-        startDragPoint = curFrame.RectTransform.localPosition;
-        startParent = transform.parent;
-
-        transform.SetParent(Managers.Keyword.PlayerKeywordPanel.transform);
-        rectTransform.SetAsLastSibling();
-        StartCoroutine(DragCheck());
-        */
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -117,67 +93,16 @@ public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBe
     {
         if (transform.parent == canvas)
         {
-            //transform.SetParent(startParent);
-            //rectTransform.position = startParent.GetComponent<RectTransform>().position;
-
             transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
         }
         else
         {
             transform.SetParent(startParent);
-            //rectTransform.position = startParent.GetComponent<RectTransform>().position;
         }
 
         canvasGroup.blocksRaycasts = true;
 
         SetDragState(false);
-        //transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
-
-        Debug.Log(CheckOverlap());
-
-        /*
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventData, results);
-
-        foreach(var result in results)
-        {
-            if(result.gameObject.CompareTag(KEYWORD_FRAME_TAG))
-            {
-                //들고 있는 오브젝트 드랍
-                eventData.pointerDrag.transform.SetParent(transform);
-            }
-        }
-        //var raycasts = Managers.Keyword.GetRaycastList(eventData);
-        //Managers.Keyword.CurDragKeyword = null;
-        */
-
-        /*
-        if (raycasts.Count > 0)
-        {
-            for (int i = 0; i < raycasts.Count; ++i)
-            {
-                if (raycasts[i].gameObject.CompareTag(KEYWORD_FRAME_TAG))
-                {
-                    var keywordFrame = raycasts[i].gameObject.GetComponent<KeywordFrameBase>();
-                    if (curFrame == keywordFrame)
-                    {
-                        continue;
-                    }
-
-                    keywordFrame.DragDropKeyword(this);
-                    return;
-                }
-#if UNITY_EDITOR
-                else
-                {
-                    Debug.Log(raycasts[i].gameObject.name);
-                }
-#endif
-            }
-        }
-        */
-        //Managers.Sound.AskSfxPlay(20011);
-        //ResetKeyword();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -189,7 +114,6 @@ public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBe
     {
         
     }
-
     public void DragReset()
     {
         transform.SetParent(startParent);
