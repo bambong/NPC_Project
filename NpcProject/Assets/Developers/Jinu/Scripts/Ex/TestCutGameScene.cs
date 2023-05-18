@@ -49,7 +49,7 @@ public class TestCutGameScene: BaseScene
         Managers.Sound.SetSFXVolume(0.5f);
 
         Managers.Sound.ChangeBGM(bgm);
-        Managers.Sound.PlayBGM();
+        Managers.Sound.BGMControl(Define.BGM.Start);
         //Managers.Sound.AskBgmPlay(20100);
         //Managers.Sound.AskBgmPlay(20100);
     }

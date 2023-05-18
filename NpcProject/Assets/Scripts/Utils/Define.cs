@@ -35,6 +35,14 @@ public class Define
         MonsterDeathEffect
     }
 
+    public enum BGM
+    {
+        Start,        
+        ReStart,
+        Stop,
+        Pause
+    }
+
     public enum SOUND
     {
         AssignmentKeyword,

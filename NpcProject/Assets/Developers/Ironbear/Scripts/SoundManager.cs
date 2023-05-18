@@ -16,6 +16,7 @@ public class SoundManager
     public StudioEventEmitter bgmEmitter;
 
 
+
     public void Init()
     {
         masterBus = RuntimeManager.GetBus("bus:/Master");
@@ -40,15 +41,24 @@ public class SoundManager
     }
 
     #region BGMControl
-    public void PlayBGM() => bgmEmitter.Play();
 
-    public void RestartBGM(float fadeoutTime = 1.0f)
+    public void BGMControl(Define.BGM bgmAction, float fadeDelay = 1.0f)
     {
-        Managers.Scene.CurrentScene.StartCoroutine(Restart(fadeoutTime));
-    }
-    public void StopBGM(float fadeoutTime = 1.0f)
-    {
-        Managers.Scene.CurrentScene.StartCoroutine(Pause(fadeoutTime));
+        switch(bgmAction)
+        {
+            case Define.BGM.Start:
+                Managers.Scene.CurrentScene.StartCoroutine(Start(fadeDelay));
+                break;
+            case Define.BGM.ReStart:
+                Managers.Scene.CurrentScene.StartCoroutine(Restart(fadeDelay));
+                break;
+            case Define.BGM.Stop:
+                Managers.Scene.CurrentScene.StartCoroutine(Stop(fadeDelay));
+                break;
+            case Define.BGM.Pause:
+                Managers.Scene.CurrentScene.StartCoroutine(Pause(fadeDelay));
+                break;
+        }        
     }
 
     public void ChangeBGM(EventReference bgm, string param = null, float value = 0)
@@ -62,51 +72,38 @@ public class SoundManager
             bgmEmitter.SetParameter(param, value);
         }
     }
-    private IEnumerator Start(float fadeOutDuration)
+    private IEnumerator Start(float fadeDelay)
     {
-        float startVolume;
-        bgmEmitter.EventInstance.getParameterByName("Volume", out startVolume);
-
         bgmEmitter.Play();
-        for (float t = 1.0f; t > 0.0f; t -= Time.deltaTime / fadeOutDuration)
+
+        for (float t = 1.0f; t > 0.0f; t -= Time.deltaTime / fadeDelay)
         {
             float volume = Mathf.Lerp(1.0f, 0.0f, t);
             bgmEmitter.EventInstance.setParameterByName("Volume", volume);
             yield return null;
         }
     }
-    private IEnumerator Restart(float fadeOutDuration)
+    private IEnumerator Restart(float fadeDelay)
     {
-        float startVolume;
-
-        bgmEmitter.EventInstance.getParameterByName("Volume", out startVolume);
-
-        for (float t = 1.0f; t > 0.0f; t -= Time.deltaTime / fadeOutDuration)
+        for (float t = 1.0f; t > 0.0f; t -= Time.deltaTime / fadeDelay)
         {
             float volume = Mathf.Lerp(1.0f, 0.0f, t);
             bgmEmitter.EventInstance.setParameterByName("Volume", volume);
             yield return null;
-        }
-        
+        }        
     }
-    private IEnumerator Pause(float fadeOutDuration)
+    private IEnumerator Pause(float fadeDelay)
     {
-        float startVolume;
-        bgmEmitter.EventInstance.getParameterByName("Volume", out startVolume);
-
-        for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / fadeOutDuration)
+        for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / fadeDelay)
         {
             float volume = Mathf.Lerp(1.0f, 0.0f, t);
             bgmEmitter.EventInstance.setParameterByName("Volume", volume);
             yield return null;
         }
     }
-    private IEnumerator Stop(float fadeOutDuration)
+    private IEnumerator Stop(float fadeDelay)
     {
-        float startVolume;
-        bgmEmitter.EventInstance.getParameterByName("Volume", out startVolume);
-
-        for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / fadeOutDuration)
+        for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / fadeDelay)
         {
             float volume = Mathf.Lerp(1.0f, 0.0f, t);
             bgmEmitter.EventInstance.setParameterByName("Volume", volume);
@@ -123,6 +120,7 @@ public class SoundManager
         sfxInstance.start();
     }
 
+    #region SoundVolumeControl
     public void SetPauseBGM(bool pause) => bgmEmitter.SetPause(pause);
 
     public void SetMasterVolume(float value) => masterBus.setVolume(value);
@@ -130,10 +128,10 @@ public class SoundManager
     public void SetBGMVolume(float value) => bgmBus.setVolume(value);
 
     public void SetSFXVolume(float value) => sfxBus.setVolume(value);
+    #endregion
 
     public void Clear()
     {
-        StopBGM();
     }
 
 }
