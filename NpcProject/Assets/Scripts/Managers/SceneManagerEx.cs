@@ -20,13 +20,18 @@ public class SceneManagerEx
     {
         sceneTransition.StartCoroutine(LoadSceneCo(GetSceneName(type), onComplete));
     }
+    public void LoadScene(string sceneName, Action onComplete = null)
+    {
+        sceneTransition.StartCoroutine(LoadSceneCo(sceneName, onComplete));
+    }
 
     public void ReLoadCurrentScene(Action onComplete = null) 
     {
-        sceneTransition.StartCoroutine(LoadSceneCo(SceneManager.GetActiveScene().name ,onComplete));
+        sceneTransition.StartCoroutine(LoadSceneCo(SceneManager.GetActiveScene().name ,onComplete,false));
     }
-    private IEnumerator LoadSceneCo(string sceneName, Action onComplete = null)
+    private IEnumerator LoadSceneCo(string sceneName, Action onComplete = null, bool isSave = true)
     {
+        string prevSceneName = SceneManager.GetActiveScene().name;
         float alpha = 0;
         float progress = 0;
         while (progress < 1)
@@ -46,6 +51,18 @@ public class SceneManagerEx
             progress += Time.deltaTime;
             sceneTransition.canvasGroup.alpha = Mathf.Lerp(alpha, 1, progress);
             yield return null;
+        }
+        /// 데이터 세이브 
+        if (isSave) 
+        {
+            Managers.Data.SaveGame(prevSceneName);
+        }
+        else /// 데이터 초기화  
+        {
+            if (Managers.Data.SceneGameData.ContainsKey(prevSceneName)) 
+            {
+                Managers.Data.SceneGameData.Remove(prevSceneName);
+            }
         }
         //sceneTransition.canvasGroup.alpha = 1;
         Managers.Clear();
@@ -76,7 +93,6 @@ public class SceneManagerEx
 
     public void Clear()
     {
-        
         OnSceneUnload?.Invoke();
         OnSceneUnload = null;
         CurrentScene.Clear();

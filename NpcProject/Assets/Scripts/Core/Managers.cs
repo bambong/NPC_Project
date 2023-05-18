@@ -1,12 +1,18 @@
 using System.Collections; 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Managers : MonoBehaviour
 {
-
+    static bool isQuit = false;
     static Managers instance; // ���ϼ��� ����ȴ�
-    static Managers Instance { get { Init(); return instance; } } // ������ �Ŵ����� �����´�
+    static Managers Instance { get {
+            if (!isQuit) 
+            {
+                Init();
+            }
+            return instance; } } // ������ �Ŵ����� �����´�
     
     #region CoreManager
     private PoolManager pool = new PoolManager();
@@ -20,6 +26,7 @@ public class Managers : MonoBehaviour
     private SoundManager sound = new SoundManager();
     private TimeManager time = new TimeManager();
     private EffectManager effect = new EffectManager();
+    private DataManager data = new DataManager();
     public static KeywordManager Keyword { get => Instance.keyword; }
     public static CameraManager Camera { get => Instance.cam; }
     public static PoolManager Pool { get => Instance.pool; }
@@ -31,11 +38,13 @@ public class Managers : MonoBehaviour
     public static SoundManager Sound { get => Instance.sound; }
     public static TimeManager Time { get => Instance.time; }
     public static EffectManager Effect { get => Instance.effect; }
+    public static DataManager Data { get => Instance.data; }
     #endregion
 
     void Start()
     {
         Init();
+        
     }
 
     static void Init()
@@ -59,6 +68,7 @@ public class Managers : MonoBehaviour
             instance.keyword.Init();
             instance.scene.Init();
             instance.sound.Init();
+            instance.data.Init();
         }
 
     }
@@ -75,5 +85,18 @@ public class Managers : MonoBehaviour
         Pool.Clear();
         Keyword.Clear();
         Sound.Clear();
+    }
+    private void OnApplicationQuit()
+    {
+        isQuit = true;
+        //// DontDestroyOnLoad로 표시된 모든 게임 오브젝트를 찾아서 배열에 저장합니다.
+        //GameObject[] dontDestroyObjects = GameObject.FindObjectsOfType<GameObject>().Where(obj => obj.transform.parent == null && obj.scene.name == null).ToArray();
+
+        //// 배열에 저장된 모든 게임 오브젝트의 이름을 출력합니다.
+        //foreach (GameObject obj in dontDestroyObjects)
+        //{
+        //    Debug.Log(obj.name);
+        //    Destroy(obj);
+        //}
     }
 }

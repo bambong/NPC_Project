@@ -11,6 +11,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 
 public class ResultButtonController : MonoBehaviour ,IPointerEnterHandler ,IPointerExitHandler,IPointerClickHandler
+    
 {
     [SerializeField]
     private CanvasGroup focusImageCanvas;
@@ -43,6 +44,7 @@ public class ResultButtonController : MonoBehaviour ,IPointerEnterHandler ,IPoin
         {
             return;
         }
+        iSAvailable = true;
         Clear();
         onClick = click;
         Sequence seq = DOTween.Sequence();
@@ -84,7 +86,6 @@ public class ResultButtonController : MonoBehaviour ,IPointerEnterHandler ,IPoin
         {
             return;
         }
-
         focusImageCanvas.DOKill();
         float curTime = focusOpenTime * (1 - focusImageCanvas.alpha);
         focusImageCanvas.DOFade(1, curTime);
@@ -102,5 +103,5 @@ public class ResultButtonController : MonoBehaviour ,IPointerEnterHandler ,IPoin
         focusImageCanvas.DOFade(0, curTime);
         titleText.color = Color.white;
     }
-
+ 
 }

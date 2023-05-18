@@ -8,25 +8,26 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SpriteMatSpine
-  m_Shader: {fileID: 4800000, guid: b77e51f117177954ea863bdb422344fb, type: 3}
+  m_Shader: {fileID: 4800000, guid: 9f253724b2d29a3438eeea48277c25cb, type: 3}
   m_ValidKeywords:
-  - _DOUBLE_SIDED_LIGHTING
-  - _LIGHT_AFFECTS_ADDITIVE
-  - _STRAIGHT_ALPHA_INPUT
-  m_InvalidKeywords:
   - PIXELSNAP_ON
   - _ALPHABLEND_ON
-  - _FIXED_NORMALS_VIEWSPACE
+  - _FIXED_NORMALS_MODELSPACE
   - _OLD_HARD_RAMP
+  - _RECEIVE_SHADOWS_OFF
   - _RIM_LIGHTING
+  - _STRAIGHT_ALPHA_INPUT
+  m_InvalidKeywords:
+  - _LIGHT_AFFECTS_ADDITIVE
   - _USE8NEIGHBOURHOOD_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 1
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap:
     AlphaDepth: true
     IGNOREPROJECTOR: true
+    RenderType: SpriteModelSpaceFixedNormal
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -67,8 +68,8 @@ Material:
     - _BumpScale: 1
     - _Cull: 0
     - _CustomRenderQueue: 1
-    - _Cutoff: 1
-    - _DoubleSidedLighting: 1
+    - _Cutoff: 0
+    - _DoubleSidedLighting: 0
     - _DstBlend: 10
     - _EmissionPower: 1.5
     - _GlossMapScale: 1
@@ -81,10 +82,10 @@ Material:
     - _OutlineSmoothness: 1
     - _OutlineWidth: 3
     - _ReceiveShadows: 0
-    - _RenderQueue: 6
-    - _RimPower: 0
+    - _RenderQueue: 0
+    - _RimPower: 1
     - _Saturation: 1
-    - _ShadowAlphaCutoff: 0.1
+    - _ShadowAlphaCutoff: 0.8
     - _SrcBlend: 1
     - _StencilComp: 8
     - _StencilRef: 1

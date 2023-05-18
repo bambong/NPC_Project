@@ -57,7 +57,7 @@ public class InteractionDetectController : MonoBehaviour
     {
         var interaction = go.GetComponent<IInteraction>();
 
-        if (interaction != null)
+        if (interaction != null && interaction.IsInteractAble)
         {
             interactionUi.Open(go.transform);
             curIteraction = interaction;

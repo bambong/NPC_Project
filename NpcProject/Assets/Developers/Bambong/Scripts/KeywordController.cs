@@ -43,6 +43,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     public KeywordFrameBase CurFrame { get => curFrame;}
     public RectTransform RectTransform { get => rectTransform;  }
     public E_KEYWORD_TYPE KeywordType { get => keywordType;  }
+    public bool IsLock { get => isLock; }
 
     private Color originColor;
     private readonly Color LOCK_COLOR = new Color(0.45f, 0.45f, 0.45f);

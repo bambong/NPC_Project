@@ -29,6 +29,8 @@ public class ServerroomPuzzleController : MonoBehaviour ,IInteraction
 
     public GameObject Go => gameObject;
 
+    public bool IsInteractAble => true;
+
     private bool isClear = false;
 
     private void Start()

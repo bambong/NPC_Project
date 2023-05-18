@@ -1,7 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
 
-public class SettingsPanelController : MonoBehaviour
+public class SettingsPanelController : UI_Base
 {
     [SerializeField]
     private GameObject settingPanel;
@@ -10,6 +10,10 @@ public class SettingsPanelController : MonoBehaviour
     private float animDuration = 0.5f;
 
     private Sequence sq;
+
+    public override void Init()
+    {
+    }
 
     private void Start()
     {

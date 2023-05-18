@@ -28,8 +28,7 @@ public class InputFieldController : UI_Base
     private bool isRestrict = false;
 
     public override void Init()
-    {
-        
+    {        
     }
 
     private void Awake()
@@ -58,7 +57,6 @@ public class InputFieldController : UI_Base
     public void LoadNextScene()
     {
         SaveUserName();
-        SceneManager.LoadScene("Chapter_01");
     }   
 
     public void StringCheck()
