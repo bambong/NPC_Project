@@ -1,5 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class PanelsController : UI_Base
 {
@@ -14,7 +16,6 @@ public class PanelsController : UI_Base
     [SerializeField]
     private GameObject textPanel;
 
-
     private float fadeDuration = 1f;
 
     private bool isLogo = false;
@@ -27,7 +28,7 @@ public class PanelsController : UI_Base
     {
     }
 
-    private void Start()
+    private void Awake()
     {
         logoPanel.SetActive(true);
         startPanel.SetActive(false);
