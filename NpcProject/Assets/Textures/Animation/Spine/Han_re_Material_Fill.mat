@@ -8,16 +8,21 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Han_re_Material_Fill
-  m_Shader: {fileID: 4800000, guid: 45495790b394f894a967dbf44489b57b, type: 3}
+  m_Shader: {fileID: 4800000, guid: b77e51f117177954ea863bdb422344fb, type: 3}
   m_ValidKeywords:
+  - _DOUBLE_SIDED_LIGHTING
+  - _LIGHT_AFFECTS_ADDITIVE
   - _STRAIGHT_ALPHA_INPUT
   m_InvalidKeywords:
+  - PIXELSNAP_ON
   - _ALPHABLEND_ON
+  - _FIXED_NORMALS_VIEWSPACE
   - _OLD_HARD_RAMP
+  - _RIM_LIGHTING
   - _USE8NEIGHBOURHOOD_ON
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: -1
   stringTagMap:
     AlphaDepth: true
@@ -52,24 +57,27 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - PixelSnap: 0
+    - PixelSnap: 1
     - _BlendAmount: 0
     - _Brightness: 1
     - _BumpScale: 1
     - _Cull: 0
-    - _CustomRenderQueue: 0
-    - _Cutoff: 0
+    - _CustomRenderQueue: 1
+    - _Cutoff: 1
+    - _DoubleSidedLighting: 1
     - _DstBlend: 10
     - _EmissionPower: 2
     - _FillPhase: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _Hue: 0
+    - _LightAffectsAdditive: 1
     - _Metallic: 0
     - _OutlineMipLevel: 0
     - _OutlineReferenceTexWidth: 1024
     - _OutlineSmoothness: 1
     - _OutlineWidth: 3
+    - _ReceiveShadows: 0
     - _RenderQueue: 0
     - _RimPower: 2
     - _Saturation: 1
@@ -88,5 +96,5 @@ Material:
     - _FixedNormal: {r: 0, g: 0, b: 1, a: 1}
     - _OutlineColor: {r: 1, g: 1, b: 0, a: 1}
     - _OverlayColor: {r: 0, g: 0, b: 0, a: 0}
-    - _RimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _RimColor: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

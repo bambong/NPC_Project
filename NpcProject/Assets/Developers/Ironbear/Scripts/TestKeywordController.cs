@@ -73,7 +73,7 @@ public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBe
         {
             return;
         }
-        //Managers.Sound.AskSfxPlay(20009); -> ÀÚ²Ù ¾À ·Îµù È­¸éÀÌ ¶ä
+        //Managers.Sound.AskSfxPlay(20009); -> ìê¾¸ ì”¬ ë¡œë”© í™”ë©´ì´ ëœ¸
 
         SetDragState(true);
         SetMoveState(true);
@@ -143,7 +143,7 @@ public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBe
         {
             if(result.gameObject.CompareTag(KEYWORD_FRAME_TAG))
             {
-                //µé°í ÀÖ´Â ¿ÀºêÁ§Æ® µå¶ø
+                //ë“¤ê³  ìˆëŠ” ì˜¤ë¸Œì íŠ¸ ë“œë
                 eventData.pointerDrag.transform.SetParent(transform);
             }
         }
@@ -188,21 +188,6 @@ public class TestKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBe
     public void OnPointerExit(PointerEventData eventData)
     {
         
-    }
-
-    IEnumerator DragCheck()
-    {
-        while (isDrag)
-        {
-            if (!Input.GetMouseButton(0))
-            {
-                Managers.Sound.AskSfxPlay(20011);
-                DragReset();
-                Debug.Log("À¯´ÏÆ¼ µå·¡±× ¹ö±× ¹ß»ı!");
-                yield break;
-            }
-            yield return null;
-        }
     }
 
     public void DragReset()

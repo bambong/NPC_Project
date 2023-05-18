@@ -19,9 +19,9 @@ public class SpriteGhostController : GhostEffectController
     private float curtime = 0;
     private readonly string SOMBRA_NAME = "Sombra";
     
-    private void LateUpdate()
+    private void FixedUpdate()
     {
-        curtime += Time.deltaTime;
+        curtime += Time.fixedDeltaTime;
         if(curtime > interval) 
         {
             curtime = 0;

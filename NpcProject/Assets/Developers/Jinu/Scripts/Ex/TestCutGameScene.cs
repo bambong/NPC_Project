@@ -1,4 +1,5 @@
 using Cinemachine;
+using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +21,9 @@ public class TestCutGameScene: BaseScene
 
     public CutSceneEvent cutScene;
 
+    [SerializeField]
+    private EventReference bgm;
+
     public override void Clear()
     {
 
@@ -35,12 +39,18 @@ public class TestCutGameScene: BaseScene
         Managers.Talk.LoadTalkData(tutorialSceneTalkData);
 
         cutScene = new CutSceneEvent(playableDirector);
-        cutScene.Play();
+        cutScene.Play();        
+        
     }
 
     private void Start()
     {
-        Managers.Sound.AskBgmPlay(20100);
-        Managers.Sound.AskBgmPlay(20100);
+        Managers.Sound.SetBGMVolume(0.1f);
+        Managers.Sound.SetSFXVolume(0.5f);
+
+        Managers.Sound.ChangeBGM(bgm);
+        Managers.Sound.PlayBGM();
+        //Managers.Sound.AskBgmPlay(20100);
+        //Managers.Sound.AskBgmPlay(20100);
     }
 }

@@ -14,6 +14,10 @@ public class SubCubeController : MonoBehaviour
     private Vector3 vec;
 
     private Tweener floatTweener;
+    private Tweener turnTweener;
+    private Sequence sequence;
+
+    private float turnInterval = 1.5f;
 
     void Start()
     {
@@ -23,5 +27,21 @@ public class SubCubeController : MonoBehaviour
         vec = (curVec - coreVec).normalized;
 
         floatTweener = transform.DOLocalMoveY(distance, floatDuration).SetRelative().SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutQuad);
+
+        /*
+        sequence = DOTween.Sequence();
+        sequence.AppendInterval(turnInterval);
+        sequence.SetAutoKill(false);
+        sequence.Append(transform.DORotate(new Vector3(0, 0, 360), 3, RotateMode.FastBeyond360));
+        sequence.SetLoops(-1);
+        DOVirtual.DelayedCall(turnInterval, CallTurnTweenerRecursive);
+        sequence.Play();
+        */
+    }
+
+    private void CallTurnTweenerRecursive()
+    {
+        sequence.Append(turnTweener);
+        DOVirtual.DelayedCall(turnInterval, CallTurnTweenerRecursive);
     }
 }

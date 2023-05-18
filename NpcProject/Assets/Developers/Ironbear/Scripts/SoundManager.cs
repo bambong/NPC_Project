@@ -1,116 +1,97 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-[System.Serializable]
-public struct BgmData
-{
-    public string name;
-    public AudioClip clip;
-    public float volume;
-    public bool load;
-}
-public struct SoundData
-{
-    public string name;
-    public AudioClip clip;
-    public float volume;
-    public bool load;
-}
+using FMODUnity;
+using FMOD.Studio;
+using UnityEngine.SceneManagement;
+using System;
 
 public class SoundManager
 {    
+    private Bus masterBus;
+    private Bus bgmBus;
+    private Bus sfxBus;
 
-    private SoundController soundController;
-    private BgmZone currentBgmZone;
+    public EventInstance sfxInstance;
+    public StudioEventEmitter bgmEmitter;
 
-    private Dictionary<int, BgmData> bgmDatas = new Dictionary<int, BgmData>();
-    private Dictionary<int, SoundData> sfxDatas = new Dictionary<int, SoundData>();
 
-    private SoundExcel soundExcel;
     public void Init()
     {
-        var soundPrefab = Managers.Resource.Instantiate("SoundSource");
-        Object.DontDestroyOnLoad(soundPrefab.gameObject);
-        soundPrefab.name = "@SoundSource";
-        soundController = soundPrefab.GetComponent<SoundController>();
-        soundExcel = Resources.Load<SoundExcel>($"Data/SoundData/SoundExcel");
-        LoadSoundData();
+        masterBus = RuntimeManager.GetBus("bus:/Master");
+        bgmBus = RuntimeManager.GetBus("bus:/Master/BGM");
+        sfxBus = RuntimeManager.GetBus("bus:/Master/SFX");
+
+        CreateBGMEmitter();
     }
 
-    private SoundData ReadSfxData(SoundEvent eventData) 
+    private void CreateBGMEmitter()
     {
-        SoundData data = new SoundData();
-        data.clip = Resources.Load<AudioClip>($"Sounds/SFX/{eventData.Name}");
-        data.volume = eventData.Vol;
-        return data;
+        GameObject bgmPrefab = Resources.Load<GameObject>("Prefabs/BGM");
+        GameObject instance = UnityEngine.Object.Instantiate(bgmPrefab);
+        UnityEngine.Object.DontDestroyOnLoad(instance);
+
+        bgmEmitter = instance.GetComponent<StudioEventEmitter>();
     }
 
-    public void LoadSoundData()
+    public void LoadBank(Scene scene)
     {
+        RuntimeManager.LoadBank(scene.name);
+    }
 
-        for(int i = 0; i < soundExcel.datas.Count; i++)
+    #region BGMControl
+    public void PlayBGM() => bgmEmitter.Play();
+
+    public void StopBGM(float fadeoutTime = 1.0f)
+    {
+        Managers.Scene.CurrentScene.StartCoroutine(Stop(fadeoutTime));
+    }
+
+    public void ChangeBGM(EventReference bgm, string param = null, float value = 0)
+    {
+        if (param == null)
         {
-            var data = soundExcel.datas[i];
-
-            if(data.soundType == "SFX")
-            {
-                SoundData soundData = new SoundData();
-                soundData.name = data.soundName;
-                soundData.volume = data.soundVol;
-                soundData.load = false;
-                sfxDatas.Add(data.soundID, soundData);
-            }
-            else
-            {
-                BgmData bgmData = new BgmData();
-                bgmData.name = data.soundName;
-                bgmData.volume = data.soundVol;
-                bgmData.load = false;
-                bgmDatas.Add(data.soundID, bgmData);
-            }
+            bgmEmitter.ChangeEvent(bgm);
+        }
+        else
+        {
+            bgmEmitter.SetParameter(param, value);
         }
     }
 
-    public void AskBgmPlay(int id)
+    private IEnumerator Stop(float fadeOutDuration)
     {
-        if(bgmDatas[id].load == false)
+        float startVolume;
+
+        bgmEmitter.EventInstance.getParameterByName("Volume", out startVolume);
+        for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / fadeOutDuration)
         {
-            Debug.Log("Load Sound ID: " + id);
-            BgmData bgmData = new BgmData();
-            bgmData.clip = Resources.Load<AudioClip>($"Sounds/BGM/{bgmDatas[id].name}");
-            bgmData.name = bgmDatas[id].name;
-            bgmData.volume = bgmDatas[id].volume;
-            bgmData.load = true;
-
-            bgmDatas[id] = bgmData;
+            float volume = Mathf.Lerp(1.0f, 0.0f, t);
+            bgmEmitter.EventInstance.setParameterByName("Volume", volume);
+            yield return null;
         }
-        soundController.BgmPlay(bgmDatas[id].clip, bgmDatas[id].volume);
+        bgmEmitter.Stop();
     }
+    #endregion
 
-    public void AskSfxPlay(int id)
+
+    public void PlaySFX(string eventpath)
     {
-        if(sfxDatas[id].load == false)
-        {
-            Debug.Log("Load Sound ID:" + id);
-            SoundData soundData = new SoundData();
-            soundData.clip = Resources.Load<AudioClip>($"Sounds/SFX/{sfxDatas[id].name}");
-            soundData.name = sfxDatas[id].name;
-            soundData.volume = sfxDatas[id].volume;
-            soundData.load = true;
-
-            sfxDatas[id] = soundData;
-        }
-        soundController.SfxPlay(sfxDatas[id].clip, sfxDatas[id].volume);
+        sfxInstance = RuntimeManager.CreateInstance("event:/SFX/" + eventpath);
+        sfxInstance.start();
     }
 
-    public void CheckBgmZone(BgmZone zone)
-    {
-        currentBgmZone = zone;
-    }
+    public void SetPauseBGM(bool pause) => bgmEmitter.SetPause(pause);
+
+    public void SetMasterVolume(float value) => masterBus.setVolume(value);
+
+    public void SetBGMVolume(float value) => bgmBus.setVolume(value);
+
+    public void SetSFXVolume(float value) => sfxBus.setVolume(value);
 
     public void Clear()
     {
-        bgmDatas.Clear();
+        StopBGM();
     }
+
 }

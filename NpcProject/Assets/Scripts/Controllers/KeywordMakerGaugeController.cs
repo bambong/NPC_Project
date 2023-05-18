@@ -43,6 +43,7 @@ public class KeywordMakerGaugeController : MonoBehaviour
         curCount++;
         float fillAmount =  curCount / (float)needForMakeCount;
         fillImage.DOFillAmount(fillAmount, ONCE_AMOUNT_ANIMTIME);
+        Managers.Sound.PlaySFX("Enlargement Keyword");
         yield return new WaitForSeconds(ONCE_AMOUNT_ANIMTIME);
     }
   
