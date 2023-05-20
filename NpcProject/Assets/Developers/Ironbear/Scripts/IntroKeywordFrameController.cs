@@ -26,8 +26,10 @@ public class IntroKeywordFrameController : MonoBehaviour, IDropHandler, IPointer
         {
             isFilled = true;
             eventData.pointerDrag.transform.SetParent(transform);
-            eventData.pointerDrag.GetComponent<RectTransform>().localScale = Vector3.one;
-            eventData.pointerDrag.GetComponent<RectTransform>().localPosition = Vector3.zero;
+
+            RectTransform draggedRect = eventData.pointerDrag.GetComponent<RectTransform>();
+            draggedRect.localScale = Vector3.one;
+            draggedRect.DOLocalMove(Vector3.zero, 0.1f).SetEase(Ease.OutQuad);
         }
     }
 

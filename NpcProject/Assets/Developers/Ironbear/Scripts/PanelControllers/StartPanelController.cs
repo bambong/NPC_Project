@@ -34,7 +34,10 @@ public class StartPanelController : UI_Base
     {
         for (int j = 0; j < texts.Length; j++)
         {
-            seq.Append(tmpText.DOText(texts[j], texts[j].Length * typeSpeed));
+            string text = texts[j];
+            text = text.Replace("\\n", "\n");
+
+            seq.Append(tmpText.DOText(text, text.Length * typeSpeed));
             if (j < texts.Length - 1)
             {
                 seq.AppendCallback(() =>

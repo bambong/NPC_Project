@@ -11,6 +11,9 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
     private RectTransform rectTransform;
     [SerializeField]
     private Transform canvas;
+    [SerializeField]
+    private Transform puzzleCanvas;
+
 
     private CanvasGroup canvasGroup;
     private int prevSibilintIndex;
@@ -93,10 +96,10 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
         if (transform.parent == canvas)
         {
             transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
+            transform.SetParent(startParent);
         }
         else
-        {
-            transform.SetParent(startParent);
+        {        
         }
 
         canvasGroup.blocksRaycasts = true;
@@ -121,22 +124,5 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
         SetMoveState(false);
         SetDragState(false);
         curFrame.OnEndDrag();
-    }
-
-    public bool CheckOverlap()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity, LayerMask.GetMask("UI"));
-
-        for (int i = 0; i < hits.Length; i++)
-        {
-            if(hits[i].collider.gameObject.CompareTag(KEYWORD_FRAME_TAG))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
