@@ -35,7 +35,11 @@ public class PlayerController : MonoBehaviour , IDataHandler
     [Header("Player Move Option")]
     [Space(1)]
     [SerializeField]
-    private float moveSpeed = 10f;
+    private float moveSpeed = 600f;
+    [SerializeField]
+    private float walkSpeed = 600f;
+    [SerializeField]
+    private float runSpeed = 800f;
     [SerializeField]
     private int maxSlopeAngle = 40;
     [SerializeField]
@@ -75,6 +79,8 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private int slopeLayer;
     public int Hp { get => hp; }
     public int MaxHp { get => maxHp; }
+
+    private bool changeStage = false;
 
     private readonly float CHECK_RAY_WIDTH = 0.3f;
     private readonly float WIRE_EFFECT_OPEN_TIME = 2f;
@@ -158,7 +164,13 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
+        var isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
 
+        if (isRun)
+        {
+            SetStateRun();
+            return;
+        }
 
         if (new Vector3(hor, 0, ver).magnitude <= 0.1f)
         {
@@ -176,7 +188,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
         var isSlope = IsOnSlope(moveVec);
         var preDir = curDir;
-        CurrentAnimDirUpdtae(moveVec);
+        CurrentAnimDirUpdate(moveVec);
         moveVec = MoveRayCheck(moveVec, isSlope);
        
         if (isSlope)
@@ -196,7 +208,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
         if (new Vector3(moveVec.x, 0, moveVec.z).magnitude > 0.02f)
         {
             AnimMoveEnter(new Vector3(hor, 0, ver));
-            rigid.velocity = moveVec.normalized * speed + gravity;  
+            rigid.velocity = moveVec.normalized * speed + gravity;
         }
         else
         {
@@ -205,6 +217,67 @@ public class PlayerController : MonoBehaviour , IDataHandler
             SetStateIdle();
         }
     }
+
+    public void PlayerRunUpdate()
+    {
+        var hor = Input.GetAxis("Horizontal");
+        var ver = Input.GetAxis("Vertical");
+        var isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
+
+        if(!isRun)
+        {
+            ChangeToRunSpeed(isRun);
+            SetStateIdle();
+            return;
+        }
+
+        var moveVec = new Vector3(hor, 0, ver).normalized;
+        moveVec = rotater.transform.TransformDirection(-moveVec);
+        Vector3 gravity = Vector3.down * Mathf.Abs(rigid.velocity.y);
+
+        var pos = transform.position;
+        var speed = moveSpeed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.PLAYER);
+
+        var isSlope = IsOnSlope(moveVec);
+        var preDir = curDir;
+        CurrentAnimDirUpdate(moveVec);
+        moveVec = MoveRayCheck(moveVec, isSlope);
+
+        if (isSlope)
+        {
+            moveVec = AdjustDirectionToSlope(moveVec);
+            gravity = Vector3.zero;
+            rigid.useGravity = false;
+            gravityForce.enabled = false;
+            Debug.DrawRay(pos, moveVec * 10, Color.blue);
+        }
+        else
+        {
+            rigid.useGravity = true;
+            gravityForce.enabled = true;
+        }
+
+        if (new Vector3(moveVec.x, 0, moveVec.z).magnitude > 0.02f)
+        {
+            AnimRunEnter(new Vector3(hor, 0, ver));
+            rigid.velocity = moveVec.normalized * speed + gravity;
+        }
+        else
+        {
+            curDir = preDir;
+            rigid.velocity = Vector3.zero;
+            SetStateIdle();
+        }
+    }
+
+    public void ChangeToRunSpeed(bool run)
+    {
+        if (run)
+            moveSpeed = runSpeed;
+        else
+            moveSpeed = walkSpeed;
+    }
+
 
     private Vector3 MoveRayCheck(Vector3 moveVec, bool isSlope )
     {
@@ -266,7 +339,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
         return moveVec;
 
     }
-    private void CurrentAnimDirUpdtae(Vector3 moveVec) 
+    private void CurrentAnimDirUpdate(Vector3 moveVec) 
     {
         var moveDotVer = Vector3.Dot(-rotater.transform.forward.normalized, moveVec.normalized);
         var factor = PLAYER_ANIM_COS;
@@ -313,7 +386,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
-        
+
         if(hor == 0 && ver == 0)
         {
             return;
@@ -382,6 +455,10 @@ public class PlayerController : MonoBehaviour , IDataHandler
     public void AnimMoveEnter(Vector3 moveVec)
     {
         animationController.SetMoveAnim(curDir,moveVec);
+    }
+    public void AnimRunEnter(Vector3 moveVec)
+    {
+        animationController.SetRunAnim(curDir);
     }
     public void ClearMoveAnim()
     {
@@ -454,7 +531,11 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         playerStateController.ChangeState(PlayerIdle.Instance);
     }
-
+    public void SetStateRun()
+    {
+        animationController.changeAnim();
+        playerStateController.ChangeState(PlayerRun.Instance);
+    }
     public void SetstateStop()
     {
         playerStateController.ChangeState(PlayerStop.Instance);

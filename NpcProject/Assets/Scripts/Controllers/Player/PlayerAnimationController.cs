@@ -22,6 +22,11 @@ public class PlayerAnimationController : MonoBehaviour
     private SkeletonAnimation backIdleSpineAnim;
     [SerializeField]
     private Animator frontBackMoveframeAnim;
+    [Header("RunAnimation")]
+    [SerializeField]
+    private SkeletonAnimation runSpineAnim;
+    [SerializeField]
+    private Animator frontBackRunframeAnim;
     [Header("GhostEffect")]
     [SerializeField]
     private GhostEffectColorPickerController ghostColorPicker;
@@ -33,7 +38,9 @@ public class PlayerAnimationController : MonoBehaviour
 
     private AnimDir curDir = AnimDir.Front;
     private bool isMove = false;
+    public bool isRun = true;
     private bool isDebugMod = false;
+
     private void Awake()
     {
         frontBackMoveframeAnim.gameObject.GetComponent<SpriteRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
@@ -41,8 +48,10 @@ public class PlayerAnimationController : MonoBehaviour
         anims.Add(frontIdleSpineAnim.gameObject);
         anims.Add(backIdleSpineAnim.gameObject);
         anims.Add(frontBackMoveframeAnim.gameObject);
-        
-        
+        anims.Add(runSpineAnim.gameObject);
+        anims.Add(frontBackRunframeAnim.gameObject);
+
+
         foreach (var item in ghostEffects)
         {
             item.Init(ghostColorPicker);
@@ -122,7 +131,7 @@ public class PlayerAnimationController : MonoBehaviour
         if (!isMove && curDir == dir)
         {
             return;
-        }
+        }        
         switch (dir)
         {
             case AnimDir.Left:
@@ -145,6 +154,41 @@ public class PlayerAnimationController : MonoBehaviour
         curDir = dir;
         isMove = false;
     }
+    public void SetRunAnim(AnimDir dir)
+    {
+        if (isMove && curDir == dir)
+        {
+            return;
+        }
+        switch (dir)
+        {
+            case AnimDir.Left:
+                EnableAnim(runSpineAnim.gameObject);
+                runSpineAnim.AnimationState.SetAnimation(0, "animation", true);
+                runSpineAnim.skeleton.ScaleX = -1;
+                break;
+            case AnimDir.Right:
+                EnableAnim(runSpineAnim.gameObject);
+                runSpineAnim.AnimationState.SetAnimation(0, "animation", true);
+                runSpineAnim.skeleton.ScaleX = 1;
+                break;
+            case AnimDir.Front:
+                EnableAnim(frontBackRunframeAnim.gameObject);
+                frontBackRunframeAnim.SetBool("IsFront", false);
+                break;
+            case AnimDir.Back:
+                EnableAnim(frontBackRunframeAnim.gameObject);
+                frontBackRunframeAnim.SetBool("IsFront", true);
+                break;
+        }
+        curDir = dir;
+        isMove = true;
+    }
+    public void changeAnim()
+    {
+        isMove = false;
+    }
+
     public void PlayerHitEffectPlay() 
     {
     

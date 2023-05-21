@@ -57,6 +57,32 @@ public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
     }
 }
 
+public class PlayerRun : Singleton<PlayerRun>, IState<PlayerController>
+{
+    public void Init()
+    {
+    }
+    public void Enter(PlayerController stateController)
+    {
+    }
+
+    public void Exit(PlayerController stateController)
+    {
+    }
+
+    public void FixedUpdateActive(PlayerController stateController)
+    {
+        stateController.ChangeToRunSpeed(true);
+        stateController.PlayerRunUpdate();
+    }
+
+    public void UpdateActive(PlayerController stateController)
+    {
+        stateController.InteractionInputCheck();
+        stateController.DebugModEnterInputCheck();
+    }
+}
+
 public class PlayerStop : Singleton<PlayerStop>, IState<PlayerController>
 {
     public void Init()
