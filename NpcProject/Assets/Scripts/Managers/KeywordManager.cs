@@ -31,7 +31,8 @@ public class KeywordManager
     public DebugZone CurDebugZone { get => curDebugZone;  }
 
     public Transform PlayerPanelLayout { get => playerKeywordPanel.LayoutParent; }
-    public Transform KeywordEntitySlots { get; private set; } 
+    public Transform KeywordEntitySlots { get; private set; }
+    public Transform EntityKeywordStatusList { get; private set; } 
     public KeywordController CurDragKeyword { get; set; }
     public Action OnEnterDebugModEvent{ get; set; }
     public Action OnExitDebugModEvent{ get; set; }
@@ -39,6 +40,9 @@ public class KeywordManager
     {
         playerKeywordPanel = Managers.UI.MakeSceneUI<PlayerKeywordPanelController>(null,"PlayerKeywordPanel");
         KeywordEntitySlots = new GameObject("KeywordEntitySlots").transform;
+        EntityKeywordStatusList = new GameObject("EntityKeywordStatusList").transform;
+        EntityKeywordStatusList.SetAsFirstSibling();
+        playerKeywordPanel.transform.SetAsFirstSibling();
         KeywordEntitySlots.SetParent(playerKeywordPanel.transform);
         graphicRaycaster = playerKeywordPanel.gameObject.GetOrAddComponent<GraphicRaycaster>();
         LoadColorStateData();
