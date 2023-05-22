@@ -88,12 +88,12 @@ public class PlayerAnimationController : MonoBehaviour
         {
             case AnimDir.Left:
                 EnableAnim(sideSpineAnim.gameObject);
-                sideSpineAnim.AnimationState.SetAnimation(0, "animation", true);
+                sideSpineAnim.AnimationState.SetAnimation(0, "walk", true);
                 sideSpineAnim.skeleton.ScaleX = 1;
                 break;
             case AnimDir.Right:
                 EnableAnim(sideSpineAnim.gameObject);
-                sideSpineAnim.AnimationState.SetAnimation(0, "animation", true);
+                sideSpineAnim.AnimationState.SetAnimation(0, "walk", true);
                 sideSpineAnim.skeleton.ScaleX = -1;
                 break;
             case AnimDir.Front:
@@ -127,12 +127,12 @@ public class PlayerAnimationController : MonoBehaviour
         {
             case AnimDir.Left:
                 EnableAnim(sideSpineAnim.gameObject);
-                sideSpineAnim.AnimationState.SetAnimation(0, "idel", true);
+                sideSpineAnim.AnimationState.SetAnimation(0, "idle", true);
                 sideSpineAnim.skeleton.ScaleX = 1;
                 break;
             case AnimDir.Right:
                 EnableAnim(sideSpineAnim.gameObject);
-                sideSpineAnim.AnimationState.SetAnimation(0, "idel", true);
+                sideSpineAnim.AnimationState.SetAnimation(0, "idle", true);
                 sideSpineAnim.skeleton.ScaleX = -1;
                 break;
             case AnimDir.Front:
