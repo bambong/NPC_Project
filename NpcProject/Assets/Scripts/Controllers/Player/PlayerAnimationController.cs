@@ -2,26 +2,34 @@ using Spine.Unity;
 using Spine.Unity.Examples;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 public class PlayerAnimationController : MonoBehaviour
 {
-    public enum AnimDir 
+    public enum MoveDir 
     {
         Left,
         Right,
         Front,
         Back
     }
-    
+    public enum PlayerDir
+    {
+        PlayerSide,
+        PlayerFront,
+        PlayerBack
+    }
+    public enum AnimTag
+    {
+        _Idle,
+        _Walk,
+        _Run
+    }
     [SerializeField]
-    private SkeletonAnimation sideSpineAnim;
+    private Animator animatorController;
     [SerializeField]
-    private SkeletonAnimation frontIdleSpineAnim;
-    [SerializeField]
-    private SkeletonAnimation backIdleSpineAnim;
-    [SerializeField]
-    private Animator frontBackMoveframeAnim;
+    private SpriteRenderer spriteRenderer;
     [Header("GhostEffect")]
     [SerializeField]
     private GhostEffectColorPickerController ghostColorPicker;
@@ -29,20 +37,14 @@ public class PlayerAnimationController : MonoBehaviour
     [SerializeField]
     private List<GhostEffectController> ghostEffects;
 
-    private List<GameObject> anims =new List<GameObject>();
-
-    private AnimDir curDir = AnimDir.Front;
+    private MoveDir curDir = MoveDir.Front;
     private bool isMove = false;
     private bool isDebugMod = false;
+
     private void Awake()
     {
-        frontBackMoveframeAnim.gameObject.GetComponent<SpriteRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-        anims.Add(sideSpineAnim.gameObject);
-        anims.Add(frontIdleSpineAnim.gameObject);
-        anims.Add(backIdleSpineAnim.gameObject);
-        anims.Add(frontBackMoveframeAnim.gameObject);
-        
-        
+        spriteRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+
         foreach (var item in ghostEffects)
         {
             item.Init(ghostColorPicker);
@@ -65,88 +67,93 @@ public class PlayerAnimationController : MonoBehaviour
             item.Close();
         }
     }
-
-    private void EnableAnim(GameObject target)
+    private void AnimationOrderDirCheck(StringBuilder str , MoveDir dir) 
     {
-        for(int i =0; i<anims.Count; ++i) 
-        {
-            if(anims[i] != target) 
-            {
-                anims[i].SetActive(false);
-            }
-        }
-        target.SetActive(true);
-    }
-
-    public void SetMoveAnim(AnimDir dir , Vector3 moveVec) 
-    {
-        if (isMove && curDir == dir)
-        {
-            return;
-        }
         switch (dir)
         {
-            case AnimDir.Left:
-                EnableAnim(sideSpineAnim.gameObject);
-                sideSpineAnim.AnimationState.SetAnimation(0, "walk", true);
-                sideSpineAnim.skeleton.ScaleX = 1;
+            case MoveDir.Left:
+                str.Append(PlayerDir.PlayerSide.ToString());
                 break;
-            case AnimDir.Right:
-                EnableAnim(sideSpineAnim.gameObject);
-                sideSpineAnim.AnimationState.SetAnimation(0, "walk", true);
-                sideSpineAnim.skeleton.ScaleX = -1;
+            case MoveDir.Right:
+                str.Append(PlayerDir.PlayerSide.ToString());
                 break;
-            case AnimDir.Front:
-                //if (isDebugMod) 
-                //{
-                //    ghostEffects[0].Open();
-                //}
-                EnableAnim(frontBackMoveframeAnim.gameObject);
-                frontBackMoveframeAnim.SetBool("IsFront", true);
+            case MoveDir.Front:
+                str.Append(PlayerDir.PlayerFront.ToString());
                 break;
-            case AnimDir.Back:
-                //if (isDebugMod)
-                //{
-                //    ghostEffects[0].Close();
-                //}
-               
-                EnableAnim(frontBackMoveframeAnim.gameObject);
-                frontBackMoveframeAnim.SetBool("IsFront", false);
+            case MoveDir.Back:
+                str.Append(PlayerDir.PlayerBack.ToString());
                 break;
         }
-        curDir = dir;
-        isMove = true;
     }
-    public void SetIdleAnim(AnimDir dir) 
+    private void FlipUpdate(MoveDir dir) 
+    {
+        var scale = spriteRenderer.transform.localScale;
+        if (dir == MoveDir.Right)
+        {
+            scale.x = Mathf.Abs(scale.x) * -1;
+        }
+        else
+        {
+            scale.x = Mathf.Abs(scale.x);
+        }
+        spriteRenderer.transform.localScale = scale;
+    }
+   
+    public void SetIdleAnim(MoveDir dir) 
     {
         if (!isMove && curDir == dir)
         {
             return;
         }
-        switch (dir)
-        {
-            case AnimDir.Left:
-                EnableAnim(sideSpineAnim.gameObject);
-                sideSpineAnim.AnimationState.SetAnimation(0, "idle", true);
-                sideSpineAnim.skeleton.ScaleX = 1;
-                break;
-            case AnimDir.Right:
-                EnableAnim(sideSpineAnim.gameObject);
-                sideSpineAnim.AnimationState.SetAnimation(0, "idle", true);
-                sideSpineAnim.skeleton.ScaleX = -1;
-                break;
-            case AnimDir.Front:
-                EnableAnim(frontIdleSpineAnim.gameObject);
-                break;
-            case AnimDir.Back:
-                EnableAnim(backIdleSpineAnim.gameObject);
-                break;
-        }
+
+        StringBuilder animOrder = new StringBuilder();
+
+        FlipUpdate(dir);
+        AnimationOrderDirCheck(animOrder, dir);
+        animOrder.Append(AnimTag._Idle.ToString());
+        animatorController.Play(animOrder.ToString());
+
         curDir = dir;
         isMove = false;
-    }
-    public void PlayerHitEffectPlay() 
-    {
     
+    }
+    public void SetWalkAnim(MoveDir dir, Vector3 moveVec)
+    {
+        if (isMove && curDir == dir)
+        {
+            return;
+        }
+
+        StringBuilder animOrder = new StringBuilder();
+
+        FlipUpdate(dir);
+        AnimationOrderDirCheck(animOrder, dir);
+        animOrder.Append(AnimTag._Walk.ToString());
+        animatorController.Play(animOrder.ToString());
+
+        curDir = dir;
+        isMove = true;
+    }
+
+    public void SetRunAnim(MoveDir dir)
+    {
+        if (isMove && curDir == dir)
+        {
+            return;
+        }
+
+        StringBuilder animOrder = new StringBuilder();
+
+        FlipUpdate(dir);
+        AnimationOrderDirCheck(animOrder, dir);
+        animOrder.Append(AnimTag._Run.ToString());
+        animatorController.Play(animOrder.ToString());
+
+        curDir = dir;
+        isMove = true;
+    }
+    public void PlayerDeathAnimPlay() 
+    {
+        animatorController.SetBool("IsDead", true);
     }
 }

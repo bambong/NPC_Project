@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     [SerializeField]
     private MMF_Player hitFeedback;
 
-    private PlayerAnimationController.AnimDir curDir = PlayerAnimationController.AnimDir.Front;
+    private PlayerAnimationController.MoveDir curDir = PlayerAnimationController.MoveDir.Front;
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
 
@@ -270,7 +270,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         var moveDotVer = Vector3.Dot(-rotater.transform.forward.normalized, moveVec.normalized);
         var factor = PLAYER_ANIM_COS;
-        if(curDir == PlayerAnimationController.AnimDir.Front || curDir == PlayerAnimationController.AnimDir.Back) 
+        if(curDir == PlayerAnimationController.MoveDir.Front || curDir == PlayerAnimationController.MoveDir.Back) 
         {
             factor -= PLAYER_DIR_WEIGHT;
         }
@@ -283,11 +283,11 @@ public class PlayerController : MonoBehaviour , IDataHandler
         {
             if (moveDotVer < 0)
             {
-                curDir = PlayerAnimationController.AnimDir.Front;
+                curDir = PlayerAnimationController.MoveDir.Front;
             }
             else
             {
-                curDir = PlayerAnimationController.AnimDir.Back;
+                curDir = PlayerAnimationController.MoveDir.Back;
             }
         }
         else if (Mathf.Abs(moveDotVer) < factor)
@@ -295,11 +295,11 @@ public class PlayerController : MonoBehaviour , IDataHandler
             var moveDotHor = Vector3.Dot(rotater.transform.right.normalized, moveVec.normalized);
             if (moveDotHor < 0)
             {
-                curDir = PlayerAnimationController.AnimDir.Left;
+                curDir = PlayerAnimationController.MoveDir.Left;
             }
             else
             {
-                curDir = PlayerAnimationController.AnimDir.Right;
+                curDir = PlayerAnimationController.MoveDir.Right;
             }
         }
     }
@@ -381,7 +381,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     }
     public void AnimMoveEnter(Vector3 moveVec)
     {
-        animationController.SetMoveAnim(curDir,moveVec);
+        animationController.SetWalkAnim(curDir,moveVec);
     }
     public void ClearMoveAnim()
     {
