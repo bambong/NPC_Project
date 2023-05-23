@@ -20,6 +20,8 @@ public class ExLazer : MonoBehaviour
     private void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer.startWidth = laserWidth;
+        lineRenderer.endWidth = laserWidth;
     }
 
     private void Update()
@@ -37,33 +39,34 @@ public class ExLazer : MonoBehaviour
         {
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, hit.point);
-            
+            RayResult.gameObject.transform.position = hit.point;
             
             // 레이저와 충돌한 물체를 검출하면 실행될 코드 작성
-            Debug.Log(hit.collider.gameObject.name);
-            if(hit.collider.gameObject.name == correctObject.gameObject.name)
-            {
-                if (clear == false)
-                {
-                    clear = true;
-                    bridgeGame.clearCount++;
-                    bridgeGame.Clear();
-                }
-            }
+            //Debug.Log(hit.collider.gameObject.name);
+            //if(hit.collider.gameObject.name == correctObject.gameObject.name)
+            //{
+            //    if (clear == false)
+            //    {
+            //        clear = true;
+            //        bridgeGame.clearCount++;
+            //        bridgeGame.Clear();
+            //    }
+            //}
             
             // 충돌한 물체에 대한 추가 처리
             // hit.collider.gameObject.GetComponent<Enemy>().TakeDamage(damage);
         }
         else
         {
-            if(clear == true)
-            {
-                clear = false;
-                bridgeGame.clearCount--;
-                bridgeGame.Clear();
-            }
+            //if(clear == true)
+            //{
+            //    clear = false;
+            //    bridgeGame.clearCount--;
+            //    bridgeGame.Clear();
+            //}
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, transform.position + transform.forward * maxLength);
+            RayResult.gameObject.transform.localPosition = transform.forward * maxLength;
         }
     }
 }
