@@ -12,7 +12,8 @@ public class SoundManager
     private Bus bgmBus;
     private Bus sfxBus;
 
-    public EventInstance sfxInstance;
+    private EventInstance sfxInstance;
+    private EventInstance moveSoundInstance;
     public StudioEventEmitter bgmEmitter;
 
 
@@ -120,6 +121,23 @@ public class SoundManager
         sfxInstance.start();
     }
 
+    public void StopSFX()
+    {
+        sfxInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+    }
+
+    public void PlayMoveSound(Enum eventpath)
+    {
+        StopMoveSound();
+        moveSoundInstance = RuntimeManager.CreateInstance("event:/SFX/" + eventpath.ToString());
+        moveSoundInstance.start();
+    }
+
+    public void StopMoveSound()
+    {
+        moveSoundInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+    }
+
     #region SoundVolumeControl
     public void SetPauseBGM(bool pause) => bgmEmitter.SetPause(pause);
 
@@ -132,6 +150,7 @@ public class SoundManager
 
     public void Clear()
     {
+        StopMoveSound();
     }
 
 }

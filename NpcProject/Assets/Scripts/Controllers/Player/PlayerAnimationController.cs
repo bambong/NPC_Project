@@ -37,7 +37,8 @@ public class PlayerAnimationController : MonoBehaviour
     [SerializeField]
     private List<GhostEffectController> ghostEffects;
 
-    private MoveDir curDir = MoveDir.Front;
+    private PlayerDir curPlayerDir;
+    private AnimTag curAnimTag;
     private bool isMove = false;
     private bool isDebugMod = false;
 
@@ -67,23 +68,26 @@ public class PlayerAnimationController : MonoBehaviour
             item.Close();
         }
     }
-    private void AnimationOrderDirCheck(StringBuilder str , MoveDir dir) 
+    private PlayerDir GetPlayerDir(MoveDir dir) 
     {
         switch (dir)
         {
             case MoveDir.Left:
-                str.Append(PlayerDir.PlayerSide.ToString());
-                break;
+                return PlayerDir.PlayerSide;
             case MoveDir.Right:
-                str.Append(PlayerDir.PlayerSide.ToString());
-                break;
+                return PlayerDir.PlayerSide;
             case MoveDir.Front:
-                str.Append(PlayerDir.PlayerFront.ToString());
-                break;
+                return PlayerDir.PlayerFront;
             case MoveDir.Back:
-                str.Append(PlayerDir.PlayerBack.ToString());
-                break;
+                return PlayerDir.PlayerBack;
         }
+        return PlayerDir.PlayerSide;
+    }
+
+    private void AnimationOrderDirCheck(StringBuilder str , MoveDir dir) 
+    {
+        curPlayerDir = GetPlayerDir(dir);
+        str.Append(curPlayerDir.ToString());
     }
     private void FlipUpdate(MoveDir dir) 
     {
@@ -101,55 +105,53 @@ public class PlayerAnimationController : MonoBehaviour
    
     public void SetIdleAnim(MoveDir dir) 
     {
-        if (!isMove && curDir == dir)
+        FlipUpdate(dir);
+        if (curAnimTag == AnimTag._Idle && curPlayerDir == GetPlayerDir(dir))
         {
             return;
         }
 
         StringBuilder animOrder = new StringBuilder();
 
-        FlipUpdate(dir);
         AnimationOrderDirCheck(animOrder, dir);
         animOrder.Append(AnimTag._Idle.ToString());
         animatorController.Play(animOrder.ToString());
+        curAnimTag = AnimTag._Idle;
 
-        curDir = dir;
         isMove = false;
     
     }
     public void SetWalkAnim(MoveDir dir, Vector3 moveVec)
     {
-        if (isMove && curDir == dir)
+        FlipUpdate(dir);
+        if (curAnimTag == AnimTag._Walk && curPlayerDir == GetPlayerDir(dir))
         {
             return;
         }
-
         StringBuilder animOrder = new StringBuilder();
 
-        FlipUpdate(dir);
         AnimationOrderDirCheck(animOrder, dir);
         animOrder.Append(AnimTag._Walk.ToString());
         animatorController.Play(animOrder.ToString());
-
-        curDir = dir;
+        curAnimTag = AnimTag._Walk;
         isMove = true;
     }
 
     public void SetRunAnim(MoveDir dir)
     {
-        if (isMove && curDir == dir)
+        FlipUpdate(dir);
+        if (curAnimTag == AnimTag._Run && curPlayerDir == GetPlayerDir(dir))
         {
             return;
         }
 
         StringBuilder animOrder = new StringBuilder();
 
-        FlipUpdate(dir);
         AnimationOrderDirCheck(animOrder, dir);
         animOrder.Append(AnimTag._Run.ToString());
         animatorController.Play(animOrder.ToString());
-
-        curDir = dir;
+        curAnimTag = AnimTag._Run;
+ 
         isMove = true;
     }
     public void PlayerDeathAnimPlay() 
