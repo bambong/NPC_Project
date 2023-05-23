@@ -10,8 +10,8 @@ public class IntroKeywordFrameController : MonoBehaviour, IDropHandler, IPointer
 
     private bool isFilled = false;
 
-    private float initScale = 1.5f;
-    private float targetScale = 1.75f;
+    private float initScale = 1.3f;
+    private float targetScale = 1.5f;
     private float animDuration = 0.1f;
 
     private void Awake()
