@@ -10,6 +10,7 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
+        Managers.Sound.StopSFX();
         stateController.AnimIdleEnter();
     }
 
@@ -38,11 +39,12 @@ public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-      
+        Managers.Sound.PlaySFX(Define.SOUND.WalkPlayer);
     }
 
     public void Exit(PlayerController stateController)
     {
+        Managers.Sound.StopSFX();
     }
 
     public void FixedUpdateActive(PlayerController stateController)
@@ -64,10 +66,12 @@ public class PlayerRun : Singleton<PlayerRun>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
+        Managers.Sound.PlaySFX(Define.SOUND.RunPlayer);
     }
 
     public void Exit(PlayerController stateController)
     {
+        Managers.Sound.StopSFX();
     }
 
     public void FixedUpdateActive(PlayerController stateController)

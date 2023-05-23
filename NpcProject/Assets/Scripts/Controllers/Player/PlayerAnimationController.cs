@@ -22,11 +22,6 @@ public class PlayerAnimationController : MonoBehaviour
     private SkeletonAnimation backIdleSpineAnim;
     [SerializeField]
     private Animator frontBackMoveframeAnim;
-    [Header("RunAnimation")]
-    [SerializeField]
-    private SkeletonAnimation runSpineAnim;
-    [SerializeField]
-    private Animator frontBackRunframeAnim;
     [Header("GhostEffect")]
     [SerializeField]
     private GhostEffectColorPickerController ghostColorPicker;
@@ -48,8 +43,6 @@ public class PlayerAnimationController : MonoBehaviour
         anims.Add(frontIdleSpineAnim.gameObject);
         anims.Add(backIdleSpineAnim.gameObject);
         anims.Add(frontBackMoveframeAnim.gameObject);
-        anims.Add(runSpineAnim.gameObject);
-        anims.Add(frontBackRunframeAnim.gameObject);
 
 
         foreach (var item in ghostEffects)
@@ -162,23 +155,24 @@ public class PlayerAnimationController : MonoBehaviour
         }
         switch (dir)
         {
+            
             case AnimDir.Left:
-                EnableAnim(runSpineAnim.gameObject);
-                runSpineAnim.AnimationState.SetAnimation(0, "animation", true);
-                runSpineAnim.skeleton.ScaleX = -1;
+                EnableAnim(sideSpineAnim.gameObject);
+                sideSpineAnim.AnimationState.SetAnimation(0, "run", true);
+                sideSpineAnim.skeleton.ScaleX = 1;
                 break;
             case AnimDir.Right:
-                EnableAnim(runSpineAnim.gameObject);
-                runSpineAnim.AnimationState.SetAnimation(0, "animation", true);
-                runSpineAnim.skeleton.ScaleX = 1;
+                EnableAnim(sideSpineAnim.gameObject);
+                sideSpineAnim.AnimationState.SetAnimation(0, "run", true);
+                sideSpineAnim.skeleton.ScaleX = -1;
                 break;
             case AnimDir.Front:
-                EnableAnim(frontBackRunframeAnim.gameObject);
-                frontBackRunframeAnim.SetBool("IsFront", false);
+                EnableAnim(frontBackMoveframeAnim.gameObject);
+                frontBackMoveframeAnim.SetBool("IsFront", true);
                 break;
             case AnimDir.Back:
-                EnableAnim(frontBackRunframeAnim.gameObject);
-                frontBackRunframeAnim.SetBool("IsFront", true);
+                EnableAnim(frontBackMoveframeAnim.gameObject);
+                frontBackMoveframeAnim.SetBool("IsFront", false);
                 break;
         }
         curDir = dir;

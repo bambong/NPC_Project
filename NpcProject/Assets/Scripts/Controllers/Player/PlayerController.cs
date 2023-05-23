@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     [SerializeField]
     private float walkSpeed = 600f;
     [SerializeField]
-    private float runSpeed = 800f;
+    private float runSpeed = 1800f;
     [SerializeField]
     private int maxSlopeAngle = 40;
     [SerializeField]

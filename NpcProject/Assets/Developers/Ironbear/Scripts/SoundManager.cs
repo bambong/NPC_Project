@@ -120,6 +120,11 @@ public class SoundManager
         sfxInstance.start();
     }
 
+    public void StopSFX()
+    {
+        sfxInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+    }
+
     #region SoundVolumeControl
     public void SetPauseBGM(bool pause) => bgmEmitter.SetPause(pause);
 
