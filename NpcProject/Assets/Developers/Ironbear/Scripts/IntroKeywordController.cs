@@ -9,11 +9,9 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
 
     [SerializeField]
     private RectTransform rectTransform;
-    [SerializeField]
-    private Transform canvas;
-    [SerializeField]
-    private Transform puzzleCanvas;
 
+    private Transform canvas;
+    private Transform puzzleCanvas;
 
     private CanvasGroup canvasGroup;
     private int prevSibilintIndex;
@@ -33,6 +31,9 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
     {
         startDragPoint = GetComponent<RectTransform>().localPosition;
         canvasGroup = GetComponent<CanvasGroup>();
+
+        canvas = GameObject.Find("Canvas").transform;
+        puzzleCanvas = GameObject.Find("PuzzlePanel").transform;
     }
 
     public override void Init()
@@ -92,7 +93,8 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
     }
 
     public void OnEndDrag(PointerEventData eventData)
-    {
+    { 
+        //키워드 칸에 못 들어갔을 때
         if (transform.parent == canvas)
         {
             transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
@@ -115,14 +117,5 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
     public void OnPointerExit(PointerEventData eventData)
     {
         
-    }
-    public void DragReset()
-    {
-        transform.SetParent(startParent);
-        transform.SetSiblingIndex(prevSibilintIndex);
-        rectTransform.localPosition = startDragPoint;
-        SetMoveState(false);
-        SetDragState(false);
-        curFrame.OnEndDrag();
     }
 }
