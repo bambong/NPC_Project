@@ -576,6 +576,7 @@ MonoBehaviour:
   vircam: {fileID: 855878969}
   tutorialSceneTalkData: {fileID: 11400000, guid: 7d50e8233f93f1845b8c4519239f8d8d, type: 2}
   playerSpawnSpot: {x: 268.47894, y: -6.2812696, z: 23.127155}
+  progress: 1
 --- !u!4 &248614868
 Transform:
   m_ObjectHideFlags: 0
@@ -808,6 +809,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24651d961476c7a4ca00d46866546750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  guId: 
   availableKeywordType: -1
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
@@ -815,7 +817,7 @@ MonoBehaviour:
   keywords:
   - isLock: 0
     keywordGo: {fileID: 0}
-  worldSlotLayoutName: KeywordWorldSlotLayout
+  statusSlotLayoutName: KeywordStatusLayoutController
 --- !u!65 &270483438
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2742,6 +2744,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24651d961476c7a4ca00d46866546750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  guId: 
   availableKeywordType: -1
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
@@ -2749,7 +2752,7 @@ MonoBehaviour:
   keywords:
   - isLock: 0
     keywordGo: {fileID: 0}
-  worldSlotLayoutName: KeywordWorldSlotLayout
+  statusSlotLayoutName: KeywordStatusLayoutController
 --- !u!65 &1592296192
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4801,7 +4804,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 060e2cfef8673f4419ab3152849811c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetScene: 5
+  targetScene: 10
 --- !u!33 &4212857253977160185
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5148,6 +5151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dae1261cdc2509f4b81c83d717c0459a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  guId: 
   availableKeywordType: -1
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
@@ -5157,7 +5161,7 @@ MonoBehaviour:
     keywordGo: {fileID: 9059506981520492944, guid: a229d9efe7e2d1b4fbe5e4354cd12089, type: 3}
   - isLock: 0
     keywordGo: {fileID: 9059506981520492944, guid: 70ee77ae61459f643b87f6cae22de398, type: 3}
-  worldSlotLayoutName: KeywordWorldSlotLayout
+  statusSlotLayoutName: KeywordStatusLayoutController
 --- !u!54 &4212857254325584569
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5301,6 +5305,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24651d961476c7a4ca00d46866546750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  guId: 
   availableKeywordType: -1
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
@@ -5308,7 +5313,7 @@ MonoBehaviour:
   keywords:
   - isLock: 0
     keywordGo: {fileID: 0}
-  worldSlotLayoutName: KeywordWorldSlotLayout
+  statusSlotLayoutName: KeywordStatusLayoutController
 --- !u!1 &4212857254512145440
 GameObject:
   m_ObjectHideFlags: 0
@@ -5534,6 +5539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24651d961476c7a4ca00d46866546750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  guId: 
   availableKeywordType: -1
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
@@ -5541,7 +5547,7 @@ MonoBehaviour:
   keywords:
   - isLock: 0
     keywordGo: {fileID: 0}
-  worldSlotLayoutName: KeywordWorldSlotLayout
+  statusSlotLayoutName: KeywordStatusLayoutController
 --- !u!4 &4266472900245517440
 Transform:
   m_ObjectHideFlags: 0
