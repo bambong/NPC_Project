@@ -1,7 +1,5 @@
 using UnityEngine;
 using DG.Tweening;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 public class PanelsController : UI_Base
 {
@@ -13,12 +11,15 @@ public class PanelsController : UI_Base
     private GameObject startPanel;
     [SerializeField]
     private GameObject puzzlePanel;
+    [SerializeField]
+    private GameObject textPanel;
 
     private float fadeDuration = 1f;
 
     private bool isLogo = false;
     private bool isStart = false;
     private bool isPuzzle = false;
+    private bool isText = false;
 
 
     public override void Init()
@@ -30,6 +31,7 @@ public class PanelsController : UI_Base
         logoPanel.SetActive(true);
         startPanel.SetActive(false);
         puzzlePanel.SetActive(false);
+        textPanel.SetActive(false);
         isLogo = true;
     }
 
@@ -53,10 +55,14 @@ public class PanelsController : UI_Base
             }
             else if(isPuzzle)
             {
-                //scene loading
+                puzzlePanel.SetActive(false);
+                textPanel.SetActive(true);
+                isPuzzle = false;
+                isText = true;
             }
             
-            CanvasFadeIn(); });
+            CanvasFadeIn(); 
+        });
     }
 
     private void CanvasFadeIn()
