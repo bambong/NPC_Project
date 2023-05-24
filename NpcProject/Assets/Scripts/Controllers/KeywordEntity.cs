@@ -47,18 +47,8 @@ class CreateKeywordOption
     public GameObject keywordGo;
 }
 
-public class KeywordEntity : MonoBehaviour , IDataHandler
+public class KeywordEntity : GuIdBehaviour , IDataHandler
 {
-
-    [Header("GUID")]
-    [SerializeField]
-    private string guId;
-    [ContextMenu("Generate GUID")]
-    private void GenerateGuid() 
-    {
-        guId = System.Guid.NewGuid().ToString();
-    }
-
     [Space(10)]
     [Header("Keyword Stat")]
     [SerializeField]
@@ -112,8 +102,10 @@ public class KeywordEntity : MonoBehaviour , IDataHandler
     private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude;
     private readonly string WIRE_FRAME_COLOR_NAME = "_Wireframe_Color";
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         InitColisionLayer();
         if (!TryGetComponent<BoxCollider>(out col))
         {

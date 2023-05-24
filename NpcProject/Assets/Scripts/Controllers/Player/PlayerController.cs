@@ -160,7 +160,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
         }
     }
 
-    public void PlayerMoveUpdate()
+    public void PlayerWalkUpdate()
     {
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
@@ -226,8 +226,13 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
         if(!isRun)
         {
-            ChangeToRunSpeed(isRun);
-            SetStateIdle();
+            if (new Vector3(hor, 0, ver).magnitude <= 0.1f)
+            {
+                SetStateIdle();
+                rigid.velocity = Vector3.zero;
+                return;
+            }
+            SetStateWalk();
             return;
         }
 
@@ -394,7 +399,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
         
         if(IsMove(transform.position,hor,ver))
         {
-            playerStateController.ChangeState(PlayerMove.Instance);
+            SetStateWalk();
         }
 
     }
@@ -530,6 +535,10 @@ public class PlayerController : MonoBehaviour , IDataHandler
     public void SetStateIdle()
     {
         playerStateController.ChangeState(PlayerIdle.Instance);
+    }
+    public void SetStateWalk()
+    {
+        playerStateController.ChangeState(PlayerWalk.Instance);
     }
     public void SetStateRun()
     {

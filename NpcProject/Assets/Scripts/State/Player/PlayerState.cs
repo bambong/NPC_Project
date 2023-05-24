@@ -32,13 +32,14 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
     }
 }
 
-public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
+public class PlayerWalk : Singleton<PlayerWalk>, IState<PlayerController>
 {
     public void Init()
     {
     }
     public void Enter(PlayerController stateController)
     {
+        stateController.ChangeToRunSpeed(false);
         Managers.Sound.PlayMoveSound(Define.SOUND.WalkPlayer);
     }
 
@@ -49,7 +50,7 @@ public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
 
     public void FixedUpdateActive(PlayerController stateController)
     {
-        stateController.PlayerMoveUpdate();
+        stateController.PlayerWalkUpdate();
     }
 
     public void UpdateActive(PlayerController stateController)
@@ -67,16 +68,18 @@ public class PlayerRun : Singleton<PlayerRun>, IState<PlayerController>
     public void Enter(PlayerController stateController)
     {
         Managers.Sound.PlayMoveSound(Define.SOUND.RunPlayer);
+        stateController.ChangeToRunSpeed(true);
     }
 
     public void Exit(PlayerController stateController)
     {
+        stateController.ChangeToRunSpeed(false);
         Managers.Sound.StopMoveSound();
     }
 
     public void FixedUpdateActive(PlayerController stateController)
     {
-        stateController.ChangeToRunSpeed(true);
+       
         stateController.PlayerRunUpdate();
     }
 

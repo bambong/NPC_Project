@@ -39,8 +39,9 @@ public class DebugZone : GuIdBehaviour, IDataHandler
     public int PlayerSlotCount { get => playerSlotCount; }
     public List<Material> WireMaterials { get => wireMaterials; }
     public bool IsDebugAble { get => isDebugAble; }
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         MakeFrame();
         InitKeywords();
        
