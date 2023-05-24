@@ -21,9 +21,7 @@ MonoBehaviour:
       LayerMask:
         serializedVersion: 2
         m_Bits: 2147483647
-      PassNames:
-      - Outline
-      - Silhouette
+      PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
     overrideDepthState: 0
@@ -73,11 +71,11 @@ MonoBehaviour:
     Downsample: 0
     AfterOpaque: 0
     Source: 0
-    NormalSamples: 1
-    Intensity: 3
-    DirectLightingStrength: 0.162
-    Radius: 1.52
-    SampleCount: 4
+    NormalSamples: 2
+    Intensity: 0.38
+    DirectLightingStrength: 0.275
+    Radius: 0.36
+    SampleCount: 10
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -164,7 +162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   m_Settings:
-    technique: 2
+    technique: 0
     maxDrawDistance: 1000
     dBufferSettings:
       surfaceData: 2
