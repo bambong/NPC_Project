@@ -391,8 +391,20 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
+        
+        if (IsOnSlope(Vector3.zero))
+        {
+            rigid.useGravity = false;
+            gravityForce.enabled = false;
+ 
+        }
+        else
+        {
+            rigid.useGravity = true;
+            gravityForce.enabled = true;
+        }
 
-        if(hor == 0 && ver == 0)
+        if (hor == 0 && ver == 0)
         {
             return;
         }
