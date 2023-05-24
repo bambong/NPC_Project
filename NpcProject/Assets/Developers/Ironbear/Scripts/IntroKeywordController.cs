@@ -100,9 +100,6 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
             transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
             transform.SetParent(startParent);
         }
-        else
-        {        
-        }
 
         canvasGroup.blocksRaycasts = true;
 

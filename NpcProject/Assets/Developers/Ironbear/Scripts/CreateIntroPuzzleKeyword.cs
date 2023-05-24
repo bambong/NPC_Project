@@ -3,10 +3,14 @@ using TMPro;
 
 public class CreateIntroPuzzleKeyword : MonoBehaviour
 {
-    public TMP_FontAsset font;
-    public string[] words;
-    public GameObject prefab;
-    public Transform[] spawnParent;
+    [SerializeField]
+    private TMP_FontAsset font;
+    [SerializeField]
+    private string[] words;
+    [SerializeField]
+    private GameObject prefab;
+    [SerializeField]
+    private Transform[] spawnParent;
 
     private void Awake()
     {
