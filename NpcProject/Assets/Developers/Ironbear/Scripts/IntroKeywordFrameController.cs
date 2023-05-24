@@ -5,47 +5,34 @@ using DG.Tweening;
 
 public class IntroKeywordFrameController : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField]
-    private GameObject nextText;
-
     private Image image;
-    private RectTransform rect;
     private CanvasGroup canvasGroup;
-    private CanvasGroup nextCanvasGroup;
-
-    private bool isFilled = false;
+    private PuzzlePanelController panelController;
 
     private float initScale = 1.3f;
     private float targetScale = 1.5f;
     private float animDuration = 0.1f;
-    private float fadeOutDuration = 0.5f;
-    private float fadeInDuration = 0.5f;
-
-    private Sequence seq;
+    private float fadeDuration = 0.5f;
 
     private void Awake()
     {
-        rect = GetComponent<RectTransform>();
         image = GetComponent<Image>();
-        canvasGroup = GetComponentInParent<CanvasGroup>();
-        nextCanvasGroup = nextText.GetComponent<CanvasGroup>();
+        canvasGroup = transform.parent.GetComponentInParent<CanvasGroup>();
+        panelController = transform.parent.GetComponentInParent<PuzzlePanelController>();
     }
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (eventData.pointerDrag != null && isFilled == false)
-        {
-            isFilled = true;
+        if (eventData.pointerDrag != null && !panelController.isFilled)
+        {          
+            panelController.SetFilled();
             eventData.pointerDrag.transform.SetParent(transform);
 
             RectTransform draggedRect = eventData.pointerDrag.GetComponent<RectTransform>();
             draggedRect.localScale = Vector3.one;
-            draggedRect.DOLocalMove(Vector3.zero, 0.1f).SetEase(Ease.OutQuad).OnComplete(() =>
-            {
-                FadeOutFrame();
-                seq.AppendInterval(1f);
-                FadeInFrame();
-            });
+            draggedRect.DOLocalMove(Vector3.zero, 0.1f).SetEase(Ease.OutQuad);
+            
+            panelController.FadeOutCurrentFrame();
         }
     }
 
@@ -56,21 +43,26 @@ public class IntroKeywordFrameController : MonoBehaviour, IDropHandler, IPointer
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if(!isFilled)
+        if(!panelController.isFilled)
         {
             image.rectTransform.DOScale(Vector3.one * initScale, animDuration).SetEase(Ease.OutBack);
         }        
     }
 
-    private void FadeOutFrame()
+    public void SetAlpha(float alpha)
     {
-        canvasGroup.DOFade(0f, fadeOutDuration);
+        canvasGroup.alpha = alpha;
     }
 
-    private void FadeInFrame()
+    public void FadeOut()
     {
-        nextText.SetActive(true);
-        nextCanvasGroup.alpha = 0f;
-        nextCanvasGroup.DOFade(1f, fadeInDuration);
+        canvasGroup.DOFade(0f, fadeDuration * 1.3f);
+    }
+
+    public void FadeIn()
+    {
+        canvasGroup.DOFade(1f, fadeDuration);
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
     }
 }

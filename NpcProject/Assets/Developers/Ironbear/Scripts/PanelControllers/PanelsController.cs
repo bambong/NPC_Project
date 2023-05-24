@@ -13,15 +13,12 @@ public class PanelsController : UI_Base
     private GameObject startPanel;
     [SerializeField]
     private GameObject puzzlePanel;
-    [SerializeField]
-    private GameObject textPanel;
 
     private float fadeDuration = 1f;
 
     private bool isLogo = false;
     private bool isStart = false;
     private bool isPuzzle = false;
-    private bool isText = false;
 
 
     public override void Init()
@@ -33,7 +30,6 @@ public class PanelsController : UI_Base
         logoPanel.SetActive(true);
         startPanel.SetActive(false);
         puzzlePanel.SetActive(false);
-        textPanel.SetActive(false);
         isLogo = true;
     }
 
@@ -57,14 +53,7 @@ public class PanelsController : UI_Base
             }
             else if(isPuzzle)
             {
-                puzzlePanel.SetActive(false);
-                textPanel.SetActive(true);
-                isPuzzle = false;
-                isText = true;
-            }
-            else if(isText)
-            {
-                //next scene loading
+                //scene loading
             }
             
             CanvasFadeIn(); });

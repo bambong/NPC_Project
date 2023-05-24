@@ -2,16 +2,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
-public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler, IPointerExitHandler, IPointerEnterHandler
+public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
     private readonly float START_END_ANIM_TIME = 0.2f;
-    private readonly string KEYWORD_FRAME_TAG = "KeywordFrame";
 
     [SerializeField]
     private RectTransform rectTransform;
 
     private Transform canvas;
-    private Transform puzzleCanvas;
 
     private CanvasGroup canvasGroup;
     private int prevSibilintIndex;
@@ -33,7 +31,6 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
         canvasGroup = GetComponent<CanvasGroup>();
 
         canvas = GameObject.Find("Canvas").transform;
-        puzzleCanvas = GameObject.Find("PuzzlePanel").transform;
     }
 
     public override void Init()
@@ -104,15 +101,5 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
         canvasGroup.blocksRaycasts = true;
 
         SetDragState(false);
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        
     }
 }
