@@ -25,34 +25,38 @@ public class SecurityDoorController : MonoBehaviour
     {
         if(other.CompareTag("Player"))
         {
-            isOpen = true;           
+            isOpen = true;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") && isOpen)
+        if (other.CompareTag("Player") )
         {           
             CloseDoor();
         }
     }
 
+
     private void OpenDoor()
-    {     
-        animator.SetTrigger("isOpen");
+    {
+        isOpen = true;
+        animator.SetBool("isOpen", true);
+
         float animationDuration = animator.GetCurrentAnimatorClipInfo(0).Length;
         StartCoroutine(WaitAndCloseDoor(animationDuration));
     }
 
     private void CloseDoor()
     {
-        animator.SetBool("isOpen", false);
         isOpen = false;
+        animator.SetBool("isOpen", false);
+        float animationDuration = animator.GetCurrentAnimatorClipInfo(0).Length;
+        StartCoroutine(WaitAndCloseDoor(animationDuration));
     }
 
     IEnumerator WaitAndCloseDoor(float waitTime)
     {
-        yield return new WaitForSeconds(waitTime);      
+        yield return new WaitForSeconds(waitTime);
     }
-
 }
