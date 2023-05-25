@@ -15,4 +15,11 @@ public class GuIdBehaviour : MonoBehaviour
     {
         guId = System.Guid.NewGuid().ToString();
     }
+    protected virtual void Start()
+    {
+        if (guId == "" || guId == null)
+        {
+            guId = System.Guid.NewGuid().ToString();
+        }
+    }
 }

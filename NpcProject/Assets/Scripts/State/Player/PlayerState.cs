@@ -10,6 +10,7 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
+        Managers.Sound.StopMoveSound();
         stateController.AnimIdleEnter();
     }
 
@@ -31,23 +32,55 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
     }
 }
 
-public class PlayerMove : Singleton<PlayerMove>, IState<PlayerController>
+public class PlayerWalk : Singleton<PlayerWalk>, IState<PlayerController>
 {
     public void Init()
     {
     }
     public void Enter(PlayerController stateController)
     {
-      
+        stateController.ChangeToRunSpeed(false);
+        Managers.Sound.PlayMoveSound(Define.SOUND.WalkPlayer);
     }
 
     public void Exit(PlayerController stateController)
     {
+        Managers.Sound.StopMoveSound();
     }
 
     public void FixedUpdateActive(PlayerController stateController)
     {
-        stateController.PlayerMoveUpdate();
+        stateController.PlayerWalkUpdate();
+    }
+
+    public void UpdateActive(PlayerController stateController)
+    {
+        stateController.InteractionInputCheck();
+        stateController.DebugModEnterInputCheck();
+    }
+}
+
+public class PlayerRun : Singleton<PlayerRun>, IState<PlayerController>
+{
+    public void Init()
+    {
+    }
+    public void Enter(PlayerController stateController)
+    {
+        Managers.Sound.PlayMoveSound(Define.SOUND.RunPlayer);
+        stateController.ChangeToRunSpeed(true);
+    }
+
+    public void Exit(PlayerController stateController)
+    {
+        stateController.ChangeToRunSpeed(false);
+        Managers.Sound.StopMoveSound();
+    }
+
+    public void FixedUpdateActive(PlayerController stateController)
+    {
+       
+        stateController.PlayerRunUpdate();
     }
 
     public void UpdateActive(PlayerController stateController)
@@ -113,7 +146,6 @@ public class PlayerDeath : Singleton<PlayerDeath>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-        //Managers.Sound.AskSfxPlay(20008);
         stateController.PlayDeathFeedback();
         Managers.Keyword.PlayerKeywordPanel.Close();
         Managers.Game.SetStateGameOver();

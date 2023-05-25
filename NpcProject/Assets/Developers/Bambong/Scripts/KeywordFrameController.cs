@@ -11,9 +11,9 @@ public class KeywordFrameController : KeywordFrameBase
     private Image raycastImage;
 
 
-   private KeywordWorldSlotUIController keywordWorldSlot;
+   private KeywordStatusUiController keywordWorldSlot;
 
-    public KeywordWorldSlotUIController KeywordWorldSlot { get => keywordWorldSlot;  }
+    public KeywordStatusUiController KeywordWorldSlot { get => keywordWorldSlot;  }
 
     protected override void DecisionKeyword(KeywordController keyword)
     {
@@ -32,7 +32,7 @@ public class KeywordFrameController : KeywordFrameBase
         curFrameInnerKeyword.SetLockState(isOn);
     }
 
-    public void RegisterEntity(KeywordEntity entity ,KeywordWorldSlotUIController keywordWorldSlot)
+    public void RegisterEntity(KeywordEntity entity ,KeywordStatusUiController keywordWorldSlot)
     {
         this.masterEntity = entity;
         this.keywordWorldSlot = keywordWorldSlot;

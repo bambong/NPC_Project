@@ -14,6 +14,10 @@ public class Define
         Chapter_01_Puzzle_02,
         Chapter_01_Puzzle_03,
         Chapter_01_Puzzle_04,
+        Chapter_01_Tutorial_01,
+        Chapter_01_Tutorial_02,
+        Chapter_01_Tutorial_03,
+        Chapter_01_Tutorial_04,
         Serverroom
     }
     public enum EventIdType

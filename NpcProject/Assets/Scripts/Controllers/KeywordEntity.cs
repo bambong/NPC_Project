@@ -47,18 +47,8 @@ class CreateKeywordOption
     public GameObject keywordGo;
 }
 
-public class KeywordEntity : MonoBehaviour , IDataHandler
+public class KeywordEntity : GuIdBehaviour , IDataHandler
 {
-
-    [Header("GUID")]
-    [SerializeField]
-    private string guId;
-    [ContextMenu("Generate GUID")]
-    private void GenerateGuid() 
-    {
-        guId = System.Guid.NewGuid().ToString();
-    }
-
     [Space(10)]
     [Header("Keyword Stat")]
     [SerializeField]
@@ -75,7 +65,7 @@ public class KeywordEntity : MonoBehaviour , IDataHandler
     private CreateKeywordOption[] keywords;
 
     [SerializeField]
-    private string worldSlotLayoutName = "KeywordWorldSlotLayout";
+    private string statusSlotLayoutName = "KeywordStatusLayoutController";
 
 #region NeedClearForRespawn
     private Dictionary<string,KeywordAction> keywrodOverrideTable = new Dictionary<string,KeywordAction>();
@@ -91,7 +81,7 @@ public class KeywordEntity : MonoBehaviour , IDataHandler
     protected BoxCollider col;
     protected int colisionCheckLayer;
     private KeywordSlotUiController keywordSlotUiController;
-    private KeywordWorldSlotLayoutController keywordWorldSlotLayout;
+    private KeywordStatusLayoutController keywordWorldSlotLayout;
     private DebugZone parentDebugZone;
     private bool isInit = false;
     private WireColorStateController wireColorController;
@@ -112,8 +102,10 @@ public class KeywordEntity : MonoBehaviour , IDataHandler
     private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude;
     private readonly string WIRE_FRAME_COLOR_NAME = "_Wireframe_Color";
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         InitColisionLayer();
         if (!TryGetComponent<BoxCollider>(out col))
         {
@@ -154,7 +146,7 @@ public class KeywordEntity : MonoBehaviour , IDataHandler
         keywordSlotUiController = Managers.UI.MakeSubItem<KeywordSlotUiController>(Managers.Keyword.KeywordEntitySlots, "KeywordSlotController");
         keywordSlotUiController.RegisterEntity(this);
         keywordSlotUiController.SetKeywordsLength(keywords.Length);
-        keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordWorldSlotLayoutController>(null, worldSlotLayoutName);
+        keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordStatusLayoutController>(Managers.Keyword.EntityKeywordStatusList, statusSlotLayoutName);
         keywordWorldSlotLayout.RegisterEntity(transform, keywords.Length);
         ClearWireFrameColor();
         InitCrateKeywordOption();
@@ -218,7 +210,7 @@ public class KeywordEntity : MonoBehaviour , IDataHandler
             var frame = Managers.UI.MakeSubItem<KeywordFrameController>(keywordSlotUiController.KeywordSlotLayout, "KeywordSlotUI");
             frame.SetKeywordType(availableKeywordType);
             keywordFrames.Add(frame);
-            frame.RegisterEntity(this, keywordWorldSlotLayout.KeywordWorldSlots[i]);
+            frame.RegisterEntity(this, keywordWorldSlotLayout.KeywordStatusUis[i]);
            
             // 키워드가 미리 생성되어 있는 슬롯인지 확인
             if (keywords[i].keywordGo == null) 
