@@ -77,6 +77,7 @@ public class Managers : MonoBehaviour
         Keyword.OnSceneLoaded();
         Game.OnSceneLoaded();
         Talk.OnSceneLoaded();
+        Camera.OnSceneLoaded();
     }
     public static void Clear()
     {
@@ -85,6 +86,7 @@ public class Managers : MonoBehaviour
         Pool.Clear();
         Keyword.Clear();
         Sound.Clear();
+        Camera.Clear();
     }
     private void OnApplicationQuit()
     {
