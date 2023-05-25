@@ -59,7 +59,7 @@ public class MonsterController : KeywordEntity , ISpawnAble
     private float curChaseTime = 0;
     private float curWaitTime = 0;
     private float curAttackTime = 0;
-
+    public bool isPlaySound = true;
     
 
     private MonsterStateController monsterStateController;
@@ -81,6 +81,7 @@ public class MonsterController : KeywordEntity , ISpawnAble
         monsterNav.enabled = false;
         SetAvoidPriority(IDLE_PRIORITY);
         monsterNav.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+        isPlaySound = true;
 
         playerDetectController.SetActive(false);
         if (spawnSpot == null)
@@ -114,6 +115,7 @@ public class MonsterController : KeywordEntity , ISpawnAble
 
     public void Revert()
     {
+        isPlaySound = true;
         monsterNav.SetDestination(spawnPos);
         FlipToDestination();
     }
@@ -389,7 +391,6 @@ public class MonsterController : KeywordEntity , ISpawnAble
     }
     public void OnStateEnterChase()
     {
-
         SetEmogeChase(true);
         monsterNav.stoppingDistance = attackDistance * attackAutoBreakingAmount;
         SetAvoidPriority(CHASE_PRIORITY);
