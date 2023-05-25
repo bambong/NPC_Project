@@ -53,8 +53,11 @@ public class TextPanelController : UI_Base
         {
             DOVirtual.DelayedCall(0.5f, () =>
              {
-                 canvas.DOFade(0f, fadeDuration).SetEase(Ease.OutQuad);
-                 SceneManager.LoadScene("Chapter_01");
+                 canvas.DOFade(0f, fadeDuration).SetEase(Ease.OutQuad).OnComplete(() =>
+                 {
+                     SceneManager.LoadScene("Chapter_01");
+                 });
+                 
              });           
         });
 

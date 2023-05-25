@@ -35,6 +35,11 @@ public class PanelsController : UI_Base
         isLogo = true;
     }
 
+    public void Exit()
+    {
+        Application.Quit();
+    }
+
     public void CanvasFadeOut()
     {
         canvas.alpha = 1f;
