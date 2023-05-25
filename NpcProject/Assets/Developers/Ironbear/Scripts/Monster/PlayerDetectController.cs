@@ -25,7 +25,7 @@ public class PlayerDetectController : MonoBehaviour
             {
                 Managers.Sound.PlaySFX(Define.SOUND.FindMonster);
                 monsterController.isPlaySound = false;
-            }            
+            }
             monsterController.SetStateChase();
         }        
     }

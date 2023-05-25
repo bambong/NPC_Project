@@ -6,6 +6,7 @@ using DG.Tweening;
 using System;
 using Unity.Mathematics;
 using static UnityEngine.Rendering.DebugUI.Table;
+using UnityEngine.Events;
 
 public class MonsterController : KeywordEntity , ISpawnAble
 {
@@ -53,6 +54,10 @@ public class MonsterController : KeywordEntity , ISpawnAble
     [Tooltip("EffectMat")]
     [SerializeField]
     private Material hitMaterial;
+
+
+    [SerializeField]
+    private UnityEvent OnDeath;
 
     private float waitTime = 2f;
     private int curHealth = 0;
@@ -174,6 +179,7 @@ public class MonsterController : KeywordEntity , ISpawnAble
             parentSpawn.RemoveItem(spawnSpot);
         }
         base.ClearForPool();
+        OnDeath?.Invoke();
     }
 
     private void SetAvoidPriority(int amount) 
