@@ -10,14 +10,12 @@ public class StartPanelController : UI_Base
     [SerializeField]
     private TMP_Text tmpText;
     [SerializeField]
-    private GameObject btn;
+    private RectTransform btn;
     [SerializeField]
     private CanvasGroup canvasGroup;
 
     private float typeSpeed = 0.08f;
     private Sequence seq;
-    
-
 
     public override void Init()
     {
@@ -29,7 +27,7 @@ public class StartPanelController : UI_Base
         seq = DOTween.Sequence();
         btn.GetComponent<Button>().interactable = false;
         canvasGroup.alpha = 0f;
-        btn.transform.localPosition = new Vector3(0f, -200f, 0f);
+        btn.anchoredPosition = new Vector3(0f, -200, 0f);
         TypeAnimation();
     }
 
@@ -55,7 +53,7 @@ public class StartPanelController : UI_Base
         seq.OnComplete(() => 
         {
             btn.GetComponent<Button>().interactable = true;
-            btn.transform.DOMoveY(450f, 1f).SetEase(Ease.OutQuad);
+            btn.DOAnchorPosY(280, 1f).SetEase(Ease.OutQuad);
             canvasGroup.DOFade(1f, 1f).SetEase(Ease.OutQuad);
         });
 
