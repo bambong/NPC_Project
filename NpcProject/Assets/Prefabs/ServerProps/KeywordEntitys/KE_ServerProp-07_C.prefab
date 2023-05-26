@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2470623123626494648
+--- !u!1 &7574551176238086413
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,49 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2135797657722891714}
-  - component: {fileID: 3844509173135304416}
-  - component: {fileID: 5967712134710518836}
-  - component: {fileID: -4203332504506105424}
+  - component: {fileID: 2297604110623477072}
+  - component: {fileID: 8002094020421926244}
+  - component: {fileID: 3148363492116814393}
+  - component: {fileID: 8002094020421926243}
+  - component: {fileID: 8002094020421926242}
+  - component: {fileID: 8002094020421926245}
   m_Layer: 8
-  m_Name: ServerProp-04
+  m_Name: KE_ServerProp-07_C
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2135797657722891714
+--- !u!4 &2297604110623477072
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2470623123626494648}
+  m_GameObject: {fileID: 7574551176238086413}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 249.60452, y: -9.649099, z: 16.219513}
-  m_LocalScale: {x: 4.38, y: 4.9318647, z: 4.38}
+  m_LocalPosition: {x: 248.16, y: -3.91, z: 25.149}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3844509173135304416
+--- !u!33 &8002094020421926244
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2470623123626494648}
-  m_Mesh: {fileID: 4300000, guid: 28d7f8c59e431f74d8f29fa3024112f0, type: 2}
---- !u!23 &5967712134710518836
+  m_GameObject: {fileID: 7574551176238086413}
+  m_Mesh: {fileID: 4300000, guid: 07dfed3f5b8e0034b94ac2f799395abf, type: 2}
+--- !u!23 &3148363492116814393
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2470623123626494648}
+  m_GameObject: {fileID: 7574551176238086413}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -84,16 +86,53 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-4203332504506105424
+--- !u!54 &8002094020421926243
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7574551176238086413}
+  serializedVersion: 2
+  m_Mass: 100
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 122
+  m_CollisionDetection: 0
+--- !u!65 &8002094020421926242
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7574551176238086413}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10.111, y: 1.314, z: 3.4026}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8002094020421926245
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2470623123626494648}
+  m_GameObject: {fileID: 7574551176238086413}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -2065496115, guid: 8a1b2a0ca9118b443af347a1638e1adf, type: 3}
+  m_Script: {fileID: 11500000, guid: 24651d961476c7a4ca00d46866546750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabProjectPath: Assets/Prefabs/ServerProps/ServerProp-04_prefab/ServerProp-04.prefab
+  guId: 
+  availableKeywordType: -1
+  maxHeight: 3
+  maxScale: {x: 2, y: 2, z: 2}
+  revAbleDistance: 1000
+  keywords:
+  - isLock: 0
+    keywordGo: {fileID: 0}
+  statusSlotLayoutName: KeywordStatusLayoutController
