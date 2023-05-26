@@ -20,8 +20,10 @@ public class ContractPanelController : MonoBehaviour
     private float targetOff = -100f;
     private float delayTime = 4.5f;
 
-    private void Awake()
+    private void Start()
     {
+        Managers.Game.Player.SetstateStop();
+
         contractCanvasGroup = contract.GetComponent<CanvasGroup>();
         contractImage = contract.GetComponent<Image>();
         inputFiledCanvasGroup = inputField.GetComponent<CanvasGroup>();
@@ -74,7 +76,7 @@ public class ContractPanelController : MonoBehaviour
         
     }
 
-    private void ContractOffEffect()
+    private void ContractOffEffect(System.Action onComplete = null)
     {
         RectTransform contractRectTransform = contract.GetComponent<RectTransform>();
         contractRectTransform.DOAnchorPosY(targetOff, effectDuration);
@@ -82,6 +84,7 @@ public class ContractPanelController : MonoBehaviour
         contractCanvasGroup.DOFade(0f, effectDuration).OnComplete(() =>
         {
             contract.SetActive(false);
+            onComplete?.Invoke();
         });        
     }
 
@@ -89,7 +92,10 @@ public class ContractPanelController : MonoBehaviour
     {
         InputFieldOffEffect(() =>
         {
-            ContractOffEffect();           
+            ContractOffEffect(()=>
+            {
+                Managers.Game.Player.SetStateIdle();
+            });           
         });
     }
 }
