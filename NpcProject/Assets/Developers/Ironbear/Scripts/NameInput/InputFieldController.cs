@@ -13,16 +13,19 @@ public class InputFieldController : UI_Base
     [SerializeField]
     private TMP_Text warning;
     [SerializeField]
-    private GameObject confirmUI;
-    [SerializeField]
     private TextMeshProUGUI test;
     [SerializeField]
     private TMP_InputField playerNameInput;
     [SerializeField]
     private Button submitBtn;
+    [SerializeField]
+    private TMP_Text outputText;
 
     [SerializeField]
     private Vector3 targetScale;
+
+    private ContractPanelController contractPanel;
+    private TMP_InputField inputField;
 
     private string playerName = null;
     private bool isRestrict = false;
@@ -33,28 +36,14 @@ public class InputFieldController : UI_Base
 
     private void Awake()
     {
-        playerNameInput.characterLimit = 7;
+        contractPanel = GetComponentInParent<ContractPanelController>();
+        inputField = GetComponent<TMP_InputField>();
+
+        inputField.onValueChanged.AddListener(UpdateOutputText);
+        playerNameInput.characterLimit = 10;
     }
 
-    public void ConfirmUIOpen()
-    {
-        confirmUI.transform.localScale = new(0f, 0f, 0f);
-        confirmUI.SetActive(true);
-        confirmUI.transform.DOScale(new Vector3(1f, 1f, 1f), 0.5f).SetEase(Ease.InOutBack);
-    }
-
-    public void ConfirmUiClose()
-    {
-        confirmUI.transform.localScale = new(1f, 1f, 1f);
-        confirmUI.transform.DOScale(new Vector3(0f, 0f, 0f), 0.5f).SetEase(Ease.InOutBack).OnComplete(TurnOffUi);           
-    }
-
-    private void TurnOffUi()
-    {
-        confirmUI.SetActive(false);
-    }
-
-    public void LoadNextScene()
+    public void SubmitName()
     {
         SaveUserName();
     }   
@@ -64,7 +53,7 @@ public class InputFieldController : UI_Base
         isRestrict = false;
         playerName = test.text;
 
-        char[] restrictChars = { '§ø', '§¡', '§√', '§≈', '§«', '§À', '§Ã', '§–', '§—', '§”', '§¿', '§¬', '§ƒ', '§∆', '§ ', '§œ', '§…', '§Œ', '§Õ', '§°', '§§', '§ß', '§©', '§±', '§≤', '§µ', '§∑', '§∏', '§∫', '§ª', '§º', '§Ω', '§æ', '§∂', '§®', '§¢', ' ' };
+        char[] restrictChars = { '„Öè', '„Öë', '„Öì', '„Öï', '„Öó', '„Öõ', '„Öú', '„Ö†', '„Ö°', '„Ö£', '„Öê', '„Öí', '„Öî', '„Öñ', '„Öö', '„Öü', '„Öô', '„Öû', '„Öù', '„Ñ±', '„Ñ¥', '„Ñ∑', '„Ñπ', '„ÖÅ', '„ÖÇ', '„ÖÖ', '„Öá', '„Öà', '„Öä', '„Öã', '„Öå', '„Öç', '„Öé', '„ÖÜ', '„Ñ∏', '„Ñ≤', ' ' };
         char[] nameChars = new char[playerName.Length];
 
         for (int i = 0; i < nameChars.Length; i++)
@@ -86,7 +75,11 @@ public class InputFieldController : UI_Base
 
         if (!isRestrict && playerName != null) 
         {
-            ConfirmUIOpen();
+            SubmitName();
+            if(contractPanel!=null)
+            {
+                contractPanel.UiOff();
+            }           
         }        
     }
 
@@ -116,5 +109,10 @@ public class InputFieldController : UI_Base
     public void TextShake()
     {
         test.gameObject.transform.DOShakePosition(0.3f, 4);
+    }
+
+    private void UpdateOutputText(string inputValue)
+    {
+        outputText.text = inputValue;
     }
 }
