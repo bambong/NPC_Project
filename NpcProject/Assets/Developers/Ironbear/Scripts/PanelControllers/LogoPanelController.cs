@@ -31,10 +31,16 @@ public class LogoPanelController : UI_Base
     private void Start()
     {
         logos.transform.localPosition = new Vector3(-1100, 0, 0);
-        btns.transform.localPosition = new Vector3(-1150, -45, 0);
+     //   btns.transform.localPosition = new Vector3(-1150, -45, 0);
         bar.transform.localPosition = new Vector3(-1600, 160, 0);
         arm.transform.localRotation = Quaternion.Euler(0f, 0f, 1f);
-
+        for (int i = 0; i < btnsList.Length; i++)
+        {
+            GameObject btn = btnsList[i];
+            var pos = btn.transform.localPosition;
+            pos.x -= 400;
+            btn.transform.localPosition = pos; 
+        }
         MoveObject();
 
         Sequence armSq = DOTween.Sequence();

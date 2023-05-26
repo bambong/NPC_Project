@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using UnityEngine.UIElements;
 
 public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
@@ -9,8 +10,8 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
     [SerializeField]
     private RectTransform rectTransform;
 
-    private Transform canvas;
-
+    private Canvas canvas;
+    private RectTransform canvasRectTransform;
     private CanvasGroup canvasGroup;
     private int prevSibilintIndex;
     private Transform startParent;
@@ -23,14 +24,15 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
     private bool isMove = false;
     private bool isDrag = false;
     private bool isLock = false;
-
+    private Vector2 offset;
 
     private void Start()
     {
         startDragPoint = GetComponent<RectTransform>().localPosition;
         canvasGroup = GetComponent<CanvasGroup>();
 
-        canvas = GameObject.Find("Canvas").transform;
+        canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+        canvasRectTransform = canvas.GetComponent<RectTransform>();
     }
 
     public override void Init()
@@ -61,15 +63,18 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
     {
         startParent = transform.parent;
 
-        transform.SetParent(canvas);
+        transform.SetParent(canvas.transform);
         transform.SetAsLastSibling();
-
+        offset = (Vector2)rectTransform.position - (Vector2)Input.mousePosition;
         canvasGroup.blocksRaycasts = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        rectTransform.position = Input.mousePosition;
+        Vector3 vec = Camera.main.WorldToScreenPoint(rectTransform.position);
+        vec.x += eventData.delta.x;
+        vec.y += eventData.delta.y;
+        rectTransform.position = Camera.main.ScreenToWorldPoint(vec);
     }
 
     public void ResetKeyword()
@@ -92,7 +97,7 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
     public void OnEndDrag(PointerEventData eventData)
     { 
         //키워드 칸에 못 들어갔을 때
-        if (transform.parent == canvas)
+        if (transform.parent == canvas.transform)
         {
             transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
             transform.SetParent(startParent);

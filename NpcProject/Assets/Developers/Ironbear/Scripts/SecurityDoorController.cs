@@ -3,36 +3,41 @@ using System.Collections;
 
 public class SecurityDoorController : MonoBehaviour
 {
+    [SerializeField]
     private Animator animator;
-
     private bool isOpen = false;
-    
+    private bool isStay = true;
 
-    private void Start()
-    {
-        animator = GetComponent<Animator>();
-    }
+    private Coroutine minOpenCo;
+    private float curOpenTime = 0;
+
+    private float MIN_OPEN_TIME = 0.5f;
+
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && !isOpen)
-        {            
+        {
+            Debug.Log("Open");
+            isStay = true;
             OpenDoor();
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            isOpen = true;
+            isStay = true;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player") )
-        {           
+        {
+            Debug.Log("Close");
+            isStay = false;
             CloseDoor();
         }
     }
@@ -40,23 +45,57 @@ public class SecurityDoorController : MonoBehaviour
 
     private void OpenDoor()
     {
+        if (isOpen) 
+        {
+            return;
+        }
+        if(minOpenCo != null)
+        {
+            StopCoroutine(minOpenCo);
+        }
         isOpen = true;
         animator.SetBool("isOpen", true);
-
-        float animationDuration = animator.GetCurrentAnimatorClipInfo(0).Length;
-        StartCoroutine(WaitAndCloseDoor(animationDuration));
+        curOpenTime = 0;
+        minOpenCo = StartCoroutine(WaitAndCloseDoor());
+        
+        //float animationDuration = animator.GetCurrentAnimatorClipInfo(0).Length;
+        //StartCoroutine(WaitAndCloseDoor(animationDuration));
     }
 
     private void CloseDoor()
     {
+
+        if(minOpenCo != null) 
+        {
+            return;
+        }
+        if (!isOpen)
+        {
+            return;
+        }
+
         isOpen = false;
         animator.SetBool("isOpen", false);
-        float animationDuration = animator.GetCurrentAnimatorClipInfo(0).Length;
-        StartCoroutine(WaitAndCloseDoor(animationDuration));
+        //float animationDuration = animator.GetCurrentAnimatorClipInfo(0).Length;
+        //StartCoroutine(WaitAndCloseDoor(animationDuration));
     }
 
-    IEnumerator WaitAndCloseDoor(float waitTime)
+    IEnumerator WaitAndCloseDoor()
     {
-        yield return new WaitForSeconds(waitTime);
+        while(curOpenTime <= MIN_OPEN_TIME ) 
+        {
+            if (!isStay) 
+            {
+                curOpenTime += Time.deltaTime;
+            }
+            else 
+            {
+                curOpenTime = 0;
+            }
+            yield return null;
+        }
+        curOpenTime = 0;
+        minOpenCo = null;
+        CloseDoor();
     }
 }
