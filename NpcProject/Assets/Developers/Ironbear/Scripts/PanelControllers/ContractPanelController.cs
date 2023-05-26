@@ -10,6 +10,8 @@ public class ContractPanelController : MonoBehaviour
     private CanvasGroup signCanvasGroup;
     [SerializeField]
     private GameObject inputField;
+    [SerializeField]
+    private GameObject kakaoPanel;
 
     private CanvasGroup contractCanvasGroup;
     private CanvasGroup inputFiledCanvasGroup;
@@ -31,6 +33,7 @@ public class ContractPanelController : MonoBehaviour
         contractCanvasGroup.alpha = 0f;
 
         inputField.SetActive(false);
+        kakaoPanel.SetActive(false);
 
         DOVirtual.DelayedCall(delayTime, ContractOnEffect);
     }
@@ -95,6 +98,7 @@ public class ContractPanelController : MonoBehaviour
             ContractOffEffect(()=>
             {
                 Managers.Game.Player.SetStateIdle();
+                kakaoPanel.SetActive(true);
             });           
         });
     }
