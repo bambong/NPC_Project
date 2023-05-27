@@ -11,12 +11,16 @@ public class PlayerKeywordPanelController : UI_Base
     private Transform debugGaugePanel; 
     [SerializeField]
     private KeywordMakerGaugeController keywordMakerGaugeController;
+    [SerializeField]
+    private PlayerKeywordLayoutTrigger trigger;
+    
 
     public Transform LayoutParent { get => layoutParent; }
     public Transform DebugGaugePanel { get => debugGaugePanel; }
 
     public override void Init()
     {
+       
         
     }
     public void AddKeywordMakerGauge(int amount) 
@@ -25,6 +29,7 @@ public class PlayerKeywordPanelController : UI_Base
     }
     public void Open() 
     {
+        trigger.gameObject.SetActive(true);
         //gameObject.SetActive(true);
         Managers.Keyword.CurDebugZone.OpenPlayerLayout();
 
@@ -32,6 +37,10 @@ public class PlayerKeywordPanelController : UI_Base
     public void ClearForPool()
     {
         keywordMakerGaugeController.StopAllCoroutines();
+    }
+    public void TriggerClose() 
+    {
+        trigger.gameObject.SetActive(false);
     }
     public void Close() 
     {

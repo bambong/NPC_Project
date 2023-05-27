@@ -56,7 +56,7 @@ public class DebugZone : GuIdBehaviour, IDataHandler
     }
     private void MakeFrame() 
     {
-        playerLayout = Managers.Resource.Instantiate("Layout",Managers.Keyword.PlayerPanelLayout).transform;
+        playerLayout = Managers.Resource.Instantiate("PlayerLayout", Managers.Keyword.PlayerPanelLayout).transform;
         ClosePlayerLayout();
         for(int i = 0; i < playerSlotCount; ++i)
         {

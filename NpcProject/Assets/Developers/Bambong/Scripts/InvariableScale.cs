@@ -10,6 +10,6 @@ public class InvariableScale : MonoBehaviour
     void Update()
     {
         var parentScale = transform.parent.lossyScale;
-        transform.localScale = new Vector3(origin.x/ parentScale.x,origin.y/parentScale.y,origin.z/parentScale.z)  ;        
+        transform.localScale = new Vector3(origin.x/ parentScale.x,origin.y/parentScale.y,origin.z/parentScale.z);
     }
 }
