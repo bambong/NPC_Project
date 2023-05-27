@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
-using UnityEngine.UIElements;
 
 public class IntroStateChangeController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
@@ -77,7 +76,6 @@ public class IntroStateChangeController : UI_Base, IDragHandler, IEndDragHandler
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        //키워드 칸에 못 들어갔을 때
         if (transform.parent == canvas.transform)
         {
             transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
