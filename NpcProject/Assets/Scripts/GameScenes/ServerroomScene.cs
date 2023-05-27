@@ -32,4 +32,8 @@ public class ServerroomScene : BaseScene
         Managers.Talk.LoadTalkData(tutorialSceneTalkData);
         Managers.Data.LoadGame(SceneManager.GetActiveScene().name);
     }
+    private void Start()
+    {
+        Managers.Talk.PlayCurrentSceneTalk(10001);
+    }
 }

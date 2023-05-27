@@ -12,6 +12,7 @@ using DG.Tweening;
 public class Dialogue
 {
     public Speaker speaker;
+    public Speaker[] leftRights = new Speaker[2];
     public string text;
 }
 
@@ -60,7 +61,7 @@ public class TalkManager
 
     private Dictionary<int, TalkEvent> currentSceneTalkDatas = new Dictionary<int, TalkEvent>();
     private Dictionary<int, Speaker> speakerDatas = new Dictionary<int, Speaker>();
-
+    private const int PARTICIPANT_NUM = 1000;
     public void Init()
     {
         talkPanel = Managers.UI.MakeSceneUI<TalkPanelController>(null, "DialoguePanel");
@@ -93,8 +94,16 @@ public class TalkManager
             Dialogue dialogue = new Dialogue();
             dialogue.text = data.text;
             dialogue.speaker = speakerDatas[data.speaker];
+            if(data.leftRight/ PARTICIPANT_NUM != 0) 
+            {
+                dialogue.leftRights[0] = speakerDatas[data.leftRight / PARTICIPANT_NUM];
+            }
+            if (data.leftRight % PARTICIPANT_NUM != 0)
+            {
+                dialogue.leftRights[1] = speakerDatas[data.leftRight % PARTICIPANT_NUM];
+            }
 
-            if(!currentSceneTalkDatas.TryGetValue(data.eventID, out talkEvent))
+            if (!currentSceneTalkDatas.TryGetValue(data.eventID, out talkEvent))
             {
                 talkEvent = new TalkEvent();
                 currentSceneTalkDatas.Add(data.eventID, talkEvent);
