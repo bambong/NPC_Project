@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 using DG.Tweening;
 using UnityEngine.UIElements;
 
-public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler
+public class IntroStateChangeController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
     private readonly float START_END_ANIM_TIME = 0.2f;
 
@@ -56,10 +56,7 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
 
     public void OnDrag(PointerEventData eventData)
     {
-        Vector3 vec = Camera.main.WorldToScreenPoint(rectTransform.position);
-        vec.x += eventData.delta.x;
-        vec.y += eventData.delta.y;
-        rectTransform.position = Camera.main.ScreenToWorldPoint(vec);
+        rectTransform.position = Input.mousePosition;
     }
 
     public void ResetKeyword()
@@ -79,7 +76,8 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
     }
 
     public void OnEndDrag(PointerEventData eventData)
-    { 
+    {
+        //키워드 칸에 못 들어갔을 때
         if (transform.parent == canvas.transform)
         {
             transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
