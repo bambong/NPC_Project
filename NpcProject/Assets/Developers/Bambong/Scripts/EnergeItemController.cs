@@ -15,11 +15,12 @@ public class EnergeItemController : MonoBehaviour , ISpawnAble
 
     [SerializeField]
     private int gaugeAmount = 1;
-
+    [SerializeField]
+    private bool isOn = false;
+    
     private SpawnController parentSpawner;
     private Transform spawnSpot;
 
-    private bool isOn = false;
 
     private void FixedUpdate()
     {
