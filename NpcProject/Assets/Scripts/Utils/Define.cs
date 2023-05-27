@@ -36,7 +36,8 @@ public class Define
     public enum ColiiderMask 
     {
         //Player,
-        Interaction
+        Interaction,
+        Slope
     }
     public enum EFFECT
     {
