@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657648, g: 0.49641043, b: 0.5748187, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -294,7 +294,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb4fd79fe60fb914caecb7f0ba146c92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1386207692}
+  bgm: []
+  playerSpawnSpot: {x: 0, y: 0, z: 0}
+  vircam: {fileID: 0}
+  gamaSceneTalkData: {fileID: 0}
+  startTalk: 0
 --- !u!1 &597437024
 GameObject:
   m_ObjectHideFlags: 0
@@ -590,7 +594,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skeletonDataAsset: {fileID: 11400000, guid: a467507a4ffb1d542a558739b2fede77, type: 2}
   initialSkinName: 
-  fixPrefabOverrideViaMeshFilter: 2
   initialFlipX: 0
   initialFlipY: 0
   updateWhenInvisible: 3
@@ -611,8 +614,6 @@ MonoBehaviour:
     materialsInsideMask: []
     materialsOutsideMask: []
   disableRenderingOnOverride: 1
-  updateTiming: 1
-  unscaledTime: 0
   _animationName: idle
   loop: 1
   timeScale: 1
@@ -797,8 +798,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fe83344af1c6284b9cbe1a9f23c4122, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1386207691}
   dumpingAmount: 3
+  diffPosToTarget: {x: 0, y: 0, z: 0}
 --- !u!1 &761525211
 GameObject:
   m_ObjectHideFlags: 0
@@ -1232,11 +1233,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b160be91258e224196826593c3c5fd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
-  skeletonAnimation: {fileID: 676255105}
-  idleAnim: idle
-  runAnim: run
+  animationController: {fileID: 0}
   interactionDetecter: {fileID: 1983506985}
+  rotater: {fileID: 0}
+  box: {fileID: 0}
+  col: {fileID: 0}
+  rigid: {fileID: 0}
+  gravityForce: {fileID: 0}
+  playerUIController: {fileID: 0}
+  moveSpeed: 10
+  maxSlopeAngle: 40
+  moveEnableDis: 0.5
+  stepHeight: 1
+  maxHp: 0
+  hp: 0
+  wireEffectGo: {fileID: 0}
+  wireframeMaskController: {fileID: 0}
+  deathFeedback: {fileID: 0}
+  hitFeedback: {fileID: 0}
 --- !u!136 &1386207693
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1439,6 +1453,8 @@ MonoBehaviour:
   speakImage: {fileID: 2079489672}
   spekerName: {fileID: 670218983}
   dialogueText: {fileID: 1044205254}
+  talkPanelInner: {fileID: 0}
+  choiceButton: {fileID: 0}
 --- !u!1 &1691938260
 GameObject:
   m_ObjectHideFlags: 0
@@ -1653,8 +1669,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a298e2c0de09e54c80fa63202078ebf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionUi: {fileID: 1312966660}
-  Effect: {fileID: 0}
 --- !u!1 &2025094226
 GameObject:
   m_ObjectHideFlags: 0

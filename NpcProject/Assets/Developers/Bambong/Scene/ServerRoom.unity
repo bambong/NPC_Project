@@ -385,7 +385,6 @@ MonoBehaviour:
   serverrackOnTex: {fileID: 2800000, guid: fea32a3b0c3d23f48bc37bd74c7098e1, type: 3}
   serverrackOffTex: {fileID: 2800000, guid: 51ed618eb8e85974bb34546fea1be587, type: 3}
   potal: {fileID: 857795791}
-  lightOnSound: {fileID: 0}
 --- !u!65 &78851436
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2741,6 +2740,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e734157c9a7582949b2a9474cead41bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetTag: Player
+  isPlayOnce: 1
   virCamera: {fileID: 1995927017}
 --- !u!1 &548136732 stripped
 GameObject:
@@ -3948,6 +3949,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 060e2cfef8673f4419ab3152849811c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetScene: 0
 --- !u!1 &869760006 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3088151792522854529, guid: da1c2630796dac240926ef89b79c4cf4, type: 3}
@@ -4003,6 +4005,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e734157c9a7582949b2a9474cead41bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetTag: Player
+  isPlayOnce: 1
   virCamera: {fileID: 1586442338}
 --- !u!65 &871274192
 BoxCollider:
@@ -4044,11 +4048,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6859b47adef8fc4dbd10ed9bc035647, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugModCameraController: {fileID: 932348398}
+  debugAbleTime: -1
+  coolTime: 1
+  playerSlotCount: 2
+  childEntitys: []
   keywords:
   - {fileID: 9059506981520492944, guid: 8cddd662c7e12684ebad1ecd8ee5cc99, type: 3}
   - {fileID: 9059506981520492944, guid: 19650dbc20760d64681b1bc9e076f6ef, type: 3}
   - {fileID: 9059506981520492944, guid: 7878230bad7234643a84f3d55808011e, type: 3}
+  wireMaterials: []
 --- !u!1001 &871389766
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5133,6 +5141,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e734157c9a7582949b2a9474cead41bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetTag: Player
+  isPlayOnce: 1
   virCamera: {fileID: 1384963559}
 --- !u!65 &1132089576
 BoxCollider:
@@ -5203,8 +5213,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgm:
   - name: bgm1
-    file: {fileID: 8300000, guid: 5d41e7f3c91935647b8b430c1589aca3, type: 3}
+    clip: {fileID: 0}
     volume: 0.1
+    load: 0
   playerSpawnSpot: {x: -34.17, y: 3, z: -114}
   vircam: {fileID: 1384963559}
   gamaSceneTalkData: {fileID: 11400000, guid: 7d50e8233f93f1845b8c4519239f8d8d, type: 2}
@@ -8633,8 +8644,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc2f112c05556184695f2c590519e123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keywordSlot: 2
-  outlineEffect: {fileID: 1933723345}
+  availableKeywordType: -1
+  maxHeight: 3
+  maxScale: {x: 2, y: 2, z: 2}
+  revAbleDistance: 1000
+  keywords: []
+  worldSlotLayoutName: KeywordWorldSlotLayout
 --- !u!114 &1933723345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8668,8 +8683,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc2f112c05556184695f2c590519e123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keywordSlot: 3
-  outlineEffect: {fileID: 1935820502}
+  availableKeywordType: -1
+  maxHeight: 3
+  maxScale: {x: 2, y: 2, z: 2}
+  revAbleDistance: 1000
+  keywords: []
+  worldSlotLayoutName: KeywordWorldSlotLayout
 --- !u!114 &1935820502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9253,7 +9272,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
