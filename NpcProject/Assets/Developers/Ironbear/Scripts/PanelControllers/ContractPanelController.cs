@@ -7,6 +7,8 @@ public class ContractPanelController : MonoBehaviour
     [SerializeField]
     private GameObject contract;
     [SerializeField]
+    private GameObject contractImage;
+    [SerializeField]
     private CanvasGroup signCanvasGroup;
     [SerializeField]
     private GameObject inputField;
@@ -15,7 +17,7 @@ public class ContractPanelController : MonoBehaviour
 
     private CanvasGroup contractCanvasGroup;
     private CanvasGroup inputFiledCanvasGroup;
-    private Image contractImage;
+    private Image contractColor;
 
     private float effectDuration = 1f;
     private float targetOn = 0f;
@@ -27,7 +29,7 @@ public class ContractPanelController : MonoBehaviour
         Managers.Game.Player.SetstateStop();
 
         contractCanvasGroup = contract.GetComponent<CanvasGroup>();
-        contractImage = contract.GetComponent<Image>();
+        contractColor = contractImage.GetComponent<Image>();
         inputFiledCanvasGroup = inputField.GetComponent<CanvasGroup>();
         inputFiledCanvasGroup.alpha = 0f;
         contractCanvasGroup.alpha = 0f;
@@ -40,10 +42,10 @@ public class ContractPanelController : MonoBehaviour
 
     public void ClickSignBtn()
     {
-        Color targetColor = new Color(170f / 255f, 170f / 255f, 170f / 255f, 1f);
+        Color targetColor = new Color(0.67f, 0.67f, 0.67f, 1f);
 
         signCanvasGroup.DOFade(0f, effectDuration);
-        contractImage.DOColor(targetColor, effectDuration);
+        contractColor.DOColor(targetColor, effectDuration);
 
         InputFieldOnEffect();
     }
@@ -68,6 +70,9 @@ public class ContractPanelController : MonoBehaviour
 
     private void InputFieldOffEffect(System.Action onComplete = null)
     {
+        Color targetColor = new Color(1f, 1f, 1f, 1f);
+        contractColor.DOColor(targetColor, effectDuration);
+
         RectTransform inputFieldRectTransform = inputField.GetComponent<RectTransform>();
         inputFieldRectTransform.DOAnchorPosY(targetOff, effectDuration);
 
@@ -96,8 +101,7 @@ public class ContractPanelController : MonoBehaviour
         InputFieldOffEffect(() =>
         {
             ContractOffEffect(()=>
-            {
-                Managers.Game.Player.SetStateIdle();
+            {                
                 kakaoPanel.SetActive(true);
             });           
         });

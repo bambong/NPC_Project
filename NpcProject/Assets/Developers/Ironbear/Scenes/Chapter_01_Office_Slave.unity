@@ -351,6 +351,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 30794192}
+  - component: {fileID: 30794193}
   m_Layer: 5
   m_Name: talkImage
   m_TagString: Untagged
@@ -380,6 +381,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &30794193
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 30794191}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &48114237
 GameObject:
   m_ObjectHideFlags: 0
@@ -3046,13 +3059,14 @@ GameObject:
   - component: {fileID: 404597838}
   - component: {fileID: 404597837}
   - component: {fileID: 404597836}
+  - component: {fileID: 404597839}
   m_Layer: 5
   m_Name: yesBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &404597835
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3071,9 +3085,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -480, y: 15}
+  m_AnchoredPosition: {x: -600, y: -25}
   m_SizeDelta: {x: 240, y: 80}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &404597836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3168,6 +3182,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 404597834}
   m_CullTransparentMesh: 1
+--- !u!225 &404597839
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 404597834}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &422221216
 GameObject:
   m_ObjectHideFlags: 0
@@ -3529,6 +3555,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 435461131}
+  - component: {fileID: 435461132}
   m_Layer: 5
   m_Name: talkText1
   m_TagString: Untagged
@@ -3558,6 +3585,18 @@ RectTransform:
   m_AnchoredPosition: {x: -300, y: 365}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &435461132
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 435461130}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &448893681
 GameObject:
   m_ObjectHideFlags: 0
@@ -4661,7 +4700,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &660355990
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4709,6 +4748,9 @@ MonoBehaviour:
   yesTxt: {fileID: 1938665403}
   yupTxt: {fileID: 1754264515}
   text1: {fileID: 1600308176}
+  btns:
+  - {fileID: 404597834}
+  - {fileID: 1296261212}
 --- !u!114 &660355992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10745,6 +10787,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1187904692}
+  - component: {fileID: 1187904693}
   m_Layer: 5
   m_Name: talkText2
   m_TagString: Untagged
@@ -10774,6 +10817,18 @@ RectTransform:
   m_AnchoredPosition: {x: -300, y: 240}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1187904693
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1187904691}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1198281169
 GameObject:
   m_ObjectHideFlags: 0
@@ -11305,13 +11360,14 @@ GameObject:
   - component: {fileID: 1296261216}
   - component: {fileID: 1296261215}
   - component: {fileID: 1296261214}
+  - component: {fileID: 1296261217}
   m_Layer: 5
   m_Name: yupBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1296261213
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11330,9 +11386,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -220, y: 15}
+  m_AnchoredPosition: {x: -340, y: -25}
   m_SizeDelta: {x: 240, y: 80}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &1296261214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11427,6 +11483,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1296261212}
   m_CullTransparentMesh: 1
+--- !u!225 &1296261217
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296261212}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1299525993
 GameObject:
   m_ObjectHideFlags: 0
@@ -15453,13 +15521,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1754264516}
+  - component: {fileID: 1754264517}
   m_Layer: 5
   m_Name: yupText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1754264516
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15482,6 +15551,18 @@ RectTransform:
   m_AnchoredPosition: {x: -300, y: 130}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1754264517
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754264515}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1779245076
 GameObject:
   m_ObjectHideFlags: 0
@@ -18824,6 +18905,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   contract: {fileID: 2135646706}
+  contractImage: {fileID: 1453811933}
   signCanvasGroup: {fileID: 1939123755}
   inputField: {fileID: 599480971}
   kakaoPanel: {fileID: 660355989}
@@ -18972,13 +19054,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1938665404}
+  - component: {fileID: 1938665405}
   m_Layer: 5
   m_Name: yesText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1938665404
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19001,6 +19084,18 @@ RectTransform:
   m_AnchoredPosition: {x: -300, y: 130}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1938665405
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1938665403}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1939123750
 GameObject:
   m_ObjectHideFlags: 0
