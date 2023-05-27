@@ -23,6 +23,7 @@ public class AttachKeyword : KeywordController
         if(dir.magnitude <= Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER)) 
         {
             entity.ColisionCheckMove(dir);
+            Managers.Sound.PlaySFX(Define.SOUND.MoveKeyword);
         }
         else 
         {

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using FMODUnity;
 using MoreMountains.Feedbacks;
 using System;
 using System.Collections;
@@ -78,6 +79,9 @@ public class MiniGameManager : BaseScene
     [SerializeField]
     private CanvasGroup ruleTextGroup;
 
+    [SerializeField]
+    private StudioEventEmitter puzzleEnterBgm;
+
     private List<ColorOrderGroupController> orderColorGroups = new List<ColorOrderGroupController>();
     private List<ResultColorNodeController> resultColorNodes = new List<ResultColorNodeController>();
 
@@ -90,6 +94,7 @@ public class MiniGameManager : BaseScene
     private bool iSGameStart = false;
     private bool isGameEnd = false;
     private bool isTimeLimit = false;
+    private bool isBGMPlay = false;
     private float curTime;
     private int row {get=>miniGameLevelData.row;}
     private int column {get=>miniGameLevelData.column;}
@@ -117,6 +122,7 @@ public class MiniGameManager : BaseScene
         //s.Append(backGround.DOFade(0, 2f));
         //s.Play();
         OpenPanel(1.8f);
+        //Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleEnter);
     }
     private void LoadLevelData() 
     {
@@ -383,7 +389,7 @@ public class MiniGameManager : BaseScene
                 return;
             }
         }
-
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleGood);
         UpdateEnableNode(pointIndex, curSelectType);
     }
     public void PointEnter(Vector2Int point)
@@ -615,7 +621,7 @@ public class MiniGameManager : BaseScene
         {
             return;
         }
-
+        puzzleEnterBgm.SetPause(true);
         isGameEnd = true;
         iSGameStart = false;
         isTimeLimit = false;
@@ -661,6 +667,7 @@ public class MiniGameManager : BaseScene
         isGameEnd = true;
         iSGameStart = false;
         isTimeLimit = false;
+        puzzleEnterBgm.Stop();
         if (timeLimitEffect.IsPlaying)
         {
             timeLimitEffect.StopFeedbacks();
@@ -676,6 +683,7 @@ public class MiniGameManager : BaseScene
             return;
         }
         isGameEnd = true;
+        puzzleEnterBgm.Stop();
 
         if (timeLimitEffect.IsPlaying)
         {
@@ -687,6 +695,12 @@ public class MiniGameManager : BaseScene
     }
     public void SetStateGamePlay() 
     {
+        if(!isBGMPlay)
+        {
+            puzzleEnterBgm.Play();
+            isBGMPlay = true;
+        }
+        puzzleEnterBgm.SetPause(false);
         iSGameStart = true;
         StartCoroutine(TimeUpdate());
     }
@@ -703,6 +717,7 @@ public class MiniGameManager : BaseScene
         isGameEnd = false;
         iSGameStart = false;
         isTimeLimit = false;
+        isBGMPlay = false;
         timeText.text = timeLimit.ToString("00.00");
         timeFillGauge.fillAmount = 0;
         resultText.ClearText();
@@ -710,18 +725,19 @@ public class MiniGameManager : BaseScene
   
     public void SetResultText(bool isSuccess) 
     {
- 
         Sequence seq = DOTween.Sequence();
         seq.Append(backGround.DOFade(1, 1f));
         seq.Join(timePanelGroup.DOFade(0, 1f));
         seq.Play();
 
         if (isSuccess)
-        {
+        {            
+            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleSuccess);
             resultText.OnSuccess(1f);
         }
         else 
         {
+            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleFail);
             resultText.OnFail(1f);
         }
        

@@ -14,6 +14,7 @@ public class CutSceneController : MonoBehaviour
     private List<int> cutSceneTalk = new List<int>();
     private int talkCount = 0;
     private bool cutSceneprogress = false;
+
     public void LoadTalk()
     {
         cutSceneprogress = false;
@@ -21,7 +22,7 @@ public class CutSceneController : MonoBehaviour
         curCutScene.Pause();
         var talk = Managers.Talk.GetTalkEvent(cutSceneTalk[talkCount]);
         talk.OnComplete(() => talkCount++);
-        //Àç½ÃÀÛ
+        //ìž¬ì‹œìž‘
         talk.OnComplete(() => curCutScene.Resume());
         talk.OnComplete(() => SkipCutScene());
 

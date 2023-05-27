@@ -89,6 +89,7 @@ public class GameManager
     #region StateEnter
     public void OnDebugModStateEnter()
     {
+        Managers.Sound.PlaySFX(Define.SOUND.DebugModeEnter);
         Managers.Time.SetTimeScale(TIME_TYPE.NONE_PLAYER, DEBUG_TIME_SCALE);
         prevGravity = Physics.gravity;
         Physics.gravity = prevGravity * DEBUG_TIME_SCALE;
@@ -98,6 +99,7 @@ public class GameManager
     #region StateExit
     public void OnDebugModStateExit()
     {
+        Managers.Sound.PlaySFX(Define.SOUND.DebugModeExit);
         Physics.gravity = prevGravity;
         Managers.Time.SetTimeScale(TIME_TYPE.NONE_PLAYER, 1);
     }

@@ -87,6 +87,7 @@ public class DebugZone : GuIdBehaviour, IDataHandler
                 continue;
             }
             keyword = Managers.UI.MakeSubItem<KeywordController>(null, "KeywordPrefabs/" + name);
+            keyword.isPlay = true;
             playerFrames[i].InitKeyword(keyword);
             keyword.SetDebugZone(this);
             return keyword;

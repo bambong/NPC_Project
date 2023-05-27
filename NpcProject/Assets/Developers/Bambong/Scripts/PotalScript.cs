@@ -10,6 +10,7 @@ public class PotalScript : MonoBehaviour, IInteraction
     public virtual bool IsInteractAble => true;
     public void OnInteraction()
     {
+        Managers.Sound.PlaySFX(Define.SOUND.NextChapter);
         Managers.Scene.LoadScene(targetScene);
     }
 }

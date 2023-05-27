@@ -53,7 +53,6 @@ public class MiniGameNodeController : UI_Base ,IPointerEnterHandler ,IPointerCli
     }
     public void ClearLookUpmod() 
     {
-
         UpdateAvailableColor();
     }
     public void SetData(MiniGameManager manager , Vector2Int pos , string key) 
@@ -128,7 +127,7 @@ public class MiniGameNodeController : UI_Base ,IPointerEnterHandler ,IPointerCli
         }
         isDelete = true;
         isAbailable = false;
-
+                
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(interval);
         sequence.Append(rectTransform.DOScale(0, 0.2f));
@@ -146,6 +145,7 @@ public class MiniGameNodeController : UI_Base ,IPointerEnterHandler ,IPointerCli
         {
             return;
         }
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleButtonHover);
         SetImageColor(pickColor);
         miniGameManager.PointEnter(posIndex);
     }

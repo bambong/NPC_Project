@@ -115,15 +115,17 @@ public class SoundManager
     #endregion
 
     #region SFXControl
+
     public void PlaySFX(Enum eventpath, bool routine = false)
     {
-        sfxInstance = RuntimeManager.CreateInstance("event:/SFX/" + eventpath.ToString());        
+        sfxInstance = RuntimeManager.CreateInstance("event:/SFX/" + eventpath.ToString());
         sfxInstance.start();
     }
 
     public void StopSFX()
-    {        
-        sfxInstance.release();
+    {
+        //sfxInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        sfxBus.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 
     //public void PlayMoveSound(Enum eventpath)
@@ -150,6 +152,7 @@ public class SoundManager
 
     public void Clear()
     {
+        StopSFX();
         //StopMoveSound();
     }
 

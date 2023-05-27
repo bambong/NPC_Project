@@ -1,29 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Spine.Unity;
+using System.Text;
+
 
 public class CutScenePlayerController : MonoBehaviour
 {
     [SerializeField]
-    private SkeletonAnimation sideSpineAnim;
+    private SpriteRenderer spriteRenderer;    
     [SerializeField]
-    private SkeletonAnimation frontIdleSpineAnim;
-    [SerializeField]
-    private SkeletonAnimation backIdleSpineAnim;
-    [SerializeField]
-    private Animator frontBackMoveframeAnim;
+    private Animator cutSceneAnimatorController;
     [SerializeField]
     private GameObject cutScenePlayer;
 
-    private List<GameObject> cutAnims = new List<GameObject>();
-
     public void Awake()
     {
-        cutAnims.Add(sideSpineAnim.gameObject);
-        cutAnims.Add(frontIdleSpineAnim.gameObject);
-        cutAnims.Add(backIdleSpineAnim.gameObject);
-        cutAnims.Add(frontBackMoveframeAnim.gameObject);
+        spriteRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;        
     }
     
     public void CutScenePlayerSpawn()
@@ -41,63 +33,90 @@ public class CutScenePlayerController : MonoBehaviour
     #region CutScenePlayerAnim
     public void LeftIdle()
     {
-        EnableAnim(sideSpineAnim.gameObject);
-        sideSpineAnim.AnimationState.SetAnimation(0, "idel", true);
-        sideSpineAnim.skeleton.ScaleX = 1;
+        var scale = spriteRenderer.transform.localScale;
+        scale.x = Mathf.Abs(scale.x);
+        spriteRenderer.transform.localScale = scale;
+
+        cutSceneAnimatorController.Play("PlayerSide_Idle");
     }
 
     public void RightIdle()
     {
-        EnableAnim(sideSpineAnim.gameObject);
-        sideSpineAnim.AnimationState.SetAnimation(0, "idel", true);
-        sideSpineAnim.skeleton.ScaleX = -1;
+        var scale = spriteRenderer.transform.localScale;
+        scale.x = Mathf.Abs(scale.x) * -1;
+        spriteRenderer.transform.localScale = scale;
+
+        cutSceneAnimatorController.Play("PlayerSide_Idle");
     }
 
     public void FrontIdle()
     {
-        EnableAnim(frontIdleSpineAnim.gameObject);
+        cutSceneAnimatorController.Play("PlayerFront_Idle");
     }
 
     public void BackIdle()
     {
-        EnableAnim(backIdleSpineAnim.gameObject);
+        cutSceneAnimatorController.Play("PlayerBack_Idle");
     }
 
-    public void LeftMove()
+    public void LeftWalk()
     {
-        EnableAnim(sideSpineAnim.gameObject);
-        sideSpineAnim.AnimationState.SetAnimation(0, "animation", true);
-        sideSpineAnim.skeleton.ScaleX = 1;
+        var scale = spriteRenderer.transform.localScale;
+        scale.x = Mathf.Abs(scale.x);
+        spriteRenderer.transform.localScale = scale;
+
+        cutSceneAnimatorController.Play("PlayerSide_Walk");
     }
 
-    public void RightMove()
+    public void RightWalk()
     {
-        EnableAnim(sideSpineAnim.gameObject);
-        sideSpineAnim.AnimationState.SetAnimation(0, "animation", true);
-        sideSpineAnim.skeleton.ScaleX = -1;
+        var scale = spriteRenderer.transform.localScale;
+        scale.x = Mathf.Abs(scale.x) * -1;
+        spriteRenderer.transform.localScale = scale;
+
+        cutSceneAnimatorController.Play("PlayerSide_Walk");
+
     }
 
-    public void FrontMove()
+    public void FrontWalk()
     {
-        EnableAnim(frontBackMoveframeAnim.gameObject);
-        frontBackMoveframeAnim.SetBool("IsFront", true);
+        cutSceneAnimatorController.Play("PlayerFront_Walk");
+
     }
 
-    public void BackMove()
+    public void BackWalk()
     {
-        EnableAnim(frontBackMoveframeAnim.gameObject);
-        frontBackMoveframeAnim.SetBool("IsFront", false);
+        cutSceneAnimatorController.Play("PlayerBack_Walk");
     }
-    private void EnableAnim(GameObject target)
+
+    public void LeftRun()
     {
-        for (int i = 0; i < cutAnims.Count; ++i)
-        {
-            if (cutAnims[i] != target)
-            {
-                cutAnims[i].SetActive(false);
-            }
-        }
-        target.SetActive(true);
+        var scale = spriteRenderer.transform.localScale;
+        scale.x = Mathf.Abs(scale.x);
+        spriteRenderer.transform.localScale = scale;
+
+        cutSceneAnimatorController.Play("PlayerSide_Run");
     }
+
+    public void RightRun()
+    {
+        var scale = spriteRenderer.transform.localScale;
+        scale.x = Mathf.Abs(scale.x) * -1;
+        spriteRenderer.transform.localScale = scale;
+
+        cutSceneAnimatorController.Play("PlayerSide_Run");
+    }
+
+    public void FrontRun()
+    {
+        cutSceneAnimatorController.Play("PlayerFront_Run");
+
+    }
+
+    public void BackRun()
+    {
+        cutSceneAnimatorController.Play("PlayerBack_Run");
+    }
+
     #endregion
 }

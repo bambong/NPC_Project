@@ -27,21 +27,21 @@ public class BubbleUI :  MonoBehaviour
 
     public void Start()
     {
-        parent = transform.parent.gameObject;
-        transform.position = parent.transform.position + Vector3.up * ((parent.GetComponent<Collider>().bounds.size.y / 2) * Y_POS_REVISION_AMOUNT);
+        //parent = transform.parent.gameObject;
+        //transform.position = parent.transform.position + Vector3.up * ((parent.GetComponent<Collider>().bounds.size.y / 2) * Y_POS_REVISION_AMOUNT);
         bubbleDefalutUI.alpha = 1;
         bubbleUI.alpha = 0;
         
-        if (parent.transform.localScale.x < 0)
-        {
-            transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
-        }
+        //if (parent.transform.localScale.x < 0)
+        //{
+        //    transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+        //}
     }
 
     public void Update()
     {
 
-        transform.rotation = Camera.main.transform.rotation;
+        //transform.rotation = Camera.main.transform.rotation;
         if (isStart && !isEnter)
         {
             isStart = false;

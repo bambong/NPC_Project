@@ -507,6 +507,13 @@ MonoBehaviour:
   tutorialSceneTalkData: {fileID: 11400000, guid: 7d50e8233f93f1845b8c4519239f8d8d, type: 2}
   playerSpawnSpot: {x: 268.47894, y: -6.2812696, z: 23.127155}
   progress: 1
+  bgm:
+    Guid:
+      Data1: -1195518390
+      Data2: 1167794492
+      Data3: 2143623842
+      Data4: -1285021945
+    Path: event:/BGM/ServerRoom
 --- !u!4 &248614868
 Transform:
   m_ObjectHideFlags: 0
@@ -532,9 +539,9 @@ GameObject:
   m_Component:
   - component: {fileID: 250774300}
   - component: {fileID: 250774299}
-  - component: {fileID: 250774298}
   - component: {fileID: 250774301}
   - component: {fileID: 250774303}
+  - component: {fileID: 250774304}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -542,14 +549,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &250774298
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 250774297}
-  m_Enabled: 1
 --- !u!20 &250774299
 Camera:
   m_ObjectHideFlags: 0
@@ -675,6 +674,19 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &250774304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250774297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attenuationObject: {fileID: 0}
 --- !u!1 &270483434
 GameObject:
   m_ObjectHideFlags: 0
@@ -1634,7 +1646,7 @@ PrefabInstance:
     - target: {fileID: 5894186153558330794, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
       propertyPath: keywords.Array.data[1]
       value: 
-      objectReference: {fileID: 9059506981520492944, guid: fca84c79f48e59648893fa6aa9e7aeff, type: 3}
+      objectReference: {fileID: 9059506981520492944, guid: c51dff497805a07439967cab93db5cc2, type: 3}
     - target: {fileID: 5894186153558330794, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
       propertyPath: childEntitys.Array.size
       value: 5
@@ -5242,7 +5254,7 @@ MonoBehaviour:
   revAbleDistance: 1000
   keywords:
   - isLock: 0
-    keywordGo: {fileID: 0}
+    keywordGo: {fileID: 9059506981520492944, guid: fca84c79f48e59648893fa6aa9e7aeff, type: 3}
   statusSlotLayoutName: KeywordStatusLayoutController
 --- !u!1 &4212857254512145440
 GameObject:
@@ -5476,7 +5488,9 @@ MonoBehaviour:
   revAbleDistance: 1000
   keywords:
   - isLock: 0
-    keywordGo: {fileID: 0}
+    keywordGo: {fileID: 9059506981520492944, guid: c51dff497805a07439967cab93db5cc2, type: 3}
+  - isLock: 0
+    keywordGo: {fileID: 9059506981520492944, guid: 8cddd662c7e12684ebad1ecd8ee5cc99, type: 3}
   statusSlotLayoutName: KeywordStatusLayoutController
 --- !u!4 &4266472900245517440
 Transform:
