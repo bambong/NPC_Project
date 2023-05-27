@@ -34,6 +34,6 @@ public class ServerroomScene : BaseScene
     }
     private void Start()
     {
-        Managers.Talk.PlayCurrentSceneTalk(10001);
+        //Managers.Talk.PlayCurrentSceneTalk(10001);
     }
 }
