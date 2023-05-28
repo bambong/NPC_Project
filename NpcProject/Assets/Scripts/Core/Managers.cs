@@ -64,7 +64,6 @@ public class Managers : MonoBehaviour
             instance.talk.Init();
             instance.game.Init();
             instance.pool.Init();
-            instance.cam.Init();
             instance.keyword.Init();
             instance.scene.Init();
             instance.sound.Init();
