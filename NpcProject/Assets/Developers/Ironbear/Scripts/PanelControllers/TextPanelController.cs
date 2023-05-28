@@ -9,6 +9,8 @@ public class TextPanelController : UI_Base
     private string[] texts;
     [SerializeField]
     private TMP_Text tmpText;
+    [SerializeField]
+    private Define.Scene transitionSceneName;
 
     private float fadeDuration = 1f;
     private float typeSpeed = 0.08f;
@@ -55,7 +57,7 @@ public class TextPanelController : UI_Base
              {
                  canvas.DOFade(0f, fadeDuration).SetEase(Ease.OutQuad).OnComplete(() =>
                  {
-                     SceneManager.LoadScene("Chapter_01_Office_Slave");
+                     SceneManager.LoadScene(transitionSceneName.ToString());
                  });
                  
              });           

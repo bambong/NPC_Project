@@ -41,21 +41,27 @@ public class CameraSwitchEvent : GameEvent
 
 }
 
-public class CameraManager 
+public class CameraManager
 {
     private CinemachineBrain brain;
+    private CinemachineBrain Brain { get
+        {
+
+            if (brain == null)
+            {
+                brain = Util.GetOrAddComponent<CinemachineBrain>(Camera.main.gameObject);
+            }
+            return brain;
+        }
+    }
     private CameraInfo prevCamInfo;
     private CameraInfo curCamInfo;
     
     public ICinemachineCamera CurActiveCam 
     {
-        get => brain.ActiveVirtualCamera;
+        get => Brain.ActiveVirtualCamera;
     }
 
-    public void Init() 
-    {
-        brain = Util.GetOrAddComponent<CinemachineBrain>(Camera.main.gameObject);
-    }
     public void SwitchPrevCamera() 
     {
         EnterSwitchCamera(new CameraSwitchEvent(prevCamInfo));
@@ -94,18 +100,18 @@ public class CameraManager
         SetCurCamInfo(switchEvent.CamInfo);
 
         curCamInfo.cam.gameObject.SetActive(true);
-        brain.StartCoroutine(SwitchEventCompleteCheck(switchEvent));
+        Brain.StartCoroutine(SwitchEventCompleteCheck(switchEvent));
         return true;
     }
     private IEnumerator SwitchEventCompleteCheck(CameraSwitchEvent switchEvent) 
     {
        yield return null;
 
-       while (brain.IsBlending)
+       while (Brain.IsBlending)
        {
             yield return null;     
        }
-       if(brain.IsLive(switchEvent.TargetCam))
+       if(Brain.IsLive(switchEvent.TargetCam))
        {
             switchEvent.Complete();
        }

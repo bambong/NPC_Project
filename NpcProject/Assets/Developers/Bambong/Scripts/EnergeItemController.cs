@@ -43,7 +43,10 @@ public class EnergeItemController : MonoBehaviour , ISpawnAble
             Managers.Effect.PlayEffect(Define.EFFECT.EnergeItemEffect,transform);
             Managers.Sound.PlaySFX(Define.SOUND.Item);
             Managers.Keyword.AddKeywordMakerGauge(gaugeAmount);
-            parentSpawner.RemoveItem(spawnSpot);
+            if(parentSpawner != null) 
+            {
+                parentSpawner.RemoveItem(spawnSpot);
+            }
             Managers.Resource.Destroy(gameObject);
         }
     }

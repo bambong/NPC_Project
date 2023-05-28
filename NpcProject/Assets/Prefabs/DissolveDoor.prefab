@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 1848347083940965891}
   - component: {fileID: 1422907192333249910}
   - component: {fileID: 8672838711065586608}
+  - component: {fileID: 8936620731515411828}
   m_Layer: 0
   m_Name: SV3_wall003
   m_TagString: Untagged
@@ -166,6 +167,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8936620731515411828
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6984214111722577113}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 12.077087, y: 16.720598, z: 1.542099}
+  m_Center: {x: -222.80075, y: 8.0211, z: -42.74105}
 --- !u!1 &7889019794062781745
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,6 +190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3658560645865200616}
   - component: {fileID: 3504926761559587281}
+  - component: {fileID: 7084250569420556869}
   m_Layer: 0
   m_Name: DissolveDoor
   m_TagString: Untagged
@@ -220,3 +235,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &7084250569420556869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7889019794062781745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1ec735441757f84f99c2da852e26c07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guId: 
+  animator: {fileID: 3504926761559587281}
