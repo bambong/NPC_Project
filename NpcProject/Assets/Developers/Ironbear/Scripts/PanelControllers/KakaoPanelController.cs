@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 using TMPro;
 
 public class KakaoPanelController : MonoBehaviour
@@ -116,6 +117,8 @@ public class KakaoPanelController : MonoBehaviour
     public void Yes()
     {
         yesTxt.SetActive(true);
+        btns[1].GetComponent<Button>().interactable = false;
+
         DOVirtual.DelayedCall(waitTime, () =>
         {
             CloseAll();
@@ -127,6 +130,7 @@ public class KakaoPanelController : MonoBehaviour
     public void Yup()
     {
         yupTxt.SetActive(true);
+        btns[0].GetComponent<Button>().interactable = false;
 
         DOVirtual.DelayedCall(waitTime, () =>
         {
