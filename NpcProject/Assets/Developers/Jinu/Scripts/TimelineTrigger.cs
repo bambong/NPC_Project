@@ -19,6 +19,7 @@ public class TimelineTrigger : MonoBehaviour
         {
             cutScene = new CutSceneEvent(playableDirector);
             cutScene.Play();
+            isPlayed = true;
         }
     }
 }
