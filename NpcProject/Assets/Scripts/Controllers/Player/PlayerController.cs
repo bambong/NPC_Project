@@ -104,6 +104,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
         var rot = Camera.main.transform.rotation.eulerAngles;
         rot.x = 0;
         rot.y += 180;
+        transform.rotation = Quaternion.identity;
         rotater.rotation = Quaternion.Euler(rot);
         playerStateController.Update();
         if (transform.lossyScale != Vector3.one)

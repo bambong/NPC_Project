@@ -56,10 +56,6 @@ public class CameraManager
     {
         brain = Util.GetOrAddComponent<CinemachineBrain>(Camera.main.gameObject);
     }
-    public void OnSceneLoaded()
-    {
-        brain = Util.GetOrAddComponent<CinemachineBrain>(Camera.main.gameObject);
-    }
     public void SwitchPrevCamera() 
     {
         EnterSwitchCamera(new CameraSwitchEvent(prevCamInfo));
@@ -75,16 +71,16 @@ public class CameraManager
         if(curCamInfo.target != null) 
         {
             curCamInfo.cam.Follow = curCamInfo.target;
-            //curCamInfo.cam.LookAt = curCamInfo.target;
+           // curCamInfo.cam.LookAt = curCamInfo.target;
         }
-        //Managers.Scene.CurrentScene.StartCoroutine(LookClear());
+      //  Managers.Scene.CurrentScene.StartCoroutine(LookClear());
     }
-    IEnumerator LookClear() 
-    {
-        yield return null;
-        curCamInfo.cam.LookAt = null;
+    //IEnumerator LookClear() 
+    //{
+    //    yield return null;
+    //    curCamInfo.cam.LookAt = null;
 
-    }
+    //}
     public bool EnterSwitchCamera(CameraSwitchEvent switchEvent) 
     {
         if(switchEvent.TargetCam == curCamInfo.cam) 
@@ -107,17 +103,12 @@ public class CameraManager
 
        while (brain.IsBlending)
        {
-            yield return null;
+            yield return null;     
        }
        if(brain.IsLive(switchEvent.TargetCam))
        {
             switchEvent.Complete();
        }
-    }
-
-    public void Clear()
-    {
-        brain = null;
     }
 
 }

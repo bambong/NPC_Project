@@ -56,7 +56,7 @@ public class DebugZone : GuIdBehaviour, IDataHandler
     }
     private void MakeFrame() 
     {
-        playerLayout = Managers.Resource.Instantiate("Layout",Managers.Keyword.PlayerPanelLayout).transform;
+        playerLayout = Managers.Resource.Instantiate("PlayerLayout", Managers.Keyword.PlayerPanelLayout).transform;
         ClosePlayerLayout();
         for(int i = 0; i < playerSlotCount; ++i)
         {
@@ -133,7 +133,9 @@ public class DebugZone : GuIdBehaviour, IDataHandler
     public void OnEnterDebugMod() 
     {
         Managers.Game.Player.SetWireframeMaterial(wireMaterials);
-        Managers.Game.Player.OpenWireEffect(boxSize *2);
+
+        var length = boxSize.magnitude;
+        Managers.Game.Player.OpenWireEffect(new Vector3(length,length,length));
         
         StartCoroutine(DebugModeTimeUpdate());
        

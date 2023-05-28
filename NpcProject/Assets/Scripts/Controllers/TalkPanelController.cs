@@ -16,7 +16,7 @@ public class TalkPanelController : UI_Base
     private readonly float SKIP_DELAY_TIME = 0.1f;
     
     [SerializeField]
-    private Image speakImage;
+    private List<Image> leftRights;
     [SerializeField]
     private TextMeshProUGUI spekerName;
     [SerializeField]
@@ -44,6 +44,8 @@ public class TalkPanelController : UI_Base
     private bool isChoice = false;
     private int buttonCount;
 
+ 
+
     public override void Init()
     {
         choiceButton.AddButtonEvent();
@@ -51,8 +53,25 @@ public class TalkPanelController : UI_Base
 
     public void SetDialogue(Dialogue dialogue)
     {
-        speakImage.sprite = dialogue.speaker.sprite;
-        spekerName.text = dialogue.speaker.name;
+        for(int i =0; i < dialogue.leftRights.Length; ++i ) 
+        {
+            if(dialogue.leftRights[i] == null) 
+            {
+                leftRights[i].DOFade(0, 0);
+                continue;
+            }
+            leftRights[i].sprite = dialogue.leftRights[i].sprite;
+            if (dialogue.speaker.sprite == dialogue.leftRights[i].sprite) 
+            {
+                leftRights[i].color = Color.white;
+            }
+            else 
+            {
+                leftRights[i].color = Color.gray;
+            }
+            leftRights[i].DOFade(1, 0);
+        }
+        spekerName.text = $"-{dialogue.speaker.name}-";
         choiceButton.Inactive();
         dialogueText.text = "";
     }
@@ -61,8 +80,27 @@ public class TalkPanelController : UI_Base
         dialogueText.text = "";
         isNext = false;        
         curDialogue = dialogue;
-        speakImage.sprite = dialogue.speaker.sprite;
-        spekerName.text = dialogue.speaker.name;
+
+        for (int i = 0; i < dialogue.leftRights.Length; ++i)
+        {
+            if (dialogue.leftRights[i] == null)
+            {
+                leftRights[i].DOFade(0, 0);
+                continue;
+            }
+            leftRights[i].sprite = dialogue.leftRights[i].sprite;
+            if (dialogue.speaker.sprite == dialogue.leftRights[i].sprite)
+            {
+                leftRights[i].color = Color.white;
+            }
+            else
+            {
+                leftRights[i].color = Color.gray;
+            }
+            leftRights[i].DOFade(1, 0);
+        }
+
+        spekerName.text = $"-{dialogue.speaker.name}-";
         StartCoroutine(SkipDelayTime());
         StartCoroutine(PlayTextAnimation());
     }
