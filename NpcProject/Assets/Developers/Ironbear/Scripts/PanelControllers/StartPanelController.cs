@@ -10,11 +10,12 @@ public class StartPanelController : UI_Base
     [SerializeField]
     private TMP_Text tmpText;
     [SerializeField]
-    private Button btn;
+    private RectTransform btn;
+    [SerializeField]
+    private CanvasGroup canvasGroup;
 
-    private float typeSpeed = 0.1f;
+    private float typeSpeed = 0.08f;
     private Sequence seq;
-
 
     public override void Init()
     {
@@ -24,9 +25,9 @@ public class StartPanelController : UI_Base
     private void Start()
     {
         seq = DOTween.Sequence();
-
-        btn.interactable = false;
-
+        btn.GetComponent<Button>().interactable = false;
+        canvasGroup.alpha = 0f;
+        btn.anchoredPosition = new Vector3(0f, -200, 0f);
         TypeAnimation();
     }
 
@@ -34,19 +35,27 @@ public class StartPanelController : UI_Base
     {
         for (int j = 0; j < texts.Length; j++)
         {
-            seq.Append(tmpText.DOText(texts[j], texts[j].Length * typeSpeed));
+            string text = texts[j];
+            text = text.Replace("\\n", "\n");
+
+            seq.Append(tmpText.DOText(text, text.Length * typeSpeed).SetEase(Ease.Linear));
             if (j < texts.Length - 1)
             {
                 seq.AppendCallback(() =>
                 {
-                    seq.AppendInterval(0.3f);
+                    seq.AppendInterval(0.5f);
                     tmpText.text = " ";
                 });
             }
             seq.AppendInterval(0.1f);
         }
 
-        seq.OnComplete(() => { btn.interactable = true; });
+        seq.OnComplete(() => 
+        {
+            btn.GetComponent<Button>().interactable = true;
+            btn.DOAnchorPosY(280, 1f).SetEase(Ease.OutQuad);
+            canvasGroup.DOFade(1f, 1f).SetEase(Ease.OutQuad);
+        });
 
         seq.Play();
     }
