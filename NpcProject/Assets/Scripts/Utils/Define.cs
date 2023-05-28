@@ -7,22 +7,19 @@ public class Define
     public enum Scene
     {
         Unknown,
-        Clear,
         DataPuzzle,
-        Chapter_01,
-        Chapter_01_Puzzle_01, 
-        Chapter_01_Puzzle_02,
-        Chapter_01_Puzzle_03,
-        Chapter_01_Puzzle_04,
-        Chapter_01_Tutorial_01,
-        Chapter_01_Tutorial_02,
-        Chapter_01_Tutorial_03,
-        Chapter_01_Tutorial_04,
-        Serverroom
-    }
-    public enum EventIdType
-    {
-        DataPuzzle = 90,
+        Chapter_01_Office_Slave,
+        Chapter_01_Serverroom,
+        Chapter_01_Puzzle01, 
+        Chapter_01_Puzzle02,
+        Chapter_01_Puzzle03,
+        Chapter_01_Puzzle04,
+        Chapter_01_Puzzle05,
+        Chapter_01_Puzzle06,
+        Chapter_01_Puzzle07,
+        Chapter_01_Puzzle08,
+        Chapter_01_Puzzle09,
+        Chapter_01_Puzzle10
     }
     public enum WorldObject
     {
