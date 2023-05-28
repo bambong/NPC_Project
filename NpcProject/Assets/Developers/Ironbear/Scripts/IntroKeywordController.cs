@@ -1,17 +1,16 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using UnityEngine.UIElements;
 
-public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler, IPointerExitHandler, IPointerEnterHandler
+public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
     private readonly float START_END_ANIM_TIME = 0.2f;
-    private readonly string KEYWORD_FRAME_TAG = "KeywordFrame";
 
     [SerializeField]
     private RectTransform rectTransform;
-    [SerializeField]
-    private Transform canvas;
 
+    private Canvas canvas;
     private CanvasGroup canvasGroup;
     private int prevSibilintIndex;
     private Transform startParent;
@@ -21,15 +20,14 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
     private float moveAnimDuration = 0.2f;
 
     private bool isInit = false;
-    private bool isMove = false;
-    private bool isDrag = false;
     private bool isLock = false;
-
 
     private void Start()
     {
         startDragPoint = GetComponent<RectTransform>().localPosition;
         canvasGroup = GetComponent<CanvasGroup>();
+
+        canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
     }
 
     public override void Init()
@@ -45,30 +43,23 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
         curFrame = frame;
     }
 
-    public void SetMoveState(bool isOn)
-    {
-        isMove = isOn;
-    }
-    public void SetDragState(bool isOn)
-    {
-        isDrag = isOn;
-    }
-
     private bool IsDragable(PointerEventData eventData) { return isLock || eventData.button != PointerEventData.InputButton.Left; }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         startParent = transform.parent;
 
-        transform.SetParent(canvas);
+        transform.SetParent(canvas.transform);
         transform.SetAsLastSibling();
-
         canvasGroup.blocksRaycasts = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        rectTransform.position = Input.mousePosition;
+        Vector3 vec = Camera.main.WorldToScreenPoint(rectTransform.position);
+        vec.x += eventData.delta.x;
+        vec.y += eventData.delta.y;
+        rectTransform.position = Camera.main.ScreenToWorldPoint(vec);
     }
 
     public void ResetKeyword()
@@ -84,59 +75,17 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
             .OnComplete(() =>
             {
                 curFrame.OnEndDrag();
-                SetMoveState(false);
             });
     }
 
     public void OnEndDrag(PointerEventData eventData)
-    {
-        if (transform.parent == canvas)
+    { 
+        if (transform.parent == canvas.transform)
         {
             transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
-        }
-        else
-        {
             transform.SetParent(startParent);
         }
 
         canvasGroup.blocksRaycasts = true;
-
-        SetDragState(false);
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        
-    }
-    public void DragReset()
-    {
-        transform.SetParent(startParent);
-        transform.SetSiblingIndex(prevSibilintIndex);
-        rectTransform.localPosition = startDragPoint;
-        SetMoveState(false);
-        SetDragState(false);
-        curFrame.OnEndDrag();
-    }
-
-    public bool CheckOverlap()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity, LayerMask.GetMask("UI"));
-
-        for (int i = 0; i < hits.Length; i++)
-        {
-            if(hits[i].collider.gameObject.CompareTag(KEYWORD_FRAME_TAG))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

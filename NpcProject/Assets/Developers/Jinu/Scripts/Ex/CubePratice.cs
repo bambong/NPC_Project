@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class CubePratice : MonoBehaviour
 {
+    [SerializeField]
+    float setScale = 1.0f;
+
     private void OnTriggerEnter(Collider other)
-    {
+    {        
         if (other.tag == "Player")
         {
-            Managers.Sound.BGMControl(Define.BGM.Pause);
+            //Managers.Sound.BGMControl(Define.BGM.Pause);
+            Time.timeScale = setScale;
         }
     }
 
@@ -19,4 +23,5 @@ public class CubePratice : MonoBehaviour
             Managers.Sound.BGMControl(Define.BGM.ReStart);
         }
     }
+
 }

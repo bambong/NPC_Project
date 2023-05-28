@@ -40,6 +40,15 @@ public class SpriteGhostController : GhostEffectController
 
     }
 
+    private void PlayWalkSFX()
+    {
+        Managers.Sound.PlaySFX(Define.SOUND.WalkPlayer);
+    }
+
+    private void PlayRunSFX()
+    {
+        Managers.Sound.PlaySFX(Define.SOUND.RunPlayer);
+    }
 
     public override void Open()
     {

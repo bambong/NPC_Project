@@ -38,6 +38,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
     private bool isLock = false;
     private bool isMove = false;
     private bool isDrag = false;
+    public bool isPlay = false;
     public Image Image { get => image; }
     public string KewordId { get; private set; }
     public KeywordFrameBase CurFrame { get => curFrame;}

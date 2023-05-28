@@ -44,6 +44,7 @@ public class ResultNodeController : UI_Base
         isSuccess = isOn;
         if (isOn)
         {
+            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleGood);
             outImage.color = Color.green;
         }
         else

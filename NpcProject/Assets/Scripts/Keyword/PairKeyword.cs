@@ -161,6 +161,7 @@ public class PairKeyword : KeywordController
         KeywordEntity otherEntity = null;
         if (IsAvailablePair(out otherEntity))
         {
+            Managers.Sound.PlaySFX(Define.SOUND.PairKeyword);
             OpenLineRender(otherEntity);
             LinePosUpdate(MasterEntity, otherEntity);
         }

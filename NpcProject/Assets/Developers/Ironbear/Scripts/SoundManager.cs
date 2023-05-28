@@ -114,8 +114,9 @@ public class SoundManager
     }
     #endregion
 
+    #region SFXControl
 
-    public void PlaySFX(Enum eventpath)
+    public void PlaySFX(Enum eventpath, bool routine = false)
     {
         sfxInstance = RuntimeManager.CreateInstance("event:/SFX/" + eventpath.ToString());
         sfxInstance.start();
@@ -123,21 +124,22 @@ public class SoundManager
 
     public void StopSFX()
     {
-        sfxInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        //sfxInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        sfxBus.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 
-    public void PlayMoveSound(Enum eventpath)
-    {
-        StopMoveSound();
-        moveSoundInstance = RuntimeManager.CreateInstance("event:/SFX/" + eventpath.ToString());
-        moveSoundInstance.start();
-    }
+    //public void PlayMoveSound(Enum eventpath)
+    //{
+    //    StopMoveSound();
+    //    moveSoundInstance = RuntimeManager.CreateInstance("event:/SFX/" + eventpath.ToString());
+    //    moveSoundInstance.start();
+    //}
 
-    public void StopMoveSound()
-    {
-        moveSoundInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-    }
-
+    //public void StopMoveSound()
+    //{
+    //    moveSoundInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+    //}
+    #endregion
     #region SoundVolumeControl
     public void SetPauseBGM(bool pause) => bgmEmitter.SetPause(pause);
 
@@ -150,7 +152,8 @@ public class SoundManager
 
     public void Clear()
     {
-        StopMoveSound();
+        StopSFX();
+        //StopMoveSound();
     }
 
 }

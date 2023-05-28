@@ -10,6 +10,8 @@ public class LogoPanelController : UI_Base
     private GameObject btns;
     [SerializeField]
     private GameObject bar;
+    [SerializeField]
+    private GameObject arm;
 
     [SerializeField]
     private GameObject[] btnsList;
@@ -29,10 +31,22 @@ public class LogoPanelController : UI_Base
     private void Start()
     {
         logos.transform.localPosition = new Vector3(-1100, 0, 0);
-        btns.transform.localPosition = new Vector3(-380, 0, 0);
+     //   btns.transform.localPosition = new Vector3(-1150, -45, 0);
         bar.transform.localPosition = new Vector3(-1600, 160, 0);
-
+        arm.transform.localRotation = Quaternion.Euler(0f, 0f, 1f);
+        for (int i = 0; i < btnsList.Length; i++)
+        {
+            GameObject btn = btnsList[i];
+            var pos = btn.transform.localPosition;
+            pos.x -= 400;
+            btn.transform.localPosition = pos; 
+        }
         MoveObject();
+
+        Sequence armSq = DOTween.Sequence();
+        armSq.Append(arm.transform.DORotate(new Vector3(0f, 0f, 5f), 2f).SetEase(Ease.InOutSine));
+        armSq.Append(arm.transform.DORotate(new Vector3(0f, 0f, 1f), 2f).SetEase(Ease.InOutSine));
+        armSq.SetLoops(-1);
     }
 
     private void MoveObject()
@@ -45,7 +59,7 @@ public class LogoPanelController : UI_Base
             GameObject btn = btnsList[i];
             float delay = i * moveDelay * 0.5f;
 
-            btn.transform.DOLocalMoveX(btn.transform.localPosition.x + 380, moveDuration).SetEase(Ease.OutQuad).SetDelay(delay);
+            btn.transform.DOLocalMoveX(btn.transform.localPosition.x + 400, moveDuration).SetEase(Ease.OutQuad).SetDelay(delay);
         }
 
         EnableButtonInteractable();
@@ -57,5 +71,5 @@ public class LogoPanelController : UI_Base
         {
             btnsList[i].GetComponent<Button>().interactable = true;
         }
-    }
+    }    
 }

@@ -40,11 +40,11 @@ public class ColorOrderGroupController : UI_Base
                 return;
             }
 
+            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleBad);
             miniGameManager.SetStateGameReset();
             //orderNodes[curIndex].SetIsSuccess(fa);
             return;
         }
-      
         orderNodes[curIndex].SetIsSuccess(true);
         curIndex++;
 
@@ -80,7 +80,7 @@ public class ColorOrderGroupController : UI_Base
     {
         Sequence seq = DOTween.Sequence();
         seq.AppendInterval(interval);
-        seq.Append(imageGroup.DOFade(1, 2f));
+        seq.Append(imageGroup.DOFade(1, 2f).OnStart(()=> Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleButtonHover)));
         seq.Play();
         for (int i =0; i< orderNodes.Count; ++i) 
         {

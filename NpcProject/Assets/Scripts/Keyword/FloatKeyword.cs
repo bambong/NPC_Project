@@ -9,7 +9,12 @@ public class FloatKeyword : KeywordController
 
     public override void OnEnter(KeywordEntity entity)
     {
+        if (isPlay)
+        {
+            Managers.Sound.PlaySFX(Define.SOUND.FloatingKeyword);
+        }
         entity.WireColorController.AddColorState(WireColorStateController.E_WIRE_STATE.NORMAL, E_WIRE_COLOR_MODE.Float);
+        isPlay = true;
     }
     public override void OnFixedUpdate(KeywordEntity entity)
     {

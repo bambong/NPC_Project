@@ -1,7 +1,5 @@
 using UnityEngine;
 using DG.Tweening;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 public class PanelsController : UI_Base
 {
@@ -37,6 +35,11 @@ public class PanelsController : UI_Base
         isLogo = true;
     }
 
+    public void Exit()
+    {
+        Application.Quit();
+    }
+
     public void CanvasFadeOut()
     {
         canvas.alpha = 1f;
@@ -62,12 +65,9 @@ public class PanelsController : UI_Base
                 isPuzzle = false;
                 isText = true;
             }
-            else if(isText)
-            {
-                //next scene loading
-            }
             
-            CanvasFadeIn(); });
+            CanvasFadeIn(); 
+        });
     }
 
     private void CanvasFadeIn()

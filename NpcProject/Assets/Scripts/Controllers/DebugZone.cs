@@ -87,6 +87,7 @@ public class DebugZone : GuIdBehaviour, IDataHandler
                 continue;
             }
             keyword = Managers.UI.MakeSubItem<KeywordController>(null, "KeywordPrefabs/" + name);
+            keyword.isPlay = true;
             playerFrames[i].InitKeyword(keyword);
             keyword.SetDebugZone(this);
             return keyword;
@@ -132,7 +133,9 @@ public class DebugZone : GuIdBehaviour, IDataHandler
     public void OnEnterDebugMod() 
     {
         Managers.Game.Player.SetWireframeMaterial(wireMaterials);
-        Managers.Game.Player.OpenWireEffect(boxSize *2);
+
+        var length = boxSize.magnitude;
+        Managers.Game.Player.OpenWireEffect(new Vector3(length,length,length));
         
         StartCoroutine(DebugModeTimeUpdate());
        

@@ -6,28 +6,33 @@ using DG.Tweening;
 public class IntroKeywordFrameController : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
     private Image image;
-    private RectTransform rect;
+    private CanvasGroup canvasGroup;
+    private PuzzlePanelController panelController;
 
-    private bool isFilled = false;
-
-    private float initScale = 1.5f;
-    private float targetScale = 1.75f;
+    private float initScale = 1.3f;
+    private float targetScale = 1.5f;
     private float animDuration = 0.1f;
+    private float fadeDuration = 0.5f;
 
     private void Awake()
     {
-        rect = GetComponent<RectTransform>();
         image = GetComponent<Image>();
+        canvasGroup = transform.parent.GetComponentInParent<CanvasGroup>();
+        panelController = transform.parent.GetComponentInParent<PuzzlePanelController>();
     }
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (eventData.pointerDrag != null && isFilled == false)
-        {
-            isFilled = true;
+        if (eventData.pointerDrag != null && !panelController.isFilled)
+        {          
+            panelController.SetFilled();
             eventData.pointerDrag.transform.SetParent(transform);
-            eventData.pointerDrag.GetComponent<RectTransform>().localScale = Vector3.one;
-            eventData.pointerDrag.GetComponent<RectTransform>().localPosition = Vector3.zero;
+
+            RectTransform draggedRect = eventData.pointerDrag.GetComponent<RectTransform>();
+            draggedRect.localScale = Vector3.one;
+            draggedRect.DOLocalMove(Vector3.zero, 0.1f).SetEase(Ease.OutQuad);
+            
+            panelController.FadeOutCurrentFrame();
         }
     }
 
@@ -38,9 +43,26 @@ public class IntroKeywordFrameController : MonoBehaviour, IDropHandler, IPointer
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if(!isFilled)
+        if(!panelController.isFilled)
         {
             image.rectTransform.DOScale(Vector3.one * initScale, animDuration).SetEase(Ease.OutBack);
         }        
+    }
+
+    public void SetAlpha(float alpha)
+    {
+        canvasGroup.alpha = alpha;
+    }
+
+    public void FadeOut()
+    {
+        canvasGroup.DOFade(0f, fadeDuration * 1.3f);
+    }
+
+    public void FadeIn()
+    {
+        canvasGroup.DOFade(1f, fadeDuration);
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
     }
 }

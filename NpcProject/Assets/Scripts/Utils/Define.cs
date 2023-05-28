@@ -61,7 +61,7 @@ public class Define
         DeathPlayer,
         EnlargementKeyword,
         ErrorEffectKeyword,
-        FairKeyword,
+        PairKeyword,
         FindMonster,
         FloatingKeyword,
         HitMonster,
@@ -73,6 +73,18 @@ public class Define
         RunPlayer,
         ToBounceKeyword,
         ToDropKeyword,
-        WalkPlayer
+        WalkPlayer,
+        OpenDoor,
+        NextChapter,
+        DebugModeEnter,
+        DebugModeExit,
+        DataPuzzleSuccess,
+        DataPuzzleFail,
+        DataPuzzleGood,
+        DataPuzzleBad,
+        DataPuzzleButtonHover,
+        ResetButton,
+        DataPuzzleEnter,
+        Sign
     }
 }
