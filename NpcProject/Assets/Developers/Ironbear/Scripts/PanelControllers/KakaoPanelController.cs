@@ -115,6 +115,7 @@ public class KakaoPanelController : MonoBehaviour
 
     public void Yes()
     {
+        Managers.Sound.PlaySFX(Define.SOUND.ClickButton);
         yesTxt.SetActive(true);
         DOVirtual.DelayedCall(waitTime, () =>
         {
@@ -125,6 +126,7 @@ public class KakaoPanelController : MonoBehaviour
 
     public void Yup()
     {
+        Managers.Sound.PlaySFX(Define.SOUND.ClickButton);
         yupTxt.SetActive(true);
 
         DOVirtual.DelayedCall(waitTime, () =>

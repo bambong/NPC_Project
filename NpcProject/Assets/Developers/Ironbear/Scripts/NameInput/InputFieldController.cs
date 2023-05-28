@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.Events;
+
 
 public class InputFieldController : UI_Base
 {
@@ -24,9 +26,10 @@ public class InputFieldController : UI_Base
 
     private ContractPanelController contractPanel;
     private TMP_InputField inputField;
-
     private string playerName = null;
+    public bool isSelect = false;
     private bool isRestrict = false;
+    private string previousText = "";
 
     public override void Init()
     {        
@@ -66,6 +69,7 @@ public class InputFieldController : UI_Base
                 if (nameChars[i] == restrictChars[j] || playerName.Length <= 1)
                 {
                     isRestrict = true;
+                    Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleBad);
                     StartCoroutine(WarningTextEffect());
                 }             
             }
@@ -73,6 +77,7 @@ public class InputFieldController : UI_Base
 
         if (!isRestrict && playerName != null) 
         {
+            Managers.Sound.PlaySFX(Define.SOUND.Sign);
             SubmitName();
             if(contractPanel!=null)
             {
@@ -109,8 +114,35 @@ public class InputFieldController : UI_Base
         test.gameObject.transform.DOShakePosition(0.3f, 4);
     }
 
-    private void UpdateOutputText(string inputValue)
+    public void UpdateOutputText(string inputValue)
     {
+        previousText = inputValue;
         outputText.text = inputValue;
     }
+
+    //public void HangleInputCheck()
+    //{
+    //    isSelect = true;
+    //    Debug.Log("한글 입력 감지 시작");
+    //    StartCoroutine(HangleCheck());
+    //}    
+
+    //public void HangleCheckOut()
+    //{
+    //    Debug.Log("한글 입력 나가기");
+    //    isSelect = false;
+    //}
+
+    //private IEnumerator HangleCheck()
+    //{
+    //    while(isSelect)
+    //    {
+    //        if (i)
+    //        {
+    //            Debug.Log("한글 입력 감지");
+    //            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleGood);
+    //        }
+    //        yield return null;
+    //    }        
+    //}
 }
