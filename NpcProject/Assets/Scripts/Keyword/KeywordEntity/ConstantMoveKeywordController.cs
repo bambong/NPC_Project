@@ -58,10 +58,7 @@ public class ConstantMoveKeywordController : KeywordEntity
         {
             dir.x = 0;
         }
-        if (new Vector3(dir.x, 0, dir.z).magnitude <= 0)
-        {
-            dir = Vector3.right;
-        }
+  
         entity.ColisionCheckMove(dir.normalized * ApartKeyword.Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER));
     }
 
