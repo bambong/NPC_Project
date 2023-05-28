@@ -116,6 +116,7 @@ public class KakaoPanelController : MonoBehaviour
 
     public void Yes()
     {
+        Managers.Sound.PlaySFX(Define.SOUND.ClickButton);
         yesTxt.SetActive(true);
         btns[1].GetComponent<Button>().interactable = false;
 
@@ -129,6 +130,7 @@ public class KakaoPanelController : MonoBehaviour
 
     public void Yup()
     {
+        Managers.Sound.PlaySFX(Define.SOUND.ClickButton);
         yupTxt.SetActive(true);
         btns[0].GetComponent<Button>().interactable = false;
 

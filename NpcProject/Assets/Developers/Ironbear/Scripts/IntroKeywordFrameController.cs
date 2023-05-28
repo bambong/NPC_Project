@@ -24,7 +24,8 @@ public class IntroKeywordFrameController : MonoBehaviour, IDropHandler, IPointer
     public void OnDrop(PointerEventData eventData)
     {
         if (eventData.pointerDrag != null && !panelController.isFilled)
-        {          
+        {
+            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleGood);
             panelController.SetFilled();
             eventData.pointerDrag.transform.SetParent(transform);
 

@@ -156,6 +156,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         {
             return;
         }
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleButtonHover);
         transform.DOScale(FOCUSING_SCALE,START_END_ANIM_TIME).SetUpdate(true);
     }
     public void OnPointerExit(PointerEventData eventData)

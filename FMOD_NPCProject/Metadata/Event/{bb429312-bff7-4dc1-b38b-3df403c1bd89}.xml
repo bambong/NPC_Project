@@ -90,8 +90,11 @@
 	<object class="MixerBusPanner" id="{21472711-4c3e-470e-b4e5-4731510fa468}" />
 	<object class="SingleSound" id="{09035cdb-67a7-4dac-ac21-dcb01d11871e}">
 		<property name="length">
-			<value>1.4446458333333334</value>
+			<value>0.99340783044043768</value>
 		</property>
+		<relationship name="fadeOutCurve">
+			<destination>{7dfefad7-6c37-4cc4-bb47-a96334b32aa9}</destination>
+		</relationship>
 		<relationship name="audioFile">
 			<destination>{61102701-4d6e-4928-bdce-3a2e908bf21f}</destination>
 		</relationship>
@@ -120,6 +123,14 @@
 	</object>
 	<object class="MixerBusPanner" id="{41eb3f93-dfb7-4953-bf2a-ee60c239950f}" />
 	<object class="MixerBusFader" id="{8c8abe51-f55a-491a-ab46-32a74da54fde}" />
+	<object class="FadeCurve" id="{7dfefad7-6c37-4cc4-bb47-a96334b32aa9}">
+		<relationship name="startPoint">
+			<destination>{e834ee9c-2a1a-438c-b7d6-6c9f26b7b4bd}</destination>
+		</relationship>
+		<relationship name="endPoint">
+			<destination>{cd051b47-ac4b-48ab-acc1-129436f36d6b}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusEffectChain" id="{5e607b9d-75a3-4de4-983c-2c825197defe}">
 		<relationship name="effects">
 			<destination>{1c448876-a26b-45cb-a792-86b05ce5070c}</destination>
@@ -127,5 +138,24 @@
 	</object>
 	<object class="MixerBusPanner" id="{5864735e-cc1b-44f0-a1f6-9678dae61f7b}" />
 	<object class="MixerBusFader" id="{2afbc417-fae1-4a2c-9368-30de07f687c3}" />
+	<object class="AutomationPoint" id="{e834ee9c-2a1a-438c-b7d6-6c9f26b7b4bd}">
+		<property name="position">
+			<value>0.66000000000000003</value>
+		</property>
+		<property name="value">
+			<value>1</value>
+		</property>
+		<property name="curveShape">
+			<value>0.25471893</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{cd051b47-ac4b-48ab-acc1-129436f36d6b}">
+		<property name="position">
+			<value>0.99340783044043768</value>
+		</property>
+		<property name="value">
+			<value>0</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{1c448876-a26b-45cb-a792-86b05ce5070c}" />
 </objects>

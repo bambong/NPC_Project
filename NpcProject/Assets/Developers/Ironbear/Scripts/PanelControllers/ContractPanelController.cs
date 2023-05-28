@@ -42,6 +42,7 @@ public class ContractPanelController : MonoBehaviour
 
     public void ClickSignBtn()
     {
+        Managers.Sound.PlaySFX(Define.SOUND.ClickButton);
         Color targetColor = new Color(0.67f, 0.67f, 0.67f, 1f);
 
         signCanvasGroup.DOFade(0f, effectDuration);

@@ -46,6 +46,7 @@ public class IntroStateChangeController : UI_Base, IDragHandler, IEndDragHandler
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        Managers.Sound.PlaySFX(Define.SOUND.ClickButton);
         startParent = transform.parent;
 
         transform.SetParent(canvas.transform);
@@ -78,10 +79,15 @@ public class IntroStateChangeController : UI_Base, IDragHandler, IEndDragHandler
     {
         if (transform.parent == canvas.transform)
         {
+            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleBad);
             ResetPosition();
         }
+        else
+        {
+            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleGood);
+        }
 
-        canvasGroup.blocksRaycasts = true;
+        canvasGroup.blocksRaycasts = true;        
     }
 
     private void ResetPosition()
@@ -89,4 +95,6 @@ public class IntroStateChangeController : UI_Base, IDragHandler, IEndDragHandler
         transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
         transform.SetParent(startParent);
     }
+
+
 }

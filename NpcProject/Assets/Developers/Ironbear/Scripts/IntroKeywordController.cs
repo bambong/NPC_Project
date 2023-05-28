@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 using DG.Tweening;
 using UnityEngine.UIElements;
 
-public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler
+public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler, IPointerEnterHandler
 {
     private readonly float START_END_ANIM_TIME = 0.2f;
 
@@ -21,6 +21,7 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
 
     private bool isInit = false;
     private bool isLock = false;
+    private bool sfxSoundPlay = true;
 
     private void Start()
     {
@@ -52,6 +53,8 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
         transform.SetParent(canvas.transform);
         transform.SetAsLastSibling();
         canvasGroup.blocksRaycasts = false;
+        
+        Managers.Sound.PlaySFX(Define.SOUND.ClickButton);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -79,13 +82,19 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
     }
 
     public void OnEndDrag(PointerEventData eventData)
-    { 
+    {
         if (transform.parent == canvas.transform)
-        {
+        {            
             transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
             transform.SetParent(startParent);
+            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleBad);
         }
-
         canvasGroup.blocksRaycasts = true;
     }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleButtonHover);
+    }
+
 }

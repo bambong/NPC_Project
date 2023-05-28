@@ -82,6 +82,7 @@ public class Define
         DataPuzzleButtonHover,
         ResetButton,
         DataPuzzleEnter,
-        Sign
+        Sign,
+        ClickButton
     }
 }
