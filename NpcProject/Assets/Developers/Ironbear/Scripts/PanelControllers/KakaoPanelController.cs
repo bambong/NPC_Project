@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 using TMPro;
 
 public class KakaoPanelController : MonoBehaviour
@@ -87,7 +88,7 @@ public class KakaoPanelController : MonoBehaviour
         for(int i=0; i<kakaos.Length; i++)
         {
             CanvasGroup kakaoCanvas = kakaos[i].GetComponent<CanvasGroup>();
-            kakaoCanvas.DOFade(0f, 0.3f).OnComplete(() =>
+            kakaoCanvas.DOFade(0f, 0.45f).OnComplete(() =>
             {
                 kakaos[i].SetActive(false);
             });
@@ -96,14 +97,14 @@ public class KakaoPanelController : MonoBehaviour
         for(int i=0; i<btns.Length; i++)
         {
             CanvasGroup btnCanvas = btns[i].GetComponent<CanvasGroup>();
-            btnCanvas.DOFade(0f, 0.3f).OnComplete(() =>
+            btnCanvas.DOFade(0f, 0.45f).OnComplete(() =>
             {
                 btns[i].SetActive(false);
             });
         }
 
-        yesTxt.GetComponent<CanvasGroup>().DOFade(0f, 0.3f);
-        yupTxt.GetComponent<CanvasGroup>().DOFade(0f, 0.3f);
+        yesTxt.GetComponent<CanvasGroup>().DOFade(0f, 0.45f);
+        yupTxt.GetComponent<CanvasGroup>().DOFade(0f, 0.45f);
     }
 
     public void UpdateName()
@@ -116,16 +117,20 @@ public class KakaoPanelController : MonoBehaviour
     public void Yes()
     {
         yesTxt.SetActive(true);
+        btns[1].GetComponent<Button>().interactable = false;
+
         DOVirtual.DelayedCall(waitTime, () =>
         {
             CloseAll();
             Managers.Game.Player.SetStateIdle();
+            myseat.SetActive(true);
         });
     }
 
     public void Yup()
     {
         yupTxt.SetActive(true);
+        btns[0].GetComponent<Button>().interactable = false;
 
         DOVirtual.DelayedCall(waitTime, () =>
         {
