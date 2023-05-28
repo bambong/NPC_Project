@@ -120,6 +120,7 @@ public class KakaoPanelController : MonoBehaviour
         {
             CloseAll();
             Managers.Game.Player.SetStateIdle();
+            myseat.SetActive(true);
         });
     }
 
