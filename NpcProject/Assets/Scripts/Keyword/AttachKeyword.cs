@@ -11,8 +11,8 @@ public class AttachKeyword : KeywordController
     {
         entity.WireColorController.AddColorState(WireColorStateController.E_WIRE_STATE.PAIR, E_WIRE_COLOR_MODE.Attach);
 
-        KeywordEntity otherEntity;
-        if (!PairKeyword.IsAvailablePair(entity, out otherEntity))
+        KeywordEntity other;
+        if (!PairKeyword.IsAvailablePair(entity, out other))
         {
             return;
         }
