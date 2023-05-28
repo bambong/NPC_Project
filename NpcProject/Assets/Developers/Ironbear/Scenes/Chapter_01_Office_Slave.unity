@@ -1013,6 +1013,7 @@ GameObject:
   - component: {fileID: 96959640}
   - component: {fileID: 96959642}
   - component: {fileID: 96959641}
+  - component: {fileID: 96959643}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -1078,6 +1079,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 96959639}
   m_CullTransparentMesh: 1
+--- !u!114 &96959643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96959639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efd431482356f6a478761bedd37a23e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  warning: {fileID: 29521325}
 --- !u!1 &124396002
 GameObject:
   m_ObjectHideFlags: 0
@@ -5335,6 +5349,7 @@ MonoBehaviour:
   btns:
   - {fileID: 404597834}
   - {fileID: 1296261212}
+  myseat: {fileID: 840510094}
 --- !u!114 &660355992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5970,7 +5985,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &840510095
 Transform:
   m_ObjectHideFlags: 0
@@ -15920,7 +15935,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC0AC\uC6A9\uD560 \uC218 \uC5C6\uB294 \uC774\uB984\uC785\uB2C8\uB2E4!"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 38d09d76aea749e4c8296890a30de96c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6320e5f81066747419a8601ab90bc88e, type: 2}
   m_sharedMaterial: {fileID: -6426664433711297009, guid: 38d09d76aea749e4c8296890a30de96c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -15984,7 +15999,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1618595334
@@ -21436,6 +21451,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statePanel: {fileID: 1375578911}
+  myseat: {fileID: 840510094}
 --- !u!1 &2050721861
 GameObject:
   m_ObjectHideFlags: 0
@@ -21831,7 +21847,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vircam: {fileID: 855878969}
   tutorialSceneTalkData: {fileID: 11400000, guid: 7d50e8233f93f1845b8c4519239f8d8d, type: 2}
-  playerSpawnSpot: {x: 324.47, y: 0.86, z: 10.46}
+  playerSpawnSpot: {x: 322, y: 1, z: 5}
   progress: 1
 --- !u!4 &2089485275
 Transform:

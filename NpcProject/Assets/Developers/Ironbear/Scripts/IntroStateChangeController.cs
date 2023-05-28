@@ -78,10 +78,15 @@ public class IntroStateChangeController : UI_Base, IDragHandler, IEndDragHandler
     {
         if (transform.parent == canvas.transform)
         {
-            transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
-            transform.SetParent(startParent);
+            ResetPosition();
         }
 
         canvasGroup.blocksRaycasts = true;
+    }
+
+    private void ResetPosition()
+    {
+        transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
+        transform.SetParent(startParent);
     }
 }

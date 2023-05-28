@@ -38,7 +38,7 @@ public class InputFieldController : UI_Base
         inputField = GetComponent<TMP_InputField>();
 
         inputField.onValueChanged.AddListener(UpdateOutputText);
-        playerNameInput.characterLimit = 10;
+        playerNameInput.characterLimit = 8;
     }
 
     public void SubmitName()

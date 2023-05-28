@@ -55,7 +55,7 @@ public class TextPanelController : UI_Base
              {
                  canvas.DOFade(0f, fadeDuration).SetEase(Ease.OutQuad).OnComplete(() =>
                  {
-                     SceneManager.LoadScene("Chapter_01");
+                     SceneManager.LoadScene("Chapter_01_Office_Slave");
                  });
                  
              });           

@@ -6,6 +6,8 @@ public class IntroStateChangeFrameController : MonoBehaviour, IDropHandler
 {
     [SerializeField]
     private GameObject statePanel;
+    [SerializeField]
+    private GameObject myseat;
 
     private CanvasGroup stateCanvas;
     private StatePanelController statePanelController;
@@ -38,6 +40,7 @@ public class IntroStateChangeFrameController : MonoBehaviour, IDropHandler
                 //문 열림...
                 Managers.Game.Player.SetStateIdle();
                 statePanelController.DoorOpen();
+                myseat.SetActive(false);
             });
             
         }

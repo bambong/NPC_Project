@@ -18,6 +18,8 @@ public class KakaoPanelController : MonoBehaviour
     private TMP_Text text1;
     [SerializeField]
     private GameObject[] btns;
+    [SerializeField]
+    private GameObject myseat;
 
     private float waitTime = 1.3f;
 
@@ -129,6 +131,7 @@ public class KakaoPanelController : MonoBehaviour
         {
             CloseAll();
             Managers.Game.Player.SetStateIdle();
+            myseat.SetActive(true);
         });
     }
 }
