@@ -118,7 +118,11 @@ public class KakaoPanelController : MonoBehaviour
     {
         Managers.Sound.PlaySFX(Define.SOUND.ClickButton);
         yesTxt.SetActive(true);
-        btns[1].GetComponent<Button>().interactable = false;
+
+        for (int i = 0; i < btns.Length; i++)
+        {
+            btns[i].GetComponent<Button>().interactable = false;
+        }
 
         DOVirtual.DelayedCall(waitTime, () =>
         {
@@ -132,7 +136,11 @@ public class KakaoPanelController : MonoBehaviour
     {
         Managers.Sound.PlaySFX(Define.SOUND.ClickButton);
         yupTxt.SetActive(true);
-        btns[0].GetComponent<Button>().interactable = false;
+
+        for (int i = 0; i < btns.Length; i++)
+        {
+            btns[i].GetComponent<Button>().interactable = false;
+        }
 
         DOVirtual.DelayedCall(waitTime, () =>
         {

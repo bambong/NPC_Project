@@ -9,6 +9,7 @@ public class IntroStateChangeFrameController : MonoBehaviour, IDropHandler
     [SerializeField]
     private GameObject myseat;
 
+    private CanvasGroup parentCanvas;
     private CanvasGroup stateCanvas;
     private StatePanelController statePanelController;
 
@@ -16,6 +17,7 @@ public class IntroStateChangeFrameController : MonoBehaviour, IDropHandler
 
     private void Start()
     {
+        parentCanvas = GetComponentInParent<CanvasGroup>();
         stateCanvas = statePanel.GetComponent<CanvasGroup>();
         statePanelController = statePanel.GetComponent<StatePanelController>();
     }
@@ -30,6 +32,10 @@ public class IntroStateChangeFrameController : MonoBehaviour, IDropHandler
             draggedRect.localScale = Vector3.one;
             draggedRect.DOLocalMove(Vector3.zero, 0.1f).SetEase(Ease.OutQuad);
 
+            parentCanvas.interactable = false;
+            parentCanvas.blocksRaycasts = false;
+            myseat.SetActive(false);
+
             DOVirtual.DelayedCall(0.5f, () =>
             {
                 stateCanvas.DOFade(0f, fadeDuration).OnComplete(() =>
@@ -39,8 +45,7 @@ public class IntroStateChangeFrameController : MonoBehaviour, IDropHandler
 
                 //문 열림...
                 Managers.Game.Player.SetStateIdle();
-                statePanelController.DoorOpen();
-                myseat.SetActive(false);
+                statePanelController.DoorOpen();               
             });
             
         }
