@@ -134,7 +134,7 @@ public class PlayerInteraction : Singleton<PlayerInteraction>, IState<PlayerCont
     }
 }
 
-public class PlayerDeath : Singleton<PlayerDeath>, IState<PlayerController>
+public class PlayerBombDeath : Singleton<PlayerBombDeath>, IState<PlayerController>
 {
     public void Init()
     {
@@ -142,6 +142,32 @@ public class PlayerDeath : Singleton<PlayerDeath>, IState<PlayerController>
     public void Enter(PlayerController stateController)
     {
         stateController.PlayDeathFeedback();
+        Managers.Keyword.PlayerKeywordPanel.Close();
+        Managers.Sound.PlaySFX(Define.SOUND.DeathPlayer);
+        Managers.Game.SetStateGameOver();
+    }
+
+    public void Exit(PlayerController stateController)
+    {
+    }
+
+    public void FixedUpdateActive(PlayerController stateController)
+    {
+    }
+
+    public void UpdateActive(PlayerController stateController)
+    {
+    }
+}
+
+public class PlayerDeath : Singleton<PlayerDeath>, IState<PlayerController>
+{
+    public void Init()
+    {
+    }
+    public void Enter(PlayerController stateController)
+    {
+        stateController.PlayerDeathAnimPlay();
         Managers.Keyword.PlayerKeywordPanel.Close();
         Managers.Sound.PlaySFX(Define.SOUND.DeathPlayer);
         Managers.Game.SetStateGameOver();

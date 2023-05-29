@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3883182412271440895}
   - component: {fileID: 7738459083281581883}
   - component: {fileID: 5962338160030845581}
+  - component: {fileID: 1065460366610905943}
   m_Layer: 3
   m_Name: Player_FrameAnim
   m_TagString: Untagged
@@ -122,6 +123,23 @@ MonoBehaviour:
   interval: 0.12
   fadeTime: 1
   alpha: 0.1
+--- !u!114 &1065460366610905943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1719746091281472723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc0bb47ea5e56ed48a81dcdd849626e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animatorController: {fileID: 7738459083281581883}
+  spriteRenderer: {fileID: 3883182412271440895}
+  ghostColorPicker: {fileID: 2299308842911941008}
+  ghostEffects:
+  - {fileID: 5962338160030845581}
 --- !u!1 &2651666308150187510
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,7 +261,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5137152168051090499}
   - component: {fileID: 5137152168051090500}
-  - component: {fileID: 1118931517153202617}
   - component: {fileID: 7689613559260098677}
   - component: {fileID: -2748945565535478403}
   - component: {fileID: -3214319884165166903}
@@ -288,11 +305,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b160be91258e224196826593c3c5fd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationController: {fileID: 1118931517153202617}
+  animationController: {fileID: 1065460366610905943}
   interactionDetecter: {fileID: 5137152168514951073}
   rotater: {fileID: 3074541703899278083}
   box: {fileID: 7689613559260098677}
   col: {fileID: -2748945565535478403}
+  playerDeathTrigger: {fileID: 2651666308150187510}
   rigid: {fileID: -3214319884165166903}
   gravityForce: {fileID: 6728709929109359645}
   playerUIController: {fileID: 3483899446330706488}
@@ -308,23 +326,6 @@ MonoBehaviour:
   wireframeMaskController: {fileID: 6930505361111398999}
   deathFeedback: {fileID: 6794421696221332829}
   hitFeedback: {fileID: 8803524367701368091}
---- !u!114 &1118931517153202617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5137152168051090498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc0bb47ea5e56ed48a81dcdd849626e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animatorController: {fileID: 7738459083281581883}
-  spriteRenderer: {fileID: 3883182412271440895}
-  ghostColorPicker: {fileID: 2299308842911941008}
-  ghostEffects:
-  - {fileID: 5962338160030845581}
 --- !u!65 &7689613559260098677
 BoxCollider:
   m_ObjectHideFlags: 0

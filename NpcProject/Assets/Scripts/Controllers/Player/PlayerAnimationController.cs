@@ -156,6 +156,11 @@ public class PlayerAnimationController : MonoBehaviour
     }
     public void PlayerDeathAnimPlay() 
     {
-        animatorController.SetBool("IsDead", true);
+        animatorController.SetTrigger("IsDead");
+    }
+
+    public void PlayerDeathAnimEnd() 
+    {
+        Managers.Game.Player.PlayerDeathAnimEnd();
     }
 }

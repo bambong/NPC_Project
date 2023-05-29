@@ -7,6 +7,7 @@ using MoreMountains.Feedbacks;
 using Spine.Unity.Examples;
 using System.Linq;
 using UnityEngine.Playables;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerController : MonoBehaviour , IDataHandler
 {
@@ -22,6 +23,9 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private BoxCollider box;
     [SerializeField]
     private CapsuleCollider col;
+    [SerializeField]
+    private GameObject playerDeathTrigger;
+
 
     [SerializeField]
     private Rigidbody rigid;
@@ -560,6 +564,14 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         playerStateController.ChangeState(PlayerStop.Instance);
     }
+    public void SetstateBombDeath()
+    {
+        if (PlayerIsStopState())
+        {
+            return;
+        }
+        playerStateController.ChangeState(PlayerBombDeath.Instance);
+    }
     public void SetstateDeath()
     {
         if (PlayerIsStopState())
@@ -595,10 +607,27 @@ public class PlayerController : MonoBehaviour , IDataHandler
     public void PlayDeathFeedback()
     {
         //rotater.gameObject.SetActive(false);
+        box.enabled = false;
+        col.enabled = false;
+        rigid.isKinematic = true;
+
         deathFeedback.transform.SetParent(null);
         deathFeedback.PlayFeedbacks();
         rigid.velocity = Vector3.zero;
         gameObject.SetActive(false);
+    }
+    public void PlayerDeathAnimPlay()
+    {
+        box.enabled = false;
+        col.enabled = false;
+        rigid.isKinematic = true;
+        playerDeathTrigger.gameObject.SetActive(false);
+        rigid.velocity = Vector3.zero;
+        animationController.PlayerDeathAnimPlay();
+    }
+    public void PlayerDeathAnimEnd()
+    {
+        OpenDeathUI();
     }
 
     #endregion
