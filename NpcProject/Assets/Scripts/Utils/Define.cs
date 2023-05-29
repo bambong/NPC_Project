@@ -83,6 +83,7 @@ public class Define
         ResetButton,
         DataPuzzleEnter,
         Sign,
-        ClickButton
+        ClickButton,
+        Door
     }
 }

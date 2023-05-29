@@ -56,6 +56,7 @@ public class SecurityDoorController : MonoBehaviour
         isOpen = true;
         animator.SetBool("isOpen", true);
         curOpenTime = 0;
+        Managers.Sound.PlaySFX(Define.SOUND.OpenDoor);
         minOpenCo = StartCoroutine(WaitAndCloseDoor());
         
         //float animationDuration = animator.GetCurrentAnimatorClipInfo(0).Length;
