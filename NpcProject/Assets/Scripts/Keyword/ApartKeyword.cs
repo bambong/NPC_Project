@@ -16,6 +16,7 @@ public class ApartKeyword : KeywordController
         KeywordEntity otherEntity;
         if(!PairKeyword.IsAvailablePair(entity,out otherEntity)) 
         {
+
             return;
         }
         var dir = entity.KeywordTransformFactor.position -otherEntity.KeywordTransformFactor.position;
@@ -25,8 +26,6 @@ public class ApartKeyword : KeywordController
         //    dir = Vector3.right;
         //}
         var isAble =  entity.ColisionCheckMove(dir.normalized * Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER)); 
-        
-        PairKeyword.ChangeMoveAble(parentDebugZone, isAble);
         entity.MoveAbleUpdate(isAble);
 
 

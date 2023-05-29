@@ -35,13 +35,11 @@ public class ConstantMoveKeywordController : KeywordEntity
         {
 
             var isAble = entity.ColisionCheckMove(dir);
-            PairKeyword.ChangeMoveAble(entity.ParentDebugZone, isAble);
             entity.MoveAbleUpdate(isAble);
         }
         else
         {
             var isAble = entity.ColisionCheckMove(dir.normalized * AttachKeyword.Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER));
-            PairKeyword.ChangeMoveAble(entity.ParentDebugZone, isAble);
             entity.MoveAbleUpdate(isAble);
         }
     }
@@ -65,7 +63,6 @@ public class ConstantMoveKeywordController : KeywordEntity
         }
 
         var isAble = entity.ColisionCheckMove(dir.normalized * ApartKeyword.Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER));
-        PairKeyword.ChangeMoveAble(entity.ParentDebugZone, isAble);
         entity.MoveAbleUpdate(isAble);
     }
 

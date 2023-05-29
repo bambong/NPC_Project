@@ -163,13 +163,7 @@ public class PairKeyword : KeywordController
        }
        return false;
     }
-    public static void ChangeMoveAble(DebugZone zone , bool isOn) 
-    {
-        for (int i = 0; i < PairKeywords[zone].Count; ++i)
-        {
-            PairKeywords[zone][i].ChangeMoveAble(isOn);
-        }
-    }
+
     public void ChangeMoveAble(bool isOn) 
     {
         if(isOn == isMoveAble)
@@ -215,6 +209,7 @@ public class PairKeyword : KeywordController
         KeywordEntity otherEntity = null;
         if (IsAvailablePair(out otherEntity))
         {
+            ChangeMoveAble(MasterEntity.IsMoveAble && otherEntity.IsMoveAble);  
             LinePosUpdate(MasterEntity, otherEntity);
         }
         else
@@ -246,12 +241,15 @@ public class PairKeyword : KeywordController
         //{
         //    return;
         //}
+       
         var other = GetOtherPair();
         if(other != null) 
         {
             other.CloseLineRender();
         }
+        entity.MoveAbleUpdate(true);
         CloseLineRender();
+       
         MasterEntity = null;
         lineRenderer.enabled=false;
     }

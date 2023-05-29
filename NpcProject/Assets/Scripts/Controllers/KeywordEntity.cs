@@ -85,7 +85,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     private DebugZone parentDebugZone;
     private bool isInit = false;
     private WireColorStateController wireColorController;
-
+    private bool isMoveAble = true;
     public Dictionary<KeywordController,KeywordAction> CurrentRegisterKeyword { get => currentRegisterKeyword; }
     public virtual Transform KeywordTransformFactor { get => transform; }
     public Vector3 OriginScale { get; private set; }
@@ -98,6 +98,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     public WireColorStateController WireColorController { get => wireColorController; }
     public float RevAbleDistance { get => revAbleDistance; }
     public DebugZone ParentDebugZone { get => parentDebugZone;  }
+    public bool IsMoveAble { get => isMoveAble; set => isMoveAble = value; }
 
     private readonly float SLOT_UI_DISTANCE = 100f;
     private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude;
@@ -209,7 +210,8 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         Destroy(keywordWorldSlotLayout.gameObject);
         Destroy(keywordSlotUiController.gameObject);
         Managers.Keyword.RemoveSceneEntity(this);
-        isInit = false; 
+        isInit = false;
+        IsMoveAble = true;
     }
 
     public void DestroyKeywordEntity() 
@@ -381,6 +383,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     }
     public void MoveAbleUpdate(bool isOn) 
     {
+        isMoveAble = isOn;
         wireColorController.MoveAbleUpdate(isOn);
     }
     public void SetWireFrameColor(Color color) 

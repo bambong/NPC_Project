@@ -31,14 +31,12 @@ public class AttachKeyword : KeywordController
         {
 
             var isAble = entity.ColisionCheckMove(dir);
-            PairKeyword.ChangeMoveAble(parentDebugZone, isAble);
             entity.MoveAbleUpdate(isAble);
             
         }
         else 
         {
             var isAble = entity.ColisionCheckMove(dir.normalized * Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER));
-            PairKeyword.ChangeMoveAble(parentDebugZone, isAble);
             entity.MoveAbleUpdate(isAble);
         }
     }
