@@ -97,6 +97,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     public Renderer MRenderer { get => mRenderer;}
     public WireColorStateController WireColorController { get => wireColorController; }
     public float RevAbleDistance { get => revAbleDistance; }
+    public DebugZone ParentDebugZone { get => parentDebugZone;  }
 
     private readonly float SLOT_UI_DISTANCE = 100f;
     private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude;
@@ -117,6 +118,13 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
             col = Util.GetOrAddComponent<BoxCollider>(gameObject);
         }
         TryGetComponent<Rigidbody>(out rigidbody);
+        if(rigidbody == null) 
+        {
+            rigidbody = gameObject.AddComponent<Rigidbody>();
+            rigidbody.mass = 100;
+            rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+        }
+        
         wireColorController = new WireColorStateController();
         wireColorController.Init(this);
         //mRenderer = GetComponent<Renderer>();
@@ -179,7 +187,14 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         {
             return;
         }
+
         Debug.Log("Clear For Pool");
+        if(Managers.Game.Player.PlayerAncestor == transform) 
+        {
+            Managers.Game.Player.PlayerAncestor = null;
+            Managers.Game.Player.transform.SetParent(null);
+        }
+
         //keywrodOverrideTable.Clear();
         currentRegisterKeyword.Clear();
         foreach(var frame in keywordFrames) 
@@ -200,7 +215,15 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     public void DestroyKeywordEntity() 
     {
         ClearForPool();
-        Managers.Resource.Destroy(gameObject);
+        if (gameObject.GetComponent<Poolable>() != null) 
+        {
+            Managers.Resource.Destroy(gameObject);
+
+        }
+        else 
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void InitCrateKeywordOption()
@@ -295,6 +318,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         updateAction += action.OnUpdate;
         currentRegisterKeyword[controller] = action;
     }
+
     public void RemoveAction(KeywordController registerkeyword , KeywordController newKeyword)
     {
         if(registerkeyword == null)
@@ -355,7 +379,10 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         //키워드 액션을 추가
         AddAction(newKeyword, keywordAciton);
     }
-
+    public void MoveAbleUpdate(bool isOn) 
+    {
+        wireColorController.MoveAbleUpdate(isOn);
+    }
     public void SetWireFrameColor(Color color) 
     {
         if (!originMat.HasProperty(WIRE_FRAME_COLOR_NAME))
@@ -582,8 +609,17 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
 
     public void SaveData(GameData gameData)
     {
+
         var data = new KeywordEntityData();
         data.isEnable = gameObject.activeSelf;
+       
+        if (!gameObject.activeSelf)
+        {
+            gameData.keywordEntityDatas.AddOrUpdateValue(guId, data);
+            return;
+        }
+
+        //data.isEnable = gameObject.activeSelf;
         data.pos = transform.position;
         data.rot = transform.rotation;
         data.scale = transform.localScale;
@@ -606,8 +642,13 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         {
             return;
         }
+  
         var data = gameData.keywordEntityDatas[guId];
-        gameObject.SetActive(data.isEnable);
+        if (!data.isEnable)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
         transform.position = data.pos;
         transform.rotation = data.rot;
         transform.localScale = data.scale;

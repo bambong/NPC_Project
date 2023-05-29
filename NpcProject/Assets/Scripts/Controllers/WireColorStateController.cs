@@ -8,11 +8,11 @@ public class WireColorStateController
     public enum E_WIRE_STATE 
     {
         NORMAL,
-        PAIR
+        PAIR,
     }
 
     private bool isWireStateOn = false;
-
+    private bool isMoveAble = true;
     private KeywordEntity entity;
     private Dictionary<E_WIRE_STATE, List<E_WIRE_COLOR_MODE>> colorMods;
 
@@ -23,7 +23,25 @@ public class WireColorStateController
         colorMods.Add(E_WIRE_STATE.NORMAL, new List<E_WIRE_COLOR_MODE>());
         colorMods.Add(E_WIRE_STATE.PAIR, new List<E_WIRE_COLOR_MODE>());
     }
+    public void MoveAbleUpdate(bool isOn) 
+    {
 
+        if(isMoveAble == isOn) 
+        {
+            return;
+        }
+        isMoveAble = isOn;
+        if (!isMoveAble) 
+        {
+            Color pickColor = Managers.Keyword.GetColorByState(E_WIRE_COLOR_MODE.Fail);
+            entity.SetWireFrameColor(pickColor);
+            //Managers.Sound.PlaySFX(Define.SOUND.ErrorEffectKeyword);
+        }
+        else 
+        {
+            UpdateColor();
+        }
+    }
     public void Open() 
     {
         if (isWireStateOn) 
@@ -57,6 +75,11 @@ public class WireColorStateController
     }
     public void UpdateColor() 
     {
+
+        if(!isMoveAble)
+        {
+            return;
+        }
         E_WIRE_STATE wireMod = E_WIRE_STATE.NORMAL;
         Color pickColor = Managers.Keyword.GetColorByState(E_WIRE_COLOR_MODE.Default);
         if (isWireStateOn) 

@@ -84,6 +84,7 @@ public class Managers : MonoBehaviour
         Pool.Clear();
         Keyword.Clear();
         Sound.Clear();
+        Game.Clear();
     }
     private void OnApplicationQuit()
     {

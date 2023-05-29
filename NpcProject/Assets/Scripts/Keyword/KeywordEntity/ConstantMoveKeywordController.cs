@@ -33,11 +33,16 @@ public class ConstantMoveKeywordController : KeywordEntity
         }
         if (dir.magnitude <= AttachKeyword.Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER))
         {
-            entity.ColisionCheckMove(dir);
+
+            var isAble = entity.ColisionCheckMove(dir);
+            PairKeyword.ChangeMoveAble(entity.ParentDebugZone, isAble);
+            entity.MoveAbleUpdate(isAble);
         }
-        else 
+        else
         {
-            entity.ColisionCheckMove(dir.normalized * AttachKeyword.Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER));
+            var isAble = entity.ColisionCheckMove(dir.normalized * AttachKeyword.Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER));
+            PairKeyword.ChangeMoveAble(entity.ParentDebugZone, isAble);
+            entity.MoveAbleUpdate(isAble);
         }
     }
     public void OnApartKeyword(KeywordEntity entity)
@@ -58,8 +63,10 @@ public class ConstantMoveKeywordController : KeywordEntity
         {
             dir.x = 0;
         }
-  
-        entity.ColisionCheckMove(dir.normalized * ApartKeyword.Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER));
+
+        var isAble = entity.ColisionCheckMove(dir.normalized * ApartKeyword.Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER));
+        PairKeyword.ChangeMoveAble(entity.ParentDebugZone, isAble);
+        entity.MoveAbleUpdate(isAble);
     }
 
 }

@@ -12,8 +12,8 @@ public enum E_WIRE_COLOR_MODE
     Apart,
     Attach,
     Float, 
-    Revolution = 5,
-    
+    Revolution,
+    Fail
 }
 
 public class KeywordManager

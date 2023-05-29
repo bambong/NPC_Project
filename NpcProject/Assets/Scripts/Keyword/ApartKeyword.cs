@@ -24,11 +24,16 @@ public class ApartKeyword : KeywordController
         //{
         //    dir = Vector3.right;
         //}
-        entity.ColisionCheckMove(dir.normalized * Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER));
+        var isAble =  entity.ColisionCheckMove(dir.normalized * Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER)); 
         
+        PairKeyword.ChangeMoveAble(parentDebugZone, isAble);
+        entity.MoveAbleUpdate(isAble);
+
+
     }
     public override void OnRemove(KeywordEntity entity)
     {
         entity.WireColorController.RemoveColorState(WireColorStateController.E_WIRE_STATE.PAIR, E_WIRE_COLOR_MODE.Apart);
+        entity.MoveAbleUpdate(true);
     }
 }

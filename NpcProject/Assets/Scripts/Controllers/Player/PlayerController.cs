@@ -79,8 +79,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private int slopeLayer;
     public int Hp { get => hp; }
     public int MaxHp { get => maxHp; }
-
-    private bool changeStage = false;
+    public Transform PlayerAncestor { get; set; }
 
     private readonly float CHECK_RAY_WIDTH = 0.3f;
     private readonly float WIRE_EFFECT_OPEN_TIME = 2f;

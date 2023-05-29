@@ -29,16 +29,23 @@ public class AttachKeyword : KeywordController
         dir.y = 0;
         if(dir.magnitude <= Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER)) 
         {
-            entity.ColisionCheckMove(dir);
+
+            var isAble = entity.ColisionCheckMove(dir);
+            PairKeyword.ChangeMoveAble(parentDebugZone, isAble);
+            entity.MoveAbleUpdate(isAble);
+            
         }
         else 
         {
-            entity.ColisionCheckMove(dir.normalized * Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER));
+            var isAble = entity.ColisionCheckMove(dir.normalized * Speed * Managers.Time.GetFixedDeltaTime(TIME_TYPE.NONE_PLAYER));
+            PairKeyword.ChangeMoveAble(parentDebugZone, isAble);
+            entity.MoveAbleUpdate(isAble);
         }
     }
     public override void OnRemove(KeywordEntity entity)
     {
         entity.WireColorController.RemoveColorState(WireColorStateController.E_WIRE_STATE.PAIR, E_WIRE_COLOR_MODE.Attach);
+        entity.MoveAbleUpdate(true);
         isPlay = true;
     }
 }

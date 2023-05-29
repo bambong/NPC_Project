@@ -45,6 +45,8 @@ public class GameManager
     {
         retryPanel = Managers.UI.MakeSceneUI<RetryPanelController>(null, "RetryPanelUI");
         SetStateNormal();
+    
+
         isDebugMod = false;
     }
     #region SetState
@@ -80,12 +82,10 @@ public class GameManager
     {
         gameStateController.ChangeState(GameNormalState.Instance);
         player = null;
-       
-        if (isDebugMod) 
-        {
-            SetDisableDebugMod();
-        }
+        Physics.gravity = prevGravity;
+        Managers.Time.SetTimeScale(TIME_TYPE.NONE_PLAYER, 1);
     }
+
     #region StateEnter
     public void OnDebugModStateEnter()
     {

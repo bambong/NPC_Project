@@ -119,10 +119,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7bca488b01ea5c45990a315a5619e5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outlineEffect: {fileID: 3883072612028367365}
+  guId: 
+  availableKeywordType: -1
   maxHeight: 3
   maxScale: {x: 11, y: 11, z: 11}
+  revAbleDistance: 1000
   keywords: []
+  statusSlotLayoutName: KeywordStatusLayoutController
   parent: {fileID: 2971441432766502828}
   scaleDesire: {x: 11, y: 11, z: 11}
   onScaleFeedback: {fileID: 1523663504656688447}
@@ -5461,6 +5464,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7631337916224925586, guid: 67822323dca8bec4ba06bfb403d2a744, type: 3}
+      propertyPath: playerParent
+      value: 
+      objectReference: {fileID: 2971441432766502828}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 67822323dca8bec4ba06bfb403d2a744, type: 3}
 --- !u!4 &1840198722047935584 stripped

@@ -11,12 +11,21 @@ public class PairKeyword : KeywordController
 
     [SerializeField]
     private LineRenderer lineRenderer;
+    [SerializeField, ColorUsage(true,true)]
+    private Color defaultColor;
+    [SerializeField, ColorUsage(true,true)]
+    private Color failColor;
+
+
 
     private bool isLineOn = false;
+    private bool isMoveAble = true;
     private KeywordEntity lineEntity;
     public KeywordEntity MasterEntity { get; protected set; }
 
     private const string MAT_FLOW_PROPERTY_NAME = "_BoardTill";
+    private const string MAT_COLOR_PROPERTY_NAME = "_Color";
+    private const string MAT_SPEED_PROPERTY_NAME = "_Speed";
     private const int FLOW_TILL_COUNT = 20;
     private static readonly string[] FLOW_KEYWORD_IDS = new string[]{ "AttachKeyword", "ApartKeyword",};
  
@@ -154,7 +163,33 @@ public class PairKeyword : KeywordController
        }
        return false;
     }
- 
+    public static void ChangeMoveAble(DebugZone zone , bool isOn) 
+    {
+        for (int i = 0; i < PairKeywords[zone].Count; ++i)
+        {
+            PairKeywords[zone][i].ChangeMoveAble(isOn);
+        }
+    }
+    public void ChangeMoveAble(bool isOn) 
+    {
+        if(isOn == isMoveAble)
+        {
+            return;
+        }
+        isMoveAble = isOn;
+
+        if (isMoveAble) 
+        {
+            lineRenderer.material.SetColor(MAT_COLOR_PROPERTY_NAME, defaultColor);
+            lineRenderer.material.SetFloat(MAT_SPEED_PROPERTY_NAME, 0.2f);
+        }
+        else 
+        {
+            lineRenderer.material.SetColor(MAT_COLOR_PROPERTY_NAME, failColor);
+            lineRenderer.material.SetFloat(MAT_SPEED_PROPERTY_NAME, 0);
+        }
+        
+    }
     public override void OnEnter(KeywordEntity entity)
     {
         MasterEntity = entity;

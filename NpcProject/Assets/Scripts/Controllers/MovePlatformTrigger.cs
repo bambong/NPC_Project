@@ -8,10 +8,12 @@ public class MovePlatformTrigger : MonoBehaviour
     [SerializeField]
     private Transform invariableArea;
 
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player")) 
         {
+            Managers.Game.Player.PlayerAncestor = transform.parent;
             other.transform.SetParent(invariableArea);
         }
     }
@@ -20,6 +22,7 @@ public class MovePlatformTrigger : MonoBehaviour
         if(other.CompareTag("Player") && other.transform.parent == invariableArea) 
         {
             other.transform.SetParent(null);
+            Managers.Game.Player.PlayerAncestor = null;
             other.transform.localScale = Vector3.one;
         }
     }

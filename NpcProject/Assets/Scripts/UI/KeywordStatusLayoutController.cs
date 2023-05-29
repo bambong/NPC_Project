@@ -64,7 +64,7 @@ public class KeywordStatusLayoutController : UI_Base
     }
     public void SortChild(float width) 
     {
-        panel.rotation = Camera.main.transform.rotation;
+        panel.rotation = Quaternion.Euler(new Vector3(0,180,0)) * Camera.main.transform.rotation ;
 
         float startPos = ((panel.childCount/2f)-0.5f) * width * -1;
 
