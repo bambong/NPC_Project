@@ -14,6 +14,9 @@ public class PanelsController : UI_Base
     [SerializeField]
     private GameObject textPanel;
 
+    [SerializeField]
+    private Texture2D noramlCursor;
+
     private float fadeDuration = 1f;
 
     private bool isLogo = false;
@@ -26,8 +29,12 @@ public class PanelsController : UI_Base
     {
     }
 
-    private void Awake()
+    private void Start()
     {
+        Cursor.SetCursor(noramlCursor, Vector2.zero, CursorMode.Auto);
+        Cursor.lockState = CursorLockMode.Confined;
+        Camera.main.ScreenPointToRay(Input.mousePosition);
+
         logoPanel.SetActive(true);
         startPanel.SetActive(false);
         puzzlePanel.SetActive(false);
