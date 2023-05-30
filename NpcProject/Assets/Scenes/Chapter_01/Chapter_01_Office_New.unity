@@ -2251,6 +2251,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b1d19e43fe6ef4cb9af91d499c0854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetTag: Player
+  isPlayOnce: 1
   playableDirector: {fileID: 114076854}
 --- !u!320 &114076854
 PlayableDirector:
@@ -12007,6 +12009,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curCutScene: {fileID: 0}
   cutSceneTalk: 1427000011270000
+  left: {fileID: 0}
+  right: {fileID: 0}
 --- !u!1001 &443474931
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54149,6 +54153,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1909292009}
+        m_TargetAssemblyTypeName: ContractPanelController, Assembly-CSharp
+        m_MethodName: Noninteractive
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1939123753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57686,10 +57702,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff89708bd9c928e4abeb7482c3c01f4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bgm:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   vircam: {fileID: 1882251690}
   tutorialSceneTalkData: {fileID: 11400000, guid: 7d50e8233f93f1845b8c4519239f8d8d, type: 2}
   playerSpawnSpot: {x: 324.47, y: 0.86, z: 10.46}
   progress: 1
+  bgm:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!4 &2089485275
 Transform:
   m_ObjectHideFlags: 0
