@@ -239,7 +239,12 @@ public class TalkPanelController : UI_Base
             {
                 isChoice = true;
                 continue;
-            }     
+            }
+            if(item == "player")
+            {
+                textDialogue += Managers.Talk.GetSpeakerName(101);
+                continue;
+            }
             textDialogue += item;
         }
     }

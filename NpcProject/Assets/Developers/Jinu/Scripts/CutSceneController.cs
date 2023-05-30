@@ -17,6 +17,11 @@ public class CutSceneController : MonoBehaviour
     public void LoadTalk()
     {
         cutSceneprogress = false;
+        
+        if(talkCount > cutSceneTalk.Count)
+        {
+            talkCount = 0;
+        }
 
         curCutScene.Pause();
         var talk = Managers.Talk.GetTalkEvent(cutSceneTalk[talkCount]);

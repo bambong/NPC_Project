@@ -139,6 +139,13 @@ public class TalkManager
             });
         });
     }
+
+    public string GetSpeakerName(int id)
+    {
+        string name = speakerDatas[id].charName;
+        return name;
+    }
+
     public void PlayCurrentSceneTalk(int talkEventId)
     {
         GetTalkEvent(talkEventId).Play();
