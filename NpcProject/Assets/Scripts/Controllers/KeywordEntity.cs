@@ -154,7 +154,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         Managers.Keyword.AddSceneEntity(this);
         keywordSlotUiController = Managers.UI.MakeSubItem<KeywordSlotUiController>(Managers.Keyword.KeywordEntitySlots, "KeywordSlotController");
         keywordSlotUiController.RegisterEntity(this);
-        keywordSlotUiController.SetKeywordsLength(keywords.Length);
+     
         keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordStatusLayoutController>(Managers.Keyword.EntityKeywordStatusList, statusSlotLayoutName);
         keywordWorldSlotLayout.RegisterEntity(transform, keywords.Length);
         ClearWireFrameColor();

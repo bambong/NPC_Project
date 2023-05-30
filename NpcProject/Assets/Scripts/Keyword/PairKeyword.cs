@@ -241,6 +241,10 @@ public class PairKeyword : KeywordController
         //{
         //    return;
         //}
+        if(entity == null) 
+        {
+            return;
+        }
        
         var other = GetOtherPair();
         if(other != null) 
