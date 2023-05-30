@@ -1,6 +1,5 @@
 using UnityEngine;
 using DG.Tweening;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class SubCubeController : MonoBehaviour
 {
