@@ -18,6 +18,10 @@ public class ServerroomScene : BaseScene
    
     [SerializeField]
     private int progress = 1;
+
+    [SerializeField]
+    private string description;
+
     public override void Clear()
     {
       // Managers.Data.SaveGame(SceneManager.GetActiveScene().name);
@@ -31,6 +35,10 @@ public class ServerroomScene : BaseScene
         Managers.Camera.InitCamera(new CameraInfo(vircam, player.transform));
         Managers.Talk.LoadTalkData(tutorialSceneTalkData);
         Managers.Data.LoadGame(SceneManager.GetActiveScene().name);
+
+       // Managers.UI.MakeSceneUI()
+
+
     }
     private void Start()
     {

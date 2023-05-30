@@ -8,16 +8,10 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: uvgroup3 Pillar
-  m_Shader: {fileID: -6465566751694194690, guid: edd7abf643fa4bc4e8561d4c280c97cf, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 34f59dc88e1d3c342aa074aa68b0db23, type: 3}
   m_ValidKeywords:
-  - TCP2_REFLECTIONS_FRESNEL
-  - TCP2_RIM_LIGHTING_LIGHTMASK
-  - TCP2_SHADOW_LIGHT_COLOR
-  - TCP2_SPECULAR
-  - _EMISSION
-  m_InvalidKeywords:
-  - TCP2_UV_NORMALS_FULL
-  - _OCCLUSIONMAP
+  - ENUM_5312DE06_SPHERE
+  m_InvalidKeywords: []
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -37,11 +31,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 7bca21b155c7ee249a42fefed1623c90, type: 3}
+        m_Texture: {fileID: 2800000, guid: c8d3f5a40d4908e4cb99f55a15d8cc74, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: 0ae1ba7242f844d40b0cbe13853c8812, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Control:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -64,12 +62,32 @@ Material:
         m_Texture: {fileID: 2800000, guid: 07146e64a349a124eba44de09a1cb28a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Emm:
+        m_Texture: {fileID: 2800000, guid: 07146e64a349a124eba44de09a1cb28a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _GradientRamp:
         m_Texture: {fileID: 1475909320539969086}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: c8d3f5a40d4908e4cb99f55a15d8cc74, type: 3}
+        m_Texture: {fileID: 2800000, guid: 7bca21b155c7ee249a42fefed1623c90, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask3:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MatCapMask:
@@ -81,6 +99,22 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal3:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -112,6 +146,26 @@ Material:
         m_Texture: {fileID: 2800000, guid: 0a8263b7b3d5cc9429dac145cc601900, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Splat0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TerrainHolesTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -126,10 +180,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - ENUM_5312DE06: 1
     - _AllowAlphaOverflow: 0
     - _AlphaClip: 1
     - _AlphaCutoff: 0.35
     - _Anchorthefoliagebase: 0
+    - _BaseMapUVScale: 1
     - _Blend: 0
     - _BlendOp: 0
     - _BumpScale: 1
@@ -140,7 +196,7 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Color2Enable: 0
     - _Cull: 2
-    - _Cutoff: 0.5
+    - _Cutoff: 1
     - _Depth: 100
     - _DetailAlbedoMapScale: 1
     - _DetailMapBlendingMode: 0
@@ -151,6 +207,8 @@ Material:
     - _DirectLightOffset: 0
     - _DstBlend: 0
     - _EmissionChannel: 4
+    - _EnableHeightBlend: 0
+    - _EnableInstancedPerPixelNormal: 1
     - _EnableWind: 0
     - _EnvironmentReflections: 1
     - _FlatRimEdgeSmoothness: 0.5
@@ -168,6 +226,7 @@ Material:
     - _GradientCenterY: 0
     - _GradientEnabled: 0
     - _GradientSize: 10
+    - _HeightTransition: 0
     - _IndirectIntensity: 1
     - _IndirectIntensityOutline: 0
     - _IndirectLightInt: 1
@@ -177,10 +236,15 @@ Material:
     - _MatCapMaskChannel: 0
     - _MatCapType: 0
     - _Metallic: 0
+    - _Metallic0: 0
+    - _Metallic1: 0
+    - _Metallic2: 0
+    - _Metallic3: 0
     - _NoiseAmount: 0.5
     - _NoiseScale: 1
     - _NormalsSource: 0
     - _NormalsUVType: 0
+    - _NumLayersCount: 1
     - _OcclusionChannel: 0
     - _OcclusionStrength: 1
     - _OutlineDepthOffset: 0
@@ -221,7 +285,11 @@ Material:
     - _SelfShadingSize: 0
     - _ShadowColorLightAtten: 1
     - _SingleIndirectColor: 0
-    - _Smoothness: 0
+    - _Smoothness: 0.5
+    - _Smoothness0: 0.5
+    - _Smoothness1: 0.5
+    - _Smoothness2: 0.5
+    - _Smoothness3: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularEnabled: 1
     - _SpecularHighlights: 1
@@ -257,15 +325,18 @@ Material:
     - _WindForce: 0.3
     - _WindSpeed: 0.5
     - _WindWavesScale: 0.25
+    - _Wireframe_ColorEmissionStrength: 0.5
     - _WorkflowMode: 1
     - _WorldScale: 1
     - _ZWrite: 1
     m_Colors:
+    - Color_DF059B30: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorGradient: {r: 0.85023, g: 0.85034, b: 0.8504499, a: 0.85056}
     - _DetailMapColor: {r: 0, g: 0, b: 0, a: 1}
-    - _EmissionColor: {r: 1.1353015, g: 0.8024382, b: 0.39230314, a: 1}
+    - _EmissionColor: {r: 0.9723464, g: 0.5974338, b: 0.14218272, a: 1}
+    - _EmmColor: {r: 0.7924528, g: 0.4149242, b: 0, a: 1}
     - _FlatRimColor: {r: 0.85023, g: 0.85034, b: 0.85045, a: 0.85056}
     - _FlatSpecularColor: {r: 0, g: 0, b: 0, a: 0.85056}
     - _HColor: {r: 1, g: 1, b: 1, a: 1}
@@ -282,6 +353,7 @@ Material:
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SpecularColor: {r: 0.13207549, g: 0.13207549, b: 0.13207549, a: 1}
+    - _Wireframe_Color: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
 --- !u!28 &1475909320539969086
 Texture2D:
