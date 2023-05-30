@@ -18,7 +18,7 @@ public class CutSceneController : MonoBehaviour
     {
         cutSceneprogress = false;
         
-        if(talkCount > cutSceneTalk.Count)
+        if(talkCount >= cutSceneTalk.Count)
         {
             talkCount = 0;
         }
