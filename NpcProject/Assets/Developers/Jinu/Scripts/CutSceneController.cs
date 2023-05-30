@@ -9,7 +9,6 @@ public class CutSceneController : MonoBehaviour
 {
     [SerializeField]
     private PlayableDirector curCutScene;
-    // Update is called once per frame
     [SerializeField]
     private List<int> cutSceneTalk = new List<int>();
     private int talkCount = 0;
@@ -22,10 +21,10 @@ public class CutSceneController : MonoBehaviour
         curCutScene.Pause();
         var talk = Managers.Talk.GetTalkEvent(cutSceneTalk[talkCount]);
         talk.OnComplete(() => talkCount++);
-        //재시작
-        talk.OnComplete(() => curCutScene.Resume());
+        //재시작        
         talk.OnComplete(() => SkipCutScene());
-
+        talk.OnComplete(() => Managers.Game.SetStateEvent());
+        talk.OnComplete(() => curCutScene.Resume());
         //Talk Event Start
         Managers.Talk.PlayCurrentSceneTalk(cutSceneTalk[talkCount]);
     }
@@ -34,6 +33,11 @@ public class CutSceneController : MonoBehaviour
     {
         cutSceneprogress = true;
         StartCoroutine(InputSkipKey());
+    }
+
+    public void CutSceneComplete()
+    {
+        CutSceneEvent.isComplete = true;
     }
 
     IEnumerator InputSkipKey()
