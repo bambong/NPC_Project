@@ -346,7 +346,7 @@ public class MiniGameManager : BaseScene
             var peek = puzzleStack.Peek();
             puzzleStack.Pop();
             nodeMap[peek.x][peek.y].SetKey(miniGameLevelData.answerKey[i]);
-            nodeMap[peek.x][peek.y].TestAnswerMod();
+            // FOR DEBUG : 답 출력 //nodeMap[peek.x][peek.y].TestAnswerMod();
         }
     }
     public ResultColorNodeController CreateResultColorNode(Transform parent)
