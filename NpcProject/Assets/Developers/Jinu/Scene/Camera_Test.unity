@@ -18382,7 +18382,7 @@ GameObject:
   - component: {fileID: 2336986524773105979}
   - component: {fileID: 6150404562082242851}
   m_Layer: 0
-  m_Name: leftExtra
+  m_Name: "\uD558\uB298\uAC19\uC740\uC0C1\uC0AC\uB2D8"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19308,7 +19308,7 @@ GameObject:
   - component: {fileID: 4650081771733967064}
   - component: {fileID: 6282057397878090224}
   m_Layer: 0
-  m_Name: rightExtra
+  m_Name: player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20318,7 +20318,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7964123983964135911}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7248545222245777345
 MeshFilter:
@@ -21574,8 +21574,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7061228227550174798}
   - {fileID: 8672973413917676446}
+  - {fileID: 7061228227550174798}
   m_Father: {fileID: 7964123983242434549}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -21593,6 +21593,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curCutScene: {fileID: 7964123983825920977}
   cutSceneTalk: 11270000
+  left: {fileID: 4193417707812101981}
+  right: {fileID: 5575229518040618344}
 --- !u!114 &7964123984035404965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22372,7 +22374,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7964123983964135911}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8699402585332332636
 MeshFilter:

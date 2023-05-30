@@ -11,8 +11,13 @@ public class CutSceneController : MonoBehaviour
     private PlayableDirector curCutScene;
     [SerializeField]
     private List<int> cutSceneTalk = new List<int>();
+    [SerializeField]
+    private GameObject left;
+    [SerializeField]
+    private GameObject right;
+
     private int talkCount = 0;
-    private bool cutSceneprogress = false;
+    private bool cutSceneprogress = false;    
 
     public void LoadTalk()
     {
@@ -25,6 +30,10 @@ public class CutSceneController : MonoBehaviour
 
         curCutScene.Pause();
         var talk = Managers.Talk.GetTalkEvent(cutSceneTalk[talkCount]);
+        talk.OnStart(() => talk.iscutScene = true);
+        talk.OnStart(() => talk.leftObject = left);
+        talk.OnStart(() => talk.rightObject = right);
+
         talk.OnComplete(() => talkCount++);
         //재시작        
         talk.OnComplete(() => SkipCutScene());
@@ -32,6 +41,11 @@ public class CutSceneController : MonoBehaviour
         talk.OnComplete(() => curCutScene.Resume());
         //Talk Event Start
         Managers.Talk.PlayCurrentSceneTalk(cutSceneTalk[talkCount]);
+    }
+
+    public void CutScenePause()
+    {
+        curCutScene.Pause();
     }
 
     public void SkipCutScene()

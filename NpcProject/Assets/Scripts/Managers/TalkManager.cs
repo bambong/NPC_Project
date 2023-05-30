@@ -20,6 +20,10 @@ public class TalkEvent : GameEvent
 {
     private List<Dialogue> dialogues = new List<Dialogue>();
     private int curIndex = 0;
+    public bool iscutScene = false;
+
+    public GameObject leftObject;
+    public GameObject rightObject;
 
     public TalkEvent() 
     {
@@ -28,7 +32,15 @@ public class TalkEvent : GameEvent
     public override void Play()
     {
         onStart?.Invoke();
-        Managers.Talk.PlayTalk(this);
+        if(iscutScene)
+        {
+            Managers.Talk.PlayCutSceneTalk(this, leftObject, rightObject);
+        }
+        else
+        {
+            Managers.Talk.PlayTalk(this);
+        }
+        
     }
     public void AddDialogue(Dialogue dialogue)
     {
@@ -117,6 +129,7 @@ public class TalkManager
     {
         talkPanel.PlayDialogue(dialogue);
     }
+
     public TalkEvent GetTalkEvent(int talkEventId) 
     {
         return currentSceneTalkDatas[talkEventId];
@@ -152,6 +165,7 @@ public class TalkManager
     }
     public void EndTalk() 
     {
+        talkPanel.RestorationMat();
         talkPanel.gameObject.SetActive(false);
         Managers.Game.SetStateNormal();
     }
@@ -183,5 +197,52 @@ public class TalkManager
         }
     }
 
-    
+    #region CutSceneTalk Function
+    public void PlayDialogue(Dialogue dialogue, GameObject left, GameObject right)
+    {
+        talkPanel.PlayDialogue(dialogue, left, right);
+    }
+
+    public void PlayCutSceneTalk(TalkEvent talk, GameObject left, GameObject right)
+    {
+        Managers.Game.SetStateEvent();
+
+        curTalkEvent = talk;
+
+        talkPanel.SetDialogue(curTalkEvent.GetCurrentDialogue(), left, right);
+
+        talkPanel.TalkPanelInner.DOScale(Vector3.zero, 0).OnStart(() =>
+        {
+            talkPanel.gameObject.SetActive(true);
+            talkPanel.TalkPanelInner.DOScale(Vector3.one, ENTER_ANIM_SPEED).OnComplete(() =>
+            {
+                Managers.Scene.CurrentScene.StartCoroutine(ProgresscutSceneTalk(left, right));
+            });
+        });
+    }
+
+    IEnumerator ProgresscutSceneTalk(GameObject left, GameObject right)
+    {
+
+        PlayDialogue(curTalkEvent.GetCurrentDialogue(), left, right);
+
+        while (true)
+        {
+            if ((Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.TALK_KEY)) && talkPanel.IsNext == true && !talkPanel.IsChoice) || talkPanel.GetIsSelect())
+            {
+                talkPanel.InputIsSelect(false);
+
+                if (curTalkEvent.MoveNext())
+                {
+                    PlayDialogue(curTalkEvent.GetCurrentDialogue(), left, right);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            yield return null;
+        }
+    }
+    #endregion
 }
