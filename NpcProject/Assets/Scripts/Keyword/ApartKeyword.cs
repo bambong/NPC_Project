@@ -8,8 +8,15 @@ public class ApartKeyword : KeywordController
     public static float Speed = 10f;
 
     public override void OnEnter(KeywordEntity entity)
-    {
+    {        
         entity.WireColorController.AddColorState(WireColorStateController.E_WIRE_STATE.PAIR,E_WIRE_COLOR_MODE.Apart);
+        
+        KeywordEntity other;
+        if (!PairKeyword.IsAvailablePair(entity, out other))
+        {
+            return;
+        }
+        Managers.Sound.PlaySFX(Define.SOUND.MoveKeyword);
     }
     public override void OnFixedUpdate(KeywordEntity entity)
     {

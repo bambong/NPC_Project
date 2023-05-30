@@ -44,6 +44,14 @@ public class TalkPanelController : UI_Base
     private bool isChoice = false;
     private int buttonCount;
 
+    private Renderer leftRenderer;
+    private Renderer rightRenderer;
+    private Material leftmaterial;
+    private Material rightmaterial;
+
+    private Color leftColor;
+    private Color rightColor;
+    private Color gray = new Color(56/255f, 56/255f, 56/255f);
  
 
     public override void Init()
@@ -51,10 +59,11 @@ public class TalkPanelController : UI_Base
         choiceButton.AddButtonEvent();
     }
 
+    #region TalkEvent
     public void SetDialogue(Dialogue dialogue)
     {
         for(int i =0; i < dialogue.leftRights.Length; ++i ) 
-        {
+        {            
             if(dialogue.leftRights[i] == null) 
             {
                 leftRights[i].DOFade(0, 0);
@@ -75,8 +84,9 @@ public class TalkPanelController : UI_Base
         choiceButton.Inactive();
         dialogueText.text = "";
     }
+
     public void PlayDialogue(Dialogue dialogue) 
-    {
+    {        
         dialogueText.text = "";
         isNext = false;        
         curDialogue = dialogue;
@@ -104,6 +114,89 @@ public class TalkPanelController : UI_Base
         StartCoroutine(SkipDelayTime());
         StartCoroutine(PlayTextAnimation());
     }
+    #endregion
+    #region CutSceneTalk
+    public void SetDialogue(Dialogue dialogue, GameObject left, GameObject right)
+    {
+        //init
+        leftRenderer = left.GetComponent<Renderer>();
+        rightRenderer = right.GetComponent<Renderer>();
+        leftmaterial = leftRenderer.material;
+        rightmaterial = rightRenderer.material;
+        leftColor = leftmaterial.color;
+        rightColor = rightmaterial.color;        
+
+        for (int i = 0; i < dialogue.leftRights.Length; ++i)
+        {
+            leftRights[i].DOFade(0, 0);
+            continue;
+        }
+
+        if (dialogue.speaker.charName == left.name)
+        {
+            rightmaterial.color = gray;
+            rightRenderer.material = rightmaterial;
+
+            leftmaterial.color = leftColor;
+            leftRenderer.material = leftmaterial;
+        }
+        if (dialogue.speaker.charName == right.name)
+        {
+            leftmaterial.color = gray;
+            leftRenderer.material = leftmaterial;
+
+            rightmaterial.color = rightColor;
+            rightRenderer.material = rightmaterial;
+        }
+
+        spekerName.text = $"-{dialogue.speaker.name}-";
+        choiceButton.Inactive();
+        dialogueText.text = "";
+    }
+
+    public void PlayDialogue(Dialogue dialogue, GameObject left, GameObject right)
+    {
+        dialogueText.text = "";
+        isNext = false;
+        curDialogue = dialogue;
+        
+        for (int i = 0; i < dialogue.leftRights.Length; ++i)
+        {
+            leftRights[i].DOFade(0, 0);
+            continue;
+        }
+
+        if (dialogue.speaker.charName == left.name)
+        {
+            rightmaterial.color = gray;
+            rightRenderer.material = rightmaterial;
+
+            leftmaterial.color = leftColor;
+            leftRenderer.material = leftmaterial;
+        }
+        if (dialogue.speaker.charName == right.name)
+        {
+            leftmaterial.color = gray;
+            leftRenderer.material = leftmaterial;
+
+            rightmaterial.color = rightColor;
+            rightRenderer.material = rightmaterial;
+        }
+
+        spekerName.text = $"-{dialogue.speaker.name}-";
+        StartCoroutine(SkipDelayTime());
+        StartCoroutine(PlayTextAnimation());
+    }
+
+    public void RestorationMat()
+    {
+        leftmaterial.color = leftColor;
+        leftRenderer.material = leftmaterial;
+
+        rightmaterial.color = rightColor;
+        rightRenderer.material = rightmaterial;
+    }
+    #endregion
 
     #region TextAnimation
     IEnumerator PlayTextAnimation()
@@ -239,7 +332,12 @@ public class TalkPanelController : UI_Base
             {
                 isChoice = true;
                 continue;
-            }     
+            }
+            if(item == "player")
+            {
+                textDialogue += Managers.Talk.GetSpeakerName(101);
+                continue;
+            }
             textDialogue += item;
         }
     }

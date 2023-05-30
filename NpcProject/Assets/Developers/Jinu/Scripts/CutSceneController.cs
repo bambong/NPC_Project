@@ -9,31 +9,54 @@ public class CutSceneController : MonoBehaviour
 {
     [SerializeField]
     private PlayableDirector curCutScene;
-    // Update is called once per frame
     [SerializeField]
     private List<int> cutSceneTalk = new List<int>();
+    [SerializeField]
+    private GameObject left;
+    [SerializeField]
+    private GameObject right;
+
     private int talkCount = 0;
-    private bool cutSceneprogress = false;
+    private bool cutSceneprogress = false;    
 
     public void LoadTalk()
     {
         cutSceneprogress = false;
+        
+        if(talkCount >= cutSceneTalk.Count)
+        {
+            talkCount = 0;
+        }
 
         curCutScene.Pause();
         var talk = Managers.Talk.GetTalkEvent(cutSceneTalk[talkCount]);
-        talk.OnComplete(() => talkCount++);
-        //재시작
-        talk.OnComplete(() => curCutScene.Resume());
-        talk.OnComplete(() => SkipCutScene());
+        talk.OnStart(() => talk.iscutScene = true);
+        talk.OnStart(() => talk.leftObject = left);
+        talk.OnStart(() => talk.rightObject = right);
 
+        talk.OnComplete(() => talkCount++);
+        //재시작        
+        talk.OnComplete(() => SkipCutScene());
+        talk.OnComplete(() => Managers.Game.SetStateEvent());
+        talk.OnComplete(() => curCutScene.Resume());
         //Talk Event Start
         Managers.Talk.PlayCurrentSceneTalk(cutSceneTalk[talkCount]);
+    }
+
+    public void CutScenePause()
+    {
+        curCutScene.Pause();
     }
 
     public void SkipCutScene()
     {
         cutSceneprogress = true;
         StartCoroutine(InputSkipKey());
+    }
+
+    public void CutSceneComplete()
+    {
+        CutSceneEvent.isComplete = true;
     }
 
     IEnumerator InputSkipKey()

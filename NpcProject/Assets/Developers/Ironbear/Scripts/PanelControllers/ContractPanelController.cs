@@ -22,7 +22,7 @@ public class ContractPanelController : MonoBehaviour
     private float effectDuration = 1f;
     private float targetOn = 0f;
     private float targetOff = -100f;
-    private float delayTime = 4.5f;
+    private float delayTime = 3f;
 
     private void Start()
     {
@@ -106,5 +106,17 @@ public class ContractPanelController : MonoBehaviour
                 kakaoPanel.SetActive(true);
             });           
         });
+    }
+
+    public void Noninteractive()
+    {
+        Button clickedButton = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+        Image clickedImage = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<Image>();
+        CanvasGroup clickedCanvasGroup = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<CanvasGroup>();
+
+        clickedCanvasGroup.interactable = false;
+        clickedCanvasGroup.blocksRaycasts = false;
+        clickedImage.raycastTarget = false;
+        clickedButton.interactable = false;
     }
 }

@@ -5,6 +5,8 @@ using UnityEngine.Playables;
 using System;
 public class CutSceneEvent : GameEvent
 {
+    static public bool isComplete = false;
+
     private PlayableDirector timelineDirector;
     public CutSceneEvent(PlayableDirector timeline)
     {
@@ -14,6 +16,7 @@ public class CutSceneEvent : GameEvent
 
     public override void Play()
     {
+        isComplete = false;
         onStart?.Invoke();
         timelineDirector.Play();
         Managers.Game.SetStateEvent();
@@ -30,7 +33,7 @@ public class CutSceneEvent : GameEvent
     {
         while(true)
         {
-            if(!(timelineDirector.state == PlayState.Playing))
+            if (isComplete)
             {
                 Complete();
                 yield break;

@@ -44,6 +44,11 @@ public class ServerroomMonsterScene : BaseScene
         }
     }
 
+    private void Start()
+    {
+        PlayBgm();
+    }
+
     public override void Clear()
     {
     }

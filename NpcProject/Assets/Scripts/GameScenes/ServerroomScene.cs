@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
+using FMODUnity;
 
 public class ServerroomScene : BaseScene
 {
@@ -18,13 +19,12 @@ public class ServerroomScene : BaseScene
    
     [SerializeField]
     private int progress = 1;
-
     [SerializeField]
-    private string description;
+    private EventReference bgm;
 
     public override void Clear()
     {
-      // Managers.Data.SaveGame(SceneManager.GetActiveScene().name);
+        throw new System.NotImplementedException();
     }
 
     protected override void Init()
@@ -37,11 +37,9 @@ public class ServerroomScene : BaseScene
         Managers.Data.LoadGame(SceneManager.GetActiveScene().name);
 
        // Managers.UI.MakeSceneUI()
-
-
     }
     private void Start()
     {
-        //Managers.Talk.PlayCurrentSceneTalk(10001);
+        PlayBgm();
     }
 }

@@ -11,7 +11,7 @@ public class CutScenePlayerController : MonoBehaviour
     [SerializeField]
     private Animator cutSceneAnimatorController;
     [SerializeField]
-    private GameObject cutScenePlayer;
+    private GameObject cutScenePlayer;    
 
     public void Awake()
     {
