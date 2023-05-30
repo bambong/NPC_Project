@@ -57,7 +57,7 @@ public class TextPanelController : UI_Base
              {
                  canvas.DOFade(0f, fadeDuration).SetEase(Ease.OutQuad).OnComplete(() =>
                  {
-                     SceneManager.LoadScene(transitionSceneName.ToString());
+                     Managers.Scene.LoadScene(transitionSceneName.ToString());
                  });
                  
              });           

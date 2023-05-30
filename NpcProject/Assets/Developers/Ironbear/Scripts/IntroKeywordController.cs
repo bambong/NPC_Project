@@ -84,12 +84,15 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
     public void OnEndDrag(PointerEventData eventData)
     {
         if (transform.parent == canvas.transform)
-        {            
-            transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
+        {
+            canvasGroup.blocksRaycasts = false;
             transform.SetParent(startParent);
             Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleBad);
-        }
-        canvasGroup.blocksRaycasts = true;
+            transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart).OnComplete(() =>
+            {                                
+                canvasGroup.blocksRaycasts = true;
+            });           
+        }        
     }
 
     public void OnPointerEnter(PointerEventData eventData)

@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class PanelsController : UI_Base
 {
@@ -14,6 +15,9 @@ public class PanelsController : UI_Base
     [SerializeField]
     private GameObject textPanel;
 
+    [SerializeField]
+    private Texture2D noramlCursor;
+
     private float fadeDuration = 1f;
 
     private bool isLogo = false;
@@ -26,8 +30,12 @@ public class PanelsController : UI_Base
     {
     }
 
-    private void Awake()
+    private void Start()
     {
+        Cursor.SetCursor(noramlCursor, Vector2.zero, CursorMode.Auto);
+        Cursor.lockState = CursorLockMode.Confined;
+        Camera.main.ScreenPointToRay(Input.mousePosition);
+
         logoPanel.SetActive(true);
         startPanel.SetActive(false);
         puzzlePanel.SetActive(false);
@@ -68,6 +76,18 @@ public class PanelsController : UI_Base
             
             CanvasFadeIn(); 
         });
+    }
+
+    public void Noninteractive()
+    {
+        Button clickedButton = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+        Image clickedImage = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<Image>();
+        CanvasGroup clickedCanvasGroup = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<CanvasGroup>();
+
+        clickedCanvasGroup.interactable = false;
+        clickedCanvasGroup.blocksRaycasts = false;
+        clickedImage.raycastTarget = false;
+        clickedButton.interactable = false;
     }
 
     private void CanvasFadeIn()

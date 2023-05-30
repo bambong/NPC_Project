@@ -27,6 +27,7 @@ public class KakaoPanelController : MonoBehaviour
 
     void Start()
     {
+
         yesTxt.SetActive(false);
         yupTxt.SetActive(false);
 
@@ -118,13 +119,17 @@ public class KakaoPanelController : MonoBehaviour
     {
         Managers.Sound.PlaySFX(Define.SOUND.ClickButton);
         yesTxt.SetActive(true);
-        btns[1].GetComponent<Button>().interactable = false;
+
+        for (int i = 0; i < btns.Length; i++)
+        {
+            btns[i].GetComponent<Button>().interactable = false;
+        }
 
         DOVirtual.DelayedCall(waitTime, () =>
         {
             CloseAll();
             Managers.Game.Player.SetStateIdle();
-            myseat.SetActive(true);
+            myseat.GetComponent<MySeatController>().InteractionOn();
         });
     }
 
@@ -132,13 +137,18 @@ public class KakaoPanelController : MonoBehaviour
     {
         Managers.Sound.PlaySFX(Define.SOUND.ClickButton);
         yupTxt.SetActive(true);
-        btns[0].GetComponent<Button>().interactable = false;
+
+        for (int i = 0; i < btns.Length; i++)
+        {
+            btns[i].GetComponent<Button>().interactable = false;
+        }
 
         DOVirtual.DelayedCall(waitTime, () =>
         {
             CloseAll();
             Managers.Game.Player.SetStateIdle();
-            myseat.SetActive(true);
+            myseat.GetComponent<MySeatController>().InteractionOn();
         });
     }
 }
+

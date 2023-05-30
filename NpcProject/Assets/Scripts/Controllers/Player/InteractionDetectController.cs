@@ -39,17 +39,29 @@ public class InteractionDetectController : MonoBehaviour
     {
         if(Managers.Game.IsDebugMod)
         {
-            return; 
+            return;
+        }
+        if (curIteraction == null)
+        {
+            return;
+        }
+        if (!curIteraction.IsInteractAble) 
+        {
+            interactionUi.Close();
+            return;
         }
 
-        if(curIteraction != null)
-        {
-            Managers.Game.Player.SetStateInteraction();
-            curIteraction.OnInteraction();
-        }
+         Managers.Game.Player.SetStateInteraction();
+         curIteraction.OnInteraction();
 
     }
-    public void InteractionUiEnable() => interactionUi.Open();
+    public void InteractionUiEnable()
+    {
+        if (curIteraction != null && curIteraction.IsInteractAble)
+        { 
+            interactionUi.Open();
+        }
+    }
     public void InteractionUiDisable() => interactionUi.Close();
 
 
