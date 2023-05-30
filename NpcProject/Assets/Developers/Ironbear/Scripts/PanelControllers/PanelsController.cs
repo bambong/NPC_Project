@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class PanelsController : UI_Base
 {
@@ -75,6 +76,18 @@ public class PanelsController : UI_Base
             
             CanvasFadeIn(); 
         });
+    }
+
+    public void Noninteractive()
+    {
+        Button clickedButton = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+        Image clickedImage = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<Image>();
+        CanvasGroup clickedCanvasGroup = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<CanvasGroup>();
+
+        clickedCanvasGroup.interactable = false;
+        clickedCanvasGroup.blocksRaycasts = false;
+        clickedImage.raycastTarget = false;
+        clickedButton.interactable = false;
     }
 
     private void CanvasFadeIn()
