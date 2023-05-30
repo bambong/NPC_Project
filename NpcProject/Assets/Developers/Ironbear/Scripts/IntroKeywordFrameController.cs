@@ -30,6 +30,9 @@ public class IntroKeywordFrameController : MonoBehaviour, IDropHandler, IPointer
             eventData.pointerDrag.transform.SetParent(transform);
 
             RectTransform draggedRect = eventData.pointerDrag.GetComponent<RectTransform>();
+            CanvasGroup draggedCanvasGroup = eventData.pointerDrag.GetComponent<CanvasGroup>();
+
+            draggedCanvasGroup.blocksRaycasts = false;
             draggedRect.localScale = Vector3.one;
             draggedRect.DOLocalMove(Vector3.zero, 0.1f).SetEase(Ease.OutQuad);
             

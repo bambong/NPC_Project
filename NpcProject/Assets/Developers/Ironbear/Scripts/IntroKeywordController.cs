@@ -88,8 +88,9 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
             transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
             transform.SetParent(startParent);
             Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleBad);
+            canvasGroup.blocksRaycasts = true;
         }
-        canvasGroup.blocksRaycasts = true;
+        
     }
 
     public void OnPointerEnter(PointerEventData eventData)
