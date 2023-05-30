@@ -19,12 +19,10 @@ public class ServerroomScene : BaseScene
    
     [SerializeField]
     private int progress = 1;
-    [SerializeField]
-    private EventReference bgm;
 
     public override void Clear()
     {
-        throw new System.NotImplementedException();
+        
     }
 
     protected override void Init()
