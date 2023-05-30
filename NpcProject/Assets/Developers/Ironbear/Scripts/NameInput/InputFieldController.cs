@@ -26,22 +26,29 @@ public class InputFieldController : UI_Base
 
     private ContractPanelController contractPanel;
     private TMP_InputField inputField;
+
+    private Vector2 textInitPosition;
+
+    private string previousText = "";
     private string playerName = null;
+
     public bool isSelect = false;
     private bool isRestrict = false;
-    private string previousText = "";
+    private bool isShake = false;
+    
 
     public override void Init()
     {        
     }
 
-    private void Awake()
+    private void Start()
     {
         contractPanel = GetComponentInParent<ContractPanelController>();
         inputField = GetComponent<TMP_InputField>();
 
         inputField.onValueChanged.AddListener(UpdateOutputText);
         playerNameInput.characterLimit = 8;
+        textInitPosition = test.gameObject.transform.position;
     }
 
     public void SubmitName()
@@ -111,7 +118,13 @@ public class InputFieldController : UI_Base
 
     public void TextShake()
     {
-        test.gameObject.transform.DOShakePosition(0.3f, 4);
+        if(!isShake)
+        {
+            isShake = true;
+            test.gameObject.transform.DOScale(new Vector3(1.05f, 0.95f, 1f), 0.1f).SetLoops(2, LoopType.Yoyo).OnComplete(() => {
+                isShake = false;
+            });
+        }       
     }
 
     public void UpdateOutputText(string inputValue)
