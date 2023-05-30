@@ -9,7 +9,7 @@ public class Define
         Unknown,
         DataPuzzle,
         Chapter_01_Office_New,
-        Chapter_01_Serverroom,
+        Chapter_01_Serverroom_Corridor,
         Chapter_01_Puzzle01, 
         Chapter_01_Puzzle02,
         Chapter_01_Puzzle03,
