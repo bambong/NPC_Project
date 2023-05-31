@@ -20,8 +20,6 @@ public class TestLogo : MonoBehaviour
     [SerializeField]
     private CanvasGroup panelCanvasGroup;
     [SerializeField]
-    private CanvasGroup renderCanvasGroup;
-    [SerializeField]
     private CanvasGroup outLineCanvasGroup;
     [SerializeField]
     private Image glowImage;
@@ -38,27 +36,29 @@ public class TestLogo : MonoBehaviour
     private float renderfadeTim = 2f;
     [SerializeField]
     private float interval = 1f;
+    [SerializeField]
+    private CanvasGroup buttonGroup;
 
-    private DigitalGlitchVolume digitalEffect;
-    private AnalogGlitchVolume anologEffect;
-    private ChromaticAberration chromaticEffect;
+ 
     private readonly float EFFECT_START_TIME = 0.5f;
     private readonly float EFFECT_END_TIME = 0.3f;
+
     private void Start()
     {
-        renderCanvasGroup.alpha = 0;
         panelCanvasGroup.alpha = 0;
         outLineCanvasGroup.alpha = 1;
         renderCanvasGroup2.alpha = 0;
-
+        buttonGroup.alpha = 0;
+        buttonGroup.interactable = false;
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(1f);
         sequence.Append(panelCanvasGroup.DOFade(1, panelfadeTim));
-        sequence.Append(renderCanvasGroup.DOFade(1, renderfadeTim));
         sequence.AppendInterval(interval);
         sequence.AppendCallback(() => { StartCoroutine(GlitchOnce()); });
         sequence.AppendInterval(EFFECT_START_TIME+ EFFECT_END_TIME);
-        sequence.Append(panelCanvasGroup.DOFade(0, 1.5f)); 
+        sequence.Append(panelCanvasGroup.DOFade(0, 1.5f));
+        sequence.Append(buttonGroup.DOFade(1, 1f));
+        sequence.OnComplete(() => { buttonGroup.interactable = true; });
         sequence.Play();
 
     }
@@ -85,7 +85,10 @@ public class TestLogo : MonoBehaviour
         }
         glitchVol.weight = 0;
     }
-
+    public void QuitButton() 
+    {
+        Application.Quit();
+    }
 
 
 }

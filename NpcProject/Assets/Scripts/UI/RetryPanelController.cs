@@ -1,9 +1,7 @@
 using DG.Tweening;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RetryPanelController : UI_Base
@@ -14,6 +12,14 @@ public class RetryPanelController : UI_Base
     private TextMeshProUGUI retryText;
     [SerializeField]
     private Button resetButton;
+
+    [SerializeField]
+    private RectTransform resetButtonRect;
+
+    [SerializeField]
+    private Vector3 startPos;
+    [SerializeField]
+    private Vector3 desirePos;
 
     private bool isOpenPanel;
     private bool isOpenButton;
@@ -35,12 +41,15 @@ public class RetryPanelController : UI_Base
         {
             return;
         }
-        isOpenButton = true;
+        resetButtonRect.anchoredPosition = startPos;
         resetButton.gameObject.SetActive(true);
+        resetButtonRect.DOAnchorPos(desirePos, 1f);
+        isOpenButton = true;
     }
     public void CloseResetButton()
     {
         isOpenButton = false;
+        resetButtonRect.DOKill();
         resetButton.gameObject.SetActive(false);
     }
     public void OpenRetryPanel()

@@ -19,7 +19,8 @@ public class Define
         Chapter_01_Puzzle07,
         Chapter_01_Puzzle08,
         Chapter_01_Puzzle09,
-        Chapter_01_Puzzle10
+        Chapter_01_Puzzle10,
+        TestLogo
     }
     public enum WorldObject
     {
