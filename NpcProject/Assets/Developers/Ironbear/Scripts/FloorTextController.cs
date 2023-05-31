@@ -23,6 +23,7 @@ public class FloorTextController : MonoBehaviour
         for (int i = 0; i < texts.Length; i++)
         {
             string text = texts[i];
+            text = text.Replace("\\n", "\n");
 
             seq.Append(floorTexts[i].DOText(text, typeSpeed).SetEase(Ease.Linear)).OnComplete(() =>
             {
