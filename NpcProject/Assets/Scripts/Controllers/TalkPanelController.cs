@@ -43,6 +43,7 @@ public class TalkPanelController : UI_Base
     private bool isTrans = false;
     private bool isChoice = false;
     private bool isChoiceText = false;
+    private bool isComplete = false;
     private int buttonCount;
     private string choiceText;
 
@@ -283,6 +284,7 @@ public class TalkPanelController : UI_Base
         })
         .OnComplete(() =>
         {
+            isComplete = true;
             if (isChoice == true)
             {
                 choiceButton.Active(buttonCount);
@@ -307,7 +309,7 @@ public class TalkPanelController : UI_Base
     {
         while (!isNext)
         {
-            if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY)) && isSkip == true)
+            if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY)) && isSkip == true || isComplete)
             {
                 if (isChoice == true)
                 {
@@ -355,6 +357,7 @@ public class TalkPanelController : UI_Base
             yield return null;
         }
         isSkip = false;
+        isComplete = false;
         isChoiceText = false;
     }
 
