@@ -42,7 +42,9 @@ public class TalkPanelController : UI_Base
     private bool isNext = false;
     private bool isTrans = false;
     private bool isChoice = false;
+    private bool isChoiceText = false;
     private int buttonCount;
+    private string choiceText;
 
     private Renderer leftRenderer;
     private Renderer rightRenderer;
@@ -256,11 +258,21 @@ public class TalkPanelController : UI_Base
         {
             DotweenTextAnimation(textDialogue);
         }
-    }
+    }    
 
     private void DotweenTextAnimation(string text)
     {
-        textDialogue = text;
+        
+        if(isChoiceText)
+        {
+            textDialogue = choiceText;
+            isChoiceText = false;
+        }
+        else 
+        {
+            textDialogue = text;
+        }
+
         typingTime = textDialogue.Length * TEXT_SPEED;
 
         dialogueText.text = "";
@@ -278,6 +290,18 @@ public class TalkPanelController : UI_Base
             }
         });
     }
+    public void SetChoiceTextA()
+    {
+        choiceText = choiceButton.choiceTextA.text;
+    }
+    public void SetChoiceTextB()
+    {
+        choiceText = choiceButton.choiceTextB.text;
+    }
+    public void SetChoiceTextC()
+    {
+        choiceText = choiceButton.choiceTextC.text;
+    }
 
     IEnumerator SkipTextani()
     {
@@ -293,18 +317,36 @@ public class TalkPanelController : UI_Base
                 if (isTrans == false)
                 {
                     dialogueText.DOKill();
-                    dialogueText.text = textDialogue;
+                    if (isChoiceText)
+                    {
+                        dialogueText.text = choiceText;
+                    }
+                    else
+                    {
+                        dialogueText.text = textDialogue;
+                    }
+                    //dialogueText.text = textDialogue;
                     yield return new WaitForSeconds(0.3f);
+                    isChoiceText = false;
                     isSkip = false;
-                    isNext = true;
+                    isNext = true;                     
                     break;                    
                 }
                 if (isTrans == true)
                 {
                     dialogueText.text = "";
-                    dialogueText.text = textDialogue;
+                    if (isChoiceText)
+                    {
+                        dialogueText.text = choiceText;
+                    }
+                    else
+                    {
+                        dialogueText.text = textDialogue;
+                    }
+                    //dialogueText.text = textDialogue;
                     isTrans = false;
                     yield return new WaitForSeconds(0.3f);
+                    isChoiceText = false;
                     isSkip = false;
                     isNext = true;
                     break;
@@ -313,6 +355,7 @@ public class TalkPanelController : UI_Base
             yield return null;
         }
         isSkip = false;
+        isChoiceText = false;
     }
 
     private void SettingTextAnimation()
@@ -336,6 +379,11 @@ public class TalkPanelController : UI_Base
             if(item == "player")
             {
                 textDialogue += Managers.Talk.GetSpeakerName(101);
+                continue;
+            }
+            if(item == "choicetext")
+            {
+                isChoiceText = true;
                 continue;
             }
             textDialogue += item;
