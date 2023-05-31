@@ -501,6 +501,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
+--- !u!114 &133219584 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5894186153558330794, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
+  m_PrefabInstance: {fileID: 133219583}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6859b47adef8fc4dbd10ed9bc035647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &141596907
 GameObject:
   m_ObjectHideFlags: 0
@@ -4258,7 +4269,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.01
+  m_Intensity: 0.1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -4297,7 +4308,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -4315,14 +4326,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1430028996}
-  m_LocalRotation: {x: 0.5910016, y: -0.42600593, z: 0.4494347, w: 0.51695704}
+  m_LocalRotation: {x: 0.12267426, y: 0.85343254, z: -0.44996387, w: 0.23267247}
   m_LocalPosition: {x: 0, y: 61.3, z: -27.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 13
-  m_LocalEulerAnglesHint: {x: 83.704, y: 124.128, z: 200.755}
+  m_LocalEulerAnglesHint: {x: 55.6, y: 149.5, z: 0}
 --- !u!114 &1430028999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4362,6 +4373,10 @@ PrefabInstance:
       propertyPath: maxHeight
       value: 3.85
       objectReference: {fileID: 0}
+    - target: {fileID: 869209253454784198, guid: eec64b61e366a94489bea7b02a70df2b, type: 3}
+      propertyPath: parentDebugZone
+      value: 
+      objectReference: {fileID: 133219584}
     - target: {fileID: 869209253454784198, guid: eec64b61e366a94489bea7b02a70df2b, type: 3}
       propertyPath: keywords.Array.size
       value: 1

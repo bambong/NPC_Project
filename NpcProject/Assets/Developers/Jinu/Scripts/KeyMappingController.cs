@@ -23,7 +23,7 @@ public class KeyMappingController
         {KEY_TYPE.DEBUGMOD_KEY, KeyCode.R},
         {KEY_TYPE.INTERACTION_KEY, KeyCode.F},
         {KEY_TYPE.TALK_KEY, KeyCode.F},
-        {KEY_TYPE.SKIP_KEY, KeyCode.Escape},
+        {KEY_TYPE.SKIP_KEY, KeyCode.F},
         {KEY_TYPE.RETRY_KEY, KeyCode.Return},
         {KEY_TYPE.RUN_KEY, KeyCode.LeftShift}
     };
