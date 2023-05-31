@@ -20,10 +20,10 @@ public class KeyMappingController
     private Dictionary<KEY_TYPE, KeyCode> keyMap = new Dictionary<KEY_TYPE, KeyCode>()
     {
         {KEY_TYPE.EXIT_KEY, KeyCode.Escape},
-        {KEY_TYPE.DEBUGMOD_KEY, KeyCode.G},
+        {KEY_TYPE.DEBUGMOD_KEY, KeyCode.R},
         {KEY_TYPE.INTERACTION_KEY, KeyCode.F},
-        {KEY_TYPE.TALK_KEY, KeyCode.X},
-        {KEY_TYPE.SKIP_KEY, KeyCode.X},
+        {KEY_TYPE.TALK_KEY, KeyCode.F},
+        {KEY_TYPE.SKIP_KEY, KeyCode.Escape},
         {KEY_TYPE.RETRY_KEY, KeyCode.Return},
         {KEY_TYPE.RUN_KEY, KeyCode.LeftShift}
     };

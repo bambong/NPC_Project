@@ -49,6 +49,10 @@ class CreateKeywordOption
 
 public class KeywordEntity : GuIdBehaviour , IDataHandler
 {
+    [Header("DEBUG ZONE")]
+    [SerializeField]
+    private DebugZone parentDebugZone;
+
     [Space(10)]
     [Header("Keyword Stat")]
     [SerializeField]
@@ -67,7 +71,8 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     [SerializeField]
     private string statusSlotLayoutName = "KeywordStatusLayoutController";
 
-#region NeedClearForRespawn
+   
+    #region NeedClearForRespawn
     private Dictionary<string,KeywordAction> keywrodOverrideTable = new Dictionary<string,KeywordAction>();
     private Dictionary<KeywordController,KeywordAction> currentRegisterKeyword = new Dictionary<KeywordController,KeywordAction>();
     private List<KeywordFrameController> keywordFrames = new List<KeywordFrameController>();
@@ -82,7 +87,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     protected int colisionCheckLayer;
     private KeywordSlotUiController keywordSlotUiController;
     private KeywordStatusLayoutController keywordWorldSlotLayout;
-    private DebugZone parentDebugZone;
+   
     private bool isInit = false;
     private WireColorStateController wireColorController;
     private bool isMoveAble = true;
@@ -133,7 +138,8 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         //{
         //    originMat = mRenderer.material;
         //}
-
+        
+        SetDebugZoneWireMat();
         Init();
     }
     public virtual void Init()
@@ -254,10 +260,10 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
             DecisionKeyword(frame, keyword);
         }
     }
-    public void SetDebugZone(DebugZone zone)
+    public void SetDebugZoneWireMat()
     {
-        parentDebugZone = zone;
-        zone.AddWireFrameMat(GetComponent<Renderer>().material);
+        //parentDebugZone = zone;
+        parentDebugZone.AddWireFrameMat(GetComponent<Renderer>().material);
     }
     public virtual void EnterDebugMod()
     {

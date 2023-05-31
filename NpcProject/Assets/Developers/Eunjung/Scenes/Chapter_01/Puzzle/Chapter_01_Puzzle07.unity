@@ -1752,7 +1752,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1
+  m_text: "\uB370\uC774\uD130 3\uAC1C\uB97C \uD68D\uB4DD\uD558\uBA74 \uC624\uB958
+    \uD0A4\uC6CC\uB4DC\uAC00 \uB9CC\uB4E4\uC5B4\uC9D1\uB2C8\uB2E4."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2a205703649e8624e9d9a0cb904d71cc, type: 2}
   m_sharedMaterial: {fileID: 8409154440130149918, guid: 2a205703649e8624e9d9a0cb904d71cc, type: 2}
@@ -1873,17 +1874,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 976206275}
-  m_LocalRotation: {x: -0, y: -0.7071068, z: 0.7071068, w: 0}
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 5.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 319349472}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 180}
+  m_LocalEulerAnglesHint: {x: 180, y: 0, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -3, y: 1.39}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1009227433 stripped
@@ -5290,6 +5291,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6737983144649957172, guid: d4616179d40de0b41b071c35f8f22bbc, type: 3}
+      propertyPath: parentDebugZone
+      value: 
+      objectReference: {fileID: 2021241464}
+    - target: {fileID: 6737983144649957172, guid: d4616179d40de0b41b071c35f8f22bbc, type: 3}
       propertyPath: OnDeath.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -5701,6 +5706,10 @@ PrefabInstance:
       propertyPath: guId
       value: 5ae4588f-5e7f-4beb-a5c6-449345a67131
       objectReference: {fileID: 0}
+    - target: {fileID: 5680960419459741867, guid: 283fbb1aff0ff594c9179f4e97f4f6b0, type: 3}
+      propertyPath: parentDebugZone
+      value: 
+      objectReference: {fileID: 2021241464}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 283fbb1aff0ff594c9179f4e97f4f6b0, type: 3}
 --- !u!1001 &1732266225
@@ -6254,6 +6263,17 @@ MonoBehaviour:
   rotateSpeed: 100
   gaugeAmount: 1
   isOn: 1
+--- !u!114 &2021241464 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5894186153558330794, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
+  m_PrefabInstance: {fileID: 1529701166}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6859b47adef8fc4dbd10ed9bc035647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &2058306695 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5285832625342851343, guid: 1bb057fa6dc76d947a4cf8f7fce6fc87, type: 3}
