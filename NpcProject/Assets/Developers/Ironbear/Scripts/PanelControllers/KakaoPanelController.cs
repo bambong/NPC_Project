@@ -88,24 +88,29 @@ public class KakaoPanelController : MonoBehaviour
     {
         for(int i=0; i<kakaos.Length; i++)
         {
-            CanvasGroup kakaoCanvas = kakaos[i].GetComponent<CanvasGroup>();
+            int index = i;
+
+            CanvasGroup kakaoCanvas = kakaos[index].GetComponent<CanvasGroup>();
             kakaoCanvas.DOFade(0f, 0.45f).OnComplete(() =>
             {
-                kakaos[i].SetActive(false);
+                kakaos[index].SetActive(false);
             });
         }
 
         for(int i=0; i<btns.Length; i++)
         {
-            CanvasGroup btnCanvas = btns[i].GetComponent<CanvasGroup>();
+            int index = i;
+            CanvasGroup btnCanvas = btns[index].GetComponent<CanvasGroup>();
             btnCanvas.DOFade(0f, 0.45f).OnComplete(() =>
             {
-                btns[i].SetActive(false);
+                btns[index].SetActive(false);
             });
         }
 
-        yesTxt.GetComponent<CanvasGroup>().DOFade(0f, 0.45f);
-        yupTxt.GetComponent<CanvasGroup>().DOFade(0f, 0.45f);
+        CanvasGroup yesTxtCanvas = yesTxt.GetComponent<CanvasGroup>();
+        CanvasGroup yupTxtCanvas = yupTxt.GetComponent<CanvasGroup>();
+        yesTxtCanvas.DOFade(0f, 0.45f);
+        yupTxtCanvas.DOFade(0f, 0.45f);
     }
 
     public void UpdateName()

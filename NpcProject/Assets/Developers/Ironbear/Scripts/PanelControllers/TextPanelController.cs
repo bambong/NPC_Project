@@ -13,7 +13,7 @@ public class TextPanelController : UI_Base
     private Define.Scene transitionSceneName;
 
     private float fadeDuration = 1f;
-    private float typeSpeed = 0.08f;
+    private float typeSpeed = 0.04f;
 
     private Sequence seq;
     private CanvasGroup canvas;

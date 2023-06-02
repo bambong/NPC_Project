@@ -114,6 +114,7 @@ public class InputFieldController : UI_Base
         warning.gameObject.SetActive(false);
 
         submitBtn.interactable = true;
+        StopCoroutine(WarningTextEffect());
     }
 
     public void TextShake()
