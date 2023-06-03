@@ -8,6 +8,7 @@ using Spine.Unity.Examples;
 using System.Linq;
 using UnityEngine.Playables;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour , IDataHandler
 {
@@ -76,9 +77,9 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private PlayerAnimationController.MoveDir curDir = PlayerAnimationController.MoveDir.Front;
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
-
+    
     private DeathUIController deathUIController;
-
+    private Coroutine debugModeInput;
     private RaycastHit slopeHit;
     private int slopeLayer;
     public int Hp { get => hp; }
@@ -450,18 +451,95 @@ public class PlayerController : MonoBehaviour , IDataHandler
         }
         return false;
     }
+
+    IEnumerator DebugModInputCo() 
+    {
+
+        while (Managers.Game.IsDebugMod && !PlayerIsDeathState()) 
+        {
+            var pointerEventData = new UnityEngine.EventSystems.PointerEventData(EventSystem.current);
+            pointerEventData.position = Input.mousePosition;
+            pointerEventData.button = PointerEventData.InputButton.Left;
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                var raycasts = Managers.Keyword.GetRaycastList(pointerEventData);
+
+                float minDist = float.MaxValue;
+                KeywordController nearKeyword = null;
+
+                for (int i = 0; i < raycasts.Count; ++i)
+                
+                {
+                    if (raycasts[i].gameObject.CompareTag("KeywordController"))
+                    {
+
+                        var nowKeyword = raycasts[i].gameObject.GetComponent<KeywordController>();
+
+                        var nowDist = (nowKeyword.RectTransform.position - Input.mousePosition).magnitude;
+                        if (nowDist < minDist)
+                        {
+                            nearKeyword = nowKeyword;
+                            minDist = nowDist;
+                        }
+                    }
+                }
+                if(nearKeyword != null) 
+                {
+                    nearKeyword.OnBeginDrag(pointerEventData);
+                }
+
+            }
+
+            if(Managers.Keyword.CurDragKeyword == null) 
+            {
+                yield return null;
+                continue;
+            }
+            
+            if (Input.GetKeyUp(KeyCode.Mouse0))
+            {
+                Managers.Keyword.CurDragKeyword.OnEndDrag(pointerEventData);
+            }
+            else if (Input.GetKey(KeyCode.Mouse0))
+            {
+
+                Managers.Keyword.CurDragKeyword.OnDrag(pointerEventData);
+
+            }
+
+
+            yield return null;
+        }
+
+        debugModeInput = null;
+    }
     public void EnterDebugMod()
     {
         Managers.Game.SetEnableDebugMod();
+
+        if(debugModeInput != null) 
+        {
+            StopCoroutine(debugModeInput);
+            
+        }
+        debugModeInput = StartCoroutine(DebugModInputCo());
         glitchEffectController.EnterDebugMod(() =>
         {
             animationController.OnEnterDebugMod();
         });
         interactionDetecter.SwitchDebugMod(true);
+        
+
     }
     public void ExitDebugMod()
     {
         //SetstateStop();
+        if (debugModeInput != null)
+        {
+            StopCoroutine(debugModeInput);
+            debugModeInput = null;
+        }
+        
         glitchEffectController.ExitDebugMod(() => {
             
             interactionDetecter.SwitchDebugMod(false);
@@ -490,7 +568,10 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         return playerStateController.CurState == PlayerStop.Instance;
     }
-
+    private bool PlayerIsDeathState()
+    {
+        return playerStateController.CurState == PlayerDeath.Instance || playerStateController.CurState == PlayerBombDeath.Instance;
+    }
     public bool IsOnSlope(Vector3 dir)
     {
         var dirPos = transform.position;

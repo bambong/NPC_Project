@@ -105,7 +105,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     public DebugZone ParentDebugZone { get => parentDebugZone;  }
     public bool IsMoveAble { get => isMoveAble; set => isMoveAble = value; }
 
-    private readonly float SLOT_UI_DISTANCE = 100f;
+    private readonly float SLOT_UI_DISTANCE = 150f;
     private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude;
     private readonly string WIRE_FRAME_COLOR_NAME = "_Wireframe_Color";
 

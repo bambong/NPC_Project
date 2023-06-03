@@ -9,8 +9,10 @@ public abstract class BaseScene : MonoBehaviour
 {
     [SerializeField]
     private EventReference bgm;
-    public Define.Scene SceneType { get; protected set; } = Define.Scene.Unknown;
 
+    private EventSystem eventSystem;
+    public Define.Scene SceneType { get; protected set; } = Define.Scene.Unknown;
+    public EventSystem EventSystem { get => eventSystem; }
     void Awake()
     {
         Init();
@@ -19,9 +21,13 @@ public abstract class BaseScene : MonoBehaviour
    
     protected virtual void Init()
     {
-        Object obj = GameObject.FindObjectOfType(typeof(EventSystem));
-        if (obj == null)
-            Managers.Resource.Instantiate("UI/EventSystem").name = "@EventSystem";
+        eventSystem = FindObjectOfType<EventSystem>();     
+        if (eventSystem == null) 
+        {
+            var go = Managers.Resource.Instantiate("UI/EventSystem");
+            go.name = "@EventSystem";
+            eventSystem = go.GetComponent<EventSystem>();
+        }
     }
     public virtual void PlayBgm() 
     {

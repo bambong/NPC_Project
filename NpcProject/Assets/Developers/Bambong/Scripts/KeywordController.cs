@@ -13,7 +13,7 @@ public enum E_KEYWORD_TYPE
     DEFALUT = 1 << 0,
     ATTACK = 1 << 1,
 }
-public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler, IPointerExitHandler, IPointerEnterHandler
+public class KeywordController : UI_Base
 {
     private readonly float START_END_ANIM_TIME = 0.2f;
     private readonly float FOCUSING_SCALE = 1.05f;
@@ -89,6 +89,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         {
             return;
         }
+        Debug.Log("현재 드래그 중");
         Managers.Sound.PlaySFX(Define.SOUND.ClickKeyword);
 
         SetDragState(true);
@@ -100,7 +101,7 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
         startParent = transform.parent;
         transform.SetParent(Managers.Keyword.PlayerKeywordPanel.transform);
         rectTransform.SetAsLastSibling();
-        StartCoroutine(DragCheck());
+        //StartCoroutine(DragCheck());
     }
    
     public void OnDrag(PointerEventData eventData)
@@ -125,48 +126,63 @@ public class KeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginD
 
         if (raycasts.Count > 0) 
         {
-            for(int i =0; i < raycasts.Count; ++i) 
+
+            float minDist = float.MaxValue;
+            KeywordFrameBase nearFrame = null;
+            for (int i = 0; i < raycasts.Count; ++i)
             {
-                if (raycasts[i].gameObject.CompareTag(KEYWORD_FRAME_TAG)) 
+                if (raycasts[i].gameObject.CompareTag(KEYWORD_FRAME_TAG))
                 {
-                    var keywordFrame = raycasts[i].gameObject.GetComponent<KeywordFrameBase>();
-                    if (curFrame == keywordFrame)
+                    var nowFrame = raycasts[i].gameObject.GetComponent<KeywordFrameBase>();
+                   
+                    if (curFrame == nowFrame)
                     {
                         continue;
                     }
 
-                    keywordFrame.DragDropKeyword(this);
-                    return;
+                    var nowDist = (raycasts[i].gameObject.transform.position - transform.position).magnitude;
+                    if (nowDist < minDist) 
+                    {
+                        nearFrame = raycasts[i].gameObject.GetComponent<KeywordFrameBase>();
+                        minDist = nowDist;
+                    }
                 }
-#if UNITY_EDITOR
-                else 
-                {
-                    Debug.Log(raycasts[i].gameObject.name);
-                }
-#endif
             }
+         
+            if (nearFrame != null) 
+            {
+                nearFrame.DragDropKeyword(this);
+                return;
+            }
+#if UNITY_EDITOR
+            else 
+            {
+                //Debug.Log(nearFrame.gameObject.name);
+            }
+#endif
+            
         }
         Managers.Sound.PlaySFX(Define.SOUND.ToDropKeyword);
         ResetKeyword();
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (isLock || isMove)
-        {
-            return;
-        }
-        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleButtonHover);
-        transform.DOScale(FOCUSING_SCALE,START_END_ANIM_TIME).SetUpdate(true);
-    }
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        if (isLock || isMove)
-        {
-            return;
-        }
-        transform.DOScale(Vector3.one,START_END_ANIM_TIME).SetUpdate(true);
-    }
+    //public void OnPointerEnter(PointerEventData eventData)
+    //{
+    //    if (isLock || isMove)
+    //    {
+    //        return;
+    //    }
+    //    Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleButtonHover);
+    //    transform.DOScale(FOCUSING_SCALE,START_END_ANIM_TIME).SetUpdate(true);
+    //}
+    //public void OnPointerExit(PointerEventData eventData)
+    //{
+    //    if (isLock || isMove)
+    //    {
+    //        return;
+    //    }
+    //    transform.DOScale(Vector3.one,START_END_ANIM_TIME).SetUpdate(true);
+    //}
     public DG.Tweening.Core.TweenerCore<Vector3,Vector3,DG.Tweening.Plugins.Options.VectorOptions> SetToKeywordFrame(Vector3 pos) 
     {
         return rectTransform.DOLocalMove(pos, KEYWORD_FRAME_MOVE_TIME).SetUpdate(true);
