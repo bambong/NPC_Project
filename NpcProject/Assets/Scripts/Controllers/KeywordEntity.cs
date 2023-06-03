@@ -490,7 +490,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         RaycastHit hit;
 
         var boxSize = Util.VectorMultipleScale(col.size / 2,transform.lossyScale);
-       // boxSize *= 0.99f;
+        boxSize *= 0.99f;
         boxSize.y = 0;
         var rayDis = maxHeight + col.bounds.size.y;
 #if UNITY_EDITOR
