@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -44,6 +44,8 @@ public class TalkPanelController : UI_Base
     private bool isChoice = false;
     private bool isChoiceText = false;
     private bool isComplete = false;
+    private bool hanglechange = false;
+
     private int buttonCount;
     private string choiceText;
 
@@ -55,7 +57,16 @@ public class TalkPanelController : UI_Base
     private Color leftColor;
     private Color rightColor;
     private Color gray = new Color(56/255f, 56/255f, 56/255f);
- 
+
+
+    private Dictionary<string, string> hangleMap = new Dictionary<string, string>()
+    {
+        {"는", "은" },
+        {"가", "이" },
+        {"와", "과" },
+        {"씨", "씨" },
+        {"에게", "에게" }
+    };
 
     public override void Init()
     {
@@ -382,6 +393,13 @@ public class TalkPanelController : UI_Base
             if(item == "player")
             {
                 textDialogue += Managers.Talk.GetSpeakerName(101);
+                hanglechange = true;
+                continue;
+            }
+            if(hanglechange)
+            {
+                hanglechange = false;
+                textDialogue += HangleChange(item);
                 continue;
             }
             if(item == "choicetext")
@@ -390,6 +408,28 @@ public class TalkPanelController : UI_Base
                 continue;
             }
             textDialogue += item;
+        }
+    }
+
+    public string HangleChange(string item)
+    {
+        string name = Managers.Talk.GetSpeakerName(101);
+        string lastname = name.Substring(name.Length - 1);
+        int unicodeValue = (int)lastname[0];
+        //English
+        if(unicodeValue < 0xAC00 || unicodeValue > 0xD7A3)
+        {
+            return item;
+        }
+        //three word hangle
+        if((unicodeValue - 0xAC00) % 28 > 0)
+        {
+            return hangleMap[item];
+        }
+        else
+        {
+            //two word hangle
+            return item;
         }
     }
 

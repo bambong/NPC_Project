@@ -61,7 +61,7 @@ public class CutSceneController : MonoBehaviour
 
     IEnumerator InputSkipKey()
     {
-        while(cutSceneprogress == true)
+        while(cutSceneprogress)
         {
             //Input ESC key
             if (Input.GetKeyDown(KeyCode.Escape))
