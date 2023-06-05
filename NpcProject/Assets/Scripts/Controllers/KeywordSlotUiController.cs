@@ -16,9 +16,8 @@ public class KeywordSlotUiController : UI_Base
     [SerializeField]
     private Vector2 diff;
 
-
-    private readonly float OPEN_ANIM_TIME = 0.3f;
-    private readonly float ClOSE_ANIM_TIME = 0.3f;
+    [SerializeField]
+    private float constantAnimTime = 0.5f;
     public Transform KeywordSlotLayout { get => keywordSlotLayout.transform; }
  
     private bool isDrag = false;
@@ -58,7 +57,7 @@ public class KeywordSlotUiController : UI_Base
         Vector2 size = keywordSlotLayout.sizeDelta;
         size.x += diff.x;
         size.y += diff.y;
-        float animTime = OPEN_ANIM_TIME * (1 - (mask.sizeDelta.magnitude / size.magnitude));
+        float animTime = constantAnimTime * (1 - (mask.sizeDelta.magnitude / size.magnitude));
         mask.DOSizeDelta(size, animTime);
     }
     public void Close()
@@ -71,7 +70,7 @@ public class KeywordSlotUiController : UI_Base
         }
         isKeywordSlotOpen = false;
         mask.DOKill();
-        mask.DOSizeDelta(Vector2.zero, ClOSE_ANIM_TIME);
+        mask.DOSizeDelta(Vector2.zero, constantAnimTime);
     }
     private void OnDestroy()
     {

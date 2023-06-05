@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using UnityEngine.UIElements;
 
 public class IntroStateChangeFrameController : MonoBehaviour, IDropHandler
 {
@@ -8,6 +9,7 @@ public class IntroStateChangeFrameController : MonoBehaviour, IDropHandler
     private GameObject statePanel;
     [SerializeField]
     private GameObject myseat;
+   
 
     private CanvasGroup parentCanvas;
     private CanvasGroup stateCanvas;

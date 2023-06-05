@@ -24,7 +24,8 @@ public class KakaoPanelController : MonoBehaviour
 
     private float waitTime = 1.3f;
 
-
+    [SerializeField]
+    private CanvasGroup wasdCanvasGroup;
     void Start()
     {
 
@@ -86,7 +87,7 @@ public class KakaoPanelController : MonoBehaviour
 
     private void CloseAll()
     {
-        for(int i=0; i<kakaos.Length; i++)
+        for (int i = 0; i < kakaos.Length; i++)
         {
             int index = i;
 
@@ -97,7 +98,7 @@ public class KakaoPanelController : MonoBehaviour
             });
         }
 
-        for(int i=0; i<btns.Length; i++)
+        for (int i = 0; i < btns.Length; i++)
         {
             int index = i;
             CanvasGroup btnCanvas = btns[index].GetComponent<CanvasGroup>();
@@ -106,11 +107,23 @@ public class KakaoPanelController : MonoBehaviour
                 btns[index].SetActive(false);
             });
         }
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(wasdCanvasGroup.DOFade(1, 0.9f).SetEase(Ease.Linear));
+        sequence.Append(wasdCanvasGroup.DOFade(0, 0.9f).SetEase(Ease.Linear));
+        sequence.SetLoops(4);
+        
 
+
+<<<<<<< HEAD
         CanvasGroup yesTxtCanvas = yesTxt.GetComponent<CanvasGroup>();
         CanvasGroup yupTxtCanvas = yupTxt.GetComponent<CanvasGroup>();
         yesTxtCanvas.DOFade(0f, 0.45f);
         yupTxtCanvas.DOFade(0f, 0.45f);
+=======
+        yesTxt.GetComponent<CanvasGroup>().DOFade(0f, 0.45f);
+        yupTxt.GetComponent<CanvasGroup>().DOFade(0f, 0.45f).OnComplete(()=> { sequence.Play(); });
+        
+>>>>>>> main
     }
 
     public void UpdateName()

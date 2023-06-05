@@ -26,14 +26,12 @@ public class PlayerKeywordLayoutTrigger : MonoBehaviour
         // 이미지 내부에 있는지 확인
         if (RectTransformUtility.RectangleContainsScreenPoint(imageRect, mousePos))
         {
-            Debug.Log("마우스가 이미지 내부에 있음");
             controller.Open();
     
         }
         else
         {
             controller.Close();
-            Debug.Log("마우스가 이미지 외부에 있음");
         }
     }
 
