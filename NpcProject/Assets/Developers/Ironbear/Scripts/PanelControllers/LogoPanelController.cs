@@ -71,5 +71,16 @@ public class LogoPanelController : UI_Base
         {
             btnsList[i].GetComponent<Button>().interactable = true;
         }
-    }    
+    }
+
+    public void DisableButtonInteractable()
+    {
+        for (int i = 0; i < btnsList.Length; i++)
+        {
+            CanvasGroup btnCanvas = btnsList[i].GetComponent<CanvasGroup>();
+
+            btnCanvas.blocksRaycasts = false;
+            btnCanvas.interactable = false;
+        }
+    }
 }
