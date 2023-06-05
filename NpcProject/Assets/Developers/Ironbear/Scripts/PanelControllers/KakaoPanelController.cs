@@ -114,16 +114,8 @@ public class KakaoPanelController : MonoBehaviour
         
 
 
-<<<<<<< HEAD
-        CanvasGroup yesTxtCanvas = yesTxt.GetComponent<CanvasGroup>();
-        CanvasGroup yupTxtCanvas = yupTxt.GetComponent<CanvasGroup>();
-        yesTxtCanvas.DOFade(0f, 0.45f);
-        yupTxtCanvas.DOFade(0f, 0.45f);
-=======
         yesTxt.GetComponent<CanvasGroup>().DOFade(0f, 0.45f);
         yupTxt.GetComponent<CanvasGroup>().DOFade(0f, 0.45f).OnComplete(()=> { sequence.Play(); });
-        
->>>>>>> main
     }
 
     public void UpdateName()
