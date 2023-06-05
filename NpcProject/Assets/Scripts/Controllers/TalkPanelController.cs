@@ -178,8 +178,7 @@ public class TalkPanelController : UI_Base
         {
             leftRights[i].DOFade(0, 0);
             continue;
-        }
-
+        }        
         if (dialogue.speaker.charName == left.name)
         {
             rightmaterial.color = gray;
@@ -372,6 +371,17 @@ public class TalkPanelController : UI_Base
         isChoiceText = false;
     }
 
+
+
+    IEnumerator SkipDelayTime()
+    {
+        yield return new WaitForSeconds(SKIP_DELAY_TIME);
+        isSkip = true;
+    }
+    #endregion
+
+    #region TextParsing
+
     private void SettingTextAnimation()
     {
         char[] sep = { '#', '#' };
@@ -390,19 +400,19 @@ public class TalkPanelController : UI_Base
                 isChoice = true;
                 continue;
             }
-            if(item == "player")
+            if (item == "player")
             {
                 textDialogue += Managers.Talk.GetSpeakerName(101);
                 hanglechange = true;
                 continue;
             }
-            if(hanglechange)
+            if (hanglechange)
             {
                 hanglechange = false;
                 textDialogue += HangleChange(item);
                 continue;
             }
-            if(item == "choicetext")
+            if (item == "choicetext")
             {
                 isChoiceText = true;
                 continue;
@@ -417,12 +427,12 @@ public class TalkPanelController : UI_Base
         string lastname = name.Substring(name.Length - 1);
         int unicodeValue = (int)lastname[0];
         //English
-        if(unicodeValue < 0xAC00 || unicodeValue > 0xD7A3)
+        if (unicodeValue < 0xAC00 || unicodeValue > 0xD7A3)
         {
             return item;
         }
         //three word hangle
-        if((unicodeValue - 0xAC00) % 28 > 0)
+        if ((unicodeValue - 0xAC00) % 28 > 0)
         {
             return hangleMap[item];
         }
@@ -432,15 +442,6 @@ public class TalkPanelController : UI_Base
             return item;
         }
     }
-
-    IEnumerator SkipDelayTime()
-    {
-        yield return new WaitForSeconds(SKIP_DELAY_TIME);
-        isSkip = true;
-    }
-    #endregion
-
-    #region TextParsing
     private string TextExtraction(string textDialogue)
     {
         MatchCollection matches = Regex.Matches(textDialogue, PATTERN);

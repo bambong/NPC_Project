@@ -36,7 +36,7 @@ public class CutSceneController : MonoBehaviour
 
         talk.OnComplete(() => talkCount++);
         //재시작        
-        talk.OnComplete(() => SkipCutScene());
+        //talk.OnComplete(() => SkipCutScene()); //cutScene skip key input
         talk.OnComplete(() => Managers.Game.SetStateEvent());
         talk.OnComplete(() => curCutScene.Resume());
         //Talk Event Start
