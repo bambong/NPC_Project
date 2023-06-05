@@ -21,9 +21,6 @@ public class DebugZone : GuIdBehaviour, IDataHandler
     private int playerSlotCount =2;
 
     [SerializeField]
-    private List<KeywordEntity> childEntitys = new List<KeywordEntity>(); 
-
-    [SerializeField]
     private GameObject[] keywords;
 
     [Header("Wrie Material list")]
@@ -47,10 +44,7 @@ public class DebugZone : GuIdBehaviour, IDataHandler
        
         MakeDebugGaugeUi();
         
-        for (int i = 0; i< childEntitys.Count; ++i) 
-        {
-            childEntitys[i].SetDebugZone(this);
-        }
+     
         WireMaterialClear();
         boxSize = GetComponent<BoxCollider>().bounds.size;
     }
