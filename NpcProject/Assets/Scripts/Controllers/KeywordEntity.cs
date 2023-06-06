@@ -290,17 +290,17 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
             {
                 CloseKeywordPrepareIcon();
             }
-            if( Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SLOT_OPEN_KEY)) && keywordSlotUiController.IsMouseInPrepare()) 
-            {
-                if (isOpenSlot) 
-                {
-                    CloseKeywordSlot();
-                }
-                else 
-                {
-                    OpenKeywordSlot();
-                }
-            }
+            //if( Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SLOT_OPEN_KEY)) && keywordSlotUiController.IsMouseInPrepare()) 
+            //{
+            //    if (isOpenSlot) 
+            //    {
+            //        CloseKeywordSlot();
+            //    }
+            //    else 
+            //    {
+            //        OpenKeywordSlot();
+            //    }
+            //}
 
             yield return null;
         }
@@ -336,21 +336,13 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     }
     public void OpenKeywordSlot() 
     {
-        if (isOpenSlot) 
-        {
-            return; 
-        }
-        isOpenSlot = true;
         keywordSlotUiController.Open();
     }
     public void CloseKeywordSlot()
     {
-        if (!isOpenSlot) 
-        {
-            return;
-        }
-        isOpenSlot = false;
+        keywordSlotUiController.CloseKeywordPrepare();
         keywordSlotUiController.Close();
+        keywordSlotUiController.FocusExit();
     }
     public void AddOverrideTable(string id,KeywordAction action) 
     {

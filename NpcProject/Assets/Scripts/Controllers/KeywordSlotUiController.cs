@@ -18,7 +18,7 @@ public class KeywordSlotUiController : UI_Base
     [SerializeField]
     private Vector2 diff;
     [SerializeField]
-    private Image prepareImage;
+    private Image debugIcon;
     [SerializeField]
     private CanvasGroup prepareCanvasGroup;
     [SerializeField]
@@ -31,9 +31,11 @@ public class KeywordSlotUiController : UI_Base
     private bool isDrag = false;
     private bool isKeywordSlotOpen;
     private bool isPrepareImageOpen;
+    private bool isFocus;
     private KeywordEntity entity;
-
-
+    private readonly Vector3 FOCUS_DESIRE_SCALE = new Vector3(1.7f, 1.7f, 1);
+    private const float FOCUS_ANIM_TIME = 0.5f;
+    private const float CLOSE_ANIM_TIME = 0.3f;
     public override void Init()
     {
         mask.sizeDelta = Vector2.zero;
@@ -57,13 +59,39 @@ public class KeywordSlotUiController : UI_Base
     public void DragOff() 
     {
       //  isDrag = false;
-        Close();
+        //Close();
     }
+
+    public void FocusEnter()
+    {
+        if (!gameObject.activeInHierarchy) return;
+        if (isFocus)
+        {
+            return;
+        }
+        isFocus = true;
+        debugIcon.rectTransform.DOKill();
+        float animTime = FOCUS_ANIM_TIME * (1 - (debugIcon.rectTransform.localScale.magnitude/FOCUS_DESIRE_SCALE.magnitude));
+        debugIcon.rectTransform.DOScale(FOCUS_DESIRE_SCALE, animTime);
+    }
+    public void FocusExit()
+    {
+        if (!gameObject.activeInHierarchy) return;
+        if (!isFocus)
+        {
+            return;
+        }
+        isFocus = false;
+        debugIcon.rectTransform.DOKill();
+        float animTime = FOCUS_ANIM_TIME * (debugIcon.rectTransform.localScale.magnitude / FOCUS_DESIRE_SCALE.magnitude);
+        debugIcon.rectTransform.DOScale(Vector3.one, animTime);
+    }
+
 
     public void OpenKeywordPrepare()
     {
         if (!gameObject.activeInHierarchy) return;
-        if (isPrepareImageOpen)
+        if (isPrepareImageOpen || isKeywordSlotOpen)
         {
             return;
         }
@@ -85,7 +113,17 @@ public class KeywordSlotUiController : UI_Base
         float animTime = constantAnimTime * prepareCanvasGroup.alpha;
         prepareCanvasGroup.DOFade(0, animTime);
     }
-
+    public void ToggleOpen() 
+    {
+        if (isKeywordSlotOpen) 
+        {
+            Close();
+        }
+        else 
+        {
+            Open();
+        }
+    }
     public void Open()
     {
         if (!gameObject.activeInHierarchy) return;
@@ -94,6 +132,7 @@ public class KeywordSlotUiController : UI_Base
             return;
         }
         isKeywordSlotOpen = true;
+        CloseKeywordPrepare();
         transform.SetAsLastSibling();
         mask.DOKill();
         Vector2 size = keywordSlotLayout.sizeDelta;
@@ -111,28 +150,14 @@ public class KeywordSlotUiController : UI_Base
             return;
         }
         isKeywordSlotOpen = false;
+        Vector2 size = keywordSlotLayout.sizeDelta;
+        size.x += diff.x;
+        size.y += diff.y;
+        float animTime = CLOSE_ANIM_TIME * (mask.sizeDelta.magnitude / size.magnitude);
         mask.DOKill();
-        mask.DOSizeDelta(Vector2.zero, constantAnimTime);
+        mask.DOSizeDelta(Vector2.zero, animTime);
     }
-    public bool IsMouseInPrepare()
-    {
-        Vector3 mousePos = Input.mousePosition;
-        // 이미지 RectTransform을 가져옴
-        RectTransform imageRect = prepareImage.rectTransform;
-
-        // 이미지 내부에 있는지 확인
-        if (RectTransformUtility.RectangleContainsScreenPoint(imageRect, mousePos))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-
-    
+ 
     private void OnDestroy()
     {
         mask.DOKill();
