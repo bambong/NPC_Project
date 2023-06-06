@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
-
 public class KeywordAction 
 {
     private Action<KeywordEntity> onEnter;
@@ -80,8 +78,6 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     private List<KeywordFrameController> keywordFrames = new List<KeywordFrameController>();
     private Action<KeywordEntity> updateAction = null;
     private Action<KeywordEntity> fixedUpdateAction = null;
-
-    private bool isOpenSlot = false;
     #endregion
     private Renderer mRenderer;
     private Material originMat;
@@ -281,27 +277,14 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
             Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
             var factor = SCREEN_OFFSET / new Vector2(Screen.width, Screen.height).magnitude;
             pos.z = 0;
-
             if ((Input.mousePosition - pos).magnitude * factor <= SLOT_UI_DISTANCE)
             {
-                OpenKeywordPrepareIcon();
+                OpenKeywordSlot();
             }
             else
             {
-                CloseKeywordPrepareIcon();
+               CloseKeywordSlot();
             }
-            if( Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SLOT_OPEN_KEY)) && keywordSlotUiController.IsMouseInPrepare()) 
-            {
-                if (isOpenSlot) 
-                {
-                    CloseKeywordSlot();
-                }
-                else 
-                {
-                    OpenKeywordSlot();
-                }
-            }
-
             yield return null;
         }
     }
@@ -320,36 +303,12 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     {
         keywordWorldSlotLayout.Close();
     }
-
-
-    public void OpenKeywordPrepareIcon()
-    {
-        if (isOpenSlot)
-        {
-            return;
-        }
-        keywordSlotUiController.OpenKeywordPrepare();
-    }
-    public void CloseKeywordPrepareIcon()
-    {
-        keywordSlotUiController.CloseKeywordPrepare();
-    }
     public void OpenKeywordSlot() 
     {
-        if (isOpenSlot) 
-        {
-            return; 
-        }
-        isOpenSlot = true;
         keywordSlotUiController.Open();
     }
     public void CloseKeywordSlot()
     {
-        if (!isOpenSlot) 
-        {
-            return;
-        }
-        isOpenSlot = false;
         keywordSlotUiController.Close();
     }
     public void AddOverrideTable(string id,KeywordAction action) 
