@@ -82,8 +82,6 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private Coroutine debugModeInput;
     private RaycastHit slopeHit;
     private int slopeLayer;
-    private Transform focusSlotUi;
-
     public int Hp { get => hp; }
     public int MaxHp { get => maxHp; }
     public Transform PlayerAncestor { get; set; }
@@ -453,7 +451,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
         }
         return false;
     }
- 
+
     IEnumerator DebugModInputCo() 
     {
 
@@ -462,67 +460,22 @@ public class PlayerController : MonoBehaviour , IDataHandler
             var pointerEventData = new UnityEngine.EventSystems.PointerEventData(EventSystem.current);
             pointerEventData.position = Input.mousePosition;
             pointerEventData.button = PointerEventData.InputButton.Left;
-            var raycasts = Managers.Keyword.GetRaycastList(pointerEventData);
-
-            Transform nearFrameTrigger = null;
-            float minFrameTriggerDist = float.MaxValue;
-            for (int i = 0; i < raycasts.Count; ++i)
-            {
-                if (raycasts[i].gameObject.CompareTag("EntityFrameTrigger"))
-                {
-
-                    var nowTarget = raycasts[i].gameObject.transform;
-
-                    var nowDist = (nowTarget.position - Input.mousePosition).magnitude;
-                    if (nowDist < minFrameTriggerDist)
-                    {
-                        nearFrameTrigger = nowTarget;
-                        minFrameTriggerDist = nowDist;
-                    }
-                }
-            }
-
-            if (nearFrameTrigger != null)
-            {
-               
-                if(focusSlotUi != nearFrameTrigger) 
-                {
-                    if(focusSlotUi != null)
-                    {
-                        focusSlotUi.GetComponent<KeywordSlotUiController>().FocusExit();
-                    }
-                    var slotUi = nearFrameTrigger.GetComponent<KeywordSlotUiController>();
-                    slotUi.FocusEnter();
-
-                    focusSlotUi = nearFrameTrigger;
-                }
-
-            }
-
-            if (Input.GetKeyDown(KeyCode.Mouse1))
-            {
-                if(focusSlotUi != null) 
-                {
-                    var slotUi = focusSlotUi.GetComponent<KeywordSlotUiController>();
-                    slotUi.ToggleOpen();
-                }
-
-            }
-
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
+                var raycasts = Managers.Keyword.GetRaycastList(pointerEventData);
 
                 float minDist = float.MaxValue;
-                Transform nearKeyword = null;
+                KeywordController nearKeyword = null;
 
                 for (int i = 0; i < raycasts.Count; ++i)
+                
                 {
                     if (raycasts[i].gameObject.CompareTag("KeywordController"))
                     {
 
-                        var nowKeyword = raycasts[i].gameObject.transform;
+                        var nowKeyword = raycasts[i].gameObject.GetComponent<KeywordController>();
 
-                        var nowDist = (nowKeyword.position - Input.mousePosition).magnitude;
+                        var nowDist = (nowKeyword.RectTransform.position - Input.mousePosition).magnitude;
                         if (nowDist < minDist)
                         {
                             nearKeyword = nowKeyword;
@@ -532,7 +485,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
                 }
                 if(nearKeyword != null) 
                 {
-                    nearKeyword.GetComponent<KeywordController>().OnBeginDrag(pointerEventData);
+                    nearKeyword.OnBeginDrag(pointerEventData);
                 }
 
             }
@@ -593,7 +546,6 @@ public class PlayerController : MonoBehaviour , IDataHandler
             animationController.OnExitDebugMod();
             isDebugButton();
         });
-        focusSlotUi = null;
     }
     public void AnimIdleEnter()
     {
