@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SecurityDoorInteractionController : MonoBehaviour, IInteraction
 {
     [SerializeField]
     private GameObject sphere;
+    [SerializeField]
+    private GameObject capPanel;
 
     private SphereCollider sphereTrigger;
     private BoxCollider boxCollider;
@@ -26,10 +26,9 @@ public class SecurityDoorInteractionController : MonoBehaviour, IInteraction
 
     public void OnInteraction()
     {
-        //캡스 창 켜기
+        capPanel.SetActive(true);
         isInteractable = false;
-        Managers.Game.Player.SetStateIdle();
+        Managers.Game.Player.SetstateStop();
         boxCollider.enabled = false;
-        sphereTrigger.enabled = true;
     }    
 }
