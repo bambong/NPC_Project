@@ -15,10 +15,7 @@ public enum E_KEYWORD_TYPE
 }
 public class KeywordController : UI_Base
 {
-    private readonly float START_END_ANIM_TIME = 0.2f;
-    private readonly float FOCUSING_SCALE = 1.05f;
-    private readonly float KEYWORD_FRAME_MOVE_TIME = 0.1f;
-    private readonly string KEYWORD_FRAME_TAG = "KeywordFrame";
+
 
  
     [SerializeField]
@@ -47,7 +44,13 @@ public class KeywordController : UI_Base
     public bool IsLock { get => isLock; }
 
     private Color originColor;
+   
+    private readonly float START_END_ANIM_TIME = 0.2f;
+    private readonly float FOCUSING_SCALE = 1.35f;
+    private readonly float KEYWORD_FRAME_MOVE_TIME = 0.1f;
+
     private readonly Color LOCK_COLOR = new Color(0.45f, 0.45f, 0.45f);
+ 
 
     private void Awake()
     {
@@ -81,11 +84,11 @@ public class KeywordController : UI_Base
         isDrag = isOn;
     }
 
-    private bool IsDragable(PointerEventData eventData) { return isLock || eventData.button != PointerEventData.InputButton.Left; }
+    private bool IsDragable() { return isLock; }
    
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (IsDragable(eventData) || isMove) 
+        if (IsDragable() || isMove) 
         {
             return;
         }
@@ -106,7 +109,7 @@ public class KeywordController : UI_Base
    
     public void OnDrag(PointerEventData eventData)
     {
-        if (IsDragable(eventData)|| Managers.Keyword.CurDragKeyword != this)
+        if (IsDragable()|| Managers.Keyword.CurDragKeyword != this)
         {
             return;
         }
@@ -114,75 +117,46 @@ public class KeywordController : UI_Base
         rectTransform.position = Input.mousePosition;
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    public void OnEndDrag(KeywordFrameBase nearFrame)
     {
-        if (IsDragable(eventData) || Managers.Keyword.CurDragKeyword != this)
+        if (IsDragable())
         { 
             return;
         }
         SetDragState(false);
-        var raycasts = Managers.Keyword.GetRaycastList(eventData);
         Managers.Keyword.CurDragKeyword = null;
-
-        if (raycasts.Count > 0) 
-        {
-
-            float minDist = float.MaxValue;
-            KeywordFrameBase nearFrame = null;
-            for (int i = 0; i < raycasts.Count; ++i)
-            {
-                if (raycasts[i].gameObject.CompareTag(KEYWORD_FRAME_TAG))
-                {
-                    var nowFrame = raycasts[i].gameObject.GetComponent<KeywordFrameBase>();
-                   
-                    if (curFrame == nowFrame)
-                    {
-                        continue;
-                    }
-
-                    var nowDist = (raycasts[i].gameObject.transform.position - transform.position).magnitude;
-                    if (nowDist < minDist) 
-                    {
-                        nearFrame = raycasts[i].gameObject.GetComponent<KeywordFrameBase>();
-                        minDist = nowDist;
-                    }
-                }
-            }
          
-            if (nearFrame != null) 
-            {
-                nearFrame.DragDropKeyword(this);
-                return;
-            }
-#if UNITY_EDITOR
-            else 
-            {
-                //Debug.Log(nearFrame.gameObject.name);
-            }
-#endif
-            
+        if (nearFrame != null) 
+        {
+            nearFrame.DragDropKeyword(this);
+            return;
         }
+
         Managers.Sound.PlaySFX(Define.SOUND.ToDropKeyword);
         ResetKeyword();
     }
 
-    //public void OnPointerEnter(PointerEventData eventData)
-    //{
-    //    if (isLock || isMove)
-    //    {
-    //        return;
-    //    }
-    //    Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleButtonHover);
-    //    transform.DOScale(FOCUSING_SCALE,START_END_ANIM_TIME).SetUpdate(true);
-    //}
-    //public void OnPointerExit(PointerEventData eventData)
-    //{
-    //    if (isLock || isMove)
-    //    {
-    //        return;
-    //    }
-    //    transform.DOScale(Vector3.one,START_END_ANIM_TIME).SetUpdate(true);
-    //}
+    public void OnPointerEnter()
+    {
+        if (isLock)
+        {
+            return;
+        }
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleButtonHover);
+
+        var animTime = START_END_ANIM_TIME * (1 - ((transform.localScale.x -1) / (FOCUSING_SCALE-1)));
+
+        transform.DOScale(FOCUSING_SCALE, animTime).SetUpdate(true);
+    }
+    public void OnPointerExit()
+    {
+        if (isLock)
+        {
+            return;
+        }
+        var animTime = START_END_ANIM_TIME * ((transform.localScale.x -1) / (FOCUSING_SCALE - 1));
+        transform.DOScale(Vector3.one, animTime).SetUpdate(true);
+    }
     public DG.Tweening.Core.TweenerCore<Vector3,Vector3,DG.Tweening.Plugins.Options.VectorOptions> SetToKeywordFrame(Vector3 pos) 
     {
         return rectTransform.DOLocalMove(pos, KEYWORD_FRAME_MOVE_TIME).SetUpdate(true);

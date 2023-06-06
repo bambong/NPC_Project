@@ -57,7 +57,7 @@ public class KeywordSlotUiController : UI_Base
         Vector2 size = keywordSlotLayout.sizeDelta;
         size.x += diff.x;
         size.y += diff.y;
-        float animTime = constantAnimTime * (1 - (mask.sizeDelta.magnitude / size.magnitude));
+        float animTime = constantAnimTime * (1 - (mask.sizeDelta.x / size.x));
         mask.DOSizeDelta(size, animTime);
     }
     public void Close()
@@ -70,7 +70,11 @@ public class KeywordSlotUiController : UI_Base
         }
         isKeywordSlotOpen = false;
         mask.DOKill();
-        mask.DOSizeDelta(Vector2.zero, constantAnimTime);
+
+        Vector2 size = keywordSlotLayout.sizeDelta;
+        size.x += diff.x;
+        float animTime = constantAnimTime* (mask.sizeDelta.x / size.x);
+        mask.DOSizeDelta(Vector2.zero, animTime);
     }
     private void OnDestroy()
     {

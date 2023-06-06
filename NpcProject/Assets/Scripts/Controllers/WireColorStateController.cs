@@ -35,6 +35,7 @@ public class WireColorStateController
         {
             Color pickColor = Managers.Keyword.GetColorByState(E_WIRE_COLOR_MODE.Fail);
             entity.SetWireFrameColor(pickColor);
+            entity.SetWireEmmColor(pickColor);
             //Managers.Sound.PlaySFX(Define.SOUND.ErrorEffectKeyword);
         }
         else 
@@ -81,7 +82,8 @@ public class WireColorStateController
             return;
         }
         E_WIRE_STATE wireMod = E_WIRE_STATE.NORMAL;
-        Color pickColor = Managers.Keyword.GetColorByState(E_WIRE_COLOR_MODE.Default);
+        var defalutColor = Managers.Keyword.GetColorByState(E_WIRE_COLOR_MODE.Default);
+        Color pickColor = defalutColor;
         if (isWireStateOn) 
         {
             wireMod = E_WIRE_STATE.PAIR;
@@ -92,6 +94,18 @@ public class WireColorStateController
         {
             pickColor = Managers.Keyword.GetColorByState(colorMods[wireMod][colorMods[wireMod].Count - 1]);
         }
+       
         entity.SetWireFrameColor(pickColor);
+
+        if(pickColor == defalutColor) 
+        {
+            entity.ClearWireEmmColor();
+        }
+        else 
+        {
+            entity.SetWireEmmColor(pickColor);
+        }
+       
+
     }
 }

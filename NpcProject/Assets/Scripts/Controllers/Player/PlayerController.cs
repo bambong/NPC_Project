@@ -82,15 +82,22 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private Coroutine debugModeInput;
     private RaycastHit slopeHit;
     private int slopeLayer;
+
+    private KeywordController isFocusKeyword;
+    private KeywordFrameBase isFocusFrame;
+
     public int Hp { get => hp; }
     public int MaxHp { get => maxHp; }
     public Transform PlayerAncestor { get; set; }
 
-    private readonly float CHECK_RAY_WIDTH = 0.3f;
-    private readonly float WIRE_EFFECT_OPEN_TIME = 2f;
-    private readonly float WIRE_EFFECT_CLOSE_TIME = 1f;
-    private readonly float PLAYER_ANIM_COS = 0.71f;
-    private readonly float PLAYER_DIR_WEIGHT = 0.1f;
+    private const float CHECK_RAY_WIDTH = 0.3f;
+    private const float WIRE_EFFECT_OPEN_TIME = 2f;
+    private const float WIRE_EFFECT_CLOSE_TIME = 1f;
+    private const float PLAYER_ANIM_COS = 0.71f;
+    private const float PLAYER_DIR_WEIGHT = 0.1f;
+
+    private const string KEYWORD_FRAME_TAG = "KeywordFrame";
+    private const string KEYWORD_TAG = "KeywordController";
     private void Awake()
     {
         playerStateController = new PlayerStateController(this);
@@ -460,45 +467,106 @@ public class PlayerController : MonoBehaviour , IDataHandler
             var pointerEventData = new UnityEngine.EventSystems.PointerEventData(EventSystem.current);
             pointerEventData.position = Input.mousePosition;
             pointerEventData.button = PointerEventData.InputButton.Left;
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+           
+            var raycasts = Managers.Keyword.GetRaycastList(pointerEventData);
+            float minKeywordDist = float.MaxValue;
+            float minFrameDist = float.MaxValue;
+           
+            KeywordController nearKeyword = null;
+            KeywordFrameBase nearFrame = null;
+            
+            for (int i = 0; i < raycasts.Count; ++i)
             {
-                var raycasts = Managers.Keyword.GetRaycastList(pointerEventData);
-
-                float minDist = float.MaxValue;
-                KeywordController nearKeyword = null;
-
-                for (int i = 0; i < raycasts.Count; ++i)
-                
+                if (raycasts[i].gameObject.CompareTag(KEYWORD_TAG))
                 {
-                    if (raycasts[i].gameObject.CompareTag("KeywordController"))
+                    var nowKeyword = raycasts[i].gameObject.GetComponent<KeywordController>();
+                    if (nowKeyword.IsLock) 
                     {
+                        continue;
+                    }
 
-                        var nowKeyword = raycasts[i].gameObject.GetComponent<KeywordController>();
-
-                        var nowDist = (nowKeyword.RectTransform.position - Input.mousePosition).magnitude;
-                        if (nowDist < minDist)
-                        {
-                            nearKeyword = nowKeyword;
-                            minDist = nowDist;
-                        }
+                    var nowDist = (nowKeyword.RectTransform.position - Input.mousePosition).magnitude;
+                    if (nowDist < minKeywordDist)
+                    {
+                        nearKeyword = nowKeyword;
+                        minKeywordDist = nowDist;
                     }
                 }
-                if(nearKeyword != null) 
+                else if (raycasts[i].gameObject.CompareTag(KEYWORD_FRAME_TAG))
                 {
-                    nearKeyword.OnBeginDrag(pointerEventData);
+                    var nowFrame = raycasts[i].gameObject.GetComponent<KeywordFrameBase>();
+                   
+                    if (nowFrame.IsLock)
+                    {
+                        continue;
+                    }
+                    var nowDist = (nowFrame.RectTransform.position - Input.mousePosition).magnitude;
+
+                    if (nowDist < minFrameDist)
+                    {
+                        nearFrame = nowFrame;
+                        minFrameDist = nowDist;
+                    }
+                }
+            }
+           
+
+            if (Managers.Keyword.CurDragKeyword == null) 
+            {
+
+                if (isFocusKeyword != nearKeyword)
+                {
+                    if (isFocusKeyword != null)
+                    {
+                        isFocusKeyword.OnPointerExit();
+                        isFocusKeyword = null;
+                    }
+                    if (nearKeyword != null)
+                    {
+                        nearKeyword.OnPointerEnter();
+                        isFocusKeyword = nearKeyword;
+                    }
                 }
 
-            }
+                if (Input.GetKeyDown(KeyCode.Mouse0))
+                {
+                    if (isFocusKeyword != null)
+                    {
+                        isFocusKeyword.OnBeginDrag(pointerEventData);
+                        //isFocusKeyword.OnPointerExit();
+                        //isFocusKeyword = null;
+                    }
+                }
 
-            if(Managers.Keyword.CurDragKeyword == null) 
-            {
+                if (isFocusFrame != null)
+                {
+                    isFocusFrame.OnPointerExit();
+                    isFocusFrame = null;
+                }
+
                 yield return null;
                 continue;
             }
+
             
+            if (isFocusFrame != nearFrame)
+            {
+                if (isFocusFrame != null)
+                {
+                    isFocusFrame.OnPointerExit();
+                    isFocusFrame = null;
+                }
+                if (nearFrame != null)
+                {
+                    nearFrame.OnPointerEnter();
+                    isFocusFrame = nearFrame;
+                }
+            }
+
+
             if (Input.GetKeyUp(KeyCode.Mouse0))
             {
-                Managers.Keyword.CurDragKeyword.OnEndDrag(pointerEventData);
+                Managers.Keyword.CurDragKeyword.OnEndDrag(nearFrame);
             }
             else if (Input.GetKey(KeyCode.Mouse0))
             {
@@ -506,7 +574,6 @@ public class PlayerController : MonoBehaviour , IDataHandler
                 Managers.Keyword.CurDragKeyword.OnDrag(pointerEventData);
 
             }
-
 
             yield return null;
         }
@@ -546,6 +613,17 @@ public class PlayerController : MonoBehaviour , IDataHandler
             animationController.OnExitDebugMod();
             isDebugButton();
         });
+        if(isFocusKeyword != null) 
+        {
+            isFocusKeyword.OnPointerExit();
+            isFocusKeyword = null;
+        }
+        if (isFocusFrame != null)
+        {
+            isFocusFrame.OnPointerExit();
+            isFocusFrame = null;
+        }
+
     }
     public void AnimIdleEnter()
     {
