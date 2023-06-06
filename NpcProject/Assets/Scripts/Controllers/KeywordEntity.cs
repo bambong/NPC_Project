@@ -512,7 +512,9 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
                     speed =  remainDis;
                 }
                 var upVec = Vector3.up * speed;
-                ColisionCheckMove(upVec);
+                var moveAble = ColisionCheckMove(upVec);
+                MoveAbleUpdate(moveAble);
+               
                 return true;
             }
             else 
@@ -528,11 +530,13 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
                 }
                 var downVec = Vector3.down * speed;
                 KeywordTransformFactor.position += downVec;
+                MoveAbleUpdate(true);
                 return true;
             }
            
         }
         KeywordTransformFactor.position += Vector3.down * speed;
+        MoveAbleUpdate(true);
         return false;
     }
     public bool ColisionCheckScale(Vector3 desireScale, GameObject dummyParent) 
