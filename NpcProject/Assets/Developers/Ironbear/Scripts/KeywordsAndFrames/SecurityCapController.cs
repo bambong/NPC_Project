@@ -13,10 +13,13 @@ public class SecurityCapController : MonoBehaviour, IDropHandler
     private GameObject locked;
     [SerializeField]
     private GameObject unlocked;
+    [SerializeField]
+    private GameObject card;
 
     private CanvasGroup lockedCanvas;
     private CanvasGroup unlockedCanvas;
     private CanvasGroup parentCanvas;
+    private CanvasGroup cardCanvas;
     private SphereCollider sphereTrigger;
 
     private float fadeDuration = 0.5f;
@@ -27,6 +30,7 @@ public class SecurityCapController : MonoBehaviour, IDropHandler
         unlockedCanvas = unlocked.GetComponent<CanvasGroup>();
         parentCanvas = GetComponentInParent<CanvasGroup>();
         sphereTrigger = sphere.GetComponent<SphereCollider>();
+        cardCanvas = card.GetComponent<CanvasGroup>();
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -34,13 +38,15 @@ public class SecurityCapController : MonoBehaviour, IDropHandler
         if (eventData.pointerDrag != null)
         {
             eventData.pointerDrag.transform.SetParent(transform);
+            RectTransform draggedRect = eventData.pointerDrag.GetComponent<RectTransform>();           
+            draggedRect.DOLocalMove(new Vector3(300f, -200f, 0f), 0.1f).SetEase(Ease.OutQuad);
 
-            RectTransform draggedRect = eventData.pointerDrag.GetComponent<RectTransform>();
-            draggedRect.DOLocalMove(Vector3.zero, 0.1f).SetEase(Ease.OutQuad);
-
+            //카드 다시 못 만지게 수정해야함!!
+            cardCanvas.blocksRaycasts = false;
+                       
             parentCanvas.interactable = false;
             parentCanvas.blocksRaycasts = false;
-
+            
             CapUnlock();
         }
     }
@@ -53,7 +59,10 @@ public class SecurityCapController : MonoBehaviour, IDropHandler
 
         DOVirtual.DelayedCall(1f, () =>
         {
-            capPanel.GetComponent<CanvasGroup>().DOFade(0f, 0.5f);
+            capPanel.GetComponent<CanvasGroup>().DOFade(0f, fadeDuration).OnComplete(() =>
+            {
+                capPanel.SetActive(false);
+            });          
             Managers.Game.Player.SetStateIdle();
         });       
     }

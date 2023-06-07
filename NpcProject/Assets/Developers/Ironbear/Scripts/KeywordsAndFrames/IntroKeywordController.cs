@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using UnityEngine.UIElements;
 
-public class IntroStateChangeController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler
+public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler, IPointerEnterHandler
 {
     private readonly float START_END_ANIM_TIME = 0.2f;
 
@@ -20,6 +21,7 @@ public class IntroStateChangeController : UI_Base, IDragHandler, IEndDragHandler
 
     private bool isInit = false;
     private bool isLock = false;
+    private bool sfxSoundPlay = true;
 
     private void Start()
     {
@@ -46,17 +48,21 @@ public class IntroStateChangeController : UI_Base, IDragHandler, IEndDragHandler
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Managers.Sound.PlaySFX(Define.SOUND.ClickButton);
         startParent = transform.parent;
 
         transform.SetParent(canvas.transform);
         transform.SetAsLastSibling();
         canvasGroup.blocksRaycasts = false;
+        
+        Managers.Sound.PlaySFX(Define.SOUND.ClickButton);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        rectTransform.position = Input.mousePosition;
+        Vector3 vec = Camera.main.WorldToScreenPoint(rectTransform.position);
+        vec.x += eventData.delta.x;
+        vec.y += eventData.delta.y;
+        rectTransform.position = Camera.main.ScreenToWorldPoint(vec);
     }
 
     public void ResetKeyword()
@@ -79,22 +85,19 @@ public class IntroStateChangeController : UI_Base, IDragHandler, IEndDragHandler
     {
         if (transform.parent == canvas.transform)
         {
+            canvasGroup.blocksRaycasts = false;
+            transform.SetParent(startParent);
             Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleBad);
-            ResetPosition();
-        }
-        else
-        {
-            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleGood);
-        }
-
-        canvasGroup.blocksRaycasts = true;        
+            transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart).OnComplete(() =>
+            {                                
+                canvasGroup.blocksRaycasts = true;
+            });           
+        }        
     }
 
-    private void ResetPosition()
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart);
-        transform.SetParent(startParent);
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleButtonHover);
     }
-
 
 }

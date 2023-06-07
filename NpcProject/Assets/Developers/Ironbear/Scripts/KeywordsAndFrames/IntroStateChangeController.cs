@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
-public class SecurityCardController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler
+public class IntroStateChangeController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
     private readonly float START_END_ANIM_TIME = 0.2f;
 
@@ -17,7 +17,6 @@ public class SecurityCardController : UI_Base, IDragHandler, IEndDragHandler, IB
     private KeywordFrameBase curFrame;
 
     private float moveAnimDuration = 0.2f;
-    private float cardRotation = -7f;
 
     private bool isInit = false;
     private bool isLock = false;
@@ -47,10 +46,9 @@ public class SecurityCardController : UI_Base, IDragHandler, IEndDragHandler, IB
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        //Managers.Sound.PlaySFX(Define.SOUND.ClickButton);
+        Managers.Sound.PlaySFX(Define.SOUND.ClickButton);
         startParent = transform.parent;
 
-        rectTransform.rotation = Quaternion.Euler(0f, 0f, cardRotation);
         transform.SetParent(canvas.transform);
         transform.SetAsLastSibling();
         canvasGroup.blocksRaycasts = false;
@@ -81,14 +79,12 @@ public class SecurityCardController : UI_Base, IDragHandler, IEndDragHandler, IB
     {
         if (transform.parent == canvas.transform)
         {
-            rectTransform.rotation = Quaternion.Euler(0f, 0f, 0f);
-            canvasGroup.blocksRaycasts = false;
-            transform.SetParent(startParent);
-            //Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleBad);
-            transform.DOLocalMove(startDragPoint, moveAnimDuration).SetEase(Ease.OutQuart).OnComplete(() =>
-            {
-                canvasGroup.blocksRaycasts = true;
-            });
+            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleBad);
+            ResetPosition();
+        }
+        else
+        {
+            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleGood);
         }
 
         canvasGroup.blocksRaycasts = true;        
