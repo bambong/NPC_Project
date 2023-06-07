@@ -31,6 +31,8 @@ public class SecurityCapController : MonoBehaviour, IDropHandler
         parentCanvas = GetComponentInParent<CanvasGroup>();
         sphereTrigger = sphere.GetComponent<SphereCollider>();
         cardCanvas = card.GetComponent<CanvasGroup>();
+
+        unlockedCanvas.alpha = 0f;
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -41,7 +43,6 @@ public class SecurityCapController : MonoBehaviour, IDropHandler
             RectTransform draggedRect = eventData.pointerDrag.GetComponent<RectTransform>();           
             draggedRect.DOLocalMove(new Vector3(300f, -200f, 0f), 0.1f).SetEase(Ease.OutQuad);
 
-            //카드 다시 못 만지게 수정해야함!!
             cardCanvas.blocksRaycasts = false;
                        
             parentCanvas.interactable = false;
