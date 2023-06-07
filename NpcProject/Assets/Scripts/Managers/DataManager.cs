@@ -12,6 +12,9 @@ public class DataManager
     private int progress = 0;
     private MiniGameLevelData dataPuzzleLevel;
     private GameData lastGameData;
+    private PurposeData purposeData;
+    private PurposePanelController purposePanel;
+
     private Dictionary<string, GameData> sceneGameData = new Dictionary<string, GameData>();
     private Dictionary<string, bool> clearEventData= new Dictionary<string, bool>();
     public int Progress { get => progress; }
@@ -19,6 +22,7 @@ public class DataManager
     public MiniGameLevelData DataPuzzleLevel { get => dataPuzzleLevel; }
     public Dictionary<string, GameData> SceneGameData { get => sceneGameData;  }
     public Dictionary<string, bool> ClearEventData { get => clearEventData;  }
+    public PurposeData PurposeData { get => purposeData; }
 
     public bool isAvaildProgress(int progress) => progress >= this.progress; 
     public bool UpdateProgress(int progress) 
@@ -27,8 +31,23 @@ public class DataManager
         {
             return false;
         }
+
         this.progress = progress;   
+        if(Managers.Game.Player != null) 
+        {
+            Managers.Game.Player.PurposePanel.UpdatePurpose();
+        }
+
         return true;
+    }
+    public string GetCurrentPurpose()
+    {
+       if(purposeData.progressPurposes.Count <= progress) 
+       {
+            return string.Empty; 
+       }   
+
+       return purposeData.progressPurposes[progress];
     }
     public bool IsClearEvent(string id)
     {
@@ -49,6 +68,8 @@ public class DataManager
     public void Init() 
     {
         lastGameData = new GameData();
+        purposeData = Resources.Load<PurposeData>("Data/PurposeData");
+        
     }
     public bool LoadGame(string sceneName)
     {

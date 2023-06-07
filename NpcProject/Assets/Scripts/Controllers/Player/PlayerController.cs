@@ -85,10 +85,11 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
     private KeywordController isFocusKeyword;
     private KeywordFrameBase isFocusFrame;
-
+    private PurposePanelController purposePanel;
     public int Hp { get => hp; }
     public int MaxHp { get => maxHp; }
     public Transform PlayerAncestor { get; set; }
+    public PurposePanelController PurposePanel { get => purposePanel;  }
 
     private const float CHECK_RAY_WIDTH = 0.3f;
     private const float WIRE_EFFECT_OPEN_TIME = 2f;
@@ -109,7 +110,10 @@ public class PlayerController : MonoBehaviour , IDataHandler
         deathUIController = Managers.UI.MakeCameraSpaceUI<DeathUIController>(1f,null, "DeathUI");
         deathUIController.DeathUIClose();
     }
-
+    private void Start()
+    {
+        purposePanel = Managers.UI.MakeSceneUI<PurposePanelController>(null,"PurposePanel");
+    }
     void Update()
     {
         var rot = Camera.main.transform.rotation.eulerAngles;
@@ -122,6 +126,10 @@ public class PlayerController : MonoBehaviour , IDataHandler
         {
             var factor = 1 / transform.lossyScale.x;
             transform.localScale *= factor;
+        }
+        if (Input.GetKeyDown(KeyCode.Escape)) 
+        {
+            Managers.Data.UpdateProgress(Managers.Data.Progress+1);
         }
 
     }

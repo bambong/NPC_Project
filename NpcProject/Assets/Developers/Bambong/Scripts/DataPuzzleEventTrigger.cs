@@ -23,7 +23,7 @@ public class DataPuzzleEventTrigger : MonoBehaviour, IInteraction
     {
         get
         {
-            return (!Managers.Data.IsClearEvent(miniGameLevel.guId) && Managers.Data.isAvaildProgress(miniGameLevel.progress));
+            return (!Managers.Data.IsClearEvent(miniGameLevel.guId));
         }
     }
 
@@ -80,10 +80,6 @@ public class DataPuzzleEventTrigger : MonoBehaviour, IInteraction
     public void OnInteraction()
     {
         if (Managers.Data.IsClearEvent(miniGameLevel.guId)) // 이미 클리어 된 이벤트인지 확인
-        {
-            return;
-        }
-        if (!Managers.Data.isAvaildProgress(miniGameLevel.progress)) // 이미 진행도를 벗어난 것인지
         {
             return;
         }
