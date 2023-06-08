@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using FMODUnity;
+using Michsky.UI.MTP;
 
 public class ServerroomScene : BaseScene
 {
@@ -20,6 +21,8 @@ public class ServerroomScene : BaseScene
     [SerializeField]
     private int progress = 1;
 
+    [SerializeField]
+    StyleManager style;
     public override void Clear()
     {
         

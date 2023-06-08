@@ -18,7 +18,7 @@ public class SceneTransitionUIController : UI_Base
     }
     private void Start()
     {
-        StartCoroutine(StartEffect());
+       // StartCoroutine(StartEffect());
     }
 
     private IEnumerator StartEffect()

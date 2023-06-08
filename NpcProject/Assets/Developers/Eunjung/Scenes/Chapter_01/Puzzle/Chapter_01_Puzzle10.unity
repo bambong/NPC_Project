@@ -477,6 +477,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2529696039433476111, guid: 6e6a877ed0aadb441a5c264017c810e1, type: 3}
   m_PrefabInstance: {fileID: 145609271}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &153685251 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8061606925041259260, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
+  m_PrefabInstance: {fileID: 948121436}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &214680159
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2134,6 +2139,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LevelDescriptionController
       objectReference: {fileID: 0}
+    - target: {fileID: 5889345085714954910, guid: ae080909c60d6324abc05141495d2a25, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5889345087338223604, guid: ae080909c60d6324abc05141495d2a25, type: 3}
       propertyPath: m_text
       value: "10. \uCD5C\uC885 \uD14C\uC2A4\uD2B8 - \uBAA8\uB4E0 \uD0A4\uC6CC\uB4DC\uB97C
@@ -2233,12 +2242,28 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5894186153558330794, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
   m_PrefabInstance: {fileID: 948121436}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 153685251}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6859b47adef8fc4dbd10ed9bc035647, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1321338256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 153685251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcb6751dfee477342bb21799ba0ebde0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetTag: Player
+  isPlayOnce: 1
+  destinationText: LEVEL 10
+  startDelayTime: 0
 --- !u!1 &1374906768
 GameObject:
   m_ObjectHideFlags: 0
@@ -4426,6 +4451,7 @@ MonoBehaviour:
   tutorialSceneTalkData: {fileID: 11400000, guid: 7d50e8233f93f1845b8c4519239f8d8d, type: 2}
   playerSpawnSpot: {x: -83.45, y: 5.8, z: 41.19}
   progress: 1
+  style: {fileID: 0}
 --- !u!4 &2089485275
 Transform:
   m_ObjectHideFlags: 0
