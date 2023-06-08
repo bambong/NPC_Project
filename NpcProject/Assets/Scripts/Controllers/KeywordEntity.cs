@@ -105,9 +105,10 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     public DebugZone ParentDebugZone { get => parentDebugZone;  }
     public bool IsMoveAble { get => isMoveAble; set => isMoveAble = value; }
 
-    private readonly float SLOT_UI_DISTANCE = 150f;
+    private readonly float SLOT_UI_DISTANCE = 120f;
     private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude;
     private readonly string WIRE_FRAME_COLOR_NAME = "_Wireframe_Color";
+    private readonly string WIRE_FRAME_EMM_COLOR_NAME = "_EmmColor";
 
     protected override void Start()
     {
@@ -141,6 +142,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         
         SetDebugZoneWireMat();
         Init();
+
     }
     public virtual void Init()
     {
@@ -164,11 +166,13 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         keywordWorldSlotLayout = Managers.UI.MakeWorldSpaceUI<KeywordStatusLayoutController>(Managers.Keyword.EntityKeywordStatusList, statusSlotLayoutName);
         keywordWorldSlotLayout.RegisterEntity(transform, keywords.Length);
         ClearWireFrameColor();
+        ClearWireEmmColor();
+
         InitCrateKeywordOption();
         
        // DecisionKeyword();
         StartCoroutine(CheckInitDebugMod());
-      
+       // wireColorController.UpdateColor();
     }
     IEnumerator CheckInitDebugMod() 
     {
@@ -408,6 +412,23 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         }
         originMat.SetColor(WIRE_FRAME_COLOR_NAME, Managers.Keyword.GetColorByState(E_WIRE_COLOR_MODE.Default));
     }
+
+    public void SetWireEmmColor(Color color)
+    {
+        if (!originMat.HasProperty(WIRE_FRAME_EMM_COLOR_NAME))
+        {
+            return;
+        }
+        originMat.SetColor(WIRE_FRAME_EMM_COLOR_NAME, color);
+    }
+    public void ClearWireEmmColor()
+    {
+        if (!originMat.HasProperty(WIRE_FRAME_EMM_COLOR_NAME))
+        {
+            return;
+        }
+        originMat.SetColor(WIRE_FRAME_EMM_COLOR_NAME, new Color(0,0,0,0));
+    }
     private void InitColisionLayer() 
     {
         colisionCheckLayer = 1;
@@ -512,7 +533,9 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
                     speed =  remainDis;
                 }
                 var upVec = Vector3.up * speed;
-                ColisionCheckMove(upVec);
+                var moveAble = ColisionCheckMove(upVec);
+                MoveAbleUpdate(moveAble);
+               
                 return true;
             }
             else 
@@ -528,11 +551,13 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
                 }
                 var downVec = Vector3.down * speed;
                 KeywordTransformFactor.position += downVec;
+                MoveAbleUpdate(true);
                 return true;
             }
            
         }
         KeywordTransformFactor.position += Vector3.down * speed;
+        MoveAbleUpdate(true);
         return false;
     }
     public bool ColisionCheckScale(Vector3 desireScale, GameObject dummyParent) 

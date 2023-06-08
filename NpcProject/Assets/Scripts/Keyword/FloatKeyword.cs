@@ -29,6 +29,7 @@ public class FloatKeyword : KeywordController
     {
         entity.SetGravity(true);
         entity.SetKinematic(false);
+        entity.MoveAbleUpdate(true);
         entity.WireColorController.RemoveColorState(WireColorStateController.E_WIRE_STATE.NORMAL, E_WIRE_COLOR_MODE.Float);
 
     }
