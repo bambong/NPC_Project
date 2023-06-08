@@ -1,6 +1,10 @@
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using System.Collections;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using UnityEditor;
 
 public class LogoPanelController : UI_Base
 {
@@ -12,9 +16,12 @@ public class LogoPanelController : UI_Base
     private GameObject bar;
     [SerializeField]
     private GameObject arm;
+    [SerializeField]
+    private GameObject title;
 
     [SerializeField]
     private GameObject[] btnsList;
+
 
     private float moveDuration = 0.8f;
     private float moveDelay = 0.1f;
@@ -31,7 +38,6 @@ public class LogoPanelController : UI_Base
     private void Start()
     {
         logos.transform.localPosition = new Vector3(-1100, 0, 0);
-     //   btns.transform.localPosition = new Vector3(-1150, -45, 0);
         bar.transform.localPosition = new Vector3(-1600, 160, 0);
         arm.transform.localRotation = Quaternion.Euler(0f, 0f, 1f);
         for (int i = 0; i < btnsList.Length; i++)

@@ -4,6 +4,7 @@ using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class TMPTextSwitcherMixerBehaviour : PlayableBehaviour
 {
@@ -49,7 +50,8 @@ public class TMPTextSwitcherMixerBehaviour : PlayableBehaviour
 
             if (inputWeight > greatestWeight)
             {
-                m_TrackBinding.text = input.text;
+                m_TrackBinding.DOText(input.text, 1f);
+                //m_TrackBinding.text = input.text;
                 greatestWeight = inputWeight;
             }
 
@@ -61,7 +63,7 @@ public class TMPTextSwitcherMixerBehaviour : PlayableBehaviour
         m_TrackBinding.fontSize = Mathf.RoundToInt (blendedFontSize + m_DefaultFontSize * (1f - totalWeight));
         if (currentInputs != 1 && 1f - totalWeight > greatestWeight)
         {
-            m_TrackBinding.text = m_DefaultText;
+            //m_TrackBinding.text = m_DefaultText;
         }
     }
 

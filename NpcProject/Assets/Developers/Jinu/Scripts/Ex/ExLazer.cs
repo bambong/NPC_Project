@@ -39,7 +39,7 @@ public class ExLazer : MonoBehaviour
         {
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, hit.point);
-            RayResult.gameObject.transform.position = hit.point;
+            RayResult.gameObject.transform.position = hit.point;            
             
             // 레이저와 충돌한 물체를 검출하면 실행될 코드 작성
             //Debug.Log(hit.collider.gameObject.name);
