@@ -59,6 +59,8 @@ public class SecurityCardController : UI_Base, IDragHandler, IEndDragHandler, IB
     public void OnDrag(PointerEventData eventData)
     {
         rectTransform.position = Input.mousePosition;
+        Vector3 mouse = new Vector3(rectTransform.position.x, rectTransform.position.y + 130f, rectTransform.position.z);
+        rectTransform.position = mouse;
     }
 
     public void ResetKeyword()
