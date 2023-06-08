@@ -22,6 +22,7 @@ public class GameManager
     private PlayerController player;
     private Vector3 prevGravity;
     private RetryPanelController retryPanel;
+    private DestinationPanelController destinationPanel;
     private bool isDebugMod = false;
     public PlayerController Player { get => player; }
     public KeyMappingController Key { get => key;}
@@ -37,10 +38,15 @@ public class GameManager
     {
         gameStateController = new GameStateController(this);
         retryPanel = Managers.UI.MakeSceneUI<RetryPanelController>(null, "RetryPanelUI");
+        destinationPanel = Managers.UI.MakeSceneUI<DestinationPanelController>(null, "DestinationPanel");
         prevGravity = Physics.gravity;
         SetStateNormal();
 
     }
+    public void OpenDestination(string text) 
+    {
+        destinationPanel.Open(text);
+    } 
     public void OnSceneLoaded()
     {
         retryPanel = Managers.UI.MakeSceneUI<RetryPanelController>(null, "RetryPanelUI");

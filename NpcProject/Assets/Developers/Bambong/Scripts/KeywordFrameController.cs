@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,11 +11,12 @@ public class KeywordFrameController : KeywordFrameBase
     [SerializeField]
     private Image raycastImage;
 
+  
 
-   private KeywordStatusUiController keywordWorldSlot;
-
+     private KeywordStatusUiController keywordWorldSlot;
+    
     public KeywordStatusUiController KeywordWorldSlot { get => keywordWorldSlot;  }
-
+   
     protected override void DecisionKeyword(KeywordController keyword)
     {
         masterEntity.DecisionKeyword(this, keyword);
@@ -26,6 +28,7 @@ public class KeywordFrameController : KeywordFrameBase
         {
             frameColor = new Color(0.4f, 0.4f, 0.4f);
         }
+        isLock = isOn;
 
         SetFrameColor(frameColor);
         raycastImage.raycastTarget = !isOn;
@@ -56,6 +59,7 @@ public class KeywordFrameController : KeywordFrameBase
     private void ClearLock() 
     {
         SetFrameColor(Color.black);
+        isLock = false;
         raycastImage.raycastTarget = true;
     }
     public void ClearForPool()
@@ -68,4 +72,7 @@ public class KeywordFrameController : KeywordFrameBase
         ClearLock();
         Managers.Resource.Destroy(transform.parent.gameObject);
     }
+
+
+
 }

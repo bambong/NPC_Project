@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -44,6 +44,8 @@ public class TalkPanelController : UI_Base
     private bool isChoice = false;
     private bool isChoiceText = false;
     private bool isComplete = false;
+    private bool hanglechange = false;
+
     private int buttonCount;
     private string choiceText;
 
@@ -55,7 +57,16 @@ public class TalkPanelController : UI_Base
     private Color leftColor;
     private Color rightColor;
     private Color gray = new Color(56/255f, 56/255f, 56/255f);
- 
+
+
+    private Dictionary<string, string> hangleMap = new Dictionary<string, string>()
+    {
+        {"는", "은" },
+        {"가", "이" },
+        {"와", "과" },
+        {"씨", "씨" },
+        {"에게", "에게" }
+    };
 
     public override void Init()
     {
@@ -167,8 +178,7 @@ public class TalkPanelController : UI_Base
         {
             leftRights[i].DOFade(0, 0);
             continue;
-        }
-
+        }        
         if (dialogue.speaker.charName == left.name)
         {
             rightmaterial.color = gray;
@@ -361,6 +371,17 @@ public class TalkPanelController : UI_Base
         isChoiceText = false;
     }
 
+
+
+    IEnumerator SkipDelayTime()
+    {
+        yield return new WaitForSeconds(SKIP_DELAY_TIME);
+        isSkip = true;
+    }
+    #endregion
+
+    #region TextParsing
+
     private void SettingTextAnimation()
     {
         char[] sep = { '#', '#' };
@@ -379,12 +400,19 @@ public class TalkPanelController : UI_Base
                 isChoice = true;
                 continue;
             }
-            if(item == "player")
+            if (item == "player")
             {
                 textDialogue += Managers.Talk.GetSpeakerName(101);
+                hanglechange = true;
                 continue;
             }
-            if(item == "choicetext")
+            if (hanglechange)
+            {
+                hanglechange = false;
+                textDialogue += HangleChange(item);
+                continue;
+            }
+            if (item == "choicetext")
             {
                 isChoiceText = true;
                 continue;
@@ -393,14 +421,27 @@ public class TalkPanelController : UI_Base
         }
     }
 
-    IEnumerator SkipDelayTime()
+    public string HangleChange(string item)
     {
-        yield return new WaitForSeconds(SKIP_DELAY_TIME);
-        isSkip = true;
+        string name = Managers.Talk.GetSpeakerName(101);
+        string lastname = name.Substring(name.Length - 1);
+        int unicodeValue = (int)lastname[0];
+        //English
+        if (unicodeValue < 0xAC00 || unicodeValue > 0xD7A3)
+        {
+            return item;
+        }
+        //three word hangle
+        if ((unicodeValue - 0xAC00) % 28 > 0)
+        {
+            return hangleMap[item];
+        }
+        else
+        {
+            //two word hangle
+            return item;
+        }
     }
-    #endregion
-
-    #region TextParsing
     private string TextExtraction(string textDialogue)
     {
         MatchCollection matches = Regex.Matches(textDialogue, PATTERN);

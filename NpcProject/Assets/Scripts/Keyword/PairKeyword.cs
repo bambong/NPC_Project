@@ -250,6 +250,10 @@ public class PairKeyword : KeywordController
         if(other != null) 
         {
             other.CloseLineRender();
+            if (other.MasterEntity != null) 
+            {
+                other.MasterEntity.MoveAbleUpdate(true);
+            }
         }
         entity.MoveAbleUpdate(true);
         CloseLineRender();

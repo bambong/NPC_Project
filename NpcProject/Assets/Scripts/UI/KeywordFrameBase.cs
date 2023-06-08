@@ -2,29 +2,49 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
 public abstract class KeywordFrameBase : UI_Base
 {
+   
+
     [SerializeField]
     protected RectTransform rectTransform;
+    
+    [SerializeField]
+    private Image focusImage;
 
     [SerializeField]
     private Image[] frameColorImages;
 
+    protected bool isLock;
 
-    
     protected KeywordController curFrameInnerKeyword;
     private E_KEYWORD_TYPE availableKeywordType;
+
+    private Vector2 focusDesireSize;
+    private Vector2 focusStartSize;
+    protected KeywordEntity masterEntity;
+    
+
     public KeywordController CurFrameInnerKeyword { get => curFrameInnerKeyword; }
     public bool HasKeyword { get => CurFrameInnerKeyword != null; }
     public RectTransform RectTransform { get => rectTransform; }
     public E_KEYWORD_TYPE AvailableKeywordType { get => availableKeywordType; }
-    protected KeywordEntity masterEntity;
+    public bool IsLock { get => isLock;  }
+
 
     private readonly float UNAVILABLE_COLOR_TIME = 0.15f;
-    
+    private readonly float START_END_ANIM_TIME = 0.2f;
+    private readonly float FOCUSING_SCALE = 1.2f;
+
+    private void Start()
+    {
+        focusStartSize = focusImage.rectTransform.sizeDelta;
+        focusDesireSize = focusStartSize * FOCUSING_SCALE;
+    }
     public virtual void SetKeyWord(KeywordController keywordController,Action onComplete = null) 
     {
         if (keywordController == null)
@@ -146,5 +166,26 @@ public abstract class KeywordFrameBase : UI_Base
             Managers.Sound.PlaySFX(Define.SOUND.ClickKeyword);
             keywordController.ResetKeyword();
         }
+    }
+
+    public void OnPointerEnter()
+    {
+        if (isLock)
+        {
+            return;
+        }
+        focusImage.rectTransform.DOKill();
+        var animTime = START_END_ANIM_TIME * (1 - ((focusImage.rectTransform.sizeDelta.x- focusStartSize.x) / (focusDesireSize.x - focusStartSize.x)));
+        focusImage.rectTransform.DOSizeDelta(focusDesireSize, animTime).SetUpdate(true);
+    }
+    public void OnPointerExit()
+    {
+        if (isLock)
+        {
+            return;
+        }
+        focusImage.rectTransform.DOKill();
+        var animTime = START_END_ANIM_TIME * ((focusImage.rectTransform.sizeDelta.x - focusStartSize.x) / (focusDesireSize.x - focusStartSize.x));
+        focusImage.rectTransform.DOSizeDelta(focusStartSize, animTime).SetUpdate(true);
     }
 }

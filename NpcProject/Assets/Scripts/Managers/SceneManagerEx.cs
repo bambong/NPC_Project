@@ -9,8 +9,12 @@ using UnityEngine.SceneManagement;
 public class SceneManagerEx
 {
     public BaseScene CurrentScene { get { return GameObject.FindObjectOfType<BaseScene>(); } }
+
+
     private SceneTransitionUIController sceneTransition;
     public Action OnSceneUnload;
+    private bool isTransitioning;
+    public bool IsTransitioning { get => isTransitioning;}
     public void Init() 
     {
         sceneTransition = Managers.UI.MakeSceneUI<SceneTransitionUIController>(null,"SceneTransitionUI");
@@ -31,6 +35,7 @@ public class SceneManagerEx
     }
     private IEnumerator LoadSceneCo(string sceneName, Action onComplete = null, bool isSave = true)
     {
+        isTransitioning = true;
         string prevSceneName = SceneManager.GetActiveScene().name;
         float alpha = 0;
         float progress = 0;
@@ -80,7 +85,7 @@ public class SceneManagerEx
             yield return null;
         }
         sceneTransition.canvasGroup.alpha = 0;
-       
+        isTransitioning = false;
         onComplete?.Invoke();
     }
 
