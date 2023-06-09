@@ -8,7 +8,7 @@ public class DestinationEventTrigger : EventTrigger
     private string destinationText;
 
     [SerializeField]
-    private float startDelayTime = 0.5f;
+    private float startDelayTime = 0;
 
 
     public override void OnEventTrigger(Collider other)

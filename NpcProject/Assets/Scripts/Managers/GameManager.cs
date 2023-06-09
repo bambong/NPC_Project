@@ -33,7 +33,6 @@ public class GameManager
     private float DEBUG_TIME_SCALE = 0.2f;
 
 
-
     public void Init()
     {
         gameStateController = new GameStateController(this);

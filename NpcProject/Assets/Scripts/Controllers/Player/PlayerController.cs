@@ -9,6 +9,7 @@ using System.Linq;
 using UnityEngine.Playables;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.EventSystems;
+using System.Runtime.InteropServices;
 
 public class PlayerController : MonoBehaviour , IDataHandler
 {
@@ -86,10 +87,12 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private KeywordController isFocusKeyword;
     private KeywordFrameBase isFocusFrame;
     private PurposePanelController purposePanel;
+    private SignalPanelController signalPanel;
     public int Hp { get => hp; }
     public int MaxHp { get => maxHp; }
     public Transform PlayerAncestor { get; set; }
     public PurposePanelController PurposePanel { get => purposePanel;  }
+    public SignalPanelController SignalPanel { get => signalPanel;  }
 
     private const float CHECK_RAY_WIDTH = 0.3f;
     private const float WIRE_EFFECT_OPEN_TIME = 2f;
@@ -113,6 +116,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private void Start()
     {
         purposePanel = Managers.UI.MakeSceneUI<PurposePanelController>(null,"PurposePanel");
+        signalPanel = Managers.UI.MakeSceneUI<SignalPanelController>(null,"SignalPanel");
     }
     void Update()
     {
@@ -127,11 +131,12 @@ public class PlayerController : MonoBehaviour , IDataHandler
             var factor = 1 / transform.lossyScale.x;
             transform.localScale *= factor;
         }
-        if (Input.GetKeyDown(KeyCode.Escape)) 
-        {
-            Managers.Data.UpdateProgress(Managers.Data.Progress+1);
-        }
 
+        //if (Input.GetKeyDown(KeyCode.Escape)) 
+        //{
+        //    Managers.Data.UpdateProgress(Managers.Data.Progress + 1);
+               
+        //}
     }
     private void FixedUpdate()
     {
