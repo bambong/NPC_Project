@@ -111,7 +111,7 @@ public class KeywordManager
             CurDragKeyword = null;
         }
         curDebugZone?.OnExitDebugMod();
-        playerKeywordPanel.TriggerClose();
+        playerKeywordPanel.DebugModGroupClose();
         Managers.Game.SetDisableDebugMod();
 
         OnExitDebugModEvent?.Invoke();

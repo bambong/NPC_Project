@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
+using UnityEngine.Analytics;
 
 public class KeywordStatusUiController : UI_Base
 {
@@ -11,8 +13,7 @@ public class KeywordStatusUiController : UI_Base
 
     [SerializeField]
     private Image image;
-    
-    
+
     [SerializeField]
     private Sprite hasImage;
     [SerializeField]
@@ -34,12 +35,5 @@ public class KeywordStatusUiController : UI_Base
             this.image.sprite = emptyImage;
         }
     }
-    public void Open()
-    {
-        gameObject.SetActive(true);
-    }
-    public void Close()
-    {
-        parent.gameObject.SetActive(false);
-    }
+    
 }

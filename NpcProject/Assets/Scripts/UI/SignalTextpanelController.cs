@@ -16,7 +16,6 @@ public class SignalTextpanelController : MonoBehaviour
     private const float CLOSE_ANIM_TIME = 0.5f;
     private const float CHAR_ANIM_TIME = 0.2f;
 
-    [ContextMenu("Open")]
     public void Open()
     {
         if (isOpen)
@@ -30,7 +29,6 @@ public class SignalTextpanelController : MonoBehaviour
 
     }
 
-    [ContextMenu("Close")]
     public void Close()
     {
         if (!isOpen)
