@@ -12,7 +12,7 @@ public class SoundManager
     private Bus bgmBus;
     private Bus sfxBus;
 
-    private EventInstance sfxInstance;
+    private EventInstance sfxInstance;    
     private EventInstance moveSoundInstance;
     public StudioEventEmitter bgmEmitter;
 
@@ -116,9 +116,17 @@ public class SoundManager
 
     #region SFXControl
 
-    public void PlaySFX(Enum eventpath, bool routine = false)
+    public void PlaySFX(Enum eventpath, Vector3 position = default, bool routine = false)
     {
         sfxInstance = RuntimeManager.CreateInstance("event:/SFX/" + eventpath.ToString());
+
+        if (position == default)
+        {
+            sfxInstance.start();
+            return;
+        }
+        var attributes = RuntimeUtils.To3DAttributes(position);
+        sfxInstance.set3DAttributes(attributes);
         sfxInstance.start();
     }
 
@@ -126,6 +134,22 @@ public class SoundManager
     {
         //sfxInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         sfxBus.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
+    }
+
+    public void PlayTextSound(string text, float time)
+    {
+        float writetime = time / text.Length;
+        Managers.Scene.CurrentScene.StartCoroutine(TextSound(time, writetime));
+    }
+
+    IEnumerator TextSound(float time, float writetime)
+    {
+        while (time > 0)
+        {
+            PlaySFX(Define.SOUND.TextSound);
+            yield return new WaitForSeconds(writetime);
+            time -= writetime;
+        }        
     }
 
     //public void PlayMoveSound(Enum eventpath)

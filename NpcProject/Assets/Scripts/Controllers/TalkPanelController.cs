@@ -45,6 +45,7 @@ public class TalkPanelController : UI_Base
     private bool isChoiceText = false;
     private bool isComplete = false;
     private bool hanglechange = false;
+    private bool stopsound = false;
 
     private int buttonCount;
     private string choiceText;
@@ -253,6 +254,7 @@ public class TalkPanelController : UI_Base
                     textStore += textDialogue[i];
                     dialogueText.text = textStore + RandomText(textSize - randomSize);
                 }
+                Managers.Sound.PlaySFX(Define.SOUND.TextSound);
                 yield return new WaitForSeconds(TEXT_SPEED);
             }
 
@@ -261,7 +263,7 @@ public class TalkPanelController : UI_Base
                 choiceButton.Active(buttonCount);
                 StartCoroutine(ChoiceSelect());
             }
-
+            isComplete = true;
             isTrans = false;
             isNext = true; 
         }
@@ -293,15 +295,40 @@ public class TalkPanelController : UI_Base
             StartCoroutine(SkipTextani());
         })
         .OnComplete(() =>
-        {
+        {            
             isComplete = true;
+
             if (isChoice == true)
             {
                 choiceButton.Active(buttonCount);
                 StartCoroutine(ChoiceSelect());
             }
-        });
+        }).SetEase(Ease.Linear);
+        TextSound(typingTime);
+    }    
+
+    public void TextSound(float time)        
+    {
+        StartCoroutine(PlayTextSound(time));
+    }    
+    IEnumerator PlayTextSound(float time)
+    {
+        float texttime = 0;        
+        stopsound = false;
+
+        while (time > texttime && !stopsound)
+        {
+            texttime += TEXT_SPEED;
+            Managers.Sound.PlaySFX(Define.SOUND.TextSound);
+            yield return new WaitForSeconds(TEXT_SPEED);
+        }
     }
+
+    public void StopSound()
+    {
+        stopsound = true;
+    }
+
     public void SetChoiceTextA()
     {
         choiceText = choiceButton.choiceTextA.text;
@@ -321,6 +348,7 @@ public class TalkPanelController : UI_Base
         {
             if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY)) && isSkip == true || isComplete)
             {
+                StopSound();
                 if (isChoice == true)
                 {
                     choiceButton.Active(buttonCount);

@@ -5,15 +5,15 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public enum KEY_TYPE
-{
-    EXIT_KEY,
-    DEBUGMOD_KEY,
-    INTERACTION_KEY,
-    TALK_KEY,
-    SKIP_KEY,
-    RETRY_KEY,
-    RUN_KEY
-}
+    {
+        EXIT_KEY,
+        DEBUGMOD_KEY,
+        INTERACTION_KEY,
+        TALK_KEY,
+        SKIP_KEY,
+        RETRY_KEY,
+        RUN_KEY
+    }
 
 public class KeyMappingController
 {
@@ -37,4 +37,5 @@ public class KeyMappingController
     {
         keyMap[keyType] = keyCode;
     }
-}
+ }
+
