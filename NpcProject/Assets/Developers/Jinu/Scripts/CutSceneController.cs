@@ -18,7 +18,7 @@ public class CutSceneController : MonoBehaviour
 
     private int talkCount = 0;
     private bool cutSceneprogress = false;    
-
+    
     public void LoadTalk()
     {
         cutSceneprogress = false;
@@ -41,6 +41,22 @@ public class CutSceneController : MonoBehaviour
         talk.OnComplete(() => curCutScene.Resume());
         //Talk Event Start
         Managers.Talk.PlayCurrentSceneTalk(cutSceneTalk[talkCount]);
+    }
+
+    public void LoadBaseTalk()
+    {
+        cutSceneprogress = false;
+        if(talkCount >= cutSceneTalk.Count)
+        {
+            talkCount = 0;
+
+            curCutScene.Pause();
+            var talk = Managers.Talk.GetTalkEvent(cutSceneTalk[talkCount]);
+            talk.OnComplete(() => talkCount++);
+            talk.OnComplete(() => Managers.Game.SetStateEvent());
+            talk.OnComplete(() => curCutScene.Resume());
+            Managers.Talk.PlayCurrentSceneTalk(cutSceneTalk[talkCount]);
+        }
     }
 
     public void CutScenePause()
