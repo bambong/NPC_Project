@@ -15,7 +15,7 @@ public class KeywordStatusLayoutController : UI_Base
     private BoxCollider entityColider;
     private List<KeywordStatusUiController> keywordStatusUis = new List<KeywordStatusUiController>();
     public List<KeywordStatusUiController> KeywordStatusUis { get => keywordStatusUis;}
-    private readonly float ELEMENT_WIDTH = 0.6f;
+    private readonly float ELEMENT_WIDTH = 1.2f;
     public override void Init()
     {
 
@@ -64,7 +64,7 @@ public class KeywordStatusLayoutController : UI_Base
     }
     public void SortChild(float width) 
     {
-        panel.rotation = Quaternion.Euler(new Vector3(0,180,0)) * Camera.main.transform.rotation ;
+       // panel.rotation = Quaternion.Euler(new Vector3(0,180,0)) * Camera.main.transform.rotation ;
 
         float startPos = ((panel.childCount/2f)-0.5f) * width * -1;
 

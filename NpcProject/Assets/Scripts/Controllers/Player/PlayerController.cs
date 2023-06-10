@@ -121,6 +121,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     void Update()
     {
         var rot = Camera.main.transform.rotation.eulerAngles;
+        playerUIController.transform.rotation = Camera.main.transform.rotation;
         rot.x = 0;
         rot.y += 180;
         transform.rotation = Quaternion.identity;
@@ -546,8 +547,8 @@ public class PlayerController : MonoBehaviour , IDataHandler
                     if (isFocusKeyword != null)
                     {
                         isFocusKeyword.OnBeginDrag(pointerEventData);
-                        //isFocusKeyword.OnPointerExit();
-                        //isFocusKeyword = null;
+                        isFocusKeyword.OnPointerExit();
+                        isFocusKeyword = null;
                     }
                 }
 

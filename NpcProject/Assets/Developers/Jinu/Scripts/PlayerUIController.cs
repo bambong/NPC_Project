@@ -27,7 +27,7 @@ public class PlayerUIController : UI_Base
     public override void Init()
     {
     }
-
+   
     public void SetHp(int damage)
     {
         UIEnable();

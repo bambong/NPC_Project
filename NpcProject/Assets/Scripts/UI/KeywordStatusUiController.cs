@@ -11,6 +11,12 @@ public class KeywordStatusUiController : UI_Base
 
     [SerializeField]
     private Image image;
+    
+    
+    [SerializeField]
+    private Sprite hasImage;
+    [SerializeField]
+    private Sprite emptyImage;
 
 
     public override void Init()
@@ -21,11 +27,11 @@ public class KeywordStatusUiController : UI_Base
     {
         if (hasKeyword) 
         {
-            this.image.color = Color.green;
+            this.image.sprite = hasImage;
         }
         else 
         {
-            this.image.color = Color.white;
+            this.image.sprite = emptyImage;
         }
     }
     public void Open()

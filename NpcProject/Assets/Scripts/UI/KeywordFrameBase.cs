@@ -8,8 +8,6 @@ using UnityEngine.UI;
 
 public abstract class KeywordFrameBase : UI_Base
 {
-   
-
     [SerializeField]
     protected RectTransform rectTransform;
     
@@ -18,6 +16,8 @@ public abstract class KeywordFrameBase : UI_Base
 
     [SerializeField]
     private Image[] frameColorImages;
+    [SerializeField]
+    private Color hasKeywordColor;
 
     protected bool isLock;
 
@@ -27,7 +27,6 @@ public abstract class KeywordFrameBase : UI_Base
     private Vector2 focusDesireSize;
     private Vector2 focusStartSize;
     protected KeywordEntity masterEntity;
-    
 
     public KeywordController CurFrameInnerKeyword { get => curFrameInnerKeyword; }
     public bool HasKeyword { get => CurFrameInnerKeyword != null; }
@@ -35,10 +34,9 @@ public abstract class KeywordFrameBase : UI_Base
     public E_KEYWORD_TYPE AvailableKeywordType { get => availableKeywordType; }
     public bool IsLock { get => isLock;  }
 
-
     private readonly float UNAVILABLE_COLOR_TIME = 0.15f;
     private readonly float START_END_ANIM_TIME = 0.2f;
-    private readonly float FOCUSING_SCALE = 1.2f;
+    private readonly float FOCUSING_SCALE = 1.6f;
 
     private void Start()
     {
@@ -49,12 +47,12 @@ public abstract class KeywordFrameBase : UI_Base
     {
         if (keywordController == null)
         {
+            SetFrameColor(Color.white);
             ResetKeywordFrame();
             onComplete?.Invoke();
             return;
         }
-
-     
+        SetFrameColor(hasKeywordColor);
         keywordController.SetFrame(this);
         curFrameInnerKeyword = keywordController;
         keywordController.transform.SetParent(transform);
@@ -88,6 +86,7 @@ public abstract class KeywordFrameBase : UI_Base
             Debug.LogError("불가능한 타입의 키워드 생성");
             return;
         }
+        SetFrameColor(hasKeywordColor);
         keywordController.SetFrame(this);
         curFrameInnerKeyword = keywordController;
         keywordController.transform.SetParent(transform);

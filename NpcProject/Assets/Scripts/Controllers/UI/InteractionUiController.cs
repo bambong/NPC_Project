@@ -10,7 +10,7 @@ public class InteractionUiController : UI_Base
     private RectTransform rectTransform;
     
     private readonly float ON_OFF_ANIM_TIME = 0.3f;
-    private readonly float Y_POS_REVISION_AMOUNT = 2;
+    private readonly float Y_POS_REVISION_AMOUNT = 3f;
     private readonly string ON_STATE = "InteractionOn";
     private readonly string OFF_STATE = "InteractionOff";
     private readonly string IDLE_STATE = "InteractionIdle";
