@@ -13,6 +13,10 @@ public class MovePlatformTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player")) 
         {
+            if (Managers.Game.Player.PlayerAncestor == transform.parent) 
+            {
+                return;
+            }
             Managers.Game.Player.PlayerAncestor = transform.parent;
             other.transform.SetParent(invariableArea);
         }
@@ -21,6 +25,11 @@ public class MovePlatformTrigger : MonoBehaviour
     {
         if(other.CompareTag("Player") && other.transform.parent == invariableArea) 
         {
+
+            if (Managers.Game.Player.PlayerAncestor != transform.parent)
+            {
+                return;
+            }
             other.transform.SetParent(null);
             Managers.Game.Player.PlayerAncestor = null;
             other.transform.localScale = Vector3.one;
