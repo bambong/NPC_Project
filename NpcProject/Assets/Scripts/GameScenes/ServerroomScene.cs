@@ -21,8 +21,7 @@ public class ServerroomScene : BaseScene
     [SerializeField]
     private int progress = 1;
 
-    [SerializeField]
-    StyleManager style;
+
     public override void Clear()
     {
         

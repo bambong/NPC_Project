@@ -326,7 +326,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         }
         keywrodOverrideTable.Add(id,action);
     }
-    public void AddAction(KeywordController controller,KeywordAction action) 
+    public virtual void AddAction(KeywordController controller,KeywordAction action) 
     {
         action.OnEnter.Invoke(this);
         fixedUpdateAction += action.OnFixecUpdate;

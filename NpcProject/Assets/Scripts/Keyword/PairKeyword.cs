@@ -241,10 +241,10 @@ public class PairKeyword : KeywordController
         //{
         //    return;
         //}
-        if(entity == null) 
-        {
-            return;
-        }
+        //if(entity == null) 
+        //{
+        //    return;
+        //}
        
         var other = GetOtherPair();
         if(other != null) 
@@ -255,7 +255,10 @@ public class PairKeyword : KeywordController
                 other.MasterEntity.MoveAbleUpdate(true);
             }
         }
-        entity.MoveAbleUpdate(true);
+        if (entity != null) 
+        {
+            entity.MoveAbleUpdate(true);
+        }
         CloseLineRender();
        
         MasterEntity = null;

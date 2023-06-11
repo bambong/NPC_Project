@@ -273,6 +273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   guId: 
+  parentDebugZone: {fileID: 0}
   availableKeywordType: 2
   maxHeight: 3
   maxScale: {x: 2, y: 2, z: 2}
@@ -280,7 +281,7 @@ MonoBehaviour:
   keywords:
   - isLock: 0
     keywordGo: {fileID: 0}
-  statusSlotLayoutName: MonsterKeywordStatusLayout
+  statusSlotLayoutName: KeywordStatusLayoutController
   spriteRenderer: {fileID: 1865819931}
   monsterNav: {fileID: 6737983144649957171}
   animator: {fileID: 1865819930}
@@ -299,6 +300,10 @@ MonoBehaviour:
   attackDamage: 1
   attackAutoBreakingAmount: 0.2
   hitMaterial: {fileID: 2100000, guid: 364021b4e0f2d114ab8a168a37ea77f3, type: 2}
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  isPlaySound: 1
 --- !u!54 &6737983144649957169
 Rigidbody:
   m_ObjectHideFlags: 0
