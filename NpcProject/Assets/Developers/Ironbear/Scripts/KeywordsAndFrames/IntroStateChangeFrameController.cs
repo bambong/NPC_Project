@@ -47,7 +47,8 @@ public class IntroStateChangeFrameController : MonoBehaviour, IDropHandler
 
                 //문 열림...
                 Managers.Game.Player.SetStateIdle();
-                statePanelController.DoorOpen();               
+                statePanelController.DoorOpen();
+                statePanelController.FloorArrowEffect();
             });
             
         }

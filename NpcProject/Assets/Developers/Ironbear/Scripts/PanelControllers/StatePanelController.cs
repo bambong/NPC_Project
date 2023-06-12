@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using DG.Tweening;
 
 public class StatePanelController : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class StatePanelController : MonoBehaviour
     private TMP_Text text1;
     [SerializeField]
     private GameObject door;
+    [SerializeField]
+    private GameObject arrow;
 
     void Start()
     {
@@ -29,5 +32,16 @@ public class StatePanelController : MonoBehaviour
     {
         door.transform.localPosition = Vector3.zero;
         door.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+    }
+
+    public void FloorArrowEffect()
+    {
+        arrow.SetActive(true);
+        Sequence arrowSeq = DOTween.Sequence();
+
+        arrowSeq.Append(arrow.transform.DOLocalMoveX(arrow.transform.localPosition.x + 1f, 1f).SetEase(Ease.InOutQuad));
+        arrowSeq.Append(arrow.transform.DOLocalMoveX(arrow.transform.localPosition.x, 1f).SetEase(Ease.InOutQuad));
+        arrowSeq.SetLoops(-1);
+        arrowSeq.Play();
     }
 }
