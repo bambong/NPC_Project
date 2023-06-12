@@ -13,6 +13,8 @@ public class StartPanelController : UI_Base
     private RectTransform btn;
     [SerializeField]
     private CanvasGroup canvasGroup;
+    [SerializeField]
+    private GameObject mouse;
 
     private float typeSpeed = 0.08f;
     private Sequence seq;
@@ -27,6 +29,7 @@ public class StartPanelController : UI_Base
         seq = DOTween.Sequence();
         btn.GetComponent<Button>().interactable = false;
         canvasGroup.alpha = 0f;
+        mouse.GetComponent<CanvasGroup>().alpha = 0f;
         btn.anchoredPosition = new Vector3(0f, -200, 0f);
         TypeAnimation();
     }
@@ -51,10 +54,26 @@ public class StartPanelController : UI_Base
         }
 
         seq.OnComplete(() => 
-        {
+        {            
             btn.GetComponent<Button>().interactable = true;
             btn.DOAnchorPosY(280, 1f).SetEase(Ease.OutQuad);
             canvasGroup.DOFade(1f, 1f).SetEase(Ease.OutQuad);
+            DOVirtual.DelayedCall(1.1f, ()=>
+            {
+                mouse.GetComponent<CanvasGroup>().DOFade(1f, 1f).SetEase(Ease.OutQuad).OnComplete(() =>
+                {
+                    Sequence mouseSeq = DOTween.Sequence();
+                    Vector3 originalPos = mouse.transform.position;
+                    float mouseAnimDuration = 1f;
+
+                    mouseSeq.Append(mouse.transform.DOMoveY(originalPos.y + 8f, mouseAnimDuration).SetEase(Ease.OutQuad));
+                    mouseSeq.Join(mouse.GetComponent<CanvasGroup>().DOFade(0f, mouseAnimDuration).SetEase(Ease.OutQuad));
+                //mouseSeq.SetLoops(-1);
+
+                mouseSeq.Play();
+                });
+            });
+            
         });
 
         seq.Play();
