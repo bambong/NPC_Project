@@ -143,6 +143,7 @@ public class ServerroomTutorialController : GuIdBehaviour
         {
             return;
         }
+        Managers.Sound.PlaySFX(Define.SOUND.AssignmentKeyword);
         isPlaying = true;
         nextButton.interactable = false;
         ++curIndex;
@@ -154,6 +155,7 @@ public class ServerroomTutorialController : GuIdBehaviour
         {
             return;
         }
+        Managers.Sound.PlaySFX(Define.SOUND.AssignmentKeyword);
         isPlaying = true;
         nextButton.interactable = false;
         if (isEventOnce)
