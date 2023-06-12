@@ -14,9 +14,12 @@ public class ContractPanelController : MonoBehaviour
     private GameObject inputField;
     [SerializeField]
     private GameObject kakaoPanel;
+    [SerializeField]
+    private GameObject clickMouse;
 
     private CanvasGroup contractCanvasGroup;
     private CanvasGroup inputFiledCanvasGroup;
+    private CanvasGroup clickMouseCanvasGroup;
     private Image contractColor;
 
     private float effectDuration = 1f;
@@ -28,9 +31,11 @@ public class ContractPanelController : MonoBehaviour
     {
         Managers.Game.Player.SetstateStop();
 
+        clickMouseCanvasGroup = clickMouse.GetComponent<CanvasGroup>();
         contractCanvasGroup = contract.GetComponent<CanvasGroup>();
         contractColor = contractImage.GetComponent<Image>();
         inputFiledCanvasGroup = inputField.GetComponent<CanvasGroup>();
+        clickMouseCanvasGroup.alpha = 0f;
         inputFiledCanvasGroup.alpha = 0f;
         contractCanvasGroup.alpha = 0f;
 
@@ -63,7 +68,16 @@ public class ContractPanelController : MonoBehaviour
     private void ContractOnEffect()
     {
         contract.SetActive(true);
-        contractCanvasGroup.DOFade(1f, effectDuration);
+        contractCanvasGroup.DOFade(1f, effectDuration).OnComplete(() =>
+        {
+            //click mouse active and animation effect
+            Sequence clickMouseSeq = DOTween.Sequence();
+            float originalYPos = clickMouse.transform.localPosition.y;
+            clickMouseSeq.Append(clickMouseCanvasGroup.DOFade(1f, 0.5f).SetEase(Ease.OutQuad));
+            clickMouseSeq.Append(clickMouse.transform.DOLocalMoveY(originalYPos + 100f, 2f).SetEase(Ease.OutQuad));
+            clickMouseSeq.Join(clickMouseCanvasGroup.DOFade(0f, 2f).SetEase(Ease.OutQuad));
+            clickMouseSeq.Play();
+        });
 
         RectTransform contractRectTransform = contract.GetComponent<RectTransform>();
         contractRectTransform.DOAnchorPosY(targetOn, effectDuration);
