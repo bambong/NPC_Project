@@ -26,6 +26,7 @@ public class KakaoPanelController : MonoBehaviour
 
     [SerializeField]
     private CanvasGroup wasdCanvasGroup;
+
     void Start()
     {
 
