@@ -350,6 +350,12 @@ namespace DynamicShadowProjector {
 			}
 		}
 		// Call SetCommandBufferDirty or UpdateCommandBuffer when child objects are added/deleted/disabled/enabled.
+		
+		public void SetMipLevel(int level)
+		{
+			m_mipLevel = level;
+			OnValidate();
+        }
 		public void SetTexturePropertyDirty()
 		{
 			m_isTexturePropertyChanged = true;

@@ -25,11 +25,18 @@ public class PlayerShadowController : MonoBehaviour
     {
         shadowTextureRenderer.SetShadowColor(color);
     }
-
-    public void SetLight(Transform transform) 
+    public void SetMipLevel(int count) 
+    {
+        shadowTextureRenderer.SetMipLevel(count);
+    }
+    public void SetLightImmediately(Vector3 target) 
+    {
+        rotateFactor.localRotation = Quaternion.Euler(target);
+    }
+    public void SetLightTarget(Transform target) 
     {
 
-        if( targetLight == transform) 
+        if( targetLight == target) 
         {
             return;
         }
@@ -49,34 +56,10 @@ public class PlayerShadowController : MonoBehaviour
         }
 
 
-        targetLight = transform;
+        targetLight = target;
         targetTrackingCo = StartCoroutine(Tracking(isChange));
     }
-    IEnumerator ColorFade()
-    {
-        float progress = 0;
-        while (progress < CHANGE_ANIM_TIME)
-        {
-            progress += Time.deltaTime;
-            SetColor(Color.Lerp(Color.black, Color.white , progress * (1/ CHANGE_ANIM_TIME)));
-            yield return null;
-        }
-        SetColor(Color.white);
-        var dir = (rotateFactor.position - targetLight.transform.position);
-        dir.y = rotateFactor.position.y;
-        var targetRot = Quaternion.LookRotation(dir.normalized);
-        rotateFactor.rotation = targetRot;
-         yield return null;
-        progress = 0;
-        while (progress < CHANGE_ANIM_TIME)
-        {
-            progress += Time.deltaTime;
-            SetColor(Color.Lerp(Color.white, Color.black, progress * (1/ CHANGE_ANIM_TIME)));
-            yield return null;
-        }
-        SetColor(Color.black);
-        colorFadeCo = null;
-    }
+
     IEnumerator Tracking(bool change) 
     {
         //if (change) 
