@@ -43,75 +43,89 @@ public class SoundManager
 
     #region BGMControl
 
-    public void BGMControl(Define.BGM bgmAction, float fadeDelay = 1.0f)
-    {
-        switch(bgmAction)
-        {
-            case Define.BGM.Start:
-                Managers.Scene.CurrentScene.StartCoroutine(Start(fadeDelay));
-                break;
-            case Define.BGM.ReStart:
-                Managers.Scene.CurrentScene.StartCoroutine(Restart(fadeDelay));
-                break;
-            case Define.BGM.Stop:
-                Managers.Scene.CurrentScene.StartCoroutine(Stop(fadeDelay));
-                break;
-            case Define.BGM.Pause:
-                Managers.Scene.CurrentScene.StartCoroutine(Pause(fadeDelay));
-                break;
-        }        
-    }
-
     public void ChangeBGM(EventReference bgm, string param = null, float value = 0)
     {
         if (param == null)
         {
-            bgmEmitter.ChangeEvent(bgm);            
+            bgmEmitter.ChangeEvent(bgm);
         }
         else
         {
             bgmEmitter.SetParameter(param, value);
         }
     }
-    private IEnumerator Start(float fadeDelay)
+
+    public void PlayBGM()
     {
         bgmEmitter.Play();
+    }
 
-        for (float t = 1.0f; t > 0.0f; t -= Time.deltaTime / fadeDelay)
-        {
-            float volume = Mathf.Lerp(1.0f, 0.0f, t);
-            bgmEmitter.EventInstance.setParameterByName("Volume", volume);
-            yield return null;
-        }
-    }
-    private IEnumerator Restart(float fadeDelay)
+    public void StopBGM()
     {
-        for (float t = 1.0f; t > 0.0f; t -= Time.deltaTime / fadeDelay)
-        {
-            float volume = Mathf.Lerp(1.0f, 0.0f, t);
-            bgmEmitter.EventInstance.setParameterByName("Volume", volume);
-            yield return null;
-        }        
-    }
-    private IEnumerator Pause(float fadeDelay)
-    {
-        for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / fadeDelay)
-        {
-            float volume = Mathf.Lerp(1.0f, 0.0f, t);
-            bgmEmitter.EventInstance.setParameterByName("Volume", volume);
-            yield return null;
-        }
-    }
-    private IEnumerator Stop(float fadeDelay)
-    {
-        for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / fadeDelay)
-        {
-            float volume = Mathf.Lerp(1.0f, 0.0f, t);
-            bgmEmitter.EventInstance.setParameterByName("Volume", volume);
-            yield return null;
-        }
+        bgmEmitter.AllowFadeout = true;
         bgmEmitter.Stop();
     }
+
+    //public void BGMControl(Define.BGM bgmAction, float fadeDelay = 1.0f)
+    //{
+    //    switch(bgmAction)
+    //    {
+    //        case Define.BGM.Start:
+    //            Managers.Scene.CurrentScene.StartCoroutine(Start(fadeDelay));
+    //            break;
+    //        case Define.BGM.ReStart:
+    //            Managers.Scene.CurrentScene.StartCoroutine(Restart(fadeDelay));
+    //            break;
+    //        case Define.BGM.Stop:
+    //            Managers.Scene.CurrentScene.StartCoroutine(Stop(fadeDelay));
+    //            break;
+    //        case Define.BGM.Pause:
+    //            Managers.Scene.CurrentScene.StartCoroutine(Pause(fadeDelay));
+    //            break;
+    //    }        
+    //}
+
+
+
+    //private IEnumerator Start(float fadeDelay)
+    //{
+    //    bgmEmitter.Play();
+
+    //    for (float t = 1.0f; t > 0.0f; t -= Time.deltaTime / fadeDelay)
+    //    {
+    //        float volume = Mathf.Lerp(1.0f, 0.0f, t);
+    //        bgmEmitter.EventInstance.setParameterByName("Volume", volume);
+    //        yield return null;
+    //    }
+    //}
+    //private IEnumerator Restart(float fadeDelay)
+    //{
+    //    for (float t = 1.0f; t > 0.0f; t -= Time.deltaTime / fadeDelay)
+    //    {
+    //        float volume = Mathf.Lerp(1.0f, 0.0f, t);
+    //        bgmEmitter.EventInstance.setParameterByName("Volume", volume);
+    //        yield return null;
+    //    }        
+    //}
+    //private IEnumerator Pause(float fadeDelay)
+    //{
+    //    for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / fadeDelay)
+    //    {
+    //        float volume = Mathf.Lerp(1.0f, 0.0f, t);
+    //        bgmEmitter.EventInstance.setParameterByName("Volume", volume);
+    //        yield return null;
+    //    }
+    //}
+    //private IEnumerator Stop(float fadeDelay)
+    //{
+    //    for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / fadeDelay)
+    //    {
+    //        float volume = Mathf.Lerp(1.0f, 0.0f, t);
+    //        bgmEmitter.EventInstance.setParameterByName("Volume", volume);
+    //        yield return null;
+    //    }
+    //    bgmEmitter.Stop();
+    //}
     #endregion
 
     #region SFXControl

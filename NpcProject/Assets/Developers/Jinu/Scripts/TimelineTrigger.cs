@@ -16,7 +16,10 @@ public class TimelineTrigger : EventTrigger
 
     public override void OnEventTrigger(Collider other)
     {
-        cutsceneplayer.SetStartPoint(startposition, isLeft);
+        if(startposition != null)
+        {
+            cutsceneplayer.SetStartPoint(startposition, isLeft);
+        }
 
         cutScene = new CutSceneEvent(playableDirector);
         cutScene.Play();
