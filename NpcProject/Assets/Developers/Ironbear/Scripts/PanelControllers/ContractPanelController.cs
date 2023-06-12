@@ -42,6 +42,8 @@ public class ContractPanelController : MonoBehaviour
         inputField.SetActive(false);
         kakaoPanel.SetActive(false);
 
+        signCanvasGroup.blocksRaycasts = false;
+
         DOVirtual.DelayedCall(delayTime, ContractOnEffect);
     }
 
@@ -76,7 +78,10 @@ public class ContractPanelController : MonoBehaviour
             clickMouseSeq.Append(clickMouseCanvasGroup.DOFade(1f, 0.5f).SetEase(Ease.OutQuad));
             clickMouseSeq.Append(clickMouse.transform.DOLocalMoveY(originalYPos + 100f, 2f).SetEase(Ease.OutQuad));
             clickMouseSeq.Join(clickMouseCanvasGroup.DOFade(0f, 2f).SetEase(Ease.OutQuad));
-            clickMouseSeq.Play();
+            clickMouseSeq.Play().OnComplete(() =>
+            {
+                signCanvasGroup.blocksRaycasts = true;
+            });
         });
 
         RectTransform contractRectTransform = contract.GetComponent<RectTransform>();
