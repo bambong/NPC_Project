@@ -23,6 +23,8 @@ public class KakaoPanelController : MonoBehaviour
     private GameObject myseat;
     [SerializeField]
     private GameObject wasd;
+    [SerializeField]
+    private GameObject here;
 
     private float waitTime = 1.3f;
 
@@ -30,7 +32,6 @@ public class KakaoPanelController : MonoBehaviour
 
     void Start()
     {
-
         yesTxt.SetActive(false);
         yupTxt.SetActive(false);
 
@@ -118,6 +119,7 @@ public class KakaoPanelController : MonoBehaviour
     {
         Sequence wasdSeq = DOTween.Sequence();
         wasd.SetActive(true);
+        here.SetActive(true);
 
         wasdSeq.Append(wasd.transform.DOMoveY(wasd.transform.position.y - 100f, 1f).SetEase(Ease.OutQuad));
         wasdSeq.AppendInterval(4f);

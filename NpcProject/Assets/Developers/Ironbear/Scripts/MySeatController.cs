@@ -4,6 +4,8 @@ public class MySeatController : MonoBehaviour, IInteraction
 {
     [SerializeField]
     private GameObject statePanel;
+    [SerializeField]
+    private GameObject here;
 
     private bool isInteractable = false;
 
@@ -16,5 +18,9 @@ public class MySeatController : MonoBehaviour, IInteraction
     {
         statePanel.SetActive(true);
         isInteractable = false;
+        if(here.activeSelf)
+        {
+            here.SetActive(false);
+        }
     }
 }
