@@ -46,7 +46,7 @@ public class KeywordController : UI_Base
     private Color originColor;
    
     private readonly float START_END_ANIM_TIME = 0.2f;
-    private readonly float FOCUSING_SCALE = 1.35f;
+    private readonly float FOCUSING_SCALE = 1.15f;
     private readonly float KEYWORD_FRAME_MOVE_TIME = 0.1f;
 
     private readonly Color LOCK_COLOR = new Color(0.45f, 0.45f, 0.45f);

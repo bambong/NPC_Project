@@ -44,7 +44,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     private void Awake()
     {
-        spriteRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+       // spriteRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
 
         foreach (var item in ghostEffects)
         {

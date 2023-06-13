@@ -1,3 +1,4 @@
+using DG.Tweening;
 using MoreMountains.Tools;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,6 +11,9 @@ public class DebugGaugeUiController : UI_Base
 {
     [SerializeField]
     private Image fillImage;
+    [SerializeField]
+    private CanvasGroup canvasGroup;
+
 
     [Header("Normal Color Option")]
     [SerializeField]
@@ -22,8 +26,9 @@ public class DebugGaugeUiController : UI_Base
     private float colorTime = 0.2f;
 
     private bool isOpen = false;
-    
-  
+    private const float OPEN_ANIM_TIME = 0.5f;
+    private const float CLOSE_ANIM_TIME = 0.5f;
+
     public void Open(float amount)
     {
         if (isOpen) 
@@ -35,8 +40,15 @@ public class DebugGaugeUiController : UI_Base
         fillImage.fillAmount = 1;
         if (amount < 0) 
         {
-            StartCoroutine(InfinityColorAnim());
+            fillImage.fillAmount = 0;
+            //fillImage.color = Color.white;
+            //StartCoroutine(InfinityColorAnim());
         }
+        canvasGroup.DOKill();
+        var animTime = OPEN_ANIM_TIME * (1 - canvasGroup.alpha);
+        canvasGroup.DOFade(1, animTime).SetUpdate(true);
+
+
     }
     public void Close()
     {
@@ -45,7 +57,10 @@ public class DebugGaugeUiController : UI_Base
             return;
         }
         isOpen = false;
-        gameObject.SetActive(false);
+
+        canvasGroup.DOKill();
+        var animTime = CLOSE_ANIM_TIME * canvasGroup.alpha;
+        canvasGroup.DOFade(0, animTime).SetUpdate(true).OnComplete(() => { gameObject.SetActive(false); });
     }
     private void ColorAnim(float amount) 
     {

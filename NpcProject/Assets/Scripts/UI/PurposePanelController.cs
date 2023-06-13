@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -19,12 +20,20 @@ public class PurposePanelController : UI_Base
 
     [SerializeField]
     private TextMeshProUGUI purposeText;
+
+    [SerializeField]
+    private TextMeshProUGUI titleText;
+
+    
     private bool isOpen;
+    private string originTitle;
+    private Color originPanelColor;
     private const float OPEN_ANIM_TIME = 0.5f;
     private const float CLOSE_ANIM_TIME = 0.5f;
     private const float CHANGE_PURPOSE_ANIM_OPEN_TIME = 0.3f;
     private const float CHANGE_PURPOSE_ANIM_CLOSE_TIME = 0.5f;
-
+   
+    public bool IsOpen { get => isOpen; }
 
     [ContextMenu("Open")]
     public void Open() 
@@ -39,6 +48,8 @@ public class PurposePanelController : UI_Base
             return;
         }
         isOpen = true;
+        panel.color = originPanelColor;
+        titleText.text = originTitle;
         purposeText.text = temp;
         canvasGroup.DOKill();
         var animTime = OPEN_ANIM_TIME * (1 - canvasGroup.alpha);
@@ -47,7 +58,7 @@ public class PurposePanelController : UI_Base
     }
 
     [ContextMenu("Close")]
-    public void Close()
+    public void Close(Action onComplete  = null)
     {
         if (!isOpen)
         {
@@ -57,7 +68,7 @@ public class PurposePanelController : UI_Base
 
         canvasGroup.DOKill();
         var animTime = CLOSE_ANIM_TIME * canvasGroup.alpha;
-        canvasGroup.DOFade(0, animTime).SetUpdate(true);
+        canvasGroup.DOFade(0, animTime).SetUpdate(true).OnComplete(() => { onComplete?.Invoke(); });
     }
 
     public void SetPurpose(string str) 
@@ -85,14 +96,21 @@ public class PurposePanelController : UI_Base
         
         Open();
     }
-    [ContextMenu("Test Purpose")]
-    public void TestPurPose()
+    public void ClearPurpose() 
     {
-        Managers.Data.UpdateProgress(Managers.Data.Progress +1);
+        var seq = DOTween.Sequence();
+        seq.Append(panel.DOColor(Color.white, CHANGE_PURPOSE_ANIM_OPEN_TIME));
+        seq.AppendInterval(0.2f);
+        seq.AppendCallback(() => {
+            titleText.text = string.Empty;
+            purposeText.text = string.Empty; });
+        seq.Append(canvasGroup.DOFade(0, CLOSE_ANIM_TIME));
+        seq.Play();
     }
-
     public override void Init()
     {
-        Open();
+        originPanelColor = panel.color;
+        originTitle = titleText.text;
+      //  Open();
     }
 }

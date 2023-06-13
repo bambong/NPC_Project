@@ -23,7 +23,6 @@ public class ApartKeyword : KeywordController
         KeywordEntity otherEntity;
         if(!PairKeyword.IsAvailablePair(entity,out otherEntity)) 
         {
-
             return;
         }
         var dir = entity.KeywordTransformFactor.position -otherEntity.KeywordTransformFactor.position;

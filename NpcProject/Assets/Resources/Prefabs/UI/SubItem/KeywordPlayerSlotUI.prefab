@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 60, y: 60}
+  m_SizeDelta: {x: 70, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1145142094939325183
 CanvasRenderer:
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b671b7184aa65e9499dfefe0f796bce0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e6664b92c9b444649930c82320e0433c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -91,7 +91,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 1145142094939324929}
   focusImage: {fileID: 1145142094939325182}
-  frameColorImages: []
+  frameColorImages:
+  - {fileID: 8798291745589175145}
+  - {fileID: 1145142094939325182}
+  hasKeywordColor: {r: 1, g: 0.8901961, b: 0, a: 1}
 --- !u!1 &2225564754525807055
 GameObject:
   m_ObjectHideFlags: 0
@@ -129,7 +132,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 134.4}
-  m_SizeDelta: {x: 75, y: 75}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2225564754525807053
 CanvasRenderer:
@@ -152,14 +155,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 96ad56168c9f8b04eaeac913e2c4e895, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

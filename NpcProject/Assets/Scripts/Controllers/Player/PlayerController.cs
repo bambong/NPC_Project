@@ -9,6 +9,7 @@ using System.Linq;
 using UnityEngine.Playables;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.EventSystems;
+using System.Runtime.InteropServices;
 
 public class PlayerController : MonoBehaviour , IDataHandler
 {
@@ -74,6 +75,10 @@ public class PlayerController : MonoBehaviour , IDataHandler
     [SerializeField]
     private MMF_Player hitFeedback;
 
+    [SerializeField]
+    private PlayerShadowController shadowController;
+
+
     private PlayerAnimationController.MoveDir curDir = PlayerAnimationController.MoveDir.Front;
     private DebugModGlitchEffectController glitchEffectController;
     private PlayerStateController playerStateController;
@@ -86,10 +91,13 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private KeywordController isFocusKeyword;
     private KeywordFrameBase isFocusFrame;
     private PurposePanelController purposePanel;
+    private SignalPanelController signalPanel;
     public int Hp { get => hp; }
     public int MaxHp { get => maxHp; }
     public Transform PlayerAncestor { get; set; }
     public PurposePanelController PurposePanel { get => purposePanel;  }
+    public SignalPanelController SignalPanel { get => signalPanel;  }
+    public PlayerShadowController ShadowController { get => shadowController; }
 
     private const float CHECK_RAY_WIDTH = 0.3f;
     private const float WIRE_EFFECT_OPEN_TIME = 2f;
@@ -113,10 +121,12 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private void Start()
     {
         purposePanel = Managers.UI.MakeSceneUI<PurposePanelController>(null,"PurposePanel");
+        signalPanel = Managers.UI.MakeSceneUI<SignalPanelController>(null,"SignalPanel");
     }
     void Update()
     {
         var rot = Camera.main.transform.rotation.eulerAngles;
+        playerUIController.transform.rotation = Camera.main.transform.rotation;
         rot.x = 0;
         rot.y += 180;
         transform.rotation = Quaternion.identity;
@@ -127,11 +137,12 @@ public class PlayerController : MonoBehaviour , IDataHandler
             var factor = 1 / transform.lossyScale.x;
             transform.localScale *= factor;
         }
-        if (Input.GetKeyDown(KeyCode.Escape)) 
-        {
-            Managers.Data.UpdateProgress(Managers.Data.Progress+1);
-        }
 
+        //if (Input.GetKeyDown(KeyCode.Escape)) 
+        //{
+        //    Managers.Data.UpdateProgress(Managers.Data.Progress + 1);
+               
+        //}
     }
     private void FixedUpdate()
     {
@@ -541,8 +552,8 @@ public class PlayerController : MonoBehaviour , IDataHandler
                     if (isFocusKeyword != null)
                     {
                         isFocusKeyword.OnBeginDrag(pointerEventData);
-                        //isFocusKeyword.OnPointerExit();
-                        //isFocusKeyword = null;
+                        isFocusKeyword.OnPointerExit();
+                        isFocusKeyword = null;
                     }
                 }
 

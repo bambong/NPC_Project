@@ -19,7 +19,8 @@ public class KeywordSlotUiController : UI_Base
     [SerializeField]
     private float constantAnimTime = 0.5f;
     public Transform KeywordSlotLayout { get => keywordSlotLayout.transform; }
- 
+    public float ConstantAnimTime { get => constantAnimTime; }
+
     private bool isDrag = false;
     private bool isKeywordSlotOpen;
     private KeywordEntity entity;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 public class KeywordAction 
 {
@@ -109,7 +110,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude;
     private readonly string WIRE_FRAME_COLOR_NAME = "_Wireframe_Color";
     private readonly string WIRE_FRAME_EMM_COLOR_NAME = "_EmmColor";
-
+    private const float MINMUM_DIR_AMOUNT = 0.01f;
     protected override void Start()
     {
         base.Start();
@@ -284,10 +285,12 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
             if ((Input.mousePosition - pos).magnitude * factor <= SLOT_UI_DISTANCE)
             {
                 OpenKeywordSlot();
+                keywordWorldSlotLayout.Close(0);
             }
             else
             {
                CloseKeywordSlot();
+               keywordWorldSlotLayout.Open(keywordSlotUiController.ConstantAnimTime);
             }
             yield return null;
         }
@@ -301,7 +304,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     }
     public void OpenWorldSlotUI()
     {
-        keywordWorldSlotLayout.Opne();
+        keywordWorldSlotLayout.Open();
     }
     public void CloseWorldSlotUI() 
     {
@@ -323,7 +326,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         }
         keywrodOverrideTable.Add(id,action);
     }
-    public void AddAction(KeywordController controller,KeywordAction action) 
+    public virtual void AddAction(KeywordController controller,KeywordAction action) 
     {
         action.OnEnter.Invoke(this);
         fixedUpdateAction += action.OnFixecUpdate;
@@ -473,7 +476,13 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         var pos = col.transform.position;
 
         RaycastHit hit;
-   
+        vec.x = math.abs(vec.x) < MINMUM_DIR_AMOUNT ? 0 : vec.x;
+        vec.z = math.abs(vec.z) < MINMUM_DIR_AMOUNT ? 0 : vec.z;
+        if (vec.magnitude == 0) 
+        {
+            return false;
+        }
+    
         var boxSize = Util.VectorMultipleScale(col.size / 2, transform.lossyScale);
         boxSize.y = boxSize.y * 0.99f;
         var vecXSize = Mathf.Abs(vec.x);

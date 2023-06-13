@@ -50,11 +50,11 @@ public class SceneManagerEx
         var async =  SceneManager.LoadSceneAsync(sceneName);
         async.allowSceneActivation = false;
         async.completed += (async) => { Managers.OnSceneLoad(); };
-        
+        progress = 0;
         while (progress < 1 || async.progress < 0.9f)
         {
             progress += Time.deltaTime;
-            sceneTransition.canvasGroup.alpha = Mathf.Lerp(alpha, 1, progress);
+           // sceneTransition.canvasGroup.alpha = Mathf.Lerp(alpha, 1, progress);
             yield return null;
         }
         /// 데이터 세이브 

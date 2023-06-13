@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 7893893709234455981}
   - component: {fileID: 3076477013976718867}
   - component: {fileID: 5894186153558330794}
+  - component: {fileID: 7900871485370674269}
+  - component: {fileID: 7882417281698441377}
   m_Layer: 12
   m_Name: DebugZone
   m_TagString: Untagged
@@ -29,7 +31,8 @@ Transform:
   m_LocalPosition: {x: 4.4, y: 15.6, z: 36.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 6387111304171727269}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -62,6 +65,76 @@ MonoBehaviour:
   debugAbleTime: -1
   coolTime: 1
   playerSlotCount: 2
-  childEntitys: []
   keywords: []
   wireMaterials: []
+--- !u!114 &7900871485370674269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8061606925041259260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8cc80f0cfde72d4da819f423caac10e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guId: 
+  guidEventPlayOnce: 0
+  targetTag: Player
+  isPlayOnce: 0
+  lightTarget: {fileID: 6387111304171727269}
+  immediatelySet: 0
+  immediateRotate: {x: 0, y: 0, z: 0}
+  shadowColorTrans: 0
+  color: {r: 0, g: 0, b: 0, a: 0}
+  mipLevel: 2
+--- !u!114 &7882417281698441377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8061606925041259260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcb6751dfee477342bb21799ba0ebde0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guId: 
+  guidEventPlayOnce: 1
+  targetTag: Player
+  isPlayOnce: 1
+  destinationText: "\uD14C\uC2A4\uD2B8 - \uD398\uC5B4"
+  startDelayTime: 0.5
+--- !u!1 &8342238231095378297
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6387111304171727269}
+  m_Layer: 12
+  m_Name: ShadowTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6387111304171727269
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8342238231095378297}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -14, y: 0, z: 41.7}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7893893709234455981}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
