@@ -10,12 +10,14 @@ public class PuzzlePanelController : MonoBehaviour
     private IntroKeywordFrameController[] frames;
     [SerializeField]
     private CanvasGroup[] groups;
+    [SerializeField]
+    private GameObject mouse;
 
     private PanelsController panelsController;
 
     private int currentFrameIndex = 0;
 
-    private void Awake()
+    private void Start()
     {
         panelsController = GetComponentInParent<PanelsController>();
         
@@ -34,6 +36,12 @@ public class PuzzlePanelController : MonoBehaviour
                 groups[i].blocksRaycasts = false;
             }
         }
+
+        Sequence mouseBlink = DOTween.Sequence();
+        mouseBlink.Append(mouse.GetComponent<CanvasGroup>().DOFade(0f, 1f).SetEase(Ease.OutQuad));
+        mouseBlink.Append(mouse.GetComponent<CanvasGroup>().DOFade(1f, 1f).SetEase(Ease.OutQuad));
+        mouseBlink.SetLoops(-1);
+        mouseBlink.Play();
     }
 
     public void FadeOutCurrentFrame()
