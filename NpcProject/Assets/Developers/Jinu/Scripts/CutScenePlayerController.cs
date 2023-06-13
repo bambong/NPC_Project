@@ -15,9 +15,11 @@ public class CutScenePlayerController : MonoBehaviour
     private GameObject cutScenePlayer;
     [SerializeField]
     private PlayableDirector curPlayable;
+    [SerializeField]
+    private Define.Scene transitionScene;
 
     private Transform startpoint;
-    private bool isleft;
+    private bool isleft;    
 
 
     public void Awake()
@@ -55,6 +57,12 @@ public class CutScenePlayerController : MonoBehaviour
         {
             RightWalk();
         }
+    }
+
+    public void SignalSceneLoad()
+    {
+        Managers.Sound.PlaySFX(Define.SOUND.Door);
+        Managers.Scene.LoadScene(transitionScene);
     }
 
     IEnumerator MovePoint()
