@@ -95,6 +95,9 @@
 		<property name="length">
 			<value>111.96081632653062</value>
 		</property>
+		<relationship name="triggerConditions">
+			<destination>{c9ccc8ed-00b4-40e1-b08c-53a922038981}</destination>
+		</relationship>
 		<relationship name="audioFile">
 			<destination>{d338799a-8923-45bc-a71f-9f6f19ab2816}</destination>
 		</relationship>
@@ -106,8 +109,8 @@
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
-		<relationship name="modulators">
-			<destination>{229f7a7b-113f-438e-bcb8-04d088f452c3}</destination>
+		<relationship name="automators">
+			<destination>{9d031754-af47-4222-930c-e5574ac6b7bf}</destination>
 		</relationship>
 		<relationship name="effectChain">
 			<destination>{6bde874c-35f0-4f65-8f3c-c77f1d11365b}</destination>
@@ -136,25 +139,19 @@
 	<object class="MixerBusEffectChain" id="{f7221076-25a7-40f2-9002-a17ef682f2e9}">
 		<relationship name="effects">
 			<destination>{abac94bc-f364-4ac1-991a-d750d6f8951c}</destination>
+			<destination>{8d8541c8-c933-4ae8-8391-9c8174906867}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{403191a2-3c32-48c9-a577-f20b22eb289b}" />
 	<object class="MixerBusFader" id="{c329a1f0-9c3e-471c-93eb-29eff04eeda2}" />
-	<object class="ADSRModulator" id="{229f7a7b-113f-438e-bcb8-04d088f452c3}">
-		<property name="nameOfPropertyBeingModulated">
+	<object class="EventCondition" id="{c9ccc8ed-00b4-40e1-b08c-53a922038981}">
+		<property name="eventState">
+			<value>1</value>
+		</property>
+	</object>
+	<object class="Automator" id="{9d031754-af47-4222-930c-e5574ac6b7bf}">
+		<property name="nameOfPropertyBeingAutomated">
 			<value>volume</value>
-		</property>
-		<property name="initialValue">
-			<value>-80</value>
-		</property>
-		<property name="peakValue">
-			<value>-20</value>
-		</property>
-		<property name="sustainValue">
-			<value>-20</value>
-		</property>
-		<property name="finalValue">
-			<value>-80</value>
 		</property>
 	</object>
 	<object class="MixerBusEffectChain" id="{6bde874c-35f0-4f65-8f3c-c77f1d11365b}">
@@ -164,5 +161,10 @@
 	</object>
 	<object class="MixerBusPanner" id="{36a954e5-b703-4d1e-ba6f-adc33706c1f1}" />
 	<object class="MixerBusFader" id="{abac94bc-f364-4ac1-991a-d750d6f8951c}" />
+	<object class="ObjectSpatialiserEffect" id="{8d8541c8-c933-4ae8-8391-9c8174906867}">
+		<property name="distanceRolloffType">
+			<value>1</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{e3ec98b3-8011-48c3-a6fb-518d9a5292cf}" />
 </objects>

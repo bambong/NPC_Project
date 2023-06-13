@@ -134,8 +134,8 @@ public class TalkPanelController : UI_Base
     public void SetDialogue(Dialogue dialogue, GameObject left, GameObject right)
     {
         //init
-        leftRenderer = left.GetComponent<Renderer>();
-        rightRenderer = right.GetComponent<Renderer>();
+        leftRenderer = left.GetComponent<SpriteRenderer>();
+        rightRenderer = right.GetComponent<SpriteRenderer>();
         leftmaterial = leftRenderer.material;
         rightmaterial = rightRenderer.material;
         leftColor = leftmaterial.color;
