@@ -88,6 +88,7 @@ public class Define
         DataPuzzleEnter,
         Sign,
         ClickButton,
-        Door
+        Door,
+        TextSound
     }
 }

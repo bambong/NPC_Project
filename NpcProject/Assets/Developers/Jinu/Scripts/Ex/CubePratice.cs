@@ -20,7 +20,7 @@ public class CubePratice : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            Managers.Sound.BGMControl(Define.BGM.ReStart);
+            //Managers.Sound.BGMControl(Define.BGM.ReStart);
         }
     }
 

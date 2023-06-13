@@ -34,11 +34,11 @@ public abstract class BaseScene : MonoBehaviour
         if (!bgm.IsNull)
         {
             Managers.Sound.ChangeBGM(bgm);
-            Managers.Sound.BGMControl(Define.BGM.Start);
+            Managers.Sound.PlayBGM();
         }
         else
         {
-            Managers.Sound.BGMControl(Define.BGM.Stop);
+            Managers.Sound.StopBGM();
         }
     }
     public abstract void Clear();
