@@ -21,11 +21,13 @@ public class KakaoPanelController : MonoBehaviour
     private GameObject[] btns;
     [SerializeField]
     private GameObject myseat;
+    [SerializeField]
+    private GameObject wasd;
+    [SerializeField]
+    private GameObject here;
 
     private float waitTime = 1.3f;
 
-    [SerializeField]
-    private CanvasGroup wasdCanvasGroup;
     void Start()
     {
 
@@ -85,6 +87,17 @@ public class KakaoPanelController : MonoBehaviour
         }
     }
 
+    private void WASDEffect()
+    {
+        wasd.SetActive(true);
+        Sequence wasdSeq = DOTween.Sequence();
+
+        wasdSeq.Append(wasd.transform.DOLocalMoveY(wasd.transform.localPosition.y - 100f, 0.5f)).SetEase(Ease.InOutQuad);
+        wasdSeq.AppendInterval(5f);
+        wasdSeq.Append(wasd.transform.DOLocalMoveY(wasd.transform.localPosition.y, 0.5f)).SetEase(Ease.InOutQuad);
+        wasdSeq.Play();
+    }
+
     private void CloseAll()
     {
         for (int i = 0; i < kakaos.Length; i++)
@@ -107,15 +120,12 @@ public class KakaoPanelController : MonoBehaviour
                 btns[index].SetActive(false);
             });
         }
-        Sequence sequence = DOTween.Sequence();
-        sequence.Append(wasdCanvasGroup.DOFade(1, 0.9f).SetEase(Ease.Linear));
-        sequence.Append(wasdCanvasGroup.DOFade(0, 0.9f).SetEase(Ease.Linear));
-        sequence.SetLoops(4);
-        
-
-
+      
         yesTxt.GetComponent<CanvasGroup>().DOFade(0f, 0.45f);
-        yupTxt.GetComponent<CanvasGroup>().DOFade(0f, 0.45f).OnComplete(()=> { sequence.Play(); });
+        yupTxt.GetComponent<CanvasGroup>().DOFade(0f, 0.45f);
+
+        WASDEffect();
+        here.SetActive(true);
     }
 
     public void UpdateName()
