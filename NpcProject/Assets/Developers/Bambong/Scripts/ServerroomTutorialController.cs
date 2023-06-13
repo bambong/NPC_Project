@@ -69,6 +69,10 @@ public class ServerroomTutorialController : GuIdBehaviour
     private const float VIDEO_VISIBLE_TIME = 0.3f;
     protected override void Start()
     {
+        for ( int i = tutorialData.Count; i < pageMarks.Count; ++i) 
+        {
+            pageMarks[i].gameObject.SetActive(false);
+        }
         rootGroup.alpha = 0;
         innerGroup.alpha = 0;
         Open();
@@ -80,7 +84,7 @@ public class ServerroomTutorialController : GuIdBehaviour
         {
             return;
         }
-
+        rootGroup.interactable = true;
         Managers.Game.RetryPanel.CloseResetButton();
         Managers.Game.Player.SetstateStop();
         var seq = DOTween.Sequence();
@@ -88,7 +92,6 @@ public class ServerroomTutorialController : GuIdBehaviour
         seq.AppendCallback(() =>
         {
             onStart?.Invoke();
-            Managers.Game.Player.PurposePanel.Close();
         });
         seq.Append(rootGroup.DOFade(1, openAnimTime));
         seq.OnComplete(SetTutorial);
@@ -158,20 +161,21 @@ public class ServerroomTutorialController : GuIdBehaviour
         Managers.Sound.PlaySFX(Define.SOUND.AssignmentKeyword);
         isPlaying = true;
         nextButton.interactable = false;
-        if (isEventOnce)
-        {
-            Managers.Data.ClearEvent(guId);
-        }
         var seq = DOTween.Sequence();
         seq.Append(rootGroup.DOFade(0, openAnimTime));
         seq.OnComplete(() =>
         {
             Managers.Game.RetryPanel.OpenResetButton();
-            Managers.Game.Player.PurposePanel.Open();
             Managers.Game.Player.SetStateIdle();
+            rootGroup.interactable = false;
             onComplete?.Invoke();
         });
         seq.Play();
     }
 
+
+    public void ClearGuIdEvent() 
+    {
+        Managers.Data.ClearEvent(guId);
+    }
 }
