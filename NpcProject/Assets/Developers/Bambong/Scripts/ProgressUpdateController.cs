@@ -33,5 +33,12 @@ public class ProgressUpdateController : MonoBehaviour
     {
         Managers.Data.UpdateProgress(progress);
     }
-
+    public void ClearProgress(int progress) 
+    {
+        if (Managers.Data.Progress != progress) 
+        {
+            return;
+        }
+        Managers.Data.ClearCurrentProgress();
+    }
 }

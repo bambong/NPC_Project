@@ -25,6 +25,27 @@ public class DataManager
     public PurposeData PurposeData { get => purposeData; }
 
     public bool isAvaildProgress(int progress) => progress >= this.progress; 
+
+
+    public void ClearCurrentProgress() 
+    {
+        ++progress;
+        if (Managers.Game.Player != null)
+        {
+            Managers.Game.Player.PurposePanel.ClearPurpose();
+        }
+    }
+
+    public bool SetProgressWithoutUpdate(int progress) 
+    {
+        if (!isAvaildProgress(progress))
+        {
+            return false;
+        }
+
+        this.progress = progress;
+        return true;
+    }
     public bool UpdateProgress(int progress) 
     {
         if (!isAvaildProgress(progress)) 

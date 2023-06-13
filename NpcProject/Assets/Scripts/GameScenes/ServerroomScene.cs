@@ -17,10 +17,6 @@ public class ServerroomScene : BaseScene
     
     [SerializeField]
     private Vector3 playerSpawnSpot;
-   
-    [SerializeField]
-    private int progress = 1;
-
 
     public override void Clear()
     {

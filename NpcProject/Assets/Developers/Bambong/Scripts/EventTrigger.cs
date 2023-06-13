@@ -3,6 +3,7 @@ using Newtonsoft.Json.Bson;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Collider))]
 public class EventTrigger : GuIdBehaviour
@@ -16,7 +17,12 @@ public class EventTrigger : GuIdBehaviour
     [SerializeField]
     private bool isPlayOnce = true;
 
+    [SerializeField]
+    private UnityEvent onInteract;
+
     protected bool isPlay = false;
+
+
 
     public virtual void OnEventTrigger(Collider other) 
     {
@@ -42,6 +48,7 @@ public class EventTrigger : GuIdBehaviour
             {
                 return;
             }
+            onInteract?.Invoke();
             OnEventTrigger(other);
         }
     }
