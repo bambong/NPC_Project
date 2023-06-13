@@ -48,15 +48,15 @@ public class CutSceneController : MonoBehaviour
         cutSceneprogress = false;
         if(talkCount >= cutSceneTalk.Count)
         {
-            talkCount = 0;
-
-            curCutScene.Pause();
-            var talk = Managers.Talk.GetTalkEvent(cutSceneTalk[talkCount]);
-            talk.OnComplete(() => talkCount++);
-            talk.OnComplete(() => Managers.Game.SetStateEvent());
-            talk.OnComplete(() => curCutScene.Resume());
-            Managers.Talk.PlayCurrentSceneTalk(cutSceneTalk[talkCount]);
+            talkCount = 0;            
         }
+
+        curCutScene.Pause();
+        var talk = Managers.Talk.GetTalkEvent(cutSceneTalk[talkCount]);
+        talk.OnComplete(() => talkCount++);
+        talk.OnComplete(() => Managers.Game.SetStateEvent());
+        talk.OnComplete(() => curCutScene.Resume());
+        Managers.Talk.PlayCurrentSceneTalk(cutSceneTalk[talkCount]);
     }
 
     public void CutScenePause()

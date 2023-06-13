@@ -47,11 +47,16 @@ public class ExtraAnimationController : MonoBehaviour
 
     public void FrontWalk()
     {
-
+        animatorController.Play("YooMinWooWalkFront");
     }
 
     public void BackWalk()
     {
+        animatorController.Play("YooMinWooWalkBack");
+    }
 
+    public void WalkSound()
+    {
+        Managers.Sound.PlaySFX(Define.SOUND.WalkPlayer);
     }
 }

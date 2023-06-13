@@ -204,6 +204,10 @@ public class TalkPanelController : UI_Base
 
     public void RestorationMat()
     {
+        if(leftmaterial == null)
+        {
+            return;
+        }
         leftmaterial.color = leftColor;
         leftRenderer.material = leftmaterial;
 
