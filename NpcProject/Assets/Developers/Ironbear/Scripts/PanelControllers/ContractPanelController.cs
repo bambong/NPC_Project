@@ -30,7 +30,7 @@ public class ContractPanelController : MonoBehaviour
     private void Start()
     {
         Managers.Game.Player.SetstateStop();
-
+        
         clickMouseCanvasGroup = clickMouse.GetComponent<CanvasGroup>();
         contractCanvasGroup = contract.GetComponent<CanvasGroup>();
         contractColor = contractImage.GetComponent<Image>();
