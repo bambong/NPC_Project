@@ -746,8 +746,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e734157c9a7582949b2a9474cead41bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  guId: 
+  guidEventPlayOnce: 0
   targetTag: Player
   isPlayOnce: 0
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
   virCamera: {fileID: 1882251690}
 --- !u!65 &40584141
 BoxCollider:
@@ -6175,7 +6180,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  m_CustomBlends: {fileID: 11400000, guid: 8252b061771595f408b90a2eb992c389, type: 2}
+  m_CustomBlends: {fileID: 0}
   m_CameraCutEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -9735,8 +9740,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e734157c9a7582949b2a9474cead41bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  guId: 
+  guidEventPlayOnce: 0
   targetTag: Player
   isPlayOnce: 0
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
   virCamera: {fileID: 855878969}
 --- !u!65 &393003171
 BoxCollider:
@@ -17643,8 +17653,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e734157c9a7582949b2a9474cead41bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  guId: 
+  guidEventPlayOnce: 0
   targetTag: Player
   isPlayOnce: 0
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
   virCamera: {fileID: 855878969}
 --- !u!65 &659359600
 BoxCollider:
@@ -37227,8 +37242,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b1d19e43fe6ef4cb9af91d499c0854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  guId: 
+  guidEventPlayOnce: 0
   targetTag: Player
   isPlayOnce: 1
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
   playableDirector: {fileID: 1474018133}
   startposition: {fileID: 57475440}
   cutsceneplayer: {fileID: 8047939838994623445}
@@ -44300,8 +44320,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e734157c9a7582949b2a9474cead41bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  guId: 
+  guidEventPlayOnce: 0
   targetTag: Player
   isPlayOnce: 0
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
   virCamera: {fileID: 640508986}
 --- !u!65 &1727451623
 BoxCollider:
@@ -54182,8 +54207,6 @@ MonoBehaviour:
   vircam: {fileID: 1882251690}
   tutorialSceneTalkData: {fileID: 11400000, guid: 7d50e8233f93f1845b8c4519239f8d8d, type: 2}
   playerSpawnSpot: {x: 304.68, y: 3, z: 79}
-  progress: 1
-  style: {fileID: 0}
 --- !u!4 &2089485275
 Transform:
   m_ObjectHideFlags: 0
@@ -55942,7 +55965,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -766534836, guid: 35245a1cf8cceb545aeb86fd00a58af0, type: 3}
+  m_Sprite: {fileID: -757394969, guid: 6fd2469c1c3f8464d830b02b8928f614, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -56498,6 +56521,7 @@ MonoBehaviour:
   cutSceneAnimatorController: {fileID: 1027293470907235581}
   cutScenePlayer: {fileID: 1027293471556011098}
   curPlayable: {fileID: 0}
+  transitionScene: 0
 --- !u!4 &1027293471556011093
 Transform:
   m_ObjectHideFlags: 0
@@ -56869,7 +56893,7 @@ GameObject:
   m_IsActive: 1
 --- !u!4 &1027293472319341380
 Transform:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -56884,7 +56908,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1027293472319341381
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -56901,7 +56925,7 @@ GameObject:
   m_IsActive: 1
 --- !u!114 &1027293472319341383
 MonoBehaviour:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -57315,8 +57339,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b1d19e43fe6ef4cb9af91d499c0854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  guId: 
+  guidEventPlayOnce: 0
   targetTag: Player
   isPlayOnce: 0
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
   playableDirector: {fileID: 1027293472747865067}
   startposition: {fileID: 0}
   cutsceneplayer: {fileID: 0}
@@ -57722,7 +57751,7 @@ Animator:
   m_GameObject: {fileID: 3101208047865020361}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2dae7b2fb6d3c5944b443d04937e8bc4, type: 2}
+  m_Controller: {fileID: 22100000, guid: 92c1cc8f5369233429e39ef709146338, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -58011,6 +58040,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: b5439db0908c1be4ab450c674cf6434a, type: 2}
     - {fileID: 11400000, guid: 5d24bdf13c7eac744a019c8418137c7b, type: 2}
     - {fileID: 11400000, guid: 01b8f2f6a4a84a544980d8846260e026, type: 2}
+    - {fileID: 11400000, guid: 2cd6db1762dccd04ea6eed84c23e81c0, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -58222,6 +58252,20 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8047939838994623445}
+          m_TargetAssemblyTypeName: CutScenePlayerController, Assembly-CSharp
+          m_MethodName: SignalSceneLoad
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &8047939838994623445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58238,6 +58282,7 @@ MonoBehaviour:
   cutSceneAnimatorController: {fileID: 6318814389885838369}
   cutScenePlayer: {fileID: 8907736408222943064}
   curPlayable: {fileID: 1474018133}
+  transitionScene: 3
 --- !u!1 &8907736408222943064
 GameObject:
   m_ObjectHideFlags: 0
