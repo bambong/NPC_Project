@@ -101,7 +101,10 @@ public class TalkManager
         for(int i = 0; i < dialogueExcel.datas.Count; ++i) 
         {
             var data = dialogueExcel.datas[i];
-
+            if (!speakerDatas.ContainsKey(data.speaker)) 
+            {
+                continue;
+            }
             TalkEvent talkEvent;
             Dialogue dialogue = new Dialogue();
             dialogue.text = data.text;
