@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Playables;
 
 public class TimelineTrigger : EventTrigger
@@ -11,6 +12,10 @@ public class TimelineTrigger : EventTrigger
     private CutScenePlayerController cutsceneplayer;
     [SerializeField]
     private bool isLeft;
+
+    [SerializeField]
+    private UnityEvent onComplete;
+
     private CutSceneEvent cutScene;
     
 
@@ -23,6 +28,7 @@ public class TimelineTrigger : EventTrigger
 
         cutScene = new CutSceneEvent(playableDirector);
         cutScene.Play();
+        cutScene.OnComplete(() => { onComplete?.Invoke(); });
         base.OnEventTrigger(other);
     }    
 }

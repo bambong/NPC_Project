@@ -29,5 +29,6 @@ public class StatePanelController : MonoBehaviour
     {
         door.transform.localPosition = Vector3.zero;
         door.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        Managers.Data.UpdateProgress(1);
     }
 }
