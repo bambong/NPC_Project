@@ -164,7 +164,7 @@ public class TalkPanelController : UI_Base
             rightRenderer.material = rightmaterial;
         }
 
-        spekerName.text = $"-{dialogue.speaker.name}-";
+        spekerName.text = $"-{dialogue.speaker.charName}-";
         choiceButton.Inactive();
         dialogueText.text = "";
     }
@@ -197,7 +197,7 @@ public class TalkPanelController : UI_Base
             rightRenderer.material = rightmaterial;
         }
 
-        spekerName.text = $"-{dialogue.speaker.name}-";
+        spekerName.text = $"-{dialogue.speaker.charName}-";
         StartCoroutine(SkipDelayTime());
         StartCoroutine(PlayTextAnimation());
     }
