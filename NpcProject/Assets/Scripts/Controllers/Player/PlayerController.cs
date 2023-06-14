@@ -98,6 +98,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     public PurposePanelController PurposePanel { get => purposePanel;  }
     public SignalPanelController SignalPanel { get => signalPanel;  }
     public PlayerShadowController ShadowController { get => shadowController; }
+    public PlayerStateController PlayerStateController { get => playerStateController; }    
 
     private const float CHECK_RAY_WIDTH = 0.3f;
     private const float WIRE_EFFECT_OPEN_TIME = 2f;

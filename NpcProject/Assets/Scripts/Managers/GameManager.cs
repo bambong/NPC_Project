@@ -89,6 +89,7 @@ public class GameManager
         player = null;
         Physics.gravity = prevGravity;
         Managers.Time.SetTimeScale(TIME_TYPE.NONE_PLAYER, 1);
+        destinationPanel.Close();
     }
 
     #region StateEnter
@@ -98,7 +99,6 @@ public class GameManager
         Managers.Time.SetTimeScale(TIME_TYPE.NONE_PLAYER, DEBUG_TIME_SCALE);
         prevGravity = Physics.gravity;
         Physics.gravity = prevGravity * DEBUG_TIME_SCALE;
-
     }
     #endregion StateEnter
     #region StateExit

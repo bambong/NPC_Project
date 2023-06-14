@@ -7174,6 +7174,42 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &651149666 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2636733709572718412, guid: 15d8538bf43c463468135f550c414cb2, type: 3}
+  m_PrefabInstance: {fileID: 3262412}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &651149670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 651149666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d40374fff3129954ba98f0b44d324068, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guId: 
+  guidEventPlayOnce: 0
+  targetTag: Player
+  isPlayOnce: 1
+  onInteract:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2089485276}
+        m_TargetAssemblyTypeName: ProgressUpdateController, Assembly-CSharp
+        m_MethodName: UpdateProgress
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &670431794
 GameObject:
   m_ObjectHideFlags: 0
@@ -8590,7 +8626,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6866029669464227909, guid: d403a1a6fda17004ab20c19eee811fd2, type: 3}
       propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6866029669464227909, guid: d403a1a6fda17004ab20c19eee811fd2, type: 3}
       propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName

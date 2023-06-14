@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: uvgroup3_Dissolve
+  m_Name: uvgroup2_Dissolve
   m_Shader: {fileID: 4800000, guid: 9f7e299f202797a4cb234938560347b2, type: 3}
   m_ValidKeywords:
   - _2SIDESSECONDEDGE_ON
@@ -15,8 +15,7 @@ Material:
   - _EDGESAFFECT_EMISSION
   - _GLOSSSOURCE_METALLICALPHA
   - _GUIDEAFFECTSEDGESBLENDING_ON
-  m_InvalidKeywords:
-  - _USEEMISSION_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -31,7 +30,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 1}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: c530344da6fa6304bbb1bf9dffb69817, type: 3}
+        m_Texture: {fileID: 2800000, guid: 5eba38250b6611049a8bb39ac010cc17, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DisplacementGuide:
@@ -43,7 +42,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
-        m_Texture: {fileID: 2800000, guid: 07146e64a349a124eba44de09a1cb28a, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionTexture:
@@ -116,7 +115,7 @@ Material:
     - _Cutoff: 1
     - _DisplacementGuideTilling: 1
     - _DisplacementGuideTillingSpeed: 0.005
-    - _DissolveAmount: 1
+    - _DissolveAmount: 0.534
     - _Edge1PatternTilling: 8.61
     - _EdgeWidth: 0.054
     - _EdgesAffect: 1
@@ -137,11 +136,11 @@ Material:
     - _MainEdgePatternTilling: 7.4
     - _MainEdgeWidth: 0.026
     - _MaxHeightWhenAmount1: -1.23
-    - _MaxValueWhenAmount1: 22.38
+    - _MaxValueWhenAmount1: 1
     - _MaxY: 17.1
     - _MetallicValue: 0.251
     - _MinHeightWhenAmount0: 16.37
-    - _MinValueWhenAmount0: -2.63
+    - _MinValueWhenAmount0: 0
     - _MinY: -2.1
     - _NoiseStrength: 0.67
     - _QueueControl: -1
@@ -153,7 +152,7 @@ Material:
     - _SpecularHighlights: 1
     - _SpecularValue: 1
     - _Test: 0.01
-    - _UseEmission: 1
+    - _UseEmission: 0
     - _UseTriplanarUvs: 0
     - _UseTriplanarUvsGuide: 0
     - _VertexDisplacement: 0.05

@@ -12,6 +12,7 @@ public class DestinationPanelController : UI_Base
     public override void Init()
     {
         DontDestroyOnLoad(gameObject);
+     
     }
 
     public void Open(string str)
@@ -19,5 +20,13 @@ public class DestinationPanelController : UI_Base
         styleText.textItems.First().text = str;
         styleText.gameObject.SetActive(true);
         styleText.Play();
+    }
+    public void Close()
+    {
+        if (!gameObject.activeSelf) 
+        {
+            return;
+        }
+        styleText.gameObject.SetActive(false);
     }
 }

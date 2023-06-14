@@ -21,12 +21,8 @@ public class PurposePanelController : UI_Base
     [SerializeField]
     private TextMeshProUGUI purposeText;
 
-    [SerializeField]
-    private TextMeshProUGUI titleText;
-
     
     private bool isOpen;
-    private string originTitle;
     private Color originPanelColor;
     private const float OPEN_ANIM_TIME = 0.5f;
     private const float CLOSE_ANIM_TIME = 0.5f;
@@ -49,7 +45,6 @@ public class PurposePanelController : UI_Base
         }
         isOpen = true;
         panel.color = originPanelColor;
-        titleText.text = originTitle;
         purposeText.text = temp;
         canvasGroup.DOKill();
         var animTime = OPEN_ANIM_TIME * (1 - canvasGroup.alpha);
@@ -102,7 +97,6 @@ public class PurposePanelController : UI_Base
         seq.Append(panel.DOColor(Color.white, CHANGE_PURPOSE_ANIM_OPEN_TIME));
         seq.AppendInterval(0.2f);
         seq.AppendCallback(() => {
-            titleText.text = string.Empty;
             purposeText.text = string.Empty; });
         seq.Append(canvasGroup.DOFade(0, CLOSE_ANIM_TIME));
         seq.Play();
@@ -110,7 +104,6 @@ public class PurposePanelController : UI_Base
     public override void Init()
     {
         originPanelColor = panel.color;
-        originTitle = titleText.text;
       //  Open();
     }
 }

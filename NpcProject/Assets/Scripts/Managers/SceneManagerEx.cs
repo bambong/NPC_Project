@@ -15,6 +15,7 @@ public class SceneManagerEx
     public Action OnSceneUnload;
     private bool isTransitioning;
     public bool IsTransitioning { get => isTransitioning;}
+    private const float TRANSITION_ANIM_TIME = 1f;
     public void Init() 
     {
         sceneTransition = Managers.UI.MakeSceneUI<SceneTransitionUIController>(null,"SceneTransitionUI");
@@ -37,23 +38,18 @@ public class SceneManagerEx
     {
         isTransitioning = true;
         string prevSceneName = SceneManager.GetActiveScene().name;
-        float alpha = 0;
-        float progress = 0;
-        while (progress < 1)
-        {
-            progress += Time.deltaTime;
-            sceneTransition.canvasGroup.alpha = Mathf.Lerp(alpha, 1, progress);
-            yield return null;
-        }
-        alpha = 1;
-        sceneTransition.canvasGroup.alpha = alpha;
+   
+
+        sceneTransition.OpenPanel(TRANSITION_ANIM_TIME);
+        sceneTransition.SetPercentUpdate(0);
+        yield return new WaitForSeconds(TRANSITION_ANIM_TIME);
+
         var async =  SceneManager.LoadSceneAsync(sceneName);
         async.allowSceneActivation = false;
         async.completed += (async) => { Managers.OnSceneLoad(); };
-        progress = 0;
-        while (progress < 1 || async.progress < 0.9f)
+        while ( async.progress < 0.9f)
         {
-            progress += Time.deltaTime;
+            sceneTransition.SetPercentUpdate((int)(async.progress * 100));
            // sceneTransition.canvasGroup.alpha = Mathf.Lerp(alpha, 1, progress);
             yield return null;
         }
@@ -69,22 +65,21 @@ public class SceneManagerEx
                 Managers.Data.SceneGameData.Remove(prevSceneName);
             }
         }
-        //sceneTransition.canvasGroup.alpha = 1;
-        Managers.Clear();
+        
+       //sceneTransition.canvasGroup.alpha = 1;
+         Managers.Clear();
         DOTween.KillAll();
         async.allowSceneActivation = true;
-        progress = 0;
         while (!async.isDone)
         {
+            sceneTransition.SetPercentUpdate((int)(async.progress * 100));
             yield return null;
         }
-        while (progress < 1)
-        {
-            progress += Time.deltaTime;
-            sceneTransition.canvasGroup.alpha = Mathf.Lerp(alpha, 0, progress);
-            yield return null;
-        }
-        sceneTransition.canvasGroup.alpha = 0;
+        
+        sceneTransition.SetPercentUpdate(100);
+        sceneTransition.ClosePanel(TRANSITION_ANIM_TIME);
+        yield return new WaitForSeconds(TRANSITION_ANIM_TIME);
+
         isTransitioning = false;
         onComplete?.Invoke();
     }
