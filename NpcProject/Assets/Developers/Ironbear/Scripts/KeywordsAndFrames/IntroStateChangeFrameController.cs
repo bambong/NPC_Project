@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
-using UnityEngine.UIElements;
 
 public class IntroStateChangeFrameController : MonoBehaviour, IDropHandler
 {
@@ -9,6 +8,8 @@ public class IntroStateChangeFrameController : MonoBehaviour, IDropHandler
     private GameObject statePanel;
     [SerializeField]
     private GameObject myseat;
+    [SerializeField]
+    private GameObject arrow;
    
 
     private CanvasGroup parentCanvas;
@@ -47,7 +48,15 @@ public class IntroStateChangeFrameController : MonoBehaviour, IDropHandler
 
                 //문 열림...
                 Managers.Game.Player.SetStateIdle();
-                statePanelController.DoorOpen();               
+                statePanelController.DoorOpen();
+                arrow.SetActive(true);
+                arrow.GetComponent<CanvasGroup>().DOFade(1f, 0.5f);
+
+                Sequence arrowSeq = DOTween.Sequence();
+                arrowSeq.Append(arrow.transform.DOLocalMoveX(arrow.transform.localPosition.x + 0.5f, 1f)).SetEase(Ease.Linear);
+                arrowSeq.Append(arrow.transform.DOLocalMoveX(arrow.transform.localPosition.x, 1f)).SetEase(Ease.Linear);
+                arrowSeq.SetLoops(-1);
+                arrowSeq.Play();
             });
             
         }

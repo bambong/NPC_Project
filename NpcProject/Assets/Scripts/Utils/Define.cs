@@ -8,7 +8,7 @@ public class Define
     {
         Unknown,
         DataPuzzle,
-        Chapter_01_Office_New,
+        Chapter_01_Office,
         Chapter_01_Serverroom_Corridor,
         Chapter_01_Puzzle01, 
         Chapter_01_Puzzle02,
@@ -88,6 +88,7 @@ public class Define
         DataPuzzleEnter,
         Sign,
         ClickButton,
-        Door
+        Door,
+        TextSound
     }
 }
