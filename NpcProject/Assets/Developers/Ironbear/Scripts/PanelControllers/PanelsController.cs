@@ -32,7 +32,7 @@ public class PanelsController : UI_Base
 
     private void Start()
     {
-        Cursor.SetCursor(noramlCursor, Vector2.zero, CursorMode.Auto);
+        Cursor.SetCursor(noramlCursor, Vector2.zero, CursorMode.ForceSoftware);
         Cursor.lockState = CursorLockMode.Confined;
         Camera.main.ScreenPointToRay(Input.mousePosition);
 

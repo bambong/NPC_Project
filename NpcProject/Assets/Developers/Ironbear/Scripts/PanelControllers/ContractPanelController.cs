@@ -14,6 +14,8 @@ public class ContractPanelController : MonoBehaviour
     private GameObject inputField;
     [SerializeField]
     private GameObject kakaoPanel;
+    [SerializeField]
+    private GameObject mouse;
 
     private CanvasGroup contractCanvasGroup;
     private CanvasGroup inputFiledCanvasGroup;
@@ -22,7 +24,7 @@ public class ContractPanelController : MonoBehaviour
     private float effectDuration = 1f;
     private float targetOn = 0f;
     private float targetOff = -100f;
-    private float delayTime = 3f;
+    private float delayTime = 2.5f;
 
     private void Start()
     {
@@ -31,13 +33,25 @@ public class ContractPanelController : MonoBehaviour
         contractCanvasGroup = contract.GetComponent<CanvasGroup>();
         contractColor = contractImage.GetComponent<Image>();
         inputFiledCanvasGroup = inputField.GetComponent<CanvasGroup>();
+
         inputFiledCanvasGroup.alpha = 0f;
         contractCanvasGroup.alpha = 0f;
+        mouse.GetComponent<CanvasGroup>().alpha = 0f;
+        signCanvasGroup.blocksRaycasts = false;
 
         inputField.SetActive(false);
         kakaoPanel.SetActive(false);
 
-        DOVirtual.DelayedCall(delayTime, ContractOnEffect);
+        ContractOnEffect();
+
+        Sequence openSeq = DOTween.Sequence();
+        openSeq.PrependInterval(delayTime / 2);
+        openSeq.Append(mouse.GetComponent<CanvasGroup>().DOFade(1f, 1f).SetEase(Ease.OutQuad));
+        openSeq.Join(mouse.transform.DOLocalMoveY(mouse.transform.localPosition.y + 80f, effectDuration).SetEase(Ease.OutQuad));
+        openSeq.Play().OnComplete(() =>
+        {
+            signCanvasGroup.blocksRaycasts = true;
+        });
     }
 
     public void ClickSignBtn()
@@ -47,6 +61,7 @@ public class ContractPanelController : MonoBehaviour
 
         signCanvasGroup.DOFade(0f, effectDuration);
         contractColor.DOColor(targetColor, effectDuration);
+        mouse.GetComponent<CanvasGroup>().DOFade(0f, effectDuration);
 
         InputFieldOnEffect();
     }

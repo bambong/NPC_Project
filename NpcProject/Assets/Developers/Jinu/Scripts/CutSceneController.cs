@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Playables;
 
 
@@ -15,6 +16,9 @@ public class CutSceneController : MonoBehaviour
     private GameObject left;
     [SerializeField]
     private GameObject right;
+
+    [SerializeField]
+    private UnityEvent allTalkComplete;
 
     private int talkCount = 0;
     private bool cutSceneprogress = false;    
@@ -30,6 +34,8 @@ public class CutSceneController : MonoBehaviour
 
         curCutScene.Pause();
         var talk = Managers.Talk.GetTalkEvent(cutSceneTalk[talkCount]);
+
+
         talk.OnStart(() => talk.iscutScene = true);
         talk.OnStart(() => talk.leftObject = left);
         talk.OnStart(() => talk.rightObject = right);
@@ -39,6 +45,10 @@ public class CutSceneController : MonoBehaviour
         //talk.OnComplete(() => SkipCutScene()); //cutScene skip key input
         talk.OnComplete(() => Managers.Game.SetStateEvent());
         talk.OnComplete(() => curCutScene.Resume());
+        if(talkCount == cutSceneTalk.Count - 1) 
+        {
+            talk.OnComplete(() => allTalkComplete?.Invoke());
+        }
         //Talk Event Start
         Managers.Talk.PlayCurrentSceneTalk(cutSceneTalk[talkCount]);
     }
@@ -56,6 +66,11 @@ public class CutSceneController : MonoBehaviour
         talk.OnComplete(() => talkCount++);
         talk.OnComplete(() => Managers.Game.SetStateEvent());
         talk.OnComplete(() => curCutScene.Resume());
+
+        if (talkCount == cutSceneTalk.Count - 1)
+        {
+            talk.OnComplete(() => allTalkComplete?.Invoke());
+        }
         Managers.Talk.PlayCurrentSceneTalk(cutSceneTalk[talkCount]);
     }
 
