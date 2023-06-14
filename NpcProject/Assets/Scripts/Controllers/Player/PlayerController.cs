@@ -169,9 +169,6 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
         var moveVec = new Vector3(hor, 0, ver).normalized;
         moveVec = rotater.transform.TransformDirection(-moveVec);
-
-        var boxHalfSize = box.size.x * 0.5f;
-        var checkWidth = box.size.x * CHECK_RAY_WIDTH;
         
         var isSlope = IsOnSlope(moveVec);
         moveVec = MoveRayCheck(moveVec, isSlope);
