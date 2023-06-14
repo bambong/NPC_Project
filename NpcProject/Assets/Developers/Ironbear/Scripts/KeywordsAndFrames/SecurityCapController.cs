@@ -68,8 +68,9 @@ public class SecurityCapController : MonoBehaviour, IDropHandler
                 capPanel.SetActive(false);
             });          
             Managers.Game.Player.SetStateIdle();
-            //var cutScene = new CutSceneEvent(doorCutScene);
-            //cutScene.Play();
+            var talk = new TalkEvent();
+            talk = Managers.Talk.GetTalkEvent(10005);
+            talk.Play();
         });
 
 

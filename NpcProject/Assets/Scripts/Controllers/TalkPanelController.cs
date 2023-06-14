@@ -8,19 +8,23 @@ using DG.Tweening;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using HangleChange;
 
-
-public class HangleChanger
-{
-    static public Dictionary<string, string> hangleMap = new Dictionary<string, string>()
+namespace HangleChange
+{    
+    public static class HangleChanger
     {
-        {"는", "은" },
-        {"가", "이" },
-        {"와", "과" },
-        {" 씨", " 씨" },
-        {"에게", "에게" }
-    };
+        public static Dictionary<string, string> hangleMap = new Dictionary<string, string>()
+        {
+            {"는", "은" },
+            {"가", "이" },
+            {"와", "과" },
+            {" 씨", " 씨" },
+            {"에게", "에게" }
+        };
+    }
 }
+
 
 public class TalkPanelController : UI_Base
 {
@@ -469,7 +473,14 @@ public class TalkPanelController : UI_Base
         //three word hangle
         if ((unicodeValue - 0xAC00) % 28 > 0)
         {
-            return HangleChanger.hangleMap[item];
+            if(HangleChanger.hangleMap.ContainsKey(item))
+            {
+                return HangleChanger.hangleMap[item];
+            }
+            else
+            {
+                return item;
+            }
         }
         else
         {
