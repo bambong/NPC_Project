@@ -24,6 +24,11 @@ public class ChoiceButtonController : UI_Base
     [SerializeField]
     private Vector3 layoutStartPos;
 
+    [SerializeField]
+    private Image backimageA;
+    [SerializeField]
+    private Image backimageB;
+
     public bool IsSelect { get => isSelect; }
     
     public TextMeshProUGUI choiceTextA;
@@ -58,8 +63,8 @@ public class ChoiceButtonController : UI_Base
         Sequence seq = DOTween.Sequence();
         if (activeCount == 2)
         {
-            choiceA.gameObject.SetActive(true);
-            choiceB.gameObject.SetActive(true);
+            backimageA.gameObject.SetActive(true);
+            backimageB.gameObject.SetActive(true);
             seq.Append(backPanelGroup.DOFade(1, 1f));
             seq.Append(layoutCanvasGroup.DOFade(1, 0.5f));
             seq.Join(layoutRect.DOAnchorPos(Vector3.zero,0.5f));
@@ -96,8 +101,8 @@ public class ChoiceButtonController : UI_Base
     public void Inactive()
     {
         AnimClear();
-        choiceA.gameObject.SetActive(false);
-        choiceB.gameObject.SetActive(false);
+        backimageA.gameObject.SetActive(false);
+        backimageB.gameObject.SetActive(false);
         choiceC.gameObject.SetActive(false);
     }
 
