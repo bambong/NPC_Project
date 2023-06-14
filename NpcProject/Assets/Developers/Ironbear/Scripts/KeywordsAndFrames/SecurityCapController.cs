@@ -16,8 +16,8 @@ public class SecurityCapController : MonoBehaviour, IDropHandler
     private GameObject unlocked;
     [SerializeField]
     private GameObject card;
-    [SerializeField]
-    private PlayableDirector doorCutScene;
+    //[SerializeField]
+    //private PlayableDirector doorCutScene;
 
     private CanvasGroup lockedCanvas;
     private CanvasGroup unlockedCanvas;
@@ -50,7 +50,7 @@ public class SecurityCapController : MonoBehaviour, IDropHandler
                        
             parentCanvas.interactable = false;
             parentCanvas.blocksRaycasts = false;
-            
+            Managers.Data.UpdateProgress(Managers.Data.Progress+1);
             CapUnlock();
         }
     }
@@ -68,8 +68,8 @@ public class SecurityCapController : MonoBehaviour, IDropHandler
                 capPanel.SetActive(false);
             });          
             Managers.Game.Player.SetStateIdle();
-            var cutScene = new CutSceneEvent(doorCutScene);
-            cutScene.Play();
+            //var cutScene = new CutSceneEvent(doorCutScene);
+            //cutScene.Play();
         });
 
 

@@ -123,7 +123,7 @@ public class KakaoPanelController : MonoBehaviour
       
         yesTxt.GetComponent<CanvasGroup>().DOFade(0f, 0.45f);
         yupTxt.GetComponent<CanvasGroup>().DOFade(0f, 0.45f);
-
+        Managers.Data.UpdateProgress(0);
         WASDEffect();
         here.SetActive(true);
     }
