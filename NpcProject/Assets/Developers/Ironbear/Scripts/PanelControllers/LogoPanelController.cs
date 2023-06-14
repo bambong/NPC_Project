@@ -15,8 +15,6 @@ public class LogoPanelController : UI_Base
     [SerializeField]
     private GameObject bar;
     [SerializeField]
-    private GameObject arm;
-    [SerializeField]
     private GameObject title;
 
     [SerializeField]
@@ -39,7 +37,7 @@ public class LogoPanelController : UI_Base
     {
         logos.transform.localPosition = new Vector3(-1100, 0, 0);
         bar.transform.localPosition = new Vector3(-1600, 160, 0);
-        arm.transform.localRotation = Quaternion.Euler(0f, 0f, 1f);
+
         for (int i = 0; i < btnsList.Length; i++)
         {
             GameObject btn = btnsList[i];
@@ -48,11 +46,6 @@ public class LogoPanelController : UI_Base
             btn.transform.localPosition = pos; 
         }
         MoveObject();
-
-        Sequence armSq = DOTween.Sequence();
-        armSq.Append(arm.transform.DORotate(new Vector3(0f, 0f, 5f), 2f).SetEase(Ease.InOutSine));
-        armSq.Append(arm.transform.DORotate(new Vector3(0f, 0f, 1f), 2f).SetEase(Ease.InOutSine));
-        armSq.SetLoops(-1);
     }
 
     private void MoveObject()
