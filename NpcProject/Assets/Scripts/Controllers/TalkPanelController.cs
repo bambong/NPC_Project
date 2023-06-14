@@ -9,6 +9,19 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
+
+public class HangleChanger
+{
+    static public Dictionary<string, string> hangleMap = new Dictionary<string, string>()
+    {
+        {"는", "은" },
+        {"가", "이" },
+        {"와", "과" },
+        {" 씨", " 씨" },
+        {"에게", "에게" }
+    };
+}
+
 public class TalkPanelController : UI_Base
 {
     private const string PATTERN = "@(.*?)@";
@@ -59,16 +72,6 @@ public class TalkPanelController : UI_Base
     private Color rightColor;
     private Color gray = new Color(56/255f, 56/255f, 56/255f);
 
-
-    private Dictionary<string, string> hangleMap = new Dictionary<string, string>()
-    {
-        {"는", "은" },
-        {"가", "이" },
-        {"와", "과" },
-        {"씨", "씨" },
-        {"에게", "에게" }
-    };
-
     public override void Init()
     {
         choiceButton.AddButtonEvent();
@@ -95,7 +98,7 @@ public class TalkPanelController : UI_Base
             }
             leftRights[i].DOFade(1, 0);
         }
-        spekerName.text = $"-{dialogue.speaker.name}-";
+        spekerName.text = $"-{dialogue.speaker.charName}-";
         choiceButton.Inactive();
         dialogueText.text = "";
     }
@@ -125,7 +128,7 @@ public class TalkPanelController : UI_Base
             leftRights[i].DOFade(1, 0);
         }
 
-        spekerName.text = $"-{dialogue.speaker.name}-";
+        spekerName.text = $"-{dialogue.speaker.charName}-";
         StartCoroutine(SkipDelayTime());
         StartCoroutine(PlayTextAnimation());
     }
@@ -466,7 +469,7 @@ public class TalkPanelController : UI_Base
         //three word hangle
         if ((unicodeValue - 0xAC00) % 28 > 0)
         {
-            return hangleMap[item];
+            return HangleChanger.hangleMap[item];
         }
         else
         {

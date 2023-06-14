@@ -49,9 +49,8 @@ public class TMPTextSwitcherMixerBehaviour : PlayableBehaviour
             totalWeight += inputWeight;
 
             if (inputWeight > greatestWeight)
-            {
-                m_TrackBinding.DOText(input.text, 1f);
-                //m_TrackBinding.text = input.text;
+            {                
+                m_TrackBinding.text = SetText(input.text);
                 greatestWeight = inputWeight;
             }
 
@@ -63,7 +62,7 @@ public class TMPTextSwitcherMixerBehaviour : PlayableBehaviour
         m_TrackBinding.fontSize = Mathf.RoundToInt (blendedFontSize + m_DefaultFontSize * (1f - totalWeight));
         if (currentInputs != 1 && 1f - totalWeight > greatestWeight)
         {
-            //m_TrackBinding.text = m_DefaultText;
+            m_TrackBinding.text = m_DefaultText;
         }
     }
 
@@ -77,5 +76,35 @@ public class TMPTextSwitcherMixerBehaviour : PlayableBehaviour
         m_TrackBinding.color = m_DefaultColor;
         m_TrackBinding.fontSize = m_DefaultFontSize;
         m_TrackBinding.text = m_DefaultText;
+    }
+
+    private string SetText(string text)
+    {
+        string dialogueText = "";
+
+        char[] sep = { '#', '#' };
+
+        string[] result = text.Split(sep);
+
+        bool hangle = false;
+
+        foreach (var item in result)
+        {
+            if (item == "player")
+            {
+                hangle = true;
+                dialogueText += Managers.Talk.GetSpeakerName(101);
+                continue;
+            }
+            if (hangle == true)
+            {
+                dialogueText += HangleChanger.hangleMap[item];
+                hangle = false;
+                continue;
+            }
+            dialogueText += item;
+        }
+        
+        return dialogueText;
     }
 }
