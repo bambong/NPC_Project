@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;
-using static ToonyColorsPro.ShaderGenerator.Enums;
 
 public class TimelineTrigger : EventTrigger
 {

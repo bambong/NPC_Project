@@ -18,6 +18,9 @@ public class ServerroomScene : BaseScene
     [SerializeField]
     private Vector3 playerSpawnSpot;
 
+    [SerializeField]
+    private string playerType = "Player_Real";
+
     public override void Clear()
     {
         
@@ -26,7 +29,7 @@ public class ServerroomScene : BaseScene
     protected override void Init()
     {
         base.Init();
-        var player = Managers.Game.Spawn(Define.WorldObject.Player, "Player_Real");
+        var player = Managers.Game.Spawn(Define.WorldObject.Player, playerType);
         player.transform.position = playerSpawnSpot;
         Managers.Camera.InitCamera(new CameraInfo(vircam, player.transform));
         Managers.Data.LoadGame(SceneManager.GetActiveScene().name);

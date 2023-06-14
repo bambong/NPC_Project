@@ -3,7 +3,6 @@ using ProjectorForLWRP;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
-using UnityEditor.SearchService;
 using UnityEngine;
 
 public class PlayerShadowController : MonoBehaviour
