@@ -5,7 +5,7 @@ using UnityEngine.Timeline;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
-
+using HangleChange;
 public class TMPTextSwitcherMixerBehaviour : PlayableBehaviour
 {
     Color m_DefaultColor;

@@ -63,9 +63,13 @@ public class SecurityCapController : MonoBehaviour, IDropHandler
         {
             capPanel.GetComponent<CanvasGroup>().DOFade(0f, fadeDuration).OnComplete(() =>
             {
-                capPanel.SetActive(false);
+                capPanel.SetActive(false);                
             });          
             Managers.Game.Player.SetStateIdle();
+
+            var talk = new TalkEvent();
+            talk = Managers.Talk.GetTalkEvent(10005);
+            talk.Play();
         });
 
 
