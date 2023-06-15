@@ -92,6 +92,7 @@ public class Define
         TextSound,
         DataPuzzleDigital,
         DataPuzzleButtonHover,
-        StartTextSound
+        StartTextSound,
+        DataPuzzleClear
     }
 }
