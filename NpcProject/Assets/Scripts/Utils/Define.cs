@@ -91,6 +91,7 @@ public class Define
         Door,
         TextSound,
         DataPuzzleDigital,
-        DataPuzzleButtonHover
+        DataPuzzleButtonHover,
+        StartTextSound
     }
 }
