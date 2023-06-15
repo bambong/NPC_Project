@@ -109,11 +109,13 @@ public class ResultPanelController : MonoBehaviour
     }
     public void OnRetryButtonClick() 
     {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
         resultButtons[0].Close(0);
         resultButtons[1].Close(0.1f, miniGameManager.ResetPuzzle);
     }
     public void OnExitButtonClick(bool isSuccess)
     {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
         resultButtons[0].Close(0);
         resultButtons[1].Close(0.1f, () => 
         {

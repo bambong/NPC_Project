@@ -58,7 +58,9 @@ public class HelpButtonController : MonoBehaviour
         }
         isOpen = true;
         myButton.onClick.RemoveAllListeners();
-        myButton.onClick.AddListener(()=> { action?.Invoke(); });
+        myButton.onClick.AddListener(()=> {
+            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
+            action?.Invoke(); });
         var seq = DOTween.Sequence();
         seq.Append(buttonImage.DOColor(Color.white, time));
         seq.Join(openGroup.DOFade(1, time));
@@ -74,7 +76,9 @@ public class HelpButtonController : MonoBehaviour
         }
         isOpen = false;
         myButton.onClick.RemoveAllListeners();
-        myButton.onClick.AddListener(() => { action?.Invoke(); });
+        myButton.onClick.AddListener(() => {
+            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
+            action?.Invoke(); });
         var seq = DOTween.Sequence();
         seq.Append(buttonImage.DOColor(closeColor, time));
         seq.Join(openGroup.DOFade(0, time));

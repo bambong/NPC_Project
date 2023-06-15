@@ -120,6 +120,7 @@ public class MiniGameManager : BaseScene
         //s.Append(backGround.DOFade(0, 2f));
         //s.Play();
         OpenPanel(0);
+        PlayBgm();
         //Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleEnter);
     }
   
