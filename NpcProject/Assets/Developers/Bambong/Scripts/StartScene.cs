@@ -9,6 +9,6 @@ public class StartScene : BaseScene
     }
     private void Awake()
     {
-        Managers.Sound.PlaySFX(Define.SOUND.NextChapter);
+        
     }
 }
