@@ -64,6 +64,14 @@ public class ServerroomTutorialController : GuIdBehaviour
     [SerializeField]
     private UnityEvent onComplete;
 
+    [SerializeField]
+    private RectTransform clickNotice;
+
+    [SerializeField]
+    private Vector3 startPos;
+    [SerializeField]
+    private Vector3 desirePos;
+
     private int curIndex;
     private bool isPlaying;
     private const float VIDEO_VISIBLE_TIME = 0.3f;
@@ -73,6 +81,7 @@ public class ServerroomTutorialController : GuIdBehaviour
         {
             pageMarks[i].gameObject.SetActive(false);
         }
+        clickNotice.anchoredPosition = startPos;
         rootGroup.alpha = 0;
         innerGroup.alpha = 0;
         Open();
@@ -85,6 +94,7 @@ public class ServerroomTutorialController : GuIdBehaviour
             return;
         }
         rootGroup.interactable = true;
+        clickNotice.anchoredPosition = startPos;
         Managers.Game.RetryPanel.CloseResetButton();
         Managers.Game.Player.SetstateStop();
         var seq = DOTween.Sequence();
@@ -94,6 +104,7 @@ public class ServerroomTutorialController : GuIdBehaviour
             onStart?.Invoke();
         });
         seq.Append(rootGroup.DOFade(1, openAnimTime));
+        seq.Join(clickNotice.DOAnchorPos(desirePos, openAnimTime));
         seq.OnComplete(SetTutorial);
         seq.Play();
     }
@@ -163,6 +174,7 @@ public class ServerroomTutorialController : GuIdBehaviour
         nextButton.interactable = false;
         var seq = DOTween.Sequence();
         seq.Append(rootGroup.DOFade(0, openAnimTime));
+        seq.Join(clickNotice.DOAnchorPos(startPos, openAnimTime));
         seq.OnComplete(() =>
         {
             Managers.Game.RetryPanel.OpenResetButton();
