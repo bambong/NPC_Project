@@ -25,7 +25,7 @@ public class PlayerKeywordPanelController : UI_Base
     private const float CLOSE_ANIM_TIME = 0.5f;
     public override void Init()
     {
-       
+
         
     }
     public void AddKeywordMakerGauge(int amount) 

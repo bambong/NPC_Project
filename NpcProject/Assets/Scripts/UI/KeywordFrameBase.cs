@@ -90,6 +90,7 @@ public abstract class KeywordFrameBase : UI_Base
         keywordController.SetFrame(this);
         curFrameInnerKeyword = keywordController;
         keywordController.transform.SetParent(transform);
+        keywordController.transform.localScale = Vector3.one;
         keywordController.RectTransform.position = rectTransform.position;
     }
     protected virtual void DecisionKeyword(KeywordController keyword) 

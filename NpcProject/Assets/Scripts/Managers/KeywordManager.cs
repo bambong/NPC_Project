@@ -44,6 +44,7 @@ public class KeywordManager
         EntityKeywordStatusList.SetAsFirstSibling();
         playerKeywordPanel.transform.SetAsFirstSibling();
         KeywordEntitySlots.SetParent(playerKeywordPanel.transform);
+        KeywordEntitySlots.localScale = Vector3.one;
         graphicRaycaster = playerKeywordPanel.gameObject.GetOrAddComponent<GraphicRaycaster>();
         LoadColorStateData();
     }
