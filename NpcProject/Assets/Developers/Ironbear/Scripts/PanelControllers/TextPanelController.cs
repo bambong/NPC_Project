@@ -20,6 +20,7 @@ public class TextPanelController : UI_Base
     private Sequence seq;
     private CanvasGroup canvas;
 
+    private float soundSpeed = 0.1f;
     private bool textplayed;
 
     public override void Init()
@@ -43,7 +44,7 @@ public class TextPanelController : UI_Base
 
             seq.Append(tmpText.DOText(text, text.Length * typeSpeed).SetEase(Ease.Linear)
                 .OnStart(() => textplayed = false)
-                .OnStart(() => TextSound(text.Length * typeSpeed))
+                .OnStart(() => TextSound(text.Length * soundSpeed))
                 .OnComplete(()=> textplayed = true));
             
 
@@ -85,9 +86,9 @@ public class TextPanelController : UI_Base
 
         while (time > texttime && !textplayed)
         {
-            texttime += typeSpeed;
-            Managers.Sound.PlaySFX(Define.SOUND.TextSound);
-            yield return new WaitForSeconds(typeSpeed);
+            texttime += soundSpeed;
+            Managers.Sound.PlaySFX(Define.SOUND.StartTextSound);
+            yield return new WaitForSeconds(soundSpeed);
         }
     }
 

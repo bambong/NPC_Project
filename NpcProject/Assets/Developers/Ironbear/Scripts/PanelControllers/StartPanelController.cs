@@ -64,7 +64,7 @@ public class StartPanelController : UI_Base
             if (j != 1)
             {
                 seq.Append(tmpText.DOText(text, text.Length * typeSpeed).SetEase(Ease.Linear)
-                .OnStart(() => TextSound(text.Length * typeSpeed)));
+                .OnStart(() => TextSound(text.Length * 0.08f)));
             }
             else
             {
@@ -110,7 +110,7 @@ public class StartPanelController : UI_Base
         while (time > texttime && !playedsound)
         {
             texttime += typeSpeed;
-            Managers.Sound.PlaySFX(Define.SOUND.TextSound);
+            Managers.Sound.PlaySFX(Define.SOUND.StartTextSound);
             yield return new WaitForSeconds(typeSpeed);
         }
     }
