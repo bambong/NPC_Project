@@ -31,7 +31,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6329215377747239751}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6329215376885905777
 MeshFilter:
@@ -116,77 +116,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0.091, y: 20.489, z: -0.265}
---- !u!1 &6329215377369915955
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6329215377369915954}
-  - component: {fileID: 6329215377369915953}
-  m_Layer: 0
-  m_Name: Foliage generater
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6329215377369915954
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6329215377369915955}
-  m_LocalRotation: {x: -0.0787694, y: -0.71856314, z: 0.010911348, w: 0.69090044}
-  m_LocalPosition: {x: -0.5399933, y: 9, z: 5.4800034}
-  m_LocalScale: {x: 0.8001708, y: 0.36106443, z: 0.6704329}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6329215377747239751}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6329215377369915953
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6329215377369915955}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c122224900a334bd7b15e0923fe4ae28, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  carrierMesh: {fileID: -8585359849566605474, guid: 66fa7f7e1d6d24634b6111473c5b6fca, type: 3}
-  particleMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
-  carrierScale: {x: 5, y: 5, z: 5}
-  particleScale: {x: 10, y: 10, z: 10}
-  particleScaleVariance: 1
-  numParticles: 500
-  carrierSampling: 1
-  offsetAlongNormal: 2.12
-  offsetAlongNormalFraction: 0
-  particleRotationRange: 338
-  geometryBasedNormals: 0
-  oneNormalPerParticle: 0
-  particleRotationBias: 1
-  biasTowardRotation: {x: 0, y: 0, z: 0}
-  noiseEnabled: 1
-  noiseFrequency: -0
-  noiseAmplitude: -2.52
-  noiseOctaves: 1
-  noiseScale: {x: 1, y: 1, z: 1}
-  noiseSeed: 1
-  folderPath: Developers/Eunjung/Model/Forest/Foliages
-  fileNamePrefix: Treeleave
-  appendMeshName: 1
-  appendTakeNumber: 1
-  takeNumber: 1
-  appendTimestamp: 0
-  exportOnEdit: 0
 --- !u!1 &6329215377465683990
 GameObject:
   m_ObjectHideFlags: 0
@@ -218,7 +147,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6329215377747239751}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: -5.416, y: -21.242, z: 0.431}
 --- !u!33 &6329215377465683995
 MeshFilter:
@@ -298,7 +227,6 @@ Transform:
   m_LocalScale: {x: 1.0945907, y: 1.202556, z: 1.0024642}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6329215377369915954}
   - {fileID: 6329215378793216490}
   - {fileID: 6329215376885905779}
   - {fileID: 6329215378712837577}
@@ -338,7 +266,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6329215377747239751}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6329215377756576525
 MeshFilter:
@@ -504,7 +432,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6329215377747239751}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 7.395, y: 0.179, z: 2.768}
 --- !u!33 &6329215378712837583
 MeshFilter:
@@ -587,7 +515,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6329215377747239751}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -0.017, y: 0, z: -0.157}
 --- !u!33 &6329215378793216488
 MeshFilter:
