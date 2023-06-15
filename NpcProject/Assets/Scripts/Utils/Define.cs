@@ -83,12 +83,14 @@ public class Define
         DataPuzzleFail,
         DataPuzzleGood,
         DataPuzzleBad,
-        DataPuzzleButtonHover,
+        ButtonHover,
         ResetButton,
         DataPuzzleEnter,
         Sign,
         ClickButton,
         Door,
-        TextSound
+        TextSound,
+        DataPuzzleDigital,
+        DataPuzzleButtonHover
     }
 }

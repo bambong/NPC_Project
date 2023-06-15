@@ -15,7 +15,7 @@ public class PotalScript : MonoBehaviour, IInteraction
     public void OnInteraction()
     {
         onInteract?.Invoke();
-        Managers.Sound.PlaySFX(Define.SOUND.NextChapter);
+        Managers.Sound.PlaySFX(Define.SOUND.Door);
         Managers.Scene.LoadScene(targetScene);
     }
 }

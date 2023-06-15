@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 250774300}
   - component: {fileID: 250774299}
-  - component: {fileID: 250774298}
   - component: {fileID: 250774301}
   - component: {fileID: 250774303}
+  - component: {fileID: 9034655028147224876}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -78,14 +78,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &250774298
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 250774297}
-  m_Enabled: 1
 --- !u!114 &250774301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,6 +145,19 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &9034655028147224876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250774297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attenuationObject: {fileID: 0}
 --- !u!1 &855878968
 GameObject:
   m_ObjectHideFlags: 0
@@ -583,14 +588,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgm:
     Guid:
-      Data1: 1131580525
-      Data2: 1274415805
-      Data3: 427555999
-      Data4: -755427244
-    Path: event:/BGM/BGM
+      Data1: -1866942979
+      Data2: 1320459402
+      Data3: 1402342055
+      Data4: -1983361596
+    Path: event:/BGM/Puzzle
   vircam: {fileID: 855878969}
   tutorialSceneTalkData: {fileID: 11400000, guid: 7d50e8233f93f1845b8c4519239f8d8d, type: 2}
   playerSpawnSpot: {x: -83.51274, y: 4.6654005, z: 36.598347}
+  playerType: Player_Real
 --- !u!114 &4362839247362582671
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{930e9f13-c1ad-41d1-9dc5-db8136ee9abd}">
 		<property name="name">
-			<value>DataPuzzleButtonHover</value>
+			<value>ButtonHover</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
@@ -98,11 +98,14 @@
 	</object>
 	<object class="EventMixerGroup" id="{1b2c9262-58f5-412f-9b35-c341107c4103}">
 		<property name="volume">
-			<value>-14.5</value>
+			<value>-24.5</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
+		<relationship name="modulators">
+			<destination>{727c052d-8dcc-4b76-acba-374c2fe2d5db}</destination>
+		</relationship>
 		<relationship name="effectChain">
 			<destination>{5c56e94f-ef58-4497-9b4b-24c1473b24b7}</destination>
 		</relationship>
@@ -120,6 +123,14 @@
 	</object>
 	<object class="MixerBusPanner" id="{debd2f57-675f-4f3b-815d-9f67c1348b67}" />
 	<object class="MixerBusFader" id="{d2289472-94a7-468d-b06a-488541e793c7}" />
+	<object class="RandomizerModulator" id="{727c052d-8dcc-4b76-acba-374c2fe2d5db}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>volume</value>
+		</property>
+		<property name="amount">
+			<value>5</value>
+		</property>
+	</object>
 	<object class="MixerBusEffectChain" id="{5c56e94f-ef58-4497-9b4b-24c1473b24b7}">
 		<relationship name="effects">
 			<destination>{7166421e-34b3-4171-92ad-89b89ddb5ea0}</destination>

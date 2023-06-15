@@ -97,7 +97,7 @@ public class IntroKeywordController : UI_Base, IDragHandler, IEndDragHandler, IB
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleButtonHover);
+        Managers.Sound.PlaySFX(Define.SOUND.ButtonHover);
     }
 
 }

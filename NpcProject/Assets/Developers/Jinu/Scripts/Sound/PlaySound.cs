@@ -5,9 +5,9 @@ using UnityEngine;
 public class PlaySound : MonoBehaviour
 {
     [SerializeField]
-    private Define.SOUND potal;
-    public void ChapterSound()
+    private Define.SOUND sound;
+    public void LoadSceneSound()
     {
-        Managers.Sound.PlaySFX(potal);
-    }
+        Managers.Sound.PlaySFX(sound);
+    }    
 }
