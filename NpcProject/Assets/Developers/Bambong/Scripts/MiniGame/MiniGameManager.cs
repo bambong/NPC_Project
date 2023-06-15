@@ -41,18 +41,15 @@ public class MiniGameManager : BaseScene
     [SerializeField]
     private OrderColorLayoutController orderColorLayout;
     [SerializeField]
-    private Transform orderParent;
+    private RectTransform orderParent;
     [SerializeField]
     private Transform resultParent;
     [SerializeField]
-    private CanvasGroup timePanelGroup;
-    [SerializeField]
-    private CanvasGroup backGround;
+    private CanvasGroup otherPanelGroup;
+
     [Header("Time Gauge")]
     [SerializeField]
     private Image timeFillGauge;
-    [SerializeField]
-    private TextMeshProUGUI timeText;
     [SerializeField]
     private float timeLimit;
 
@@ -72,15 +69,14 @@ public class MiniGameManager : BaseScene
     private MiniGamePanelController gamePanel;
 
     [SerializeField]
-    private MiniGamePanelController orderPanel;
-    [SerializeField]
-    private MiniGamePanelController rulePanel;
-
-    [SerializeField]
-    private CanvasGroup ruleTextGroup;
-
-    [SerializeField]
     private StudioEventEmitter puzzleEnterBgm;
+
+    [SerializeField]
+    private DataPuzzleTutorialController dataPuzzleTutorial;
+
+    [SerializeField]
+    private HelpButtonController helpButton;
+
 
     private List<ColorOrderGroupController> orderColorGroups = new List<ColorOrderGroupController>();
     private List<ResultColorNodeController> resultColorNodes = new List<ResultColorNodeController>();
@@ -95,7 +91,9 @@ public class MiniGameManager : BaseScene
     private bool isGameEnd = false;
     private bool isTimeLimit = false;
     private bool isBGMPlay = false;
+    private bool isPause = false;
     private float curTime;
+    
     private int row {get=>miniGameLevelData.row;}
     private int column {get=>miniGameLevelData.column;}
     public MiniGameLevelData MiniGameLevelData { get => miniGameLevelData; }
@@ -116,14 +114,15 @@ public class MiniGameManager : BaseScene
         InitNode();
         InitPuzzle();
         SetStateInit();
-        timePanelGroup.alpha = 0;
+        otherPanelGroup.alpha = 0;
         //Sequence s = DOTween.Sequence();
         //s.AppendInterval(2f);
         //s.Append(backGround.DOFade(0, 2f));
         //s.Play();
-        OpenPanel(1.8f);
+        OpenPanel(0);
         //Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleEnter);
     }
+  
     private void LoadLevelData() 
     {
         if (Managers.Data.DataPuzzleLevel != null)
@@ -146,23 +145,26 @@ public class MiniGameManager : BaseScene
     }
     public void OpenPanel(float interval) 
     {
-        ruleTextGroup.alpha = 0;
-        orderPanel.Open(interval+0.2f,() => { OpenOrderNode(); OpenResultNode(); });
-        rulePanel.Open(interval + 0.4f, () => { ruleTextGroup.DOFade(1, 0.5f); });
+        //ruleTextGroup.alpha = 0;
+       // orderPanel.Open(interval+0.2f,() => {  });
+        OpenOrderNode(); 
+        OpenResultNode();
+        //rulePanel.Open(interval + 0.4f, () => { ruleTextGroup.DOFade(1, 0.5f); });
         gamePanel.Open(interval,() =>
         {
-            backGround.DOFade(0, 2f);
             Sequence seq = DOTween.Sequence();
-            seq.AppendCallback(() => { OpenGameNodes(); timePanelGroup.DOFade(1,1f); });
+            seq.AppendCallback(() => { OpenGameNodes(); otherPanelGroup.DOFade(1,1f); });
             seq.Play();
         });
     }
     public void ClosePanel(Action action) 
     {
+        dataPuzzleTutorial.Close();
         CloseNodes();
         Sequence seq = DOTween.Sequence();
         seq.AppendInterval((2*(row - 1)+1) * 0.1f + 0.2f);
-        seq.AppendCallback(() => { gamePanel.Close(); ruleTextGroup.DOFade(0,0.2f).OnComplete(()=> { rulePanel.Close(); }); orderPanel.Close(action); });
+        seq.AppendCallback(() => { gamePanel.Close(action); /*ruleTextGroup.DOFade(0,0.2f).OnComplete(()=> { rulePanel.Close(); });*/  });
+        seq.Join(otherPanelGroup.DOFade(0,1));
         seq.Play();
     }
 
@@ -216,7 +218,7 @@ public class MiniGameManager : BaseScene
         node.SetData(this, pos, curGameKeys[Random.Range(0, curGameKeys.Count)]);
         return node;
     }
-    public ColorOrderGroupController CreateColorOrder(Transform parent)
+    public ColorOrderGroupController CreateColorOrder(RectTransform parent)
     {
         var group = Managers.UI.MakeSubItem<ColorOrderGroupController>(parent, "MiniGame/ColorOrderGroup");
         return group;
@@ -484,15 +486,22 @@ public class MiniGameManager : BaseScene
             }
         }
     }
+    public void SetPause(bool isOn) => isPause = isOn;
     public IEnumerator TimeUpdate() 
     {
         while (!isGameEnd) 
         {
+            if (isPause) 
+            {
+                yield return null;
+                continue;
+            }
+
             curTime += Time.deltaTime;
          
             if(curTime > timeLimit) 
             {
-                timeText.text = "00.00";
+               
                 SetStateGameOver();
                 yield break;
             }
@@ -505,16 +514,12 @@ public class MiniGameManager : BaseScene
                 }
             }
            
-            TimeTextUpdate();
             TimeBarUpdate();
             yield return null;
         }
     
     }
-    private void TimeTextUpdate() 
-    {
-        timeText.text = (timeLimit - curTime).ToString("00.00");
-    }
+
     private void TimeBarUpdate() 
     {
         timeFillGauge.fillAmount = curTime / timeLimit;
@@ -598,12 +603,12 @@ public class MiniGameManager : BaseScene
             }
             interval += 0.1f;
         }
-        interval = 0;
-        for (int i = 0; i < orderColorGroups.Count; i++)
-        {
-            orderColorGroups[i].CloseAnim(interval);
-            interval += 0.1f;
-        }
+        //interval = 0;
+        //for (int i = 0; i < orderColorGroups.Count; i++)
+        //{
+        //    orderColorGroups[i].CloseAnim(interval);
+        //    interval += 0.1f;
+        //}
         interval = 0;
         for (int i = 0; i < resultColorNodes.Count; i++)
         {
@@ -627,6 +632,7 @@ public class MiniGameManager : BaseScene
         isTimeLimit = false;
         curSelectType = SELECT_TYPE.Row;
         curResultIndex = 0;
+        helpButton.SetPlayMod(false);
 
         if (timeLimitEffect.IsPlaying)
         {
@@ -654,6 +660,7 @@ public class MiniGameManager : BaseScene
             }
             OpenGameNodes();
             isGameEnd = false;
+  
         });
         seq.Play();
     }
@@ -702,6 +709,7 @@ public class MiniGameManager : BaseScene
         }
         puzzleEnterBgm.SetPause(false);
         iSGameStart = true;
+        helpButton.SetPlayMod(true);
         StartCoroutine(TimeUpdate());
     }
 
@@ -718,16 +726,15 @@ public class MiniGameManager : BaseScene
         iSGameStart = false;
         isTimeLimit = false;
         isBGMPlay = false;
-        timeText.text = timeLimit.ToString("00.00");
         timeFillGauge.fillAmount = 0;
         resultText.ClearText();
+        helpButton.SetPlayMod(false);
     }
   
     public void SetResultText(bool isSuccess) 
     {
         Sequence seq = DOTween.Sequence();
-        seq.Append(backGround.DOFade(1, 1f));
-        seq.Join(timePanelGroup.DOFade(0, 1f));
+        seq.Append(otherPanelGroup.DOFade(0, 1f));
         seq.Play();
 
         if (isSuccess)
@@ -737,7 +744,6 @@ public class MiniGameManager : BaseScene
         }
         else 
         {
-            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleFail);
             resultText.OnFail(1f);
         }
        

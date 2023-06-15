@@ -19,9 +19,11 @@ public class ResultPanelController : MonoBehaviour
     [TextArea]
     [SerializeField]
     private string successText;
-    [TextArea]
+
     [SerializeField]
-    private string failText;
+    private string failTitleText;
+    [SerializeField]
+    private string successTitleText;
 
     [SerializeField]
     private int maxShowCount = 20;
@@ -31,7 +33,7 @@ public class ResultPanelController : MonoBehaviour
     [SerializeField]
     private float successTextTime = 2f;
     [SerializeField]
-    private float failTextTime = 2f;
+    private float titleTextAnimTime = 1.5f;
 
     [SerializeField]
     private List<ResultButtonController> resultButtons;
@@ -86,9 +88,9 @@ public class ResultPanelController : MonoBehaviour
         }
         Sequence seq = DOTween.Sequence();
         seq.Append(codeText.DOFade(0, 0.5f));
-        seq.Append(resultText.DOText("..", 1f));
-        seq.Append(resultText.DOText("...", 0.5f).SetLoops(3,LoopType.Yoyo));
-        seq.Append(resultText.DOText("...Progress success.", 1.5f));
+        seq.Append(resultText.DOText("··", 1f));
+        seq.Append(resultText.DOText("···", 0.5f).SetLoops(3,LoopType.Yoyo));
+        seq.Append(resultText.DOText("···" + successTitleText, titleTextAnimTime));
         seq.Append(resultText.DOFade(0, 0));
         seq.AppendCallback(() => { OnSuccessButtonSet();  });
         seq.Append(resultText.DOFade(1, 0.2f).SetLoops(2));
@@ -127,11 +129,12 @@ public class ResultPanelController : MonoBehaviour
     {
         Sequence seq = DOTween.Sequence();
         resultText.color = Color.red;
-        resultText.text = "    ";
+        resultText.text = "";
         seq.AppendInterval(interval);
-        seq.Append(resultText.DOText("    ..", 1f));
-        seq.Append(resultText.DOText("    ...", 0.5f).SetLoops(3, LoopType.Yoyo));
-        seq.Append(resultText.DOText(failText, failTextTime));
+        seq.AppendCallback(() => Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleFail));
+        seq.Append(resultText.DOText("··", 1f));
+        seq.Append(resultText.DOText("···", 0.5f).SetLoops(3, LoopType.Yoyo));
+        seq.Append(resultText.DOText("···" + failTitleText, titleTextAnimTime));
         seq.Append(resultText.DOFade(0, 0));
         seq.AppendCallback(() => { OnFailButtonSet(); });
         seq.Append(resultText.DOFade(1, 0.2f).SetLoops(2));
