@@ -391,7 +391,7 @@ public class MiniGameManager : BaseScene
                 return;
             }
         }
-        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleGood);
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
         UpdateEnableNode(pointIndex, curSelectType);
     }
     public void PointEnter(Vector2Int point)

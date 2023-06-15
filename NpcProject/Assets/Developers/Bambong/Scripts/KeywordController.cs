@@ -142,7 +142,7 @@ public class KeywordController : UI_Base
         {
             return;
         }
-        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleButtonHover);
+        Managers.Sound.PlaySFX(Define.SOUND.ButtonHover);
 
         var animTime = START_END_ANIM_TIME * (1 - ((transform.localScale.x -1) / (FOCUSING_SCALE-1)));
 

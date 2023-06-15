@@ -2,9 +2,11 @@ using UnityEngine;
 using TMPro;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class TextPanelController : UI_Base
 {
+    [TextArea]
     [SerializeField]
     private string[] texts;
     [SerializeField]
@@ -13,12 +15,12 @@ public class TextPanelController : UI_Base
     private Define.Scene transitionSceneName;
 
     private float fadeDuration = 1f;
-    private float typeSpeed = 0.04f;
+    private float typeSpeed = 0.04f;    
 
     private Sequence seq;
     private CanvasGroup canvas;
 
-
+    private bool textplayed;
 
     public override void Init()
     {
@@ -39,7 +41,12 @@ public class TextPanelController : UI_Base
             string text = texts[j];
             text = text.Replace("\\n", "\n");
 
-            seq.Append(tmpText.DOText(text, text.Length * typeSpeed).SetEase(Ease.Linear));
+            seq.Append(tmpText.DOText(text, text.Length * typeSpeed).SetEase(Ease.Linear)
+                .OnStart(() => textplayed = false)
+                .OnStart(() => TextSound(text.Length * typeSpeed))
+                .OnComplete(()=> textplayed = true));
+            
+
             if (j < texts.Length - 1)
             {
                 seq.AppendCallback(() =>
@@ -64,7 +71,24 @@ public class TextPanelController : UI_Base
         });
 
         seq.Play();
+
     }
 
+    public void TextSound(float time)
+    {
+        StartCoroutine(PlayTextSound(time));
+    }
+
+    IEnumerator PlayTextSound(float time)
+    {
+        float texttime = 0;
+
+        while (time > texttime && !textplayed)
+        {
+            texttime += typeSpeed;
+            Managers.Sound.PlaySFX(Define.SOUND.TextSound);
+            yield return new WaitForSeconds(typeSpeed);
+        }
+    }
 
 }

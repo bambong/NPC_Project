@@ -2,10 +2,13 @@ using UnityEngine;
 using TMPro;
 using DG.Tweening;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Collections;
 
 public class StartPanelController : UI_Base
 {
     [SerializeField]
+    [TextArea]
     private string[] texts;
     [SerializeField]
     private TMP_Text tmpText;
@@ -18,6 +21,7 @@ public class StartPanelController : UI_Base
 
     private float typeSpeed = 0.08f;
     private Sequence seq;
+    private bool playedsound;
 
     public override void Init()
     {
@@ -56,7 +60,18 @@ public class StartPanelController : UI_Base
             string text = texts[j];
             text = text.Replace("\\n", "\n");
 
-            seq.Append(tmpText.DOText(text, text.Length * typeSpeed).SetEase(Ease.Linear));
+            //corrections
+            if (j != 1)
+            {
+                seq.Append(tmpText.DOText(text, text.Length * typeSpeed).SetEase(Ease.Linear)
+                .OnStart(() => TextSound(text.Length * typeSpeed)));
+            }
+            else
+            {
+                seq.Append(tmpText.DOText(text, text.Length * typeSpeed).SetEase(Ease.Linear));
+            }
+
+
             if (j < texts.Length - 1)
             {
                 seq.AppendCallback(() =>
@@ -81,6 +96,23 @@ public class StartPanelController : UI_Base
         });
 
         seq.Play();
+    }
+
+    public void TextSound(float time)
+    {
+        StartCoroutine(PlayTextSound(time));
+    }
+
+    IEnumerator PlayTextSound(float time)
+    {
+        float texttime = 0;
+
+        while (time > texttime && !playedsound)
+        {
+            texttime += typeSpeed;
+            Managers.Sound.PlaySFX(Define.SOUND.TextSound);
+            yield return new WaitForSeconds(typeSpeed);
+        }
     }
 
 
