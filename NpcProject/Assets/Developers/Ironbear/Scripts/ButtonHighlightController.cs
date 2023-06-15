@@ -45,7 +45,7 @@ public class ButtonHighlightController : UI_Base, IPointerEnterHandler, IPointer
         }
         if(btnSoundPlay)
         {
-            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleButtonHover);
+            Managers.Sound.PlaySFX(Define.SOUND.ButtonHover);
         }        
         highlightTween = highlightImage.DOColor(highlightColor, highlightDuration).SetEase(Ease.OutQuad);
     }
