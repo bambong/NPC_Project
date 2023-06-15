@@ -1,13 +1,18 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using TMPro;
 
 public class SecurityCardController : UI_Base, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
+    public Speaker player;
+
     private readonly float START_END_ANIM_TIME = 0.2f;
 
     [SerializeField]
     private RectTransform rectTransform;
+    [SerializeField]
+    private TMP_Text name;
 
     private Canvas canvas;
     private CanvasGroup canvasGroup;
@@ -28,6 +33,15 @@ public class SecurityCardController : UI_Base, IDragHandler, IEndDragHandler, IB
         canvasGroup = GetComponent<CanvasGroup>();
 
         canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+
+        UpdateName();
+    }
+
+    private void UpdateName()
+    {
+        string dialogue = "<Player>";
+        dialogue = dialogue.Replace("<Player>", player.charName);
+        name.text = dialogue;
     }
 
     public override void Init()
@@ -58,7 +72,10 @@ public class SecurityCardController : UI_Base, IDragHandler, IEndDragHandler, IB
 
     public void OnDrag(PointerEventData eventData)
     {
-        rectTransform.position = Input.mousePosition;
+        //rectTransform.position = Input.mousePosition;
+        Vector3 newPosition = Input.mousePosition;
+        newPosition.y += 75f;
+        rectTransform.position = newPosition;
     }
 
     public void ResetKeyword()
