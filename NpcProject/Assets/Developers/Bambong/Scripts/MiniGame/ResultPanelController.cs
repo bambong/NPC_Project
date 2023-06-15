@@ -92,7 +92,9 @@ public class ResultPanelController : MonoBehaviour
         seq.Append(resultText.DOText("···", 0.5f).SetLoops(3,LoopType.Yoyo));
         seq.Append(resultText.DOText("···" + successTitleText, titleTextAnimTime));
         seq.Append(resultText.DOFade(0, 0));
-        seq.AppendCallback(() => { OnSuccessButtonSet();  });
+        seq.AppendCallback(() => {
+            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleClear);
+            OnSuccessButtonSet();  });
         seq.Append(resultText.DOFade(1, 0.2f).SetLoops(2));
         seq.Play();
     }
