@@ -6733,9 +6733,9 @@ GameObject:
   m_Component:
   - component: {fileID: 250774300}
   - component: {fileID: 250774299}
-  - component: {fileID: 250774298}
   - component: {fileID: 250774301}
   - component: {fileID: 250774303}
+  - component: {fileID: 250774304}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -6743,14 +6743,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &250774298
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 250774297}
-  m_Enabled: 1
 --- !u!20 &250774299
 Camera:
   m_ObjectHideFlags: 0
@@ -6876,6 +6868,19 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &250774304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250774297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attenuationObject: {fileID: 0}
 --- !u!1 &284025211
 GameObject:
   m_ObjectHideFlags: 0
@@ -10049,11 +10054,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgm:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 981085933
+      Data2: 1159427822
+      Data3: 859963579
+      Data4: -1759746738
+    Path: event:/BGM/Server
   vircam: {fileID: 855878969}
   tutorialSceneTalkData: {fileID: 11400000, guid: 7d50e8233f93f1845b8c4519239f8d8d, type: 2}
   playerSpawnSpot: {x: 254, y: 2, z: 34}
