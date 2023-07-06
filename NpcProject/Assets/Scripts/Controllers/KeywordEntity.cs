@@ -279,6 +279,11 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     {
         while (Managers.Game.IsDebugMod) 
         {
+            if (Managers.Game.IsPause) 
+            {
+                yield return null;
+                continue;
+            }
             Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
             var factor = SCREEN_OFFSET / new Vector2(Screen.width, Screen.height).magnitude;
             pos.z = 0;

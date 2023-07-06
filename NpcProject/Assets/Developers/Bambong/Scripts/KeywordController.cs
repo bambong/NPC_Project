@@ -146,7 +146,7 @@ public class KeywordController : UI_Base
 
         var animTime = START_END_ANIM_TIME * (1 - ((transform.localScale.x -1) / (FOCUSING_SCALE-1)));
 
-        transform.DOScale(FOCUSING_SCALE, animTime).SetUpdate(true);
+        transform.DOScale(FOCUSING_SCALE, animTime);
     }
     public void OnPointerExit()
     {
@@ -155,11 +155,11 @@ public class KeywordController : UI_Base
             return;
         }
         var animTime = START_END_ANIM_TIME * ((transform.localScale.x -1) / (FOCUSING_SCALE - 1));
-        transform.DOScale(Vector3.one, animTime).SetUpdate(true);
+        transform.DOScale(Vector3.one, animTime);
     }
     public DG.Tweening.Core.TweenerCore<Vector3,Vector3,DG.Tweening.Plugins.Options.VectorOptions> SetToKeywordFrame(Vector3 pos) 
     {
-        return rectTransform.DOLocalMove(pos, KEYWORD_FRAME_MOVE_TIME).SetUpdate(true);
+        return rectTransform.DOLocalMove(pos, KEYWORD_FRAME_MOVE_TIME);
     }
 
     public void ResetKeyword()
@@ -187,20 +187,7 @@ public class KeywordController : UI_Base
         SetDragState(false);
         curFrame.OnEndDrag();
     }
-    IEnumerator DragCheck()
-    {
-        while (isDrag) 
-        {
-            if (!Input.GetMouseButton(0))
-            {
-                Managers.Sound.PlaySFX(Define.SOUND.ToDropKeyword);
-                DragReset();
-                Debug.Log("유니티 드래그 버그 발생!");
-                yield break;
-            }
-            yield return null;
-        }
-    }
+  
     public virtual void OnEnter(KeywordEntity entity)
     {
     }

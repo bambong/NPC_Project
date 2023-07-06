@@ -473,11 +473,36 @@ public class PlayerController : MonoBehaviour , IDataHandler
         return false;
     }
 
+    public void PauseModInputCheck() 
+    {
+        if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.PAUSE_KEY)))
+        {
+            if (Managers.Game.IsPause)
+            {
+                Managers.Game.SetStateNormal();
+            }
+            else
+            {
+                Managers.Game.SetStatePause();
+            }
+         
+        }
+
+    }
+
+
     IEnumerator DebugModInputCo() 
     {
 
         while (Managers.Game.IsDebugMod && !PlayerIsDeathState()) 
         {
+
+            if (Managers.Game.IsPause)
+            {
+                yield return null;
+                continue;
+            }
+
             var pointerEventData = new UnityEngine.EventSystems.PointerEventData(EventSystem.current);
             pointerEventData.position = Input.mousePosition;
             pointerEventData.button = PointerEventData.InputButton.Left;
@@ -717,6 +742,14 @@ public class PlayerController : MonoBehaviour , IDataHandler
     #endregion
 
     #region SetState
+    public void RevertState()
+    {
+        playerStateController.RevertToPrevState();
+    }
+    public void SetStatePause() 
+    {
+        playerStateController.ChangeState(PlayerPause.Instance);
+    }
     public void SetStateInteraction()
     {
         playerStateController.ChangeState(PlayerInteraction.Instance);

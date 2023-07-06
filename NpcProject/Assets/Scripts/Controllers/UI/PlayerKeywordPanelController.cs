@@ -68,4 +68,5 @@ public class PlayerKeywordPanelController : UI_Base
         debugModGroup.interactable = isOn;
         debugModGroup.blocksRaycasts = isOn;
     }
+
 }
