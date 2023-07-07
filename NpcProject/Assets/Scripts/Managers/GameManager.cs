@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class GameStateController : StateController<GameManager>
 {
     public GameStateController(GameManager owner) : base(owner)
@@ -14,7 +15,6 @@ public class GameStateController : StateController<GameManager>
     }
 
 }
-
 public class GameManager
 {
     private GameStateController gameStateController;

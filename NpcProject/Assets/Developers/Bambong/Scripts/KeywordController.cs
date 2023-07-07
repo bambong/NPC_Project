@@ -16,8 +16,6 @@ public enum E_KEYWORD_TYPE
 public class KeywordController : UI_Base
 {
 
-
- 
     [SerializeField]
     private RectTransform rectTransform;
     [SerializeField]
