@@ -10,17 +10,17 @@ public class PausePanelController : UI_Base
     private RectTransform panel;
 
     [SerializeField]
-    private Button exitButton;
-    
-    private bool isOpen;
+    private SettingPanelController settingPanelController;
 
+    private bool isOpen;
+    public SettingPanelController SettingPanelController { get => settingPanelController;}
 
 
     public override void Init()
     {
         DontDestroyOnLoad(panel.gameObject);
         panel.gameObject.SetActive(false);
-       
+        settingPanelController.Init();
     }
 
     public void Open()
@@ -34,17 +34,30 @@ public class PausePanelController : UI_Base
     }
     public void Close() 
     {
-        if (!isOpen) 
+        if (!isOpen)
         {
             return;
         }
         isOpen = false;
         panel.gameObject.SetActive(false);
     }
-
-    public void OnPanelExitButtonActive() 
+    public void OnSettingButtonActive()
+    {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
+        settingPanelController.Open();
+        EventSystem.current.SetSelectedGameObject(null);
+    }
+    public void OnResumeButtonActive() 
     {
         Managers.Game.SetStateNormal();
         EventSystem.current.SetSelectedGameObject(null);
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
     }
+    public void OnQuitButtonActive() 
+    {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
+        Application.Quit();
+    }
+
+
 }

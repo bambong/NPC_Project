@@ -10,8 +10,6 @@ using UnityEngine;
         
         protected IState<T> curState;
         protected IState<T> prevState;
-
-
         public IState<T> CurState { get { return curState; } }
         public IState<T> PrevState { get { return prevState; } }
         public StateController(T owner) 

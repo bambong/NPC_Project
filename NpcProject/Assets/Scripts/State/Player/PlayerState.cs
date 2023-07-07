@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
 {
     public void Init()
@@ -111,7 +110,6 @@ public class PlayerStop : Singleton<PlayerStop>, IState<PlayerController>
     }
 }
 
-
 public class PlayerInteraction : Singleton<PlayerInteraction>, IState<PlayerController>
 {
     public void Init()
@@ -162,7 +160,6 @@ public class PlayerBombDeath : Singleton<PlayerBombDeath>, IState<PlayerControll
     {
     }
 }
-
 
 public class PlayerPause : Singleton<PlayerPause>, IState<PlayerController>
 {
