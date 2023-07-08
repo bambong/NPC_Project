@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using UnityEditor.Searcher;
 using UnityEngine;
 public class KeywordAction 
 {
@@ -480,7 +481,6 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     {
         var pos = col.transform.position;
 
-        RaycastHit hit;
         vec.x = math.abs(vec.x) < MINMUM_DIR_AMOUNT ? 0 : vec.x;
         vec.z = math.abs(vec.z) < MINMUM_DIR_AMOUNT ? 0 : vec.z;
         if (vec.magnitude == 0) 
@@ -490,28 +490,42 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     
         var boxSize = Util.VectorMultipleScale(col.size / 2, transform.lossyScale);
         boxSize.y = boxSize.y * 0.99f;
-        var vecXSize = Mathf.Abs(vec.x);
-        var vecZSize = Mathf.Abs(vec.z);
-        //var boxXdiff = boxSize.x * 0.01f;
-        //var boxZdiff = boxSize.z * 0.01f;
-
-        //if (vecXSize == 0 || vecXSize >= boxXdiff)
-        //{ 
-        //    boxSize.x *= 0.99f;
-        //}
-        //if(vecZSize == 0 || vecZSize >= boxZdiff)
-        //{ 
-        //   // boxSize.z *= 0.99f;
-        //}
+        //boxSize.x = boxSize.x * 0.99f;
+        //boxSize.z = boxSize.z * 0.99f;
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos + vec, boxSize, KeywordTransformFactor.rotation, Color.blue);
+        //ExtDebug.DrawBoxCastBox(pos , boxSize, KeywordTransformFactor.rotation, vec.normalized, vec.magnitude, Color.blue);
 #endif
-        var hits = Physics.OverlapBox(pos+vec, boxSize, KeywordTransformFactor.rotation, colisionCheckLayer, QueryTriggerInteraction.Ignore);
-        
-        for(int i = 0; i< hits.Length; ++i) 
+        var hits = Physics.OverlapBox(pos + vec, boxSize, KeywordTransformFactor.rotation, colisionCheckLayer, QueryTriggerInteraction.Ignore);
+        //var castHits = Physics.BoxCastAll(pos , boxSize, vec.normalized, KeywordTransformFactor.rotation,vec.magnitude, colisionCheckLayer, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i< hits.Length; ++i) 
         {
             if(hits[i] != col) 
             {
+                var castHits = Physics.BoxCastAll(pos, boxSize, vec.normalized, KeywordTransformFactor.rotation, vec.magnitude, colisionCheckLayer, QueryTriggerInteraction.Ignore);
+                
+                foreach (var cast in castHits)
+                {
+                    if (cast.collider == hits[i])
+                    {
+                        Debug.Log(cast.distance + " " + vec.magnitude);
+
+                        if ((cast.distance - MINMUM_DIR_AMOUNT) > 0.001f)
+                        {
+                            var dis = cast.distance - MINMUM_DIR_AMOUNT;
+                            KeywordTransformFactor.position += dis * vec.normalized;
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+
+                //if ((castHits[i].distance - MINMUM_DIR_AMOUNT) > 0.001f)
+                //{
+                //    var dis = castHits[i].distance - MINMUM_DIR_AMOUNT;
+                //    KeywordTransformFactor.position += dis * vec.normalized;
+                //    return true;
+                //}
                 return false;
             }
         }
