@@ -14,6 +14,7 @@ Material:
   - TCP2_REFLECTIONS_FRESNEL
   - TCP2_RIM_LIGHTING_LIGHTMASK
   - TCP2_SHADOW_LIGHT_COLOR
+  - _EMISSION
   - _NORMALMAP
   m_InvalidKeywords:
   - TCP2_UV_NORMALS_FULL
@@ -27,11 +28,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 605699d992321404290173b5192e7dcf, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8fef1092e71314c4e8f183786aa93538, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: d8dc6135090a0704cb2d48eeccb869ab, type: 3}
+        m_Texture: {fileID: 2800000, guid: d638d2cb2fc904649ba20f144452f1ba, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -47,7 +48,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: cf02b2d16f7e4804a8baa06fae104029, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -151,7 +152,7 @@ Material:
     - _ReceiveShadows: 1
     - _ReceiveShadowsOff: 1
     - _ReflectionMapType: 0
-    - _ReflectionSmoothness: 0.507
+    - _ReflectionSmoothness: 0.547
     - _RenderingMode: 0
     - _RimMax: 1
     - _RimMin: 0.5
@@ -168,7 +169,7 @@ Material:
     - _SrcBlend: 1
     - _Surface: 0
     - _UseAlphaTest: 0
-    - _UseEmission: 0
+    - _UseEmission: 1
     - _UseFresnelReflections: 1
     - _UseMatCap: 0
     - _UseMatCapMask: 0
