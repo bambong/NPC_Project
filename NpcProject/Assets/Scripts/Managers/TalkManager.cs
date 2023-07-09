@@ -61,6 +61,12 @@ public class TalkEvent : GameEvent
            
         return true;
     }
+    public void MoveEnd()
+    {
+        curIndex = 0;
+        Managers.Talk.EndTalk();
+        onComplete?.Invoke();
+    }
 }
 
 public class TalkManager
@@ -183,6 +189,12 @@ public class TalkManager
         
         while(true) 
         {
+            if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.EXIT_KEY)))
+            {
+                curTalkEvent.MoveEnd();
+                break;
+            }
+
             if(((Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.TALK_KEY)) || Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY))) && talkPanel.IsNext == true && !talkPanel.IsChoice) || talkPanel.GetIsSelect()) 
             {
                 talkPanel.InputIsSelect(false);
@@ -231,6 +243,12 @@ public class TalkManager
 
         while (true)
         {
+            if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.EXIT_KEY)))
+            {
+                curTalkEvent.MoveEnd();
+                break;
+            }
+
             if (((Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.TALK_KEY))||Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY))) && talkPanel.IsNext == true && !talkPanel.IsChoice) || talkPanel.GetIsSelect())
             {
                 talkPanel.InputIsSelect(false);
