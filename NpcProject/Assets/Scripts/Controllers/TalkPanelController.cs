@@ -340,6 +340,11 @@ public class TalkPanelController : UI_Base
         stopsound = true;
     }
 
+    public void StopTextAnimation()
+    {
+        dialogueText.DOKill();
+    }
+
     public void SetChoiceTextA()
     {
         choiceText = choiceButton.choiceTextA.text;

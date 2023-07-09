@@ -62,9 +62,10 @@ public class TalkEvent : GameEvent
         return true;
     }
     public void MoveEnd()
-    {
+    {        
         curIndex = 0;
-        Managers.Talk.EndTalk();
+        Managers.Talk.StopTextAnimation();
+        Managers.Talk.EndTalk();        
         onComplete?.Invoke();
     }
 }
@@ -177,6 +178,10 @@ public class TalkManager
         talkPanel.RestorationMat();
         talkPanel.gameObject.SetActive(false);
         Managers.Game.SetStateNormal();
+    }
+    public void StopTextAnimation()
+    {
+        talkPanel.StopTextAnimation();
     }
     public void Clear() 
     {
