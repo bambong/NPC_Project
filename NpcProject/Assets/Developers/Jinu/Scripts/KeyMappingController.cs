@@ -12,7 +12,8 @@ public enum KEY_TYPE
         TALK_KEY,
         SKIP_KEY,
         RETRY_KEY,
-        RUN_KEY
+        RUN_KEY,
+        TALKSKIP_KEY
     }
 
 public class KeyMappingController
@@ -25,7 +26,7 @@ public class KeyMappingController
         {KEY_TYPE.TALK_KEY, KeyCode.Mouse0},
         {KEY_TYPE.SKIP_KEY, KeyCode.Mouse1},
         {KEY_TYPE.RETRY_KEY, KeyCode.Return},
-        {KEY_TYPE.RUN_KEY, KeyCode.LeftShift}
+        {KEY_TYPE.RUN_KEY, KeyCode.LeftShift},
     };
 
     public KeyCode ReturnKey(KEY_TYPE keyType)
