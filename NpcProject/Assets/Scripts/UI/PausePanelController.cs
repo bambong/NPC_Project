@@ -4,17 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class PausePanelController : UI_Base
+public class PausePanelController : BasePanelController
 {
-    [SerializeField]
-    private RectTransform panel;
-
     [SerializeField]
     private SettingPanelController settingPanelController;
 
-    private bool isOpen;
     public SettingPanelController SettingPanelController { get => settingPanelController;}
-
 
     public override void Init()
     {
@@ -23,24 +18,6 @@ public class PausePanelController : UI_Base
         settingPanelController.Init();
     }
 
-    public void Open()
-    {
-        if (isOpen)
-        {
-            return;
-        }
-        isOpen = true;
-        panel.gameObject.SetActive(true);
-    }
-    public void Close() 
-    {
-        if (!isOpen)
-        {
-            return;
-        }
-        isOpen = false;
-        panel.gameObject.SetActive(false);
-    }
     public void OnSettingButtonActive()
     {
         Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);

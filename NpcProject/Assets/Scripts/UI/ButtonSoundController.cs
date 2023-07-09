@@ -9,7 +9,7 @@ public class ButtonSoundController : MonoBehaviour
  
     public void StartPointerUpCheck() 
     {
-        if (pointerCo != null)
+        if (pointerCo != null || !gameObject.activeInHierarchy)
         {
             return;
         }

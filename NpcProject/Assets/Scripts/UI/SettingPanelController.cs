@@ -2,47 +2,33 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SettingPanelController : UI_Base
+public class SettingPanelController : BasePanelController
 {
     [SerializeField]
-    private RectTransform panel;
-
+    private Slider masterSlider;
     [SerializeField]
     private Slider bgmSlider;
     [SerializeField]
     private Slider sfxSlider;
 
-
-    private bool isOpen;
-    public bool IsOpen { get => isOpen;  }
-
     public override void Init()
     {
         panel.gameObject.SetActive(false);
+        masterSlider.onValueChanged.AddListener(OnChangeMasterVolume);
         bgmSlider.onValueChanged.AddListener(OnChangeBgmVolume);
         sfxSlider.onValueChanged.AddListener(OnChangeSfxVolume);
     }
   
-    public void Open() 
+    protected override void OnOpen() 
     {
-        if (isOpen) 
-        {
-            return;
-        }
-        isOpen = true;
-        panel.gameObject.SetActive(true);
+        base.OnOpen();
         bgmSlider.value = Managers.Data.CurrentSettingData.bgmVolume;
         sfxSlider.value = Managers.Data.CurrentSettingData.sfxVolume;
     }
-    public void Close() 
+    protected override void OnClose() 
     {
-        if (!isOpen)
-        {
-            return;
-        }
-        isOpen = false;
+        base.OnClose();
         PlayButtonSound();
-        panel.gameObject.SetActive(false);
     }
 
     public void OnCloseButtonActive() 
@@ -57,6 +43,10 @@ public class SettingPanelController : UI_Base
     public void OnChangeSfxVolume(float value) 
     { 
         Managers.Data.SetSfxVolumeData(value);
+    }
+    public void OnChangeMasterVolume(float value)
+    {
+        Managers.Data.SetMasterVolumeData(value);
     }
     public void PlayButtonSound()=> Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
 

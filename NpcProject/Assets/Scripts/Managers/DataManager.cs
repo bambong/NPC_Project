@@ -137,7 +137,11 @@ public class DataManager
         settingData = new GameSettingData();
         UpdateSetting();
     }
-
+    public void SetMasterVolumeData(float value)
+    {
+        settingData.masterVolume = value;
+        Managers.Sound.SetMasterVolume(value);
+    }
     public void SetBgmVolumeData(float value) 
     {
         settingData.bgmVolume = value;
