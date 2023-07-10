@@ -25,7 +25,6 @@ public class LogoPanelController : UI_Base
     [SerializeField]
     private GameObject logo;
 
-    private Material originalMat;
     private Image rend;
 
     private float moveDuration = 0.8f;
@@ -43,7 +42,8 @@ public class LogoPanelController : UI_Base
     private void Start()
     {
         rend = logo.GetComponent<Image>();
-        originalMat = rend.material;
+        rend.material = effectMat;
+        rend.material.SetFloat("_AutoManualAnimation", 0);
 
         logos.transform.localPosition = new Vector3(-1100, 0, 0);
         bar.transform.localPosition = new Vector3(-1600, 160, 0);
@@ -72,15 +72,13 @@ public class LogoPanelController : UI_Base
         }
 
         EnableButtonInteractable();
-
-        //material 변경
-        rend.material = effectMat;
+  
         Invoke("RestoreMaterial", moveDuration + 0.8f);
     }
 
     private void RestoreMaterial()
     {
-        rend.material = originalMat;
+        rend.material.SetFloat("_AutoManualAnimation", 1);
     }
 
     private void EnableButtonInteractable()
