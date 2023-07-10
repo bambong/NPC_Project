@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class NPCLaser : MonoBehaviour
 {    
     [SerializeField]
-    private GameObject correctObject;
+    private string correctTag;
     [Header("LaserProperty")]
     [SerializeField]
     private LineRenderer lineRenderer;
@@ -25,10 +27,10 @@ public class NPCLaser : MonoBehaviour
     [SerializeField]
     private Material hitMat;
 
+    private ILaserAction laserAction;
     private GameObject hitEffect;
     private Renderer curMat;
     private Material originMat;
-    
 
     private bool enter = false;
 
@@ -55,21 +57,25 @@ public class NPCLaser : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, maxLength))
         {
-            if(hit.collider.CompareTag("Laser"))
+            if(hit.collider.CompareTag(correctTag))
             {
-                if(hit.collider.gameObject.name == correctObject.name)
+                
+                if(!enter)
                 {
-                    if(!enter)
-                    {
-                        LaserEnter();
-                        enter = true;
-                    }
+                    LaserEnter();
+                    StartLaserAction(hit);
+                    enter = true;
                 }
+                
             }
             else
             {
-                LaserExit();
-                enter = false;
+                if(enter)
+                {
+                    LaserExit();
+                    EndLaserAction();
+                    enter = false;
+                }
             }            
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, hit.point);
@@ -81,6 +87,7 @@ public class NPCLaser : MonoBehaviour
             if(enter)
             {
                 LaserExit();
+                EndLaserAction();
                 enter = false;
             }            
             lineRenderer.SetPosition(0, transform.position);
@@ -108,6 +115,20 @@ public class NPCLaser : MonoBehaviour
         baseLaserEnd.SetActive(true);
         hitLaserStart.SetActive(false);
         hitLaserEnd.SetActive(false);
+    }
+
+    public void StartLaserAction(RaycastHit hit)
+    {
+        laserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
+        laserAction.OnLaserHit();
+    }
+
+    public void EndLaserAction()
+    {
+        if (laserAction != null)
+        {
+            laserAction.OffLaserHit();
+        } 
     }
 
     //public void SetLaserColor(ParticleSystem particle)
