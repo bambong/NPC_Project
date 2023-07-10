@@ -33,6 +33,7 @@ public class NPCLaser : MonoBehaviour
     private Material originMat;
 
     private bool enter = false;
+    private int layerMask;
 
     private void Start()
     {
@@ -43,6 +44,8 @@ public class NPCLaser : MonoBehaviour
 
         lineRenderer.startWidth = laserWidth;
         lineRenderer.endWidth = laserWidth;
+
+        layerMask = (-1) - (1 << LayerMask.NameToLayer("InteractionDetector"));
     }
 
     private void Update()
@@ -55,18 +58,16 @@ public class NPCLaser : MonoBehaviour
         Ray ray = new Ray(transform.position, transform.forward);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, maxLength))
+        if (Physics.Raycast(ray, out hit, maxLength, layerMask))
         {
-            if(hit.collider.CompareTag(correctTag))
-            {
-                
+            if(hit.collider.CompareTag("Player"))
+            {                
                 if(!enter)
                 {
                     LaserEnter();
                     StartLaserAction(hit);
                     enter = true;
-                }
-                
+                }                
             }
             else
             {
