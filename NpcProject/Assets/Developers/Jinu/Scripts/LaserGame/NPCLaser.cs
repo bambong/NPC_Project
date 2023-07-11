@@ -7,7 +7,7 @@ using UnityEngine;
 public class NPCLaser : MonoBehaviour
 {    
     [SerializeField]
-    private string correctTag;
+    private string[] correctTag;
     [Header("LaserProperty")]
     [SerializeField]
     private LineRenderer lineRenderer;
@@ -60,7 +60,7 @@ public class NPCLaser : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, maxLength, layerMask))
         {
-            if(hit.collider.CompareTag("Player"))
+            if(CheckTag(hit))
             {                
                 if(!enter)
                 {
@@ -97,6 +97,18 @@ public class NPCLaser : MonoBehaviour
         }
     }
 
+    public bool CheckTag(RaycastHit hit)
+    {
+        for(int i = 0; i < correctTag.Length; i++)
+        {
+            if (hit.collider.CompareTag(correctTag[i]))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void LaserEnter()
     {
 
@@ -120,8 +132,15 @@ public class NPCLaser : MonoBehaviour
 
     public void StartLaserAction(RaycastHit hit)
     {
-        laserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
-        laserAction.OnLaserHit();
+        try
+        {
+            laserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
+            laserAction.OnLaserHit();
+        }
+        catch(NullReferenceException)
+        {
+            Debug.Log(hit.collider.gameObject.name + " is no Assigned <ILaserAction>");
+        }
     }
 
     public void EndLaserAction()
@@ -131,6 +150,8 @@ public class NPCLaser : MonoBehaviour
             laserAction.OffLaserHit();
         } 
     }
+
+    
 
     //public void SetLaserColor(ParticleSystem particle)
     //{

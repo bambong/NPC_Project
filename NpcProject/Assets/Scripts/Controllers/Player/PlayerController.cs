@@ -84,8 +84,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private Coroutine debugModeInput;
     private RaycastHit slopeHit;
     private int slopeLayer;
-    [SerializeField]
-    private bool ToggleMode = false;
+    private bool togglemode = false;
     private bool isRun = false;
 
     private KeywordController isFocusKeyword;
@@ -306,7 +305,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
     public void RunCheck()
     {
-        if(ToggleMode)
+        if(togglemode)
         {
             if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY)))
             {
@@ -317,6 +316,12 @@ public class PlayerController : MonoBehaviour , IDataHandler
         {
             isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
         }
+    }
+
+    public void ToggleSwitch()
+    {
+        Debug.Log("RunMode:" + togglemode);
+        togglemode = !togglemode;
     }
 
     public void ChangeToRunSpeed(bool run)
