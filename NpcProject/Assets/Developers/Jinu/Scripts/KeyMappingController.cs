@@ -17,7 +17,7 @@ public enum KEY_TYPE
 
 public class KeyMappingController
 {
-    private Dictionary<KEY_TYPE, KeyCode> keyMap = new Dictionary<KEY_TYPE, KeyCode>()
+    public Dictionary<KEY_TYPE, KeyCode> keyMap = new Dictionary<KEY_TYPE, KeyCode>()
     {
         {KEY_TYPE.EXIT_KEY, KeyCode.Escape},
         {KEY_TYPE.DEBUGMOD_KEY, KeyCode.R},
