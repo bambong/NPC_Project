@@ -49,6 +49,17 @@ public class InputFieldController : UI_Base
         inputField.onValueChanged.AddListener(UpdateOutputText);
         playerNameInput.characterLimit = 8;
         textInitPosition = test.gameObject.transform.position;
+
+        inputField.onEndEdit.AddListener(OnEndEdit);
+    }
+    
+    private void OnEndEdit(string text)
+    {
+        if(Input.GetKeyDown(KeyCode.Return))
+        {
+            StringCheck();
+            SaveUserName();
+        }
     }
 
     public void SubmitName()
