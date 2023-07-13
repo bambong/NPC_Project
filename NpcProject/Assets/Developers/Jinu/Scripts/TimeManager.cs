@@ -57,11 +57,11 @@ public class TimeManager
     {
         return timeScale[type];
     }
-    public void TimeScaleClear(float scale)
+    public void Clear()
     {
         foreach (var temp in timeScale) 
         {
-            timeScale[temp.Key] = scale;
+            timeScale[temp.Key] = 1.0f;
         }
     }
 }
