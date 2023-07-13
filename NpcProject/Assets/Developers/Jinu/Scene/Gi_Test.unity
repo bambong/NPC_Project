@@ -4610,16 +4610,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgm:
     Guid:
-      Data1: 1131580525
-      Data2: 1274415805
-      Data3: 427555999
-      Data4: -755427244
-    Path: event:/BGM/BGM
+      Data1: -1635880574
+      Data2: 1253106613
+      Data3: -426934386
+      Data4: -280143025
+    Path: event:/BGM/Office
   vircam: {fileID: 855878969}
   tutorialSceneTalkData: {fileID: 11400000, guid: 7d50e8233f93f1845b8c4519239f8d8d, type: 2}
   playerSpawnSpot: {x: -84.4, y: 6.54, z: 41.8}
-  progress: 1
-  style: {fileID: 0}
+  playerType: Player_Real
 --- !u!4 &2089485275
 Transform:
   m_ObjectHideFlags: 0
@@ -5154,10 +5153,42 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4669338843133431057}
     m_Modifications:
+    - target: {fileID: 969427891821053751, guid: e21e849b282538449af74f356f547092, type: 3}
+      propertyPath: InitialModule.startSizeY.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 969427891821053751, guid: e21e849b282538449af74f356f547092, type: 3}
+      propertyPath: InitialModule.startSizeZ.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 969427891821053751, guid: e21e849b282538449af74f356f547092, type: 3}
+      propertyPath: InitialModule.startRotationX.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 969427891821053751, guid: e21e849b282538449af74f356f547092, type: 3}
+      propertyPath: InitialModule.startRotationY.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6056105758520435407, guid: e21e849b282538449af74f356f547092, type: 3}
+      propertyPath: correctTag
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 6056105758520435407, guid: e21e849b282538449af74f356f547092, type: 3}
       propertyPath: correctObject
       value: 
       objectReference: {fileID: 1775539704}
+    - target: {fileID: 6056105758520435407, guid: e21e849b282538449af74f356f547092, type: 3}
+      propertyPath: correctTag.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6056105758520435407, guid: e21e849b282538449af74f356f547092, type: 3}
+      propertyPath: correctTag.Array.data[0]
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 6056105758520435407, guid: e21e849b282538449af74f356f547092, type: 3}
+      propertyPath: correctTag.Array.data[1]
+      value: Laser
+      objectReference: {fileID: 0}
     - target: {fileID: 6056105759266678990, guid: e21e849b282538449af74f356f547092, type: 3}
       propertyPath: m_RootOrder
       value: 0
