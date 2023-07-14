@@ -68,6 +68,7 @@ public class Managers : MonoBehaviour
             instance.scene.Init();
             instance.sound.Init();
             instance.data.Init();
+            instance.time.Init();
         }
 
     }
@@ -76,6 +77,7 @@ public class Managers : MonoBehaviour
         Keyword.OnSceneLoaded();
         Game.OnSceneLoaded();
         Talk.OnSceneLoaded();
+        Time.OnSceneLoaded();
     }
     public static void Clear()
     {
@@ -85,6 +87,7 @@ public class Managers : MonoBehaviour
         Keyword.Clear();
         Sound.Clear();
         Game.Clear();
+        Time.Clear();
     }
     private void OnApplicationQuit()
     {
