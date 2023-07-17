@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
-using System.Text;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
@@ -15,24 +14,39 @@ public class NPCLaser : MonoBehaviour
     [SerializeField]
     public float maxLength = 300f; //laser max length
     [SerializeField]
-    public float laserWidth = 0.1f; //laser width    
+    public float laserWidth = 0.1f; //laser width
     [Header("Laser")]
     [SerializeField]
-    private GameObject baseLaserStart;
+    private GameObject hitEffect;
     [SerializeField]
-    private GameObject baseLaserEnd;
+    private ParticleSystem laserStart;
     [SerializeField]
-    private GameObject hitLaserStart;
+    private ParticleSystem glowStart;
     [SerializeField]
-    private GameObject hitLaserEnd;
+    private ParticleSystem laserEnd;
+    [SerializeField]
+    private ParticleSystem glowEnd;
+    [Header("Hit Effect")]
+    [SerializeField]
+    private Gradient baseColor;
+    [SerializeField]
+    private Gradient baseGlowColor;
+    [SerializeField]
+    private Gradient hitColor;
+    [SerializeField]
+    private Gradient hitGlowColor;
     [SerializeField]
     private Material hitMat;
 
+
     private ILaserAction laserAction;
-    private GameObject hitEffect;
+    private RaycastHit preHit;
     private Renderer curMat;
     private Material originMat;
-    private RaycastHit preHit;
+    private ParticleSystem.ColorOverLifetimeModule laserStartColor;
+    private ParticleSystem.ColorOverLifetimeModule laserEndColor;
+    private ParticleSystem.ColorOverLifetimeModule glowStartColor;
+    private ParticleSystem.ColorOverLifetimeModule glowEndColor;
 
     private bool enter = false;
     private int ignoreLayerMask = 0;
@@ -40,14 +54,14 @@ public class NPCLaser : MonoBehaviour
 
     private void Start()
     {
-        hitEffect = baseLaserEnd;
-
         curMat = GetComponent<Renderer>();
         originMat = curMat.material;
 
         lineRenderer.startWidth = laserWidth;
         lineRenderer.endWidth = laserWidth;
 
+
+        SetColorOverLifeTime();
         SetLayerMask();
         SetIgnoreLayerMask();
     }
@@ -114,26 +128,29 @@ public class NPCLaser : MonoBehaviour
     public void LaserEnter()
     {
         curMat.material = hitMat;
-        hitEffect = hitLaserEnd;
-        baseLaserStart.SetActive(false);
-        baseLaserEnd.SetActive(false);
-        hitLaserStart.SetActive(true);
-        hitLaserEnd.SetActive(true);
 
+        laserStartColor.color = hitColor;
+        laserEndColor.color = hitColor;
+        glowStartColor.color = hitGlowColor;
+        glowEndColor.color = hitGlowColor;
     }
     
     public void LaserExit()
     {
         curMat.material = originMat;
-        hitEffect = baseLaserEnd;
-        baseLaserStart.SetActive(true);
-        baseLaserEnd.SetActive(true);
-        hitLaserStart.SetActive(false);
-        hitLaserEnd.SetActive(false);
+
+        laserStartColor.color = baseColor;
+        laserEndColor.color = baseColor;
+        glowStartColor.color = baseGlowColor;
+        glowEndColor.color = baseGlowColor;
     }
 
     public void StartLaserAction(RaycastHit hit)
     {
+        if(hit.collider == null)
+        {
+            return;
+        }
         laserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
         if (laserAction != null)
         {
@@ -141,16 +158,9 @@ public class NPCLaser : MonoBehaviour
             laserAction.OnLaserHit();
         }
         else
+        {
             Debug.Log(hit.collider.gameObject.name + " is no Assigned <ILaserAction>");
-        //try
-        //{
-        //    laserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
-        //    laserAction.OnLaserHit();
-        //}
-        //catch(NullReferenceException)
-        //{
-        //    Debug.Log(hit.collider.gameObject.name + " is no Assigned <ILaserAction>");
-        //}
+        }
     }
 
     public void EndLaserAction(RaycastHit hit)
@@ -164,6 +174,13 @@ public class NPCLaser : MonoBehaviour
         {
             preLaserAction.OffLaserHit();
         } 
+    }
+    private void SetColorOverLifeTime()
+    {
+        laserStartColor = laserStart.colorOverLifetime;
+        laserEndColor = laserEnd.colorOverLifetime;
+        glowStartColor = glowStart.colorOverLifetime;
+        glowEndColor = glowEnd.colorOverLifetime;
     }
 
     public void SetLayerMask()
