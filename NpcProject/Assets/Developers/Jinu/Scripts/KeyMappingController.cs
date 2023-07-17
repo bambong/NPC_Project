@@ -7,7 +7,6 @@ public enum KEY_TYPE
     EXIT_KEY,
     DEBUGMOD_KEY,
     INTERACTION_KEY,
-    TALK_KEY,
     SKIP_KEY,
     RUN_KEY,
     UP_KEY,
@@ -28,8 +27,7 @@ public static class KeySetting
             {KEY_TYPE.EXIT_KEY, KeyCode.Escape},
             {KEY_TYPE.DEBUGMOD_KEY, KeyCode.R},
             {KEY_TYPE.INTERACTION_KEY, KeyCode.F},
-            {KEY_TYPE.TALK_KEY, KeyCode.Mouse0},
-            {KEY_TYPE.SKIP_KEY, KeyCode.Mouse1},
+            {KEY_TYPE.SKIP_KEY, KeyCode.Mouse0},
             {KEY_TYPE.RUN_KEY, KeyCode.LeftShift},
             {KEY_TYPE.UP_KEY, KeyCode.W},
             {KEY_TYPE.LEFT_KEY, KeyCode.A},
@@ -57,10 +55,8 @@ public static class KeySetting
                 return KeyCode.R;
             case KEY_TYPE.INTERACTION_KEY:
                 return KeyCode.F;
-            case KEY_TYPE.TALK_KEY:
-                return KeyCode.Mouse0;
             case KEY_TYPE.SKIP_KEY:
-                return KeyCode.Mouse1;
+                return KeyCode.Mouse0;
             case KEY_TYPE.RUN_KEY:
                 return KeyCode.LeftShift;
             case KEY_TYPE.UP_KEY:
@@ -80,8 +76,20 @@ public static class KeySetting
 
 public class KeyMappingController : MonoBehaviour
 {
-    int key = -1;
-    
+    [SerializeField]
+    private GameObject InputBackgroundPanel;
+
+    private int key = -1;
+    private bool isPanel = false;
+
+    private void FixedUpdate()
+    {
+        if(isPanel && Input.anyKey)
+        {
+            OffInputBackgroundPanel();
+            isPanel = false;
+        }
+    }
 
     //입력 키 초기화
     public void SetAllKeysToDefault()
@@ -108,6 +116,9 @@ public class KeyMappingController : MonoBehaviour
 
     public void ChangeKey(int num)
     {
+        //할당 하라는 문구 ON
+        OnInputBackgroundPanel();
+        isPanel = true;
         key = num;
 
         KEY_TYPE keyType = GetKeyTypeFromInt(num);
@@ -119,27 +130,23 @@ public class KeyMappingController : MonoBehaviour
         }
     }
 
+    private void OnInputBackgroundPanel()
+    {
+        InputBackgroundPanel.SetActive(true);
+    }
+
+    private void OffInputBackgroundPanel()
+    {
+        //if(Input.GetMouseButtonDown(0))
+        //{
+        //    InputBackgroundPanel.SetActive(false);
+        //}
+        InputBackgroundPanel.SetActive(false);
+    }
+
 
     private void ModifyInputManagerAxes(KEY_TYPE keyType, KeyCode newKeyCode)
     {
-        //SerializedObject inputManagerObj = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/InputManager.asset")[0]);
-        //SerializedProperty axesArray = inputManagerObj.FindProperty("m_Axes");
-
-        //for(int i=0; i<axesArray.arraySize; i++)
-        //{
-        //    SerializedProperty axis = axesArray.GetArrayElementAtIndex(i);
-
-        //    if (axis.FindPropertyRelative("m_Name").stringValue == GetAxisName(keyType))
-        //    {
-        //        SerializedProperty altNegativeButton = axis.FindPropertyRelative("altNegative");
-        //        SerializedProperty altPositiveButton = axis.FindPropertyRelative("altPositive");
-
-        //        altNegativeButton.stringValue = newKeyCode.ToString();
-        //        altPositiveButton.stringValue = newKeyCode.ToString();
-        //        break;
-        //    }
-        //}
-
         Object[] inputManagerAssets = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/InputManager.asset");
         if (inputManagerAssets.Length > 0)
         {
@@ -183,18 +190,16 @@ public class KeyMappingController : MonoBehaviour
             case 3:
                 return KeyCode.Mouse0;
             case 4:
-                return KeyCode.Mouse1;
-            case 5:
                 return KeyCode.LeftShift;
 
             //axis
-            case 6:
+            case 5:
                 return KeyCode.W;
-            case 7:
+            case 6:
                 return KeyCode.A;
-            case 8:
+            case 7:
                 return KeyCode.S;
-            case 9:
+            case 8:
                 return KeyCode.D;
 
             default:

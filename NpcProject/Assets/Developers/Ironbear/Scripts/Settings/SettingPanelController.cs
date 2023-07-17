@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SettingPanelController : MonoBehaviour
@@ -10,15 +8,12 @@ public class SettingPanelController : MonoBehaviour
     private GameObject inputs;
     [SerializeField]
     private GameObject sounds;
+    [SerializeField]
+    private GameObject resolutions;
 
-    private bool isInputs = false;
+    private bool isInputs = true;
     private bool isSounds = false;
-
-
-    private void Awake()
-    {
-        isInputs = true;
-    }
+    private bool isResolutions = false;
 
     public void OnSettingPanel()
     {
@@ -32,10 +27,13 @@ public class SettingPanelController : MonoBehaviour
 
     public void OnInputs()
     {
-        if(isSounds)
+        if(isSounds || isResolutions)
         {
             sounds.SetActive(false);
+            resolutions.SetActive(false);
+
             isSounds = false;
+            isResolutions = false;
         }
         inputs.SetActive(true);
         isInputs = true;
@@ -43,12 +41,29 @@ public class SettingPanelController : MonoBehaviour
 
     public void OnSounds()
     {
-        if(isInputs)
+        if(isInputs || isResolutions)
         {
             inputs.SetActive(false);
+            resolutions.SetActive(false);
+
             isInputs = false;
+            isResolutions = false;
         }
         sounds.SetActive(true);
         isSounds = true;
+    }
+
+    public void OnResolutions()
+    {
+        if(isInputs || isSounds)
+        {
+            inputs.SetActive(false);
+            sounds.SetActive(false);
+
+            isInputs = false;
+            isSounds = false;
+        }
+        resolutions.SetActive(true);
+        isResolutions = true;
     }
 }
