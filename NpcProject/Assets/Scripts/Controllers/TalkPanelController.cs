@@ -364,7 +364,7 @@ public class TalkPanelController : UI_Base
     {
         while (!isNext)
         {
-            if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY)) && isSkip == true || isComplete)
+            if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.TALK_KEY)) && isSkip == true || isComplete)
             {
                 StopSound();
                 if (isChoice == true)
