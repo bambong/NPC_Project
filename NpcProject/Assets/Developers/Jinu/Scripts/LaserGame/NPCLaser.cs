@@ -32,16 +32,14 @@ public class NPCLaser : MonoBehaviour
     private GameObject hitEffect;
     private Renderer curMat;
     private Material originMat;
-    private StringBuilder tagName;
     private RaycastHit preHit;
 
     private bool enter = false;
-    private int layerMask = 0;
+    private int ignoreLayerMask = 0;
+    private int actionLayerMask = 0;
 
     private void Start()
     {
-        tagName = new StringBuilder();
-
         hitEffect = baseLaserEnd;
 
         curMat = GetComponent<Renderer>();
@@ -51,6 +49,7 @@ public class NPCLaser : MonoBehaviour
         lineRenderer.endWidth = laserWidth;
 
         SetLayerMask();
+        SetIgnoreLayerMask();
     }
 
     private void Update()
@@ -62,37 +61,41 @@ public class NPCLaser : MonoBehaviour
     {
         Ray ray = new Ray(transform.position, transform.forward);
         RaycastHit curHit;
-
-        if (Physics.Raycast(ray, out curHit, maxLength, layerMask))
+        RaycastHit maxLengthHit;
+        if(Physics.Raycast(ray, out maxLengthHit, maxLength, ignoreLayerMask))
         {
-            try
+            if (Physics.Raycast(ray, out curHit, maxLength, actionLayerMask))
             {
-                if (preHit.collider.name != curHit.collider.name)
+                try
                 {
-                    LaserExit();
-                    EndLaserAction(preHit);
-                    enter = false;
+                    if (preHit.collider.name != curHit.collider.name)
+                    {
+                        LaserExit();
+                        EndLaserAction(preHit);
+                        enter = false;
+                        preHit = curHit;
+                    }
+                }
+                catch (NullReferenceException)
+                {
+                    Debug.Log("preHit Init");
                     preHit = curHit;
                 }
-            }
-            catch(NullReferenceException)
-            {
-                Debug.Log("preHit Init");
-                preHit = curHit;
-            }
 
-            if(!enter)
-            {
-                preHit = curHit;
-                LaserEnter();
-                StartLaserAction(curHit);
-                enter = true;
+                if (!enter)
+                {
+                    StartLaserAction(curHit);
+                    preHit = curHit;
+                    enter = true;
+                }
+                CreateLaserLine(curHit);
             }
-
-            lineRenderer.SetPosition(0, transform.position);
-            lineRenderer.SetPosition(1, curHit.point);
-            hitEffect.gameObject.transform.position = curHit.point;
-            
+            else
+            {
+                LaserExit();
+                EndLaserAction(preHit);
+                CreateLaserLine(maxLengthHit);
+            }
         }
         else
         {
@@ -134,6 +137,7 @@ public class NPCLaser : MonoBehaviour
         laserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
         if (laserAction != null)
         {
+            LaserEnter();
             laserAction.OnLaserHit();
         }
         else
@@ -151,6 +155,10 @@ public class NPCLaser : MonoBehaviour
 
     public void EndLaserAction(RaycastHit hit)
     {
+        if(hit.collider == null)
+        {
+            return;
+        }
         var preLaserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
         if (preLaserAction != null)
         {
@@ -160,13 +168,23 @@ public class NPCLaser : MonoBehaviour
 
     public void SetLayerMask()
     {
-        preHit = new RaycastHit();
         for (int i = 0; i < layerName.Length; i++)
         {
-            layerMask |= 1 << LayerMask.NameToLayer(layerName[i]);
+            actionLayerMask |= 1 << LayerMask.NameToLayer(layerName[i]);
         }
     }
 
+    public void SetIgnoreLayerMask()
+    {
+        ignoreLayerMask = ~(1 << LayerMask.NameToLayer("InteractionDetector"));
+    }
+
+    public void CreateLaserLine(RaycastHit hit)
+    {
+        lineRenderer.SetPosition(0, transform.position);
+        lineRenderer.SetPosition(1, hit.point);
+        hitEffect.gameObject.transform.position = hit.point;
+    }
     //public void SetHitLaserColor(ParticleSystem baseParticle, Color hitcolor)
     //{
     //    ParticleSystem.ColorOverLifetimeModule colorOverLifetime = baseParticle.colorOverLifetime;
