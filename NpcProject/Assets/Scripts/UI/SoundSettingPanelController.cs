@@ -1,15 +1,27 @@
 
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SettingPanelController : BasePanelController
+public class SoundSettingPanelController : BasePanelController
 {
+    [SerializeField]
+    private PausePanelController pausePanelController;
+
     [SerializeField]
     private Slider masterSlider;
     [SerializeField]
+    private TextMeshProUGUI masterText;
+
+    [SerializeField]
     private Slider bgmSlider;
     [SerializeField]
+    private TextMeshProUGUI bgmText;
+
+    [SerializeField]
     private Slider sfxSlider;
+    [SerializeField]
+    private TextMeshProUGUI sfxText;
 
     public override void Init()
     {
@@ -25,29 +37,37 @@ public class SettingPanelController : BasePanelController
         bgmSlider.value = Managers.Data.CurrentSettingData.bgmVolume;
         sfxSlider.value = Managers.Data.CurrentSettingData.sfxVolume;
     }
-    protected override void OnClose() 
-    {
-        base.OnClose();
-        PlayButtonSound();
-    }
-
     public void OnCloseButtonActive() 
     {
-        Close();
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
+        pausePanelController.ChangeToMainMenuPanel();
     }
 
     public void OnChangeBgmVolume(float value) 
     {
         Managers.Data.SetBgmVolumeData(value);
+        bgmText.text = ((int)(value * 100)).ToString();
     }
     public void OnChangeSfxVolume(float value) 
     { 
         Managers.Data.SetSfxVolumeData(value);
+        sfxText.text = ((int)(value * 100)).ToString();
     }
     public void OnChangeMasterVolume(float value)
     {
         Managers.Data.SetMasterVolumeData(value);
+        masterText.text = ((int)(value * 100)).ToString();
     }
     public void PlayButtonSound()=> Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
 
+    public void OnDefaultSettingButtonActive()
+    {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
+        OnChangeMasterVolume(1);
+        masterSlider.value = 1;
+        OnChangeBgmVolume(0.5f);
+        bgmSlider.value = 0.5f;
+        OnChangeSfxVolume(0.5f);
+        sfxSlider.value = 0.5f;
+    }
 }

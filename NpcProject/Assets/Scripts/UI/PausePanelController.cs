@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,22 +7,61 @@ using UnityEngine.UI;
 
 public class PausePanelController : BasePanelController
 {
-    [SerializeField]
-    private SettingPanelController settingPanelController;
 
-    public SettingPanelController SettingPanelController { get => settingPanelController;}
+    [SerializeField]
+    private CanvasGroup mainCanvasGroup;
+
+    [SerializeField]
+    private PauseMenuPanelController pauseMenuPanel;
+
+    [SerializeField]
+    private SoundSettingPanelController soundPanelController;
+
+    [SerializeField]
+    private PauseTutorialPanelController tutorialPanelController;
+
+    private BasePanelController currentPanel;
+
+    private bool isTransition;
+    private readonly float TRANSITION_TIME = 0.7f;
+
+    public SoundSettingPanelController SettingPanelController { get => soundPanelController;}
+    public bool IsTransition { get => isTransition; }
+    public PauseMenuPanelController PauseMenuPanel { get => pauseMenuPanel;  }
+    public SoundSettingPanelController SoundPanelController { get => soundPanelController;  }
+    public PauseTutorialPanelController TutorialPanelController { get => tutorialPanelController; }
 
     public override void Init()
     {
         DontDestroyOnLoad(panel.gameObject);
         panel.gameObject.SetActive(false);
-        settingPanelController.Init();
+        soundPanelController.Init();
     }
 
-    public void OnSettingButtonActive()
+    protected override void OnOpen()
+    {
+        base.OnOpen();
+        pauseMenuPanel.Open();
+        currentPanel = pauseMenuPanel;
+
+    }
+
+    protected override void OnClose()
+    {
+        base.OnClose();
+
+
+    }
+    public void OnTutorialButtonActive() 
     {
         Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
-        settingPanelController.Open();
+        ChangeMainPanel(tutorialPanelController);
+        EventSystem.current.SetSelectedGameObject(null);
+    }
+    public void OnSoundButtonActive()
+    {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
+        ChangeMainPanel(soundPanelController);
         EventSystem.current.SetSelectedGameObject(null);
     }
     public void OnResumeButtonActive() 
@@ -36,5 +76,30 @@ public class PausePanelController : BasePanelController
         Application.Quit();
     }
 
+    public void ChangeToMainMenuPanel() 
+    {
+        ChangeMainPanel(pauseMenuPanel);
+    }
+    public void ChangeMainPanel(BasePanelController panel)
+    {
+        if (isTransition) 
+        {
+            return;
+        }
+        isTransition = true;
+        Sequence seq = DOTween.Sequence().SetUpdate(true);
+
+        seq.Append(mainCanvasGroup.DOFade(0, TRANSITION_TIME/2));
+        seq.AppendCallback(()=>
+        {
+            currentPanel.Close();
+            panel.Open();
+            currentPanel = panel;
+        });
+        seq.Append(mainCanvasGroup.DOFade(1, TRANSITION_TIME / 2));
+        seq.OnComplete(() => isTransition = false);
+        
+        seq.Play();
+    }
 
 }

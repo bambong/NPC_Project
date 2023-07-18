@@ -436,7 +436,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         {
             return;
         }
-        originMat.SetColor(WIRE_FRAME_EMM_COLOR_NAME, new Color(0,0,0,0));
+        originMat.SetColor(WIRE_FRAME_EMM_COLOR_NAME, Color.clear);
     }
     private void InitColisionLayer() 
     {

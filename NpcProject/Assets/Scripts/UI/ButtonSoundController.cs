@@ -5,10 +5,17 @@ using UnityEngine.EventSystems;
 
 public class ButtonSoundController : MonoBehaviour 
 {
+    [SerializeField]
+    private PausePanelController pausePanelController;
+
     private Coroutine pointerCo;
  
     public void StartPointerUpCheck() 
     {
+        if (pausePanelController.IsTransition) 
+        {
+            return;
+        }
         if (pointerCo != null || !gameObject.activeInHierarchy)
         {
             return;

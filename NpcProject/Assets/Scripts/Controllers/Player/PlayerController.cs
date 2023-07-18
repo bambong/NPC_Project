@@ -479,9 +479,14 @@ public class PlayerController : MonoBehaviour , IDataHandler
         {
             if (Managers.Game.IsPause)
             {
-                if (Managers.Game.PausePanel.SettingPanelController.IsOpen) 
+                if (Managers.Game.PausePanel.IsTransition) 
                 {
-                    Managers.Game.PausePanel.SettingPanelController.Close();
+                    return;
+                }
+
+                if (!Managers.Game.PausePanel.PauseMenuPanel.IsOpen) 
+                {
+                    Managers.Game.PausePanel.ChangeToMainMenuPanel();
                     return;
                 }
                 Managers.Game.SetStateNormal();
