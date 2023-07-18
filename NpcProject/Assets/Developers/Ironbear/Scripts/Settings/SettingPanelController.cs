@@ -11,10 +11,15 @@ public class SettingPanelController : MonoBehaviour
     [SerializeField]
     private GameObject resolutions;
 
-    private bool isInputs = true;
+    private bool isInputs = false;
     private bool isSounds = false;
     private bool isResolutions = false;
 
+    private void Start()
+    {
+        sounds.SetActive(true);
+        isSounds = true;
+    }
     public void OnSettingPanel()
     {
         settingPanel.SetActive(true);

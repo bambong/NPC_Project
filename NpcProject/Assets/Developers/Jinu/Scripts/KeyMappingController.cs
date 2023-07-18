@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 public enum KEY_TYPE
 {
@@ -18,11 +17,13 @@ public enum KEY_TYPE
 
 public static class KeySetting 
 {
-    public static Dictionary<KEY_TYPE, KeyCode> keys;
-    
+    public static Dictionary<KEY_TYPE, KeyCode> defaultKeys;
+    public static Dictionary<KEY_TYPE, KeyCode> tempKeys;
+    public static Dictionary<KEY_TYPE, KeyCode> currentKeys;
+
     static KeySetting()
     {
-        keys = new Dictionary<KEY_TYPE, KeyCode>()
+        defaultKeys = new Dictionary<KEY_TYPE, KeyCode>()
         {
             {KEY_TYPE.EXIT_KEY, KeyCode.Escape},
             {KEY_TYPE.DEBUGMOD_KEY, KeyCode.R},
@@ -34,45 +35,38 @@ public static class KeySetting
             {KEY_TYPE.DOWN_KEY, KeyCode.S},
             {KEY_TYPE.RIGHT_KEY, KeyCode.D}
         };
+
+        currentKeys = new Dictionary<KEY_TYPE, KeyCode>(defaultKeys); //default로 채우기
+        tempKeys = new Dictionary<KEY_TYPE, KeyCode>(defaultKeys); //empty -> 오류떠서 default로 채우기
     }
 
-    public static void SetAllKeysToDefault()
+    public static void ApplyTempKeys() //apply button
     {
-        var keyList = new List<KEY_TYPE>(keys.Keys);
-        foreach (var key in keyList)
-        {
-            keys[key] = GetDefaultKeyCode(key);
-        }
+        currentKeys = new Dictionary<KEY_TYPE, KeyCode>(tempKeys);
+        //tempKeys.Clear();
+        tempKeys = new Dictionary<KEY_TYPE, KeyCode>(currentKeys);
     }
 
-    private static KeyCode GetDefaultKeyCode(KEY_TYPE keyType)
-    {
-        switch (keyType)
-        {
-            case KEY_TYPE.EXIT_KEY:
-                return KeyCode.Escape;
-            case KEY_TYPE.DEBUGMOD_KEY:
-                return KeyCode.R;
-            case KEY_TYPE.INTERACTION_KEY:
-                return KeyCode.F;
-            case KEY_TYPE.SKIP_KEY:
-                return KeyCode.Mouse0;
-            case KEY_TYPE.RUN_KEY:
-                return KeyCode.LeftShift;
-            case KEY_TYPE.UP_KEY:
-                return KeyCode.W;
-            case KEY_TYPE.LEFT_KEY:
-                return KeyCode.A;
-            case KEY_TYPE.DOWN_KEY:
-                return KeyCode.S;
-            case KEY_TYPE.RIGHT_KEY:
-                return KeyCode.D;
 
-            default:
-                return KeyCode.None;
-        }
+    public static void SetAllKeysToDefault() //init button
+    {
+        tempKeys = new Dictionary<KEY_TYPE, KeyCode>(defaultKeys);
+    }
+
+    public static void CopyCurrentToTemp() //inputs 메뉴 버튼에 할당
+    {
+        tempKeys = new Dictionary<KEY_TYPE, KeyCode>(currentKeys);
     }
 }
+
+
+
+
+
+
+
+
+
 
 public class KeyMappingController : MonoBehaviour
 {
@@ -91,11 +85,36 @@ public class KeyMappingController : MonoBehaviour
         }
     }
 
-    //입력 키 초기화
-    public void SetAllKeysToDefault()
+    public void CopyCurrentToTemp()
+    {
+        KeySetting.CopyCurrentToTemp();
+    }
+
+    public void SetAllKeysToDefault() //입력 초기화
     {
         KeySetting.SetAllKeysToDefault();
     }
+
+    #region
+    public void StoreTempKeyMap()
+    {
+        KeySetting.tempKeys = new Dictionary<KEY_TYPE, KeyCode>(KeySetting.defaultKeys);
+    }
+
+    public void ApplyTempKeyMap()
+    {
+        KeySetting.ApplyTempKeys();
+    }
+
+    public void CancelTempKeyMap() //뒤로 가기 버튼에 추가
+    {
+        if (KeySetting.tempKeys != null)
+        {
+            //KeySetting.tempKeys.Clear();
+            KeySetting.tempKeys = new Dictionary<KEY_TYPE, KeyCode>(KeySetting.currentKeys);
+        }
+    }
+    #endregion
 
 
     private void OnGUI()
@@ -104,14 +123,14 @@ public class KeyMappingController : MonoBehaviour
 
         if (keyEvent.isKey)
         {
-            KeySetting.keys[(KEY_TYPE)key] = keyEvent.keyCode;
+            KeySetting.tempKeys[(KEY_TYPE)key] = keyEvent.keyCode;
             key = -1;
         }
     }
 
     public KeyCode ReturnKey(KEY_TYPE keyType)
     {
-        return KeySetting.keys[keyType];
+        return KeySetting.defaultKeys[keyType];
     }
 
     public void ChangeKey(int num)
@@ -120,14 +139,6 @@ public class KeyMappingController : MonoBehaviour
         OnInputBackgroundPanel();
         isPanel = true;
         key = num;
-
-        KEY_TYPE keyType = GetKeyTypeFromInt(num);
-        if (keyType != KEY_TYPE.KEY_COUNT)
-        {
-            KeyCode newKeyCode = GetKeyCodeFromInt(num);
-            KeySetting.keys[keyType] = newKeyCode;
-            ModifyInputManagerAxes(keyType, newKeyCode);
-        }
     }
 
     private void OnInputBackgroundPanel()
@@ -137,103 +148,7 @@ public class KeyMappingController : MonoBehaviour
 
     private void OffInputBackgroundPanel()
     {
-        //if(Input.GetMouseButtonDown(0))
-        //{
-        //    InputBackgroundPanel.SetActive(false);
-        //}
         InputBackgroundPanel.SetActive(false);
-    }
-
-
-    private void ModifyInputManagerAxes(KEY_TYPE keyType, KeyCode newKeyCode)
-    {
-        Object[] inputManagerAssets = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/InputManager.asset");
-        if (inputManagerAssets.Length > 0)
-        {
-            SerializedObject inputManagerObj = new SerializedObject(inputManagerAssets[0]);
-            SerializedProperty axesArray = inputManagerObj.FindProperty("m_Axes");
-
-            for (int i = 0; i < axesArray.arraySize; i++)
-            {
-                SerializedProperty axis = axesArray.GetArrayElementAtIndex(i);
-
-                if (axis.FindPropertyRelative("m_Name").stringValue == GetAxisName(keyType))
-                {
-                    SerializedProperty altNegativeButton = axis.FindPropertyRelative("altNegativeButton");
-                    SerializedProperty altPositiveButton = axis.FindPropertyRelative("altPositiveButton");
-
-                    altNegativeButton.stringValue = newKeyCode.ToString();
-                    altPositiveButton.stringValue = newKeyCode.ToString();
-                    break;
-                }
-            }
-
-            inputManagerObj.ApplyModifiedProperties();
-            AssetDatabase.SaveAssets();
-        }
-        else
-        {
-            Debug.LogError("InputManager.asset not found");
-        }
-    }
-    
-    private KeyCode GetKeyCodeFromInt(int num)
-    {
-        switch(num)
-        {
-            case 0:
-                return KeyCode.Escape;
-            case 1:
-                return KeyCode.R;
-            case 2:
-                return KeyCode.F;
-            case 3:
-                return KeyCode.Mouse0;
-            case 4:
-                return KeyCode.LeftShift;
-
-            //axis
-            case 5:
-                return KeyCode.W;
-            case 6:
-                return KeyCode.A;
-            case 7:
-                return KeyCode.S;
-            case 8:
-                return KeyCode.D;
-
-            default:
-                return KeyCode.None;
-        }
-    }
-
-    private KEY_TYPE GetKeyTypeFromInt(int num)
-    {
-        if (num >= 0 && num < (int)KEY_TYPE.KEY_COUNT)
-        {
-            return (KEY_TYPE)num;
-        }
-        else
-        {
-            return KEY_TYPE.KEY_COUNT;
-        }
-    }
-
-    private string GetAxisName(KEY_TYPE keyType)
-    {
-        switch (keyType)
-        {
-            case KEY_TYPE.LEFT_KEY:
-            case KEY_TYPE.RIGHT_KEY:
-                return "Horizontal";
-            case KEY_TYPE.UP_KEY:
-            case KEY_TYPE.DOWN_KEY:
-                return "Vertical";
-
-
-            default:
-                return string.Empty;
-        }
     }
 }
 
