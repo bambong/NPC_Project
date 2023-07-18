@@ -43,7 +43,6 @@ public static class KeySetting
     public static void ApplyTempKeys() //apply button
     {
         currentKeys = new Dictionary<KEY_TYPE, KeyCode>(tempKeys);
-        //tempKeys.Clear();
         tempKeys = new Dictionary<KEY_TYPE, KeyCode>(currentKeys);
     }
 
@@ -72,6 +71,8 @@ public class KeyMappingController : MonoBehaviour
 {
     [SerializeField]
     private GameObject InputBackgroundPanel;
+    [SerializeField]
+    private IntroStateWarningFrameController warning;
 
     private int key = -1;
     private bool isPanel = false;
@@ -103,7 +104,31 @@ public class KeyMappingController : MonoBehaviour
 
     public void ApplyTempKeyMap()
     {
-        KeySetting.ApplyTempKeys();
+        CheckRepeatedKeys();
+    }
+
+    private void CheckRepeatedKeys()
+    {
+        HashSet<KeyCode> keySet = new HashSet<KeyCode>();
+        bool hasDuplicated = false;
+
+        foreach(var kvp in KeySetting.tempKeys)
+        {
+            if(keySet.Contains(kvp.Value))
+            {
+                hasDuplicated = true;      
+                warning.WarningCoroutine();
+            }
+            else
+            {
+                keySet.Add(kvp.Value);
+            }
+        }
+
+        if(!hasDuplicated)
+        {
+            KeySetting.ApplyTempKeys();
+        }
     }
 
     public void CancelTempKeyMap() //뒤로 가기 버튼에 추가

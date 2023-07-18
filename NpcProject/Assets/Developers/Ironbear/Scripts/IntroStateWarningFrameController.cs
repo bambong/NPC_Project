@@ -23,6 +23,12 @@ public class IntroStateWarningFrameController : MonoBehaviour, IDropHandler
         }
     }
 
+    public void WarningCoroutine()
+    {
+        warning.SetActive(true);
+        StartCoroutine(WarningTextEffect());
+    }
+
     private IEnumerator WarningTextEffect()
     {
         warning.transform.localScale = new Vector3(1f, 1f, 1f);
