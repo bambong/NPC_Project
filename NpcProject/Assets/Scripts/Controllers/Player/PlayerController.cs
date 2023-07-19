@@ -84,7 +84,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private Coroutine debugModeInput;
     private RaycastHit slopeHit;
     private int slopeLayer;
-
+    private Transform onPauseUi;
     private KeywordController isFocusKeyword;
     private KeywordFrameBase isFocusFrame;
     private PurposePanelController purposePanel;
@@ -120,6 +120,11 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         purposePanel = Managers.UI.MakeSceneUI<PurposePanelController>(null,"PurposePanel");
         signalPanel = Managers.UI.MakeSceneUI<SignalPanelController>(null,"SignalPanel");
+        onPauseUi = new GameObject("OnPauseUI").transform;
+        Managers.Keyword.PlayerKeywordPanel.transform.SetParent(onPauseUi);
+        purposePanel.transform.SetParent(onPauseUi);
+        Managers.Game.RetryPanel.transform.SetParent(onPauseUi);
+
     }
     void Update()
     {
@@ -751,6 +756,19 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
     #endregion
 
+    public void OnPasueStateEnter() 
+    {
+        Managers.Keyword.CurrentDragKeywordReset();
+        Managers.Game.DestinationPanel.gameObject.SetActive(false);   
+        
+        onPauseUi.gameObject.SetActive(false);
+ 
+    }
+    public void OnPasueStateExit()
+    {
+        Managers.Game.DestinationPanel.gameObject.SetActive(true);   
+        onPauseUi.gameObject.SetActive(true);
+    }
     #region SetState
     public void RevertState()
     {

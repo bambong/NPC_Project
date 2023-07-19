@@ -36,7 +36,7 @@ public class GameManager
     public RetryPanelController RetryPanel { get => retryPanel; }
     public PausePanelController PausePanel { get => pausePanel; }
     public BasePanelController BlurPanel { get => blurPanel; }
-
+    public DestinationPanelController DestinationPanel { get => destinationPanel; }
 
     private float DEBUG_TIME_SCALE = 0.2f;
 
@@ -123,6 +123,8 @@ public class GameManager
     {
         pausePanel.Open();
         blurPanel.Open();
+     
+       
         player.SetStatePause();
         prevTimeScale = Time.timeScale;
         Time.timeScale = 0;

@@ -16,8 +16,6 @@ public class PlayerKeywordPanelController : UI_Base
     private PlayerKeywordLayoutTrigger trigger;
     [SerializeField]
     private CanvasGroup debugModGroup;
-
-
     public Transform LayoutParent { get => layoutParent; }
     public Transform DebugGaugePanel { get => debugGaugePanel; }
 

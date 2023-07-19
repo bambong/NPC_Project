@@ -168,10 +168,12 @@ public class PlayerPause : Singleton<PlayerPause>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
+        stateController.OnPasueStateEnter();
     }
 
     public void Exit(PlayerController stateController)
     {
+        stateController.OnPasueStateExit();
     }
 
     public void FixedUpdateActive(PlayerController stateController)
