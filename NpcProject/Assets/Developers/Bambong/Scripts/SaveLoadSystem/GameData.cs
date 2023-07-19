@@ -14,7 +14,6 @@ public class GameData
    public Dictionary<string, DebugZoneData> playerKeywords = new Dictionary<string, DebugZoneData>();
    public Dictionary<string, KeywordEntityData> keywordEntityDatas = new Dictionary<string, KeywordEntityData>();
 }
-
 public class GameSettingData
 {
     public float masterVolume = 1;

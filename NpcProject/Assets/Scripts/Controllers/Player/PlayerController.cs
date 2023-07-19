@@ -759,14 +759,14 @@ public class PlayerController : MonoBehaviour , IDataHandler
     public void OnPasueStateEnter() 
     {
         Managers.Keyword.CurrentDragKeywordReset();
-        Managers.Game.DestinationPanel.gameObject.SetActive(false);   
-        
+        Managers.Game.DestinationPanel.gameObject.SetActive(false);
         onPauseUi.gameObject.SetActive(false);
  
     }
     public void OnPasueStateExit()
     {
-        Managers.Game.DestinationPanel.gameObject.SetActive(true);   
+        Managers.Game.DestinationPanel.gameObject.SetActive(true);
+        Managers.Game.DestinationPanel.Close();
         onPauseUi.gameObject.SetActive(true);
     }
     #region SetState
