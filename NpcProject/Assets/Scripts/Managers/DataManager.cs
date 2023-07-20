@@ -1,16 +1,15 @@
-using DG.Tweening.Plugins.Core.PathCore;
-using Spine.Unity.Examples;
-using System.Collections;
+
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
-
+using UnityEngine.SceneManagement;
 
 public class DataManager
 {
     private int progress = 0;
     private MiniGameLevelData dataPuzzleLevel;
+
+    
     private GameData lastGameData;
     private GameSettingData settingData;
     private PurposeData purposeData;
@@ -94,7 +93,17 @@ public class DataManager
         dataPuzzleLevel = level;
     }
    
-
+    public void DataRemoveForResetButton(string sceneName) 
+    {
+        if (!Managers.Data.SceneGameData.ContainsKey(sceneName))
+        {
+            return;
+        }
+        var guid = Managers.Keyword.CurDebugZone.GuId;
+        Managers.Data.SceneGameData[sceneName].playerPos = Managers.Keyword.CurDebugZone.PlayerDefaultPos;
+        Managers.Data.SceneGameData[sceneName].playerKeywords.Remove(guid);
+        Managers.Data.SceneGameData[sceneName].keywordEntityDatas.Remove(guid);
+    }
     public bool LoadGame(string sceneName)
     {
         GameData tempData;
@@ -110,8 +119,9 @@ public class DataManager
         }
         return true;
     }
-    public void SaveGame(string sceneName)
+    public void SaveGame()
     {
+        string sceneName = SceneManager.GetActiveScene().name;
         GameData tempData;
         if(!SceneGameData.TryGetValue(sceneName,out tempData)) 
         {

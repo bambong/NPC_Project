@@ -120,7 +120,9 @@ public class KeywordManager
             curDebugZone?.OnExitDebugMod();
             Managers.Game.Player.ExitDebugMod();
         }
+
         curDebugZone = zone;
+      
     }
 
     public KeywordController MakeKeywordToCurPlayerPanel(string name) 

@@ -10,6 +10,10 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class DebugZone : GuIdBehaviour, IDataHandler
 {
+    [Header("플레이어 초기화 기본 위치")]
+    [SerializeField]
+    private Vector3 playerDefaultPos;
+
     [Space(10)]
     [Header("디버그 모드 제한 시간 -1  = Infinity")]
     [SerializeField]
@@ -36,17 +40,20 @@ public class DebugZone : GuIdBehaviour, IDataHandler
     public int PlayerSlotCount { get => playerSlotCount; }
     public List<Material> WireMaterials { get => wireMaterials; }
     public bool IsDebugAble { get => isDebugAble; }
+    public Vector3 PlayerDefaultPos { get => playerDefaultPos; }
+
     protected override void Start()
     {
         base.Start();
         MakeFrame();
         InitKeywords();
-       
         MakeDebugGaugeUi();
-        
-     
         WireMaterialClear();
         boxSize = GetComponent<BoxCollider>().bounds.size;
+        if(playerDefaultPos == Vector3.zero) 
+        {
+            playerDefaultPos = Managers.Scene.CurrentScene.PlayerSpawnSpot;
+        }
     }
     private void MakeFrame() 
     {
@@ -184,6 +191,7 @@ public class DebugZone : GuIdBehaviour, IDataHandler
             Managers.Keyword.SetDebugZone(this);
             Managers.Game.Player.isDebugButton();
             Managers.Game.RetryPanel.OpenResetButton();
+            Managers.Data.SaveGame();
         }
     }
 

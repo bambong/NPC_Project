@@ -56,16 +56,9 @@ public class SceneManagerEx
         /// 데이터 세이브 
         if (isSave) 
         {
-            Managers.Data.SaveGame(prevSceneName);
+            Managers.Data.SaveGame();
         }
-        else /// 데이터 초기화  
-        {
-            if (Managers.Data.SceneGameData.ContainsKey(prevSceneName)) 
-            {
-                Managers.Data.SceneGameData.Remove(prevSceneName);
-            }
-        }
-        
+
        //sceneTransition.canvasGroup.alpha = 1;
          Managers.Clear();
         DOTween.KillAll();
