@@ -71,7 +71,7 @@ public class RetryPanelController : UI_Base
         seq.Append(canvasGroup.DOFade(1, FADE_OPEN_TIME));
         seq.AppendCallback(() =>
         {
-            StartCoroutine(RetryInputCheck());
+            //StartCoroutine(RetryInputCheck());
             retryText.gameObject.SetActive(true);
         });
         seq.Play();
@@ -81,20 +81,21 @@ public class RetryPanelController : UI_Base
         isOpenPanel = false;
         gameObject.SetActive(false);
     }
-    IEnumerator RetryInputCheck()
-    {
-        while (true)
-        {
-            if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.RETRY_KEY)))
-            {
-                Managers.Sound.PlaySFX(Define.SOUND.ResetButton);
-                Managers.Sound.StopBGM();
-                Managers.Scene.ReLoadCurrentScene();
-                //  Close();
-                yield break;
-            }
-            yield return null;
-        }
 
-    }
+    //IEnumerator RetryInputCheck()
+    //{
+    //    while (true)
+    //    {
+    //        if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.RETRY_KEY)))
+    //        {
+    //            Managers.Sound.PlaySFX(Define.SOUND.ResetButton);
+    //            Managers.Sound.StopBGM();
+    //            Managers.Scene.ReLoadCurrentScene();
+    //            //  Close();
+    //            yield break;
+    //        }
+    //        yield return null;
+    //    }
+
+    //}
 }

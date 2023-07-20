@@ -14,9 +14,9 @@ public class CreateIntroPuzzleKeyword : MonoBehaviour
 
     private void Awake()
     {
-        string[] selectedStrings = GetRandomStrings(words, 4);
+        string[] selectedStrings = GetRandomStrings(words, 6);
 
-        for(int i=0; i<selectedStrings.Length; i++)
+        for (int i = 0; i < selectedStrings.Length; i++)
         {
             GameObject newKeyword = Instantiate(prefab, spawnParent[i]);
             newKeyword.transform.SetParent(spawnParent[i]);

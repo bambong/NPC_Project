@@ -25,7 +25,9 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
 
     public void UpdateActive(PlayerController stateController)
     {
+
         stateController.PauseModInputCheck();
+        stateController.RunCheck();
         stateController.PlayerInputCheck();
         stateController.DebugModEnterInputCheck();
     }
@@ -52,7 +54,9 @@ public class PlayerWalk : Singleton<PlayerWalk>, IState<PlayerController>
 
     public void UpdateActive(PlayerController stateController)
     {
+
         stateController.PauseModInputCheck();
+        stateController.RunCheck();
         stateController.InteractionInputCheck();
         stateController.DebugModEnterInputCheck();
     }
@@ -82,6 +86,7 @@ public class PlayerRun : Singleton<PlayerRun>, IState<PlayerController>
     public void UpdateActive(PlayerController stateController)
     {
         stateController.PauseModInputCheck();
+        stateController.RunCheck();
         stateController.InteractionInputCheck();
         stateController.DebugModEnterInputCheck();
     }

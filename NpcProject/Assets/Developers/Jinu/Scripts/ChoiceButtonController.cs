@@ -35,6 +35,8 @@ public class ChoiceButtonController : UI_Base
     public TextMeshProUGUI choiceTextB;
     public TextMeshProUGUI choiceTextC;
 
+    public int backid;
+
     private bool isSelect = false;
     public override void Init()
     {
@@ -61,6 +63,7 @@ public class ChoiceButtonController : UI_Base
     {
         AnimClear();
         Sequence seq = DOTween.Sequence();
+        
         if (activeCount == 2)
         {
             backimageA.gameObject.SetActive(true);
@@ -73,6 +76,7 @@ public class ChoiceButtonController : UI_Base
                 choiceA.interactable = true;
                 choiceB.interactable = true;
             });
+            seq.SetId("ChoiceButtonAni");
             seq.Play();
         }
         else if(activeCount ==3)

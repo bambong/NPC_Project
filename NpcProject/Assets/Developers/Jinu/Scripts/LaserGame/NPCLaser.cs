@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using System.Text;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class NPCLaser : MonoBehaviour
 {    
     [SerializeField]
-    private GameObject correctObject;
+    private string[] correctTag;
     [Header("LaserProperty")]
     [SerializeField]
     private LineRenderer lineRenderer;
@@ -25,15 +28,19 @@ public class NPCLaser : MonoBehaviour
     [SerializeField]
     private Material hitMat;
 
+    private ILaserAction laserAction;
     private GameObject hitEffect;
     private Renderer curMat;
     private Material originMat;
-    
+    private StringBuilder tagName;
 
     private bool enter = false;
+    private int layerMask;
 
     private void Start()
     {
+        tagName = new StringBuilder();
+
         hitEffect = baseLaserEnd;
 
         curMat = GetComponent<Renderer>();
@@ -41,6 +48,8 @@ public class NPCLaser : MonoBehaviour
 
         lineRenderer.startWidth = laserWidth;
         lineRenderer.endWidth = laserWidth;
+
+        layerMask = (-1) - (1 << LayerMask.NameToLayer("InteractionDetector"));
     }
 
     private void Update()
@@ -53,23 +62,25 @@ public class NPCLaser : MonoBehaviour
         Ray ray = new Ray(transform.position, transform.forward);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, maxLength))
-        {
-            if(hit.collider.CompareTag("Laser"))
-            {
-                if(hit.collider.gameObject.name == correctObject.name)
+        if (Physics.Raycast(ray, out hit, maxLength, layerMask))
+        { 
+            if(CheckTag(hit))
+            {                
+                if(!enter)
                 {
-                    if(!enter)
-                    {
-                        LaserEnter();
-                        enter = true;
-                    }
-                }
+                    LaserEnter();
+                    StartLaserAction(hit);
+                    enter = true;
+                }                
             }
             else
             {
-                LaserExit();
-                enter = false;
+                if(enter)
+                {
+                    LaserExit();
+                    EndLaserAction();
+                    enter = false;
+                }
             }            
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, hit.point);
@@ -81,12 +92,39 @@ public class NPCLaser : MonoBehaviour
             if(enter)
             {
                 LaserExit();
+                EndLaserAction();
                 enter = false;
             }            
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, transform.position + transform.forward * maxLength);
             hitEffect.gameObject.transform.localPosition = transform.forward * maxLength;
         }
+    }
+    public bool CheckName(string name)
+    {
+        if (tagName.ToString() != name)
+        {
+            tagName.Clear();
+            tagName.Append(name);
+            return false;
+
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    public bool CheckTag(RaycastHit hit)
+    {
+        for(int i = 0; i < correctTag.Length; i++)
+        {
+            if (hit.collider.CompareTag(correctTag[i]))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void LaserEnter()
@@ -110,24 +148,40 @@ public class NPCLaser : MonoBehaviour
         hitLaserEnd.SetActive(false);
     }
 
-    //public void SetLaserColor(ParticleSystem particle)
+    public void StartLaserAction(RaycastHit hit)
+    {
+        laserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
+        if (laserAction != null)
+        {
+            laserAction.OnLaserHit();
+        }
+        else
+            Debug.Log(hit.collider.gameObject.name + " is no Assigned <ILaserAction>");
+        //try
+        //{
+        //    laserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
+        //    laserAction.OnLaserHit();
+        //}
+        //catch(NullReferenceException)
+        //{
+        //    Debug.Log(hit.collider.gameObject.name + " is no Assigned <ILaserAction>");
+        //}
+    }
+
+    public void EndLaserAction()
+    {
+        if (laserAction != null)
+        {
+            laserAction.OffLaserHit();
+        } 
+    }
+
+    //public void SetHitLaserColor(ParticleSystem baseParticle, Color hitcolor)
     //{
-    //    ParticleSystem.ColorOverLifetimeModule colorOverLifetime = particle.colorOverLifetime;
+    //    ParticleSystem.ColorOverLifetimeModule colorOverLifetime = baseParticle.colorOverLifetime;
     //    Gradient gradient = colorOverLifetime.color.gradient;
 
-    //    GradientColorKey[] colorKeys = gradient.colorKeys;
-    //    int lastIndex = colorKeys.Length - 1;
-    //    colorKeys[0].color = Color.white;
-    //    colorKeys[0].time = 0f;
-
-    //    colorKeys[1].color = Color.white;
-    //    colorKeys[1].time = 0.492f;
-
-    //    colorKeys[2].color = new Vector4(255, 0, 255);
-    //    colorKeys[2].time = 0.761f;
-
-    //    colorKeys[3].color = new Vector4(95, 25, 255);
-    //    colorKeys[3].time = 0.998f;
+    //    GradientColorKey[] colorKeys = blueParticle.colorOverLifetime.color.gradient.colorKeys;
 
     //    gradient.colorKeys = colorKeys;
 

@@ -84,7 +84,11 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private Coroutine debugModeInput;
     private RaycastHit slopeHit;
     private int slopeLayer;
+
     private Transform onPauseUi;
+    private bool togglemode = false;
+    private bool isRun = false;
+
     private KeywordController isFocusKeyword;
     private KeywordFrameBase isFocusFrame;
     private PurposePanelController purposePanel;
@@ -195,7 +199,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
-        var isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
+        //bool isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
 
         if (isRun)
         {
@@ -253,9 +257,9 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
-        var isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
+        //var isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
 
-        if(!isRun)
+        if (!isRun)
         {
             if (new Vector3(hor, 0, ver).magnitude <= 0.1f)
             {
@@ -304,6 +308,27 @@ public class PlayerController : MonoBehaviour , IDataHandler
             rigid.velocity = Vector3.zero;
             SetStateIdle();
         }
+    }
+
+    public void RunCheck()
+    {
+        if(togglemode)
+        {
+            if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY)))
+            {
+                isRun = !isRun;
+            }
+        }
+        else
+        {
+            isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
+        }
+    }
+
+    public void ToggleSwitch()
+    {
+        Debug.Log("RunMode:" + togglemode);
+        togglemode = !togglemode;
     }
 
     public void ChangeToRunSpeed(bool run)

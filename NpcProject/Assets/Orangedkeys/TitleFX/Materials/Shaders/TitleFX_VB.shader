@@ -1,239 +1,256 @@
-// Made with Amplify Shader Editor
+// Made with Amplify Shader Editor v1.9.1.7
 // Available at the Unity Asset Store - http://u3d.as/y3X 
 Shader "TitleFX_VB"
 {
-	Properties
-	{
-		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-		_Color ("Tint", Color) = (1,1,1,1)
-		
-		_StencilComp ("Stencil Comparison", Float) = 8
-		_Stencil ("Stencil ID", Float) = 0
-		_StencilOp ("Stencil Operation", Float) = 0
-		_StencilWriteMask ("Stencil Write Mask", Float) = 255
-		_StencilReadMask ("Stencil Read Mask", Float) = 255
+    Properties
+    {
+        [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
+        _Color ("Tint", Color) = (1,1,1,1)
 
-		_ColorMask ("Color Mask", Float) = 15
+        _StencilComp ("Stencil Comparison", Float) = 8
+        _Stencil ("Stencil ID", Float) = 0
+        _StencilOp ("Stencil Operation", Float) = 0
+        _StencilWriteMask ("Stencil Write Mask", Float) = 255
+        _StencilReadMask ("Stencil Read Mask", Float) = 255
 
-		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
-		_XTiling("XTiling", Float) = 1.2
-		_YTiling("YTiling", Float) = 1
-		_Main("Main", 2D) = "white" {}
-		[HDR]_MainColor("MainColor", Color) = (1.308841,1.308841,1.308841,1)
-		_MainMASK("MainMASK", 2D) = "white" {}
-		_TransitionFactor("TransitionFactor", Range( -1 , 1)) = 1
-		_DetailsMASK("DetailsMASK", 2D) = "white" {}
-		_DetailsMaskDistortionMult("DetailsMask Distortion Mult", Range( 0 , 1)) = 1
-		[Toggle(_INVERSEDIRECTION_ON)] _InverseDirection("InverseDirection", Float) = 0
-		[Toggle(_FORMAT_ON)] _Format("1:1 | 1:2 Format", Float) = 0
-		[Toggle]_AutoManualAnimation("Auto/Manual Animation", Float) = 0
-		[Toggle(_UPDOWNDIRECTION_ON)] _UpDownDirection("Up/Down Direction", Float) = 1
-		_Animation_Factor("Animation_Factor", Range( 0 , 2)) = 0
-		_TransitionSpeed("Transition Speed", Range( 2 , 5)) = 2
-		_VignetteMaskFallof("Vignette Mask Fallof", Range( 0 , 0.5)) = 0.25
-		[ASEEnd]_VignetteMaskSize("VignetteMaskSize", Range( 0 , 1)) = 0.4
+        _ColorMask ("Color Mask", Float) = 15
 
-	}
+        [Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
 
-	SubShader
-	{
+        _XTiling("XTiling", Float) = 1.2
+        _YTiling("YTiling", Float) = 1
+        _Main("Main", 2D) = "white" {}
+        [HDR]_MainColor("MainColor", Color) = (1.308841,1.308841,1.308841,1)
+        _MainMASK("MainMASK", 2D) = "white" {}
+        _TransitionFactor("TransitionFactor", Range( -1 , 1)) = 1
+        _DetailsMASK("DetailsMASK", 2D) = "white" {}
+        _DetailsMaskDistortionMult("DetailsMask Distortion Mult", Range( 0 , 1)) = 1
+        [Toggle(_INVERSEDIRECTION_ON)] _InverseDirection("InverseDirection", Float) = 0
+        [Toggle(_FORMAT_ON)] _Format("1:1 | 1:2 Format", Float) = 0
+        [Toggle]_AutoManualAnimation("Auto/Manual Animation", Float) = 0
+        [Toggle(_UPDOWNDIRECTION_ON)] _UpDownDirection("Up/Down Direction", Float) = 1
+        _Animation_Factor("Animation_Factor", Range( 0 , 2)) = 0
+        _TransitionSpeed("Transition Speed", Range( 2 , 5)) = 2
+        _VignetteMaskFallof("Vignette Mask Fallof", Range( 0 , 0.5)) = 0.25
+        [ASEEnd]_VignetteMaskSize("VignetteMaskSize", Range( 0 , 1)) = 0.4
+
+    }
+
+    SubShader
+    {
 		LOD 0
 
-		Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" "PreviewType"="Plane" "CanUseSpriteAtlas"="True" }
-		
-		Stencil
-		{
-			Ref [_Stencil]
-			ReadMask [_StencilReadMask]
-			WriteMask [_StencilWriteMask]
-			CompFront [_StencilComp]
-			PassFront [_StencilOp]
-			FailFront Keep
-			ZFailFront Keep
-			CompBack Always
-			PassBack Keep
-			FailBack Keep
-			ZFailBack Keep
-		}
+        Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" "PreviewType"="Plane" "CanUseSpriteAtlas"="True" }
+
+        Stencil
+        {
+        	Ref [_Stencil]
+        	ReadMask [_StencilReadMask]
+        	WriteMask [_StencilWriteMask]
+        	CompFront [_StencilComp]
+        	PassFront [_StencilOp]
+        	FailFront Keep
+        	ZFailFront Keep
+        	CompBack Always
+        	PassBack Keep
+        	FailBack Keep
+        	ZFailBack Keep
+        }
 
 
-		Cull Off
-		Lighting Off
-		ZWrite Off
-		ZTest [unity_GUIZTestMode]
-		Blend SrcAlpha OneMinusSrcAlpha
-		ColorMask [_ColorMask]
+        Cull Off
+        Lighting Off
+        ZWrite Off
+        ZTest [unity_GUIZTestMode]
+        Blend SrcAlpha OneMinusSrcAlpha
+        ColorMask [_ColorMask]
 
-		
-		Pass
-		{
-			Name "Default"
-		CGPROGRAM
-			
-			#ifndef UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX
-			#define UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input)
-			#endif
-			#pragma vertex vert
-			#pragma fragment frag
-			#pragma target 3.0
+        
+        Pass
+        {
+            Name "Default"
+        CGPROGRAM
+            
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma target 3.0
 
-			#include "UnityCG.cginc"
-			#include "UnityUI.cginc"
+            #include "UnityCG.cginc"
+            #include "UnityUI.cginc"
 
-			#pragma multi_compile __ UNITY_UI_CLIP_RECT
-			#pragma multi_compile __ UNITY_UI_ALPHACLIP
-			
-			#include "UnityShaderVariables.cginc"
-			#pragma shader_feature_local _FORMAT_ON
-			#pragma shader_feature_local _INVERSEDIRECTION_ON
-			#pragma shader_feature_local _UPDOWNDIRECTION_ON
+            #pragma multi_compile_local _ UNITY_UI_CLIP_RECT
+            #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
 
-			
-			struct appdata_t
-			{
-				float4 vertex   : POSITION;
-				float4 color    : COLOR;
-				float2 texcoord : TEXCOORD0;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				
-			};
+            #include "UnityShaderVariables.cginc"
+            #pragma shader_feature_local _FORMAT_ON
+            #pragma shader_feature_local _INVERSEDIRECTION_ON
+            #pragma shader_feature_local _UPDOWNDIRECTION_ON
 
-			struct v2f
-			{
-				float4 vertex   : SV_POSITION;
-				fixed4 color    : COLOR;
-				half2 texcoord  : TEXCOORD0;
-				float4 worldPosition : TEXCOORD1;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
-				UNITY_VERTEX_OUTPUT_STEREO
-				
-			};
-			
-			uniform fixed4 _Color;
-			uniform fixed4 _TextureSampleAdd;
-			uniform float4 _ClipRect;
-			uniform sampler2D _MainTex;
-			uniform sampler2D _Main;
-			uniform sampler2D _MainMASK;
-			uniform float _XTiling;
-			uniform float _YTiling;
-			uniform float _AutoManualAnimation;
-			uniform float _Animation_Factor;
-			uniform float _TransitionFactor;
-			uniform float _TransitionSpeed;
-			uniform sampler2D _DetailsMASK;
-			uniform float _DetailsMaskDistortionMult;
-			uniform float4 _MainColor;
-			uniform float _VignetteMaskSize;
-			uniform float _VignetteMaskFallof;
-			float4 MyCustomExpression215( float3 c, float a )
-			{
-				float4 colors = float4(c.x,c.y,c.z,a);
-				return colors;
-			}
-			
 
-			
-			v2f vert( appdata_t IN  )
-			{
-				v2f OUT;
-				UNITY_SETUP_INSTANCE_ID( IN );
+            struct appdata_t
+            {
+                float4 vertex   : POSITION;
+                float4 color    : COLOR;
+                float2 texcoord : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+                
+            };
+
+            struct v2f
+            {
+                float4 vertex   : SV_POSITION;
+                fixed4 color    : COLOR;
+                float2 texcoord  : TEXCOORD0;
+                float4 worldPosition : TEXCOORD1;
+                float4  mask : TEXCOORD2;
+                UNITY_VERTEX_OUTPUT_STEREO
+                
+            };
+
+            sampler2D _MainTex;
+            fixed4 _Color;
+            fixed4 _TextureSampleAdd;
+            float4 _ClipRect;
+            float4 _MainTex_ST;
+            float _UIMaskSoftnessX;
+            float _UIMaskSoftnessY;
+
+            uniform sampler2D _Main;
+            uniform sampler2D _MainMASK;
+            uniform float _XTiling;
+            uniform float _YTiling;
+            uniform float _AutoManualAnimation;
+            uniform float _Animation_Factor;
+            uniform float _TransitionFactor;
+            uniform float _TransitionSpeed;
+            uniform sampler2D _DetailsMASK;
+            uniform float _DetailsMaskDistortionMult;
+            uniform float4 _MainColor;
+            uniform float _VignetteMaskSize;
+            uniform float _VignetteMaskFallof;
+            float4 MyCustomExpression215( float3 c, float a )
+            {
+            	float4 colors = float4(c.x,c.y,c.z,a);
+            	return colors;
+            }
+            
+
+            
+            v2f vert(appdata_t v )
+            {
+                v2f OUT;
+                UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
-				UNITY_TRANSFER_INSTANCE_ID(IN, OUT);
-				OUT.worldPosition = IN.vertex;
-				
-				
-				OUT.worldPosition.xyz +=  float3( 0, 0, 0 ) ;
-				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
 
-				OUT.texcoord = IN.texcoord;
-				
-				OUT.color = IN.color * _Color;
-				return OUT;
-			}
+                
 
-			fixed4 frag(v2f IN  ) : SV_Target
-			{
-				UNITY_SETUP_INSTANCE_ID( IN );
-				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( IN );
+                v.vertex.xyz +=  float3( 0, 0, 0 ) ;
 
-				float2 texCoord2 = IN.texcoord.xy * float2( 1,1 ) + float2( 0,0 );
-				#ifdef _FORMAT_ON
-				float staticSwitch263 = 2.0;
-				#else
-				float staticSwitch263 = 1.0;
-				#endif
-				#ifdef _FORMAT_ON
-				float2 staticSwitch265 = float2( 0.5,1 );
-				#else
-				float2 staticSwitch265 = float2( 1,1 );
-				#endif
-				float2 temp_output_259_0 = ( staticSwitch263 * staticSwitch265 );
-				float2 UV209 = ( ( ( texCoord2 - float2( 0.5,0 ) ) * temp_output_259_0 ) + float2( 0.5,0 ) );
-				float2 appendResult186 = (float2(_XTiling , _YTiling));
-				float2 temp_output_33_0 = ( UV209 * appendResult186 );
-				float Animation221 = (( _AutoManualAnimation )?( _Animation_Factor ):( _SinTime.w ));
-				float temp_output_180_0 = ( 1.0 * Animation221 );
-				#ifdef _UPDOWNDIRECTION_ON
-				float2 staticSwitch256 = float2( 0,1 );
-				#else
-				float2 staticSwitch256 = float2( 1,0 );
-				#endif
-				#ifdef _INVERSEDIRECTION_ON
-				float2 staticSwitch258 = ( staticSwitch256 * float2( -1,-1 ) );
-				#else
-				float2 staticSwitch258 = staticSwitch256;
-				#endif
-				float2 temp_output_157_0 = pow( ( temp_output_180_0 * staticSwitch258 ) , 2.0 );
-				float ifLocalVar117 = 0;
-				if( temp_output_180_0 <= 0.0 )
-				ifLocalVar117 = temp_output_180_0;
-				else
-				ifLocalVar117 = ( temp_output_180_0 * -1.0 );
-				float temp_output_39_0 = ( ( ifLocalVar117 + 0.5 ) * _TransitionSpeed );
-				float clampResult45 = clamp( ( ( tex2D( _MainMASK, ( temp_output_33_0 + temp_output_157_0 ) ).r * _TransitionFactor ) - temp_output_39_0 ) , 0.0 , 1.0 );
-				float clampResult41 = clamp( ( ( tex2D( _DetailsMASK, ( temp_output_33_0 + temp_output_157_0 ) ).r * _DetailsMaskDistortionMult ) - temp_output_39_0 ) , 0.0 , 1.0 );
-				float temp_output_46_0 = ( clampResult45 + clampResult41 );
-				float MaskData187 = temp_output_46_0;
-				#ifdef _FORMAT_ON
-				float staticSwitch261 = 0.75;
-				#else
-				float staticSwitch261 = 0.5;
-				#endif
-				float2 temp_output_52_0 = ( ( UV209 + ( MaskData187 * staticSwitch261 * staticSwitch258 ) ) - ( staticSwitch258 * temp_output_259_0 ) );
-				float4 tex2DNode1 = tex2D( _Main, temp_output_52_0 );
-				float temp_output_51_0 = ( tex2DNode1.r * pow( ( temp_output_46_0 * 0.5 ) , 2.0 ) );
-				float4 clampResult253 = clamp( ( ( ( 1.0 - ( temp_output_51_0 - 1.5 ) ) * ( temp_output_51_0 - 1.6 ) ) * _MainColor * 8.0 ) , float4( 0,0,0,0 ) , float4( 1,1,1,1 ) );
-				float3 c215 = ( ( tex2DNode1 * _MainColor ) + clampResult253 ).rgb;
-				float2 texCoord279 = IN.texcoord.xy * float2( 1,1 ) + float2( 0,0 );
-				float2 temp_cast_1 = (( _VignetteMaskSize * 0.5 )).xx;
-				float clampResult301 = clamp( ( distance( max( ( abs( ( texCoord279 - float2( 0.5,0.5 ) ) ) - temp_cast_1 ) , float2( 0,0 ) ) , float2( 0,0 ) ) / _VignetteMaskFallof ) , 0.0 , 1.0 );
-				float a215 = ( temp_output_51_0 * ( 1.0 - clampResult301 ) );
-				float4 localMyCustomExpression215 = MyCustomExpression215( c215 , a215 );
-				float4 clampResult224 = clamp( localMyCustomExpression215 , float4( 0,0,0,0 ) , float4( 10000,10000,10000,10000 ) );
-				
-				half4 color = clampResult224;
-				
-				#ifdef UNITY_UI_CLIP_RECT
-                color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
+                float4 vPosition = UnityObjectToClipPos(v.vertex);
+                OUT.worldPosition = v.vertex;
+                OUT.vertex = vPosition;
+
+                float2 pixelSize = vPosition.w;
+                pixelSize /= float2(1, 1) * abs(mul((float2x2)UNITY_MATRIX_P, _ScreenParams.xy));
+
+                float4 clampedRect = clamp(_ClipRect, -2e10, 2e10);
+                float2 maskUV = (v.vertex.xy - clampedRect.xy) / (clampedRect.zw - clampedRect.xy);
+                OUT.texcoord = v.texcoord;
+                OUT.mask = float4(v.vertex.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * half2(_UIMaskSoftnessX, _UIMaskSoftnessY) + abs(pixelSize.xy)));
+
+                OUT.color = v.color * _Color;
+                return OUT;
+            }
+
+            fixed4 frag(v2f IN ) : SV_Target
+            {
+                //Round up the alpha color coming from the interpolator (to 1.0/256.0 steps)
+                //The incoming alpha could have numerical instability, which makes it very sensible to
+                //HDR color transparency blend, when it blends with the world's texture.
+                const half alphaPrecision = half(0xff);
+                const half invAlphaPrecision = half(1.0/alphaPrecision);
+                IN.color.a = round(IN.color.a * alphaPrecision)*invAlphaPrecision;
+
+                float2 texCoord2 = IN.texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+                #ifdef _FORMAT_ON
+                float staticSwitch263 = 2.0;
+                #else
+                float staticSwitch263 = 1.0;
                 #endif
-				
-				#ifdef UNITY_UI_ALPHACLIP
-				clip (color.a - 0.001);
-				#endif
+                #ifdef _FORMAT_ON
+                float2 staticSwitch265 = float2( 0.5,1 );
+                #else
+                float2 staticSwitch265 = float2( 1,1 );
+                #endif
+                float2 temp_output_259_0 = ( staticSwitch263 * staticSwitch265 );
+                float2 UV209 = ( ( ( texCoord2 - float2( 0.5,0 ) ) * temp_output_259_0 ) + float2( 0.5,0 ) );
+                float2 appendResult186 = (float2(_XTiling , _YTiling));
+                float2 temp_output_33_0 = ( UV209 * appendResult186 );
+                float Animation221 = (( _AutoManualAnimation )?( _Animation_Factor ):( _SinTime.w ));
+                float temp_output_180_0 = ( 1.0 * Animation221 );
+                #ifdef _UPDOWNDIRECTION_ON
+                float2 staticSwitch256 = float2( 0,1 );
+                #else
+                float2 staticSwitch256 = float2( 1,0 );
+                #endif
+                #ifdef _INVERSEDIRECTION_ON
+                float2 staticSwitch258 = ( staticSwitch256 * float2( -1,-1 ) );
+                #else
+                float2 staticSwitch258 = staticSwitch256;
+                #endif
+                float2 temp_output_157_0 = pow( ( temp_output_180_0 * staticSwitch258 ) , 2.0 );
+                float ifLocalVar117 = 0;
+                if( temp_output_180_0 <= 0.0 )
+                ifLocalVar117 = temp_output_180_0;
+                else
+                ifLocalVar117 = ( temp_output_180_0 * -1.0 );
+                float temp_output_39_0 = ( ( ifLocalVar117 + 0.5 ) * _TransitionSpeed );
+                float clampResult45 = clamp( ( ( tex2D( _MainMASK, ( temp_output_33_0 + temp_output_157_0 ) ).r * _TransitionFactor ) - temp_output_39_0 ) , 0.0 , 1.0 );
+                float clampResult41 = clamp( ( ( tex2D( _DetailsMASK, ( temp_output_33_0 + temp_output_157_0 ) ).r * _DetailsMaskDistortionMult ) - temp_output_39_0 ) , 0.0 , 1.0 );
+                float temp_output_46_0 = ( clampResult45 + clampResult41 );
+                float MaskData187 = temp_output_46_0;
+                #ifdef _FORMAT_ON
+                float staticSwitch261 = 0.75;
+                #else
+                float staticSwitch261 = 0.5;
+                #endif
+                float2 temp_output_52_0 = ( ( UV209 + ( MaskData187 * staticSwitch261 * staticSwitch258 ) ) - ( staticSwitch258 * temp_output_259_0 ) );
+                float4 tex2DNode1 = tex2D( _Main, temp_output_52_0 );
+                float temp_output_51_0 = ( tex2DNode1.a * pow( ( temp_output_46_0 * 0.5 ) , 2.0 ) );
+                float4 clampResult253 = clamp( ( ( ( 1.0 - ( temp_output_51_0 - 1.5 ) ) * ( temp_output_51_0 - 1.6 ) ) * _MainColor * 8.0 ) , float4( 0,0,0,0 ) , float4( 1,1,1,1 ) );
+                float3 c215 = ( ( tex2DNode1 * _MainColor ) + clampResult253 ).rgb;
+                float2 texCoord279 = IN.texcoord.xy * float2( 1,1 ) + float2( 0,0 );
+                float2 temp_cast_1 = (( _VignetteMaskSize * 0.5 )).xx;
+                float clampResult301 = clamp( ( distance( max( ( abs( ( texCoord279 - float2( 0.5,0.5 ) ) ) - temp_cast_1 ) , float2( 0,0 ) ) , float2( 0,0 ) ) / _VignetteMaskFallof ) , 0.0 , 1.0 );
+                float a215 = ( temp_output_51_0 * ( 1.0 - clampResult301 ) );
+                float4 localMyCustomExpression215 = MyCustomExpression215( c215 , a215 );
+                float4 clampResult224 = clamp( localMyCustomExpression215 , float4( 0,0,0,0 ) , float4( 10000,10000,10000,10000 ) );
+                
 
-				return color;
-			}
-		ENDCG
-		}
-	}
-	CustomEditor "Title_fx_GUI_V2"
+                half4 color = clampResult224;
+
+                #ifdef UNITY_UI_CLIP_RECT
+                half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(IN.mask.xy)) * IN.mask.zw);
+                color.a *= m.x * m.y;
+                #endif
+
+                #ifdef UNITY_UI_ALPHACLIP
+                clip (color.a - 0.001);
+                #endif
+
+                color.rgb *= color.a;
+
+                return color;
+            }
+        ENDCG
+        }
+    }
+    CustomEditor "Title_fx_GUI_V2"
 	
-	
+	Fallback Off
 }
 /*ASEBEGIN
-Version=18935
-9;39;2560;1361;-1281.24;425.8186;1;True;False
+Version=19107
 Node;AmplifyShaderEditor.Vector2Node;266;-2957.588,709.009;Inherit;False;Constant;_Vector5;Vector 5;16;0;Create;True;0;0;0;False;0;False;1,1;0,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
 Node;AmplifyShaderEditor.RangedFloatNode;201;-2956.365,427.5073;Inherit;False;Constant;_UV_Scale;UV_Scale;0;0;Create;True;0;0;0;False;0;False;2;2;0;3;0;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;264;-2748.588,539.009;Inherit;False;Constant;_Float5;Float 5;16;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
@@ -294,7 +311,7 @@ Node;AmplifyShaderEditor.SimpleMultiplyOpNode;53;141.5214,1701.406;Inherit;False
 Node;AmplifyShaderEditor.SimpleAddOpNode;8;387.0764,857.957;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT2;0,0;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.RangedFloatNode;300;1871.24,335.1814;Inherit;False;Property;_VignetteMaskSize;VignetteMaskSize;16;0;Create;True;0;0;0;False;0;False;0.4;0;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;268;699.5391,-924.224;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0.5;False;1;FLOAT;0
-Node;AmplifyShaderEditor.TexturePropertyNode;77;1146.678,822.3198;Inherit;True;Property;_Main;Main;3;0;Create;True;0;0;0;False;0;False;None;b0c70b723e8976d41abc5e0af255229a;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
+Node;AmplifyShaderEditor.TexturePropertyNode;77;1146.678,822.3198;Inherit;True;Property;_Main;Main;3;0;Create;True;0;0;0;False;0;False;None;None;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
 Node;AmplifyShaderEditor.SimpleSubtractOpNode;52;724.5054,1118.465;Inherit;False;2;0;FLOAT2;0,0;False;1;FLOAT2;0,0;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.SimpleSubtractOpNode;289;2032.314,91.80945;Inherit;False;2;0;FLOAT2;0,0;False;1;FLOAT2;0.5,0.5;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.SamplerNode;1;1507.917,1095.293;Inherit;True;Property;_TextureSample0;Texture Sample 0;0;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
@@ -333,9 +350,9 @@ Node;AmplifyShaderEditor.Vector2Node;155;-851.477,1816.487;Inherit;False;Constan
 Node;AmplifyShaderEditor.Vector2Node;11;-844.4369,1961.557;Inherit;False;Constant;_Vector0;Vector 0;3;0;Create;True;0;0;0;False;0;False;1,0;0,0;0;3;FLOAT2;0;FLOAT;1;FLOAT;2
 Node;AmplifyShaderEditor.FractNode;182;-2095.783,-241.3179;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;183;-2397.783,-222.3179;Inherit;False;Constant;_Float2;Float 2;5;0;Create;True;0;0;0;False;0;False;0.5;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;299;2191.24,-282.8186;Inherit;False;BoxMask;-1;;2;9dce4093ad5a42b4aa255f0153c4f209;0;4;1;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;10;FLOAT3;0,0,0;False;17;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;299;2191.24,-282.8186;Inherit;False;BoxMask;-1;;4;9dce4093ad5a42b4aa255f0153c4f209;0;4;1;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;10;FLOAT3;0,0,0;False;17;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;191;935.1382,1297.946;Inherit;False;Constant;_Float3;Float 3;7;0;Create;True;0;0;0;False;0;False;3;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;214;3493.082,979.55;Float;False;True;-1;2;Title_fx_GUI_V2;0;4;TitleFX_VB;5056123faa0c79b47ab6ad7e8bf059a4;True;Default;0;0;Default;2;False;True;2;5;False;-1;10;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;True;True;True;True;True;0;True;-9;False;False;False;False;False;False;False;True;True;0;True;-5;255;True;-8;255;True;-7;0;True;-4;0;True;-6;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;2;False;-1;True;0;True;-11;False;True;5;Queue=Transparent=Queue=0;IgnoreProjector=True;RenderType=Transparent=RenderType;PreviewType=Plane;CanUseSpriteAtlas=True;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;0;;0;0;Standard;0;0;1;True;False;;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;214;3493.082,979.55;Float;False;True;-1;2;Title_fx_GUI_V2;0;3;TitleFX_VB;5056123faa0c79b47ab6ad7e8bf059a4;True;Default;0;0;Default;2;False;True;2;5;False;;10;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;True;True;True;True;True;0;True;_ColorMask;False;False;False;False;False;False;False;True;True;0;True;_Stencil;255;True;_StencilReadMask;255;True;_StencilWriteMask;0;True;_StencilComp;0;True;_StencilOp;1;False;;1;False;;7;False;;1;False;;1;False;;1;False;;False;True;2;False;;True;0;True;unity_GUIZTestMode;False;True;5;Queue=Transparent=Queue=0;IgnoreProjector=True;RenderType=Transparent=RenderType;PreviewType=Plane;CanUseSpriteAtlas=True;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;0;;0;0;Standard;0;0;1;True;False;;False;0
 WireConnection;263;1;264;0
 WireConnection;263;0;201;0
 WireConnection;265;1;266;0
@@ -409,7 +426,7 @@ WireConnection;1;1;52;0
 WireConnection;60;0;268;0
 WireConnection;295;0;300;0
 WireConnection;291;0;289;0
-WireConnection;51;0;1;1
+WireConnection;51;0;1;4
 WireConnection;51;1;60;0
 WireConnection;290;0;291;0
 WireConnection;290;1;295;0
@@ -445,4 +462,4 @@ WireConnection;190;0;178;0
 WireConnection;182;0;181;0
 WireConnection;214;0;224;0
 ASEEND*/
-//CHKSM=38411B3D41AC22D52E5FF59797ACABF91FE8B40F
+//CHKSM=5A443D1064A8360E9F0C0F727F010DB88D019631

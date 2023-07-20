@@ -5,18 +5,18 @@ using UnityEngine;
 public class LaserColorController : MonoBehaviour
 {
     [SerializeField]
-    private ParticleSystem startParticle;
+    private ParticleSystem blueParticle;
     [SerializeField]
-    private ParticleSystem endParticle;
+    private ParticleSystem yellowParticle;
+    [SerializeField]
+    private ParticleSystem purpleParticle;
 
-    public void SetLaserColor(Color hitcolor)
+    public void SetLaserColor(ParticleSystem baseParticle, Color hitcolor)
     {
-        ParticleSystem.ColorOverLifetimeModule colorOverLifetime = startParticle.colorOverLifetime;
+        ParticleSystem.ColorOverLifetimeModule colorOverLifetime = baseParticle.colorOverLifetime;
         Gradient gradient = colorOverLifetime.color.gradient;
 
         GradientColorKey[] colorKeys = gradient.colorKeys;
-        int lastIndex = colorKeys.Length - 1;
-        colorKeys[lastIndex].color = hitcolor;
 
         gradient.colorKeys = colorKeys;
 
