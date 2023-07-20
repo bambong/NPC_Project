@@ -9,7 +9,7 @@ public class LaserEventTrigger : MonoBehaviour
     [SerializeField]
     private Material hitmat;
     [SerializeField]
-    private LaserColorController laserColorController;
+    private LaserColorContainer laserColorController;
     [SerializeField]
     private Color hitcolor;
 

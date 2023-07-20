@@ -5,12 +5,13 @@ using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
 public class NPCLaser : MonoBehaviour
-{    
+{
+
     [SerializeField]
     private string[] layerName;
     [Header("LaserProperty")]
     [SerializeField]
-    private LaserColorController laserColorController;
+    private LaserColorContainer laserColorContainer;
     [SerializeField]
     private Define.LaserColor laserBaseColor;
     [SerializeField]
@@ -36,21 +37,20 @@ public class NPCLaser : MonoBehaviour
     private ILaserAction laserAction;
     private RaycastHit preHit;
     private Renderer curMat;
-    private Material originMat;
     private ParticleSystem.ColorOverLifetimeModule laserStartColor;
     private ParticleSystem.ColorOverLifetimeModule laserEndColor;
     private ParticleSystem.ColorOverLifetimeModule glowStartColor;
     private ParticleSystem.ColorOverLifetimeModule glowEndColor;
 
     private bool enter = false;
+    private bool shoot = true;
     private int ignoreLayerMask = 0;
     private int actionLayerMask = 0;
 
     private void Start()
     {
         curMat = GetComponent<Renderer>();
-        curMat.material = laserColorController.GetLaserColor(laserBaseColor).beamMat;
-        originMat = curMat.material;
+        curMat.material = laserColorContainer.GetLaserColor(laserBaseColor).beamMat;
 
         lineRenderer.startWidth = laserWidth;
         lineRenderer.endWidth = laserWidth;
@@ -63,7 +63,8 @@ public class NPCLaser : MonoBehaviour
 
     private void Update()
     {
-         ShootLaser();
+        if(shoot)
+        ShootLaser();
     }
 
     private void ShootLaser()
@@ -119,7 +120,7 @@ public class NPCLaser : MonoBehaviour
 
     public void LaserEnter()
     {
-        var color = laserColorController.GetLaserColor(laserHitColor);
+        var color = laserColorContainer.GetLaserColor(laserHitColor);
         curMat.material = color.beamMat;
 
         laserStartColor.color = color.laserColor;
@@ -130,7 +131,7 @@ public class NPCLaser : MonoBehaviour
     
     public void LaserExit()
     {
-        var color = laserColorController.GetLaserColor(laserBaseColor);
+        var color = laserColorContainer.GetLaserColor(laserBaseColor);
         curMat.material = color.beamMat;
 
         laserStartColor.color = color.laserColor;
@@ -198,15 +199,14 @@ public class NPCLaser : MonoBehaviour
         lineRenderer.SetPosition(1, hit.point);
         hitEffect.gameObject.transform.position = hit.point;
     }
-    //public void SetHitLaserColor(ParticleSystem baseParticle, Color hitcolor)
-    //{
-    //    ParticleSystem.ColorOverLifetimeModule colorOverLifetime = baseParticle.colorOverLifetime;
-    //    Gradient gradient = colorOverLifetime.color.gradient;
 
-    //    GradientColorKey[] colorKeys = blueParticle.colorOverLifetime.color.gradient.colorKeys;
+    public void StartLaser()
+    {
+        shoot = true;
+    }
 
-    //    gradient.colorKeys = colorKeys;
-
-    //    colorOverLifetime.color = gradient;
-    //}
+    public void StopLaser()
+    {
+        shoot = false;
+    }
 }

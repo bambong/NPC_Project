@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class LaserColorController : MonoBehaviour
+public class LaserColorContainer : MonoBehaviour
 {
     [Serializable]
     public struct LaserProperty
