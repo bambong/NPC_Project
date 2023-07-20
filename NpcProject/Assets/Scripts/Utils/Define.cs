@@ -46,6 +46,16 @@ public class Define
         BombEffect,
         MonsterDeathEffect
     }
+
+    public enum LaserColor
+    {
+        Blue,
+        Green,
+        Purple,
+        Red,
+        Yellow
+    }
+
     public enum BGM
     {
         Start,

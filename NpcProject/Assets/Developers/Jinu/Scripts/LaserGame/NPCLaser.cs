@@ -10,6 +10,12 @@ public class NPCLaser : MonoBehaviour
     private string[] layerName;
     [Header("LaserProperty")]
     [SerializeField]
+    private LaserColorController laserColorController;
+    [SerializeField]
+    private Define.LaserColor laserBaseColor;
+    [SerializeField]
+    private Define.LaserColor laserHitColor;
+    [SerializeField]
     private LineRenderer lineRenderer;
     [SerializeField]
     public float maxLength = 300f; //laser max length
@@ -26,18 +32,6 @@ public class NPCLaser : MonoBehaviour
     private ParticleSystem laserEnd;
     [SerializeField]
     private ParticleSystem glowEnd;
-    [Header("Hit Effect")]
-    [SerializeField]
-    private Gradient baseColor;
-    [SerializeField]
-    private Gradient baseGlowColor;
-    [SerializeField]
-    private Gradient hitColor;
-    [SerializeField]
-    private Gradient hitGlowColor;
-    [SerializeField]
-    private Material hitMat;
-
 
     private ILaserAction laserAction;
     private RaycastHit preHit;
@@ -55,6 +49,7 @@ public class NPCLaser : MonoBehaviour
     private void Start()
     {
         curMat = GetComponent<Renderer>();
+        curMat.material = laserColorController.GetLaserColor(laserBaseColor).beamMat;
         originMat = curMat.material;
 
         lineRenderer.startWidth = laserWidth;
@@ -84,7 +79,6 @@ public class NPCLaser : MonoBehaviour
                 {
                     if (preHit.collider.name != curHit.collider.name)
                     {
-                        LaserExit();
                         EndLaserAction(preHit);
                         enter = false;
                         preHit = curHit;
@@ -106,7 +100,6 @@ public class NPCLaser : MonoBehaviour
             }
             else
             {
-                LaserExit();
                 EndLaserAction(preHit);
                 CreateLaserLine(maxLengthHit);
             }
@@ -115,10 +108,9 @@ public class NPCLaser : MonoBehaviour
         {
             if(enter)
             {
-                LaserExit();
                 EndLaserAction(preHit);
                 enter = false;
-            }            
+            }
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, transform.position + transform.forward * maxLength);
             hitEffect.gameObject.transform.localPosition = transform.forward * maxLength;
@@ -127,22 +119,24 @@ public class NPCLaser : MonoBehaviour
 
     public void LaserEnter()
     {
-        curMat.material = hitMat;
+        var color = laserColorController.GetLaserColor(laserHitColor);
+        curMat.material = color.beamMat;
 
-        laserStartColor.color = hitColor;
-        laserEndColor.color = hitColor;
-        glowStartColor.color = hitGlowColor;
-        glowEndColor.color = hitGlowColor;
+        laserStartColor.color = color.laserColor;
+        laserEndColor.color = color.laserColor;
+        glowStartColor.color = color.glowboxColor;
+        glowEndColor.color = color.glowboxColor;
     }
     
     public void LaserExit()
     {
-        curMat.material = originMat;
+        var color = laserColorController.GetLaserColor(laserBaseColor);
+        curMat.material = color.beamMat;
 
-        laserStartColor.color = baseColor;
-        laserEndColor.color = baseColor;
-        glowStartColor.color = baseGlowColor;
-        glowEndColor.color = baseGlowColor;
+        laserStartColor.color = color.laserColor;
+        laserEndColor.color = color.laserColor;
+        glowStartColor.color = color.glowboxColor;
+        glowEndColor.color = color.glowboxColor;
     }
 
     public void StartLaserAction(RaycastHit hit)
@@ -159,13 +153,15 @@ public class NPCLaser : MonoBehaviour
         }
         else
         {
+            LaserExit();
             Debug.Log(hit.collider.gameObject.name + " is no Assigned <ILaserAction>");
         }
     }
 
     public void EndLaserAction(RaycastHit hit)
     {
-        if(hit.collider == null)
+        LaserExit();
+        if (hit.collider == null)
         {
             return;
         }
@@ -173,7 +169,7 @@ public class NPCLaser : MonoBehaviour
         if (preLaserAction != null)
         {
             preLaserAction.OffLaserHit();
-        } 
+        }
     }
     private void SetColorOverLifeTime()
     {

@@ -1,25 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class LaserColorController : MonoBehaviour
 {
-    [SerializeField]
-    private ParticleSystem blueParticle;
-    [SerializeField]
-    private ParticleSystem yellowParticle;
-    [SerializeField]
-    private ParticleSystem purpleParticle;
-
-    public void SetLaserColor(ParticleSystem baseParticle, Color hitcolor)
+    [Serializable]
+    public struct LaserProperty
     {
-        ParticleSystem.ColorOverLifetimeModule colorOverLifetime = baseParticle.colorOverLifetime;
-        Gradient gradient = colorOverLifetime.color.gradient;
+        public Material beamMat;
+        public Gradient laserColor;
+        public Gradient glowboxColor;
+    }
 
-        GradientColorKey[] colorKeys = gradient.colorKeys;
+    [SerializeField]
+    private LaserProperty blueLaser;
+    [SerializeField]
+    private LaserProperty greenLaer;
+    [SerializeField]
+    private LaserProperty purpleLaser;
+    [SerializeField]
+    private LaserProperty redLaser;
+    [SerializeField]
+    private LaserProperty yellowLaser;
 
-        gradient.colorKeys = colorKeys;
-
-        colorOverLifetime.color = gradient;
+    public LaserProperty GetLaserColor(Define.LaserColor color)
+    {
+        switch(color)
+        {
+            case Define.LaserColor.Blue:
+                return blueLaser;
+            case Define.LaserColor.Green:
+                return greenLaer;
+            case Define.LaserColor.Purple:
+                return purpleLaser;
+            case Define.LaserColor.Red:
+                return redLaser;
+            case Define.LaserColor.Yellow:
+                return yellowLaser;
+            default:
+                return blueLaser;
+        }
     }
 }
