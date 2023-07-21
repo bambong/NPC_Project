@@ -11,7 +11,7 @@ public class NPCLaser : MonoBehaviour
     private string[] layerName;
     [Header("LaserProperty")]
     [SerializeField]
-    private LaserColorContainer laserColorContainer;
+    private LaserColorData laserColorData;
     [SerializeField]
     private Define.LaserColor laserBaseColor;
     [SerializeField]
@@ -50,7 +50,7 @@ public class NPCLaser : MonoBehaviour
     private void Start()
     {
         curMat = GetComponent<Renderer>();
-        curMat.material = laserColorContainer.GetLaserColor(laserBaseColor).beamMat;
+        curMat.material = laserColorData.GetLaserColor(laserBaseColor).laserMat;
 
         lineRenderer.startWidth = laserWidth;
         lineRenderer.endWidth = laserWidth;
@@ -118,68 +118,7 @@ public class NPCLaser : MonoBehaviour
         }
     }
 
-    public void LaserEnter()
-    {
-        var color = laserColorContainer.GetLaserColor(laserHitColor);
-        curMat.material = color.beamMat;
-
-        laserStartColor.color = color.laserColor;
-        laserEndColor.color = color.laserColor;
-        glowStartColor.color = color.glowboxColor;
-        glowEndColor.color = color.glowboxColor;
-    }
-    
-    public void LaserExit()
-    {
-        var color = laserColorContainer.GetLaserColor(laserBaseColor);
-        curMat.material = color.beamMat;
-
-        laserStartColor.color = color.laserColor;
-        laserEndColor.color = color.laserColor;
-        glowStartColor.color = color.glowboxColor;
-        glowEndColor.color = color.glowboxColor;
-    }
-
-    public void StartLaserAction(RaycastHit hit)
-    {
-        if(hit.collider == null)
-        {
-            return;
-        }
-        laserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
-        if (laserAction != null)
-        {
-            LaserEnter();
-            laserAction.OnLaserHit();
-        }
-        else
-        {
-            LaserExit();
-            Debug.Log(hit.collider.gameObject.name + " is no Assigned <ILaserAction>");
-        }
-    }
-
-    public void EndLaserAction(RaycastHit hit)
-    {
-        LaserExit();
-        if (hit.collider == null)
-        {
-            return;
-        }
-        var preLaserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
-        if (preLaserAction != null)
-        {
-            preLaserAction.OffLaserHit();
-        }
-    }
-    private void SetColorOverLifeTime()
-    {
-        laserStartColor = laserStart.colorOverLifetime;
-        laserEndColor = laserEnd.colorOverLifetime;
-        glowStartColor = glowStart.colorOverLifetime;
-        glowEndColor = glowEnd.colorOverLifetime;
-    }
-
+    #region LaserSetting
     public void SetLayerMask()
     {
         for (int i = 0; i < layerName.Length; i++)
@@ -200,6 +139,37 @@ public class NPCLaser : MonoBehaviour
         hitEffect.gameObject.transform.position = hit.point;
     }
 
+    private void SetColorOverLifeTime()
+    {
+        laserStartColor = laserStart.colorOverLifetime;
+        laserEndColor = laserEnd.colorOverLifetime;
+        glowStartColor = glowStart.colorOverLifetime;
+        glowEndColor = glowEnd.colorOverLifetime;
+    }
+    public void LaserEnter()
+    {
+        var color = laserColorData.GetLaserColor(laserHitColor);
+        curMat.material = color.laserMat;
+
+        laserStartColor.color = color.particleColor;
+        laserEndColor.color = color.particleColor;
+        glowStartColor.color = color.glowBoxColor;
+        glowEndColor.color = color.glowBoxColor;
+    }
+    
+    public void LaserExit()
+    {
+        var color = laserColorData.GetLaserColor(laserBaseColor);
+        curMat.material = color.laserMat;
+
+        laserStartColor.color = color.particleColor;
+        laserEndColor.color = color.particleColor;
+        glowStartColor.color = color.glowBoxColor;
+        glowEndColor.color = color.glowBoxColor;
+    }
+    #endregion
+
+    #region LaserAction
     public void StartLaser()
     {
         shoot = true;
@@ -209,4 +179,38 @@ public class NPCLaser : MonoBehaviour
     {
         shoot = false;
     }
+
+    public void StartLaserAction(RaycastHit hit)
+    {
+        if(hit.collider == null)
+        {
+            return;
+        }
+        laserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
+        if (laserAction == null)
+        {
+            LaserExit();
+            Debug.Log(hit.collider.gameObject.name + " is no Assigned <ILaserAction>");
+        }
+        else
+        {
+            LaserEnter();
+            laserAction.OnLaserHit();
+        }
+    }
+
+    public void EndLaserAction(RaycastHit hit)
+    {
+        LaserExit();
+        if (hit.collider == null)
+        {
+            return;
+        }
+        var preLaserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
+        if (preLaserAction != null)
+        {
+            preLaserAction.OffLaserHit();
+        }
+    }
+    #endregion
 }
