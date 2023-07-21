@@ -33,7 +33,7 @@ public static class KeySetting
             {KEY_TYPE.UP_KEY, KeyCode.W},
             {KEY_TYPE.LEFT_KEY, KeyCode.A},
             {KEY_TYPE.DOWN_KEY, KeyCode.S},
-            {KEY_TYPE.RIGHT_KEY, KeyCode.D}
+            {KEY_TYPE.RIGHT_KEY, KeyCode.D},
         };
 
         currentKeys = new Dictionary<KEY_TYPE, KeyCode>(defaultKeys); //default로 채우기
@@ -50,9 +50,10 @@ public static class KeySetting
     public static void SetAllKeysToDefault() //init button
     {
         tempKeys = new Dictionary<KEY_TYPE, KeyCode>(defaultKeys);
+        currentKeys = new Dictionary<KEY_TYPE, KeyCode>(defaultKeys);
     }
 
-    public static void CopyCurrentToTemp() //inputs 메뉴 버튼에 할당
+    public static void CopyCurrentToTemp() //메뉴 버튼에 할당
     {
         tempKeys = new Dictionary<KEY_TYPE, KeyCode>(currentKeys);
     }
@@ -91,7 +92,7 @@ public class KeyMappingController : MonoBehaviour
         KeySetting.CopyCurrentToTemp();
     }
 
-    public void SetAllKeysToDefault() //입력 초기화
+    public void SetAllKeysToDefault() //init
     {
         KeySetting.SetAllKeysToDefault();
     }
@@ -104,6 +105,12 @@ public class KeyMappingController : MonoBehaviour
 
     public void ApplyTempKeyMap()
     {
+        Debug.Log("TempKeys contents:");
+        foreach (var kvp in KeySetting.tempKeys)
+        {
+            Debug.Log(kvp.Key + ": " + kvp.Value);
+        }
+
         CheckRepeatedKeys();
     }
 
@@ -111,18 +118,24 @@ public class KeyMappingController : MonoBehaviour
     {
         HashSet<KeyCode> keySet = new HashSet<KeyCode>();
         bool hasDuplicated = false;
+        int index = 0;
 
         foreach(var kvp in KeySetting.tempKeys)
         {
-            if(keySet.Contains(kvp.Value))
+            if (index < (int)KEY_TYPE.KEY_COUNT)
             {
-                hasDuplicated = true;      
-                warning.WarningCoroutine();
+                if (keySet.Contains(kvp.Value))
+                {
+                    hasDuplicated = true;
+                    warning.WarningCoroutine();
+                    break;
+                }
+                else
+                {
+                    keySet.Add(kvp.Value);
+                }
             }
-            else
-            {
-                keySet.Add(kvp.Value);
-            }
+            index++;
         }
 
         if(!hasDuplicated)
@@ -131,11 +144,10 @@ public class KeyMappingController : MonoBehaviour
         }
     }
 
-    public void CancelTempKeyMap() //뒤로 가기 버튼에 추가
+    public void CancelTempKeyMap()
     {
-        if (KeySetting.tempKeys != null)
+        if (KeySetting.tempKeys != KeySetting.currentKeys) //저장 안했다
         {
-            //KeySetting.tempKeys.Clear();
             KeySetting.tempKeys = new Dictionary<KEY_TYPE, KeyCode>(KeySetting.currentKeys);
         }
     }

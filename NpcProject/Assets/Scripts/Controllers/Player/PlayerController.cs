@@ -505,7 +505,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
     public void PauseModInputCheck() 
     {
-        if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.PAUSE_KEY)))
+        if (Input.GetKeyDown(KeyCode.Escape)/*Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.PAUSE_KEY))*/)
         {
             if (Managers.Game.IsPause)
             {

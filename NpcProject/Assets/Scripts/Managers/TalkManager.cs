@@ -200,7 +200,7 @@ public class TalkManager
                 break;
             }
 
-            if(((Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.TALK_KEY)) || Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY))) && talkPanel.IsNext == true && !talkPanel.IsChoice) || talkPanel.GetIsSelect()) 
+            if(((Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY))) && talkPanel.IsNext == true && !talkPanel.IsChoice) || talkPanel.GetIsSelect()) 
             {
                 talkPanel.InputIsSelect(false);
 
@@ -254,7 +254,7 @@ public class TalkManager
                 break;
             }
 
-            if (((Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.TALK_KEY))||Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY))) && talkPanel.IsNext == true && !talkPanel.IsChoice) || talkPanel.GetIsSelect())
+            if (((Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY))) && talkPanel.IsNext == true && !talkPanel.IsChoice) || talkPanel.GetIsSelect())
             {
                 talkPanel.InputIsSelect(false);
 
