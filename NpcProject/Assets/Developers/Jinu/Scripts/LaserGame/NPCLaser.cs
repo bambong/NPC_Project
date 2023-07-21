@@ -50,7 +50,6 @@ public class NPCLaser : MonoBehaviour
     private void Start()
     {
         curMat = GetComponent<Renderer>();
-        curMat.material = laserColorData.GetLaserColor(laserBaseColor).laserMat;
 
         lineRenderer.startWidth = laserWidth;
         lineRenderer.endWidth = laserWidth;
@@ -59,6 +58,7 @@ public class NPCLaser : MonoBehaviour
         SetColorOverLifeTime();
         SetLayerMask();
         SetIgnoreLayerMask();
+        LaserExit();
     }
 
     private void Update()
@@ -76,19 +76,15 @@ public class NPCLaser : MonoBehaviour
         {
             if (Physics.Raycast(ray, out curHit, maxLength, actionLayerMask))
             {
-                try
+                if(preHit.collider != null && enter)
                 {
                     if (preHit.collider.name != curHit.collider.name)
                     {
-                        EndLaserAction(preHit);
+                        Debug.Log(preHit.collider.name + " Laser End Action");
+                        EndLaserAction(preHit); 
                         enter = false;
                         preHit = curHit;
                     }
-                }
-                catch (NullReferenceException)
-                {
-                    Debug.Log("preHit Init");
-                    preHit = curHit;
                 }
 
                 if (!enter)
@@ -101,7 +97,11 @@ public class NPCLaser : MonoBehaviour
             }
             else
             {
-                EndLaserAction(preHit);
+                if(enter)
+                {
+                    EndLaserAction(preHit);
+                    enter = false;
+                }
                 CreateLaserLine(maxLengthHit);
             }
         }
