@@ -9,8 +9,9 @@ using UnityEngine;
         private T owner;
         
         protected IState<T> curState;
+        protected IState<T> prevState;
         public IState<T> CurState { get { return curState; } }
-
+        public IState<T> PrevState { get { return prevState; } }
         public StateController(T owner) 
         {
             this.owner = owner;
@@ -26,10 +27,14 @@ using UnityEngine;
                 Debug.Log($"상태 전환 {curState} => {state}");
 #endif
                 curState.Exit(owner);
+                prevState = curState;
                 curState = state;
                 curState.Enter(owner);
         }
-
+        public void RevertToPrevState() 
+        {
+            ChangeState(prevState);
+        }
         public void Update() => curState.UpdateActive(owner);
         public void FixedUpdate() => curState.FixedUpdateActive(owner);
 

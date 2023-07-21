@@ -3,21 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public abstract class BaseScene : MonoBehaviour 
 {
     [SerializeField]
     private EventReference bgm;
+    [SerializeField]
+    protected Vector3 playerSpawnSpot;
 
     private EventSystem eventSystem;
     public Define.Scene SceneType { get; protected set; } = Define.Scene.Unknown;
     public EventSystem EventSystem { get => eventSystem; }
+    public Vector3 PlayerSpawnSpot { get => playerSpawnSpot;  }
+
     void Awake()
     {
         Init();
-      
+        LoadGame();
     }
-   
+    private void LoadGame() 
+    {
+        Managers.Data.LoadGame(SceneManager.GetActiveScene().name);
+    }
     protected virtual void Init()
     {
         eventSystem = FindObjectOfType<EventSystem>();     

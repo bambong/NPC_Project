@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RetryPanelController : UI_Base
@@ -33,6 +34,7 @@ public class RetryPanelController : UI_Base
         Managers.Sound.PlaySFX(Define.SOUND.ResetButton);
         Managers.Sound.StopBGM();
         resetButton.interactable = false;
+        Managers.Data.DataRemoveForResetButton(SceneManager.GetActiveScene().name);
         Managers.Scene.ReLoadCurrentScene();
     }
     public void OpenResetButton() 

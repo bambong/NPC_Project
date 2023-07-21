@@ -1,19 +1,18 @@
-using DG.Tweening.Plugins.Core.PathCore;
-using Spine.Unity.Examples;
-using System.Collections;
+
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
-
+using UnityEngine.SceneManagement;
 
 public class DataManager
 {
     private int progress = 0;
     private MiniGameLevelData dataPuzzleLevel;
+
+    
     private GameData lastGameData;
+    private GameSettingData settingData;
     private PurposeData purposeData;
-    private PurposePanelController purposePanel;
 
     private Dictionary<string, GameData> sceneGameData = new Dictionary<string, GameData>();
     private Dictionary<string, bool> clearEventData= new Dictionary<string, bool>();
@@ -23,9 +22,16 @@ public class DataManager
     public Dictionary<string, GameData> SceneGameData { get => sceneGameData;  }
     public Dictionary<string, bool> ClearEventData { get => clearEventData;  }
     public PurposeData PurposeData { get => purposeData; }
+    public GameSettingData CurrentSettingData { get => settingData; }
 
-    public bool isAvaildProgress(int progress) => progress >= this.progress; 
-
+    public bool isAvaildProgress(int progress) => progress >= this.progress;
+   
+    public void Init()
+    {
+        lastGameData = new GameData();
+        purposeData = Resources.Load<PurposeData>("Data/PurposeData");
+        ClearSetting();
+    }
 
     public void ClearCurrentProgress() 
     {
@@ -86,11 +92,17 @@ public class DataManager
     {
         dataPuzzleLevel = level;
     }
-    public void Init() 
+   
+    public void DataRemoveForResetButton(string sceneName) 
     {
-        lastGameData = new GameData();
-        purposeData = Resources.Load<PurposeData>("Data/PurposeData");
-        
+        if (!Managers.Data.SceneGameData.ContainsKey(sceneName))
+        {
+            return;
+        }
+        var guid = Managers.Keyword.CurDebugZone.GuId;
+        Managers.Data.SceneGameData[sceneName].playerPos = Managers.Keyword.CurDebugZone.PlayerDefaultPos;
+        Managers.Data.SceneGameData[sceneName].playerKeywords.Remove(guid);
+        Managers.Data.SceneGameData[sceneName].keywordEntityDatas.Remove(guid);
     }
     public bool LoadGame(string sceneName)
     {
@@ -107,8 +119,9 @@ public class DataManager
         }
         return true;
     }
-    public void SaveGame(string sceneName)
+    public void SaveGame()
     {
+        string sceneName = SceneManager.GetActiveScene().name;
         GameData tempData;
         if(!SceneGameData.TryGetValue(sceneName,out tempData)) 
         {
@@ -128,4 +141,40 @@ public class DataManager
         IEnumerable<IDataHandler> dataHandlers = Object.FindObjectsOfType<MonoBehaviour>(true).OfType<IDataHandler>();
         return new List<IDataHandler>(dataHandlers);
     }
+
+    public void ClearSetting()
+    {
+        settingData = new GameSettingData();
+        UpdateSetting();
+    }
+    public void SetMasterVolumeData(float value)
+    {
+        settingData.masterVolume = value;
+        Managers.Sound.SetMasterVolume(value);
+    }
+    public void SetBgmVolumeData(float value) 
+    {
+        settingData.bgmVolume = value;
+        Managers.Sound.SetBGMVolume(value);
+    }
+
+    public void SetSfxVolumeData(float value)
+    {
+        settingData.sfxVolume = value;
+        Managers.Sound.SetSFXVolume(value);
+    }
+    public void UpdateSetting() 
+    {
+        Managers.Sound.SetBGMVolume(settingData.bgmVolume);
+        Managers.Sound.SetSFXVolume(settingData.sfxVolume);
+    }
+    public void OnReset() 
+    {
+        progress = 0;
+        lastGameData = new GameData();
+        ClearEventData.Clear();
+        SceneGameData.Clear();
+        ClearSetting();
+    }
+
 }

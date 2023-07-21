@@ -12,9 +12,6 @@ public class ForestScene : BaseScene
     private DialogueExcel tutorialSceneTalkData;
     
     [SerializeField]
-    private Vector3 playerSpawnSpot;
-
-    [SerializeField]
     private string playerType = "Player";
 
     public override void Clear()

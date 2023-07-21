@@ -26,7 +26,8 @@ public class PairKeyword : KeywordController
     private const string MAT_FLOW_PROPERTY_NAME = "_BoardTill";
     private const string MAT_COLOR_PROPERTY_NAME = "_Color";
     private const string MAT_SPEED_PROPERTY_NAME = "_Speed";
-    private const int FLOW_TILL_COUNT = 20;
+    private const int FLOW_TILL_COUNT = 1;
+    private const float FLOW_SPEED = 4;
     private static readonly string[] FLOW_KEYWORD_IDS = new string[]{ "AttachKeyword", "ApartKeyword",};
  
     private void Start()
@@ -117,6 +118,7 @@ public class PairKeyword : KeywordController
         if (Managers.Game.IsDebugMod) 
         {
             lineRenderer.enabled = true;
+            UpdateLineProperty();
         }
     }
     private void CloseLineRender()
@@ -172,18 +174,23 @@ public class PairKeyword : KeywordController
         }
         isMoveAble = isOn;
 
-        if (isMoveAble) 
+        UpdateLineProperty();
+
+    }
+    public void UpdateLineProperty() 
+    {
+        if (isMoveAble)
         {
             lineRenderer.material.SetColor(MAT_COLOR_PROPERTY_NAME, defaultColor);
-            lineRenderer.material.SetFloat(MAT_SPEED_PROPERTY_NAME, 0.2f);
+            lineRenderer.material.SetFloat(MAT_SPEED_PROPERTY_NAME, FLOW_SPEED);
         }
-        else 
+        else
         {
             lineRenderer.material.SetColor(MAT_COLOR_PROPERTY_NAME, failColor);
             lineRenderer.material.SetFloat(MAT_SPEED_PROPERTY_NAME, 0);
         }
-        
     }
+
     public override void OnEnter(KeywordEntity entity)
     {
         MasterEntity = entity;

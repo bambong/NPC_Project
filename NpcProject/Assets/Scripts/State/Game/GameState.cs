@@ -2,6 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class GamePauseState : Singleton<GamePauseState>, IState<GameManager>
+{
+    public void Init()
+    {
+    }
+
+    public void Enter(GameManager stateController)
+    {
+        stateController.OnPauseStateEnter();
+    }
+
+    public void Exit(GameManager stateController)
+    {
+        stateController.OnPauseStateExit();
+    }
+
+    public void FixedUpdateActive(GameManager stateController)
+    {
+    }
+
+
+    public void UpdateActive(GameManager stateController)
+    {
+
+    }
+}
+
 public class GameNormalState : Singleton<GameNormalState>,IState<GameManager>
 {
     public void Init()
@@ -39,29 +66,6 @@ public class GameEventState : Singleton<GameEventState>, IState<GameManager>
     public void Exit(GameManager stateController)
     {
         Managers.Game.Player.SetStateIdle();
-    }
-
-    public void FixedUpdateActive(GameManager stateController)
-    {
-    }
-
-    public void UpdateActive(GameManager stateController)
-    {
-    }
-}
-
-public class GameDebugModState : Singleton<GameDebugModState>, IState<GameManager>
-{
-    public void Init()
-    {
-    }
-    public void Enter(GameManager stateController)
-    {
-        stateController.OnDebugModStateEnter();
-    }
-    public void Exit(GameManager stateController)
-    {
-        stateController.OnDebugModStateExit();
     }
 
     public void FixedUpdateActive(GameManager stateController)

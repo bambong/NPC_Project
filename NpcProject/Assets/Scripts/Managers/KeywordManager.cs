@@ -106,11 +106,7 @@ public class KeywordManager
         {
             effect.ExitDebugMod();
         }
-        if(CurDragKeyword != null) 
-        {
-            CurDragKeyword.DragReset();
-            CurDragKeyword = null;
-        }
+        CurrentDragKeywordReset();
         curDebugZone?.OnExitDebugMod();
         playerKeywordPanel.DebugModGroupClose();
         Managers.Game.SetDisableDebugMod();
@@ -124,7 +120,9 @@ public class KeywordManager
             curDebugZone?.OnExitDebugMod();
             Managers.Game.Player.ExitDebugMod();
         }
+
         curDebugZone = zone;
+      
     }
 
     public KeywordController MakeKeywordToCurPlayerPanel(string name) 
@@ -136,7 +134,14 @@ public class KeywordManager
     {
         debugModEffectControllers.Add(debugModEffectController);
     }
-
+    public void CurrentDragKeywordReset() 
+    {
+        if (CurDragKeyword != null)
+        {
+            CurDragKeyword.DragReset();
+            CurDragKeyword = null;
+        }
+    }
     public void Clear()
     {
         debugModEffectControllers.Clear();

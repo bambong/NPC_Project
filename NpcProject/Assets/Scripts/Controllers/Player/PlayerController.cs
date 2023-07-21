@@ -85,6 +85,10 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private RaycastHit slopeHit;
     private int slopeLayer;
 
+    private Transform onPauseUi;
+    private bool togglemode = false;
+    private bool isRun = false;
+
     private KeywordController isFocusKeyword;
     private KeywordFrameBase isFocusFrame;
     private PurposePanelController purposePanel;
@@ -120,6 +124,11 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         purposePanel = Managers.UI.MakeSceneUI<PurposePanelController>(null,"PurposePanel");
         signalPanel = Managers.UI.MakeSceneUI<SignalPanelController>(null,"SignalPanel");
+        onPauseUi = new GameObject("OnPauseUI").transform;
+        Managers.Keyword.PlayerKeywordPanel.transform.SetParent(onPauseUi);
+        purposePanel.transform.SetParent(onPauseUi);
+        Managers.Game.RetryPanel.transform.SetParent(onPauseUi);
+
     }
     void Update()
     {
@@ -190,7 +199,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
-        var isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
+        //bool isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
 
         if (isRun)
         {
@@ -248,9 +257,9 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         var hor = Input.GetAxis("Horizontal");
         var ver = Input.GetAxis("Vertical");
-        var isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
+        //var isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
 
-        if(!isRun)
+        if (!isRun)
         {
             if (new Vector3(hor, 0, ver).magnitude <= 0.1f)
             {
@@ -299,6 +308,27 @@ public class PlayerController : MonoBehaviour , IDataHandler
             rigid.velocity = Vector3.zero;
             SetStateIdle();
         }
+    }
+
+    public void RunCheck()
+    {
+        if(togglemode)
+        {
+            if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY)))
+            {
+                isRun = !isRun;
+            }
+        }
+        else
+        {
+            isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
+        }
+    }
+
+    public void ToggleSwitch()
+    {
+        Debug.Log("RunMode:" + togglemode);
+        togglemode = !togglemode;
     }
 
     public void ChangeToRunSpeed(bool run)
@@ -473,11 +503,46 @@ public class PlayerController : MonoBehaviour , IDataHandler
         return false;
     }
 
+    public void PauseModInputCheck() 
+    {
+        if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.PAUSE_KEY)))
+        {
+            if (Managers.Game.IsPause)
+            {
+                if (Managers.Game.PausePanel.IsTransition) 
+                {
+                    return;
+                }
+
+                if (!Managers.Game.PausePanel.PauseMenuPanel.IsOpen) 
+                {
+                    Managers.Game.PausePanel.ChangeToMainMenuPanel();
+                    return;
+                }
+                Managers.Game.SetStateNormal();
+            }
+            else
+            {
+                Managers.Game.SetStatePause();
+            }
+         
+        }
+
+    }
+
+
     IEnumerator DebugModInputCo() 
     {
 
         while (Managers.Game.IsDebugMod && !PlayerIsDeathState()) 
         {
+
+            if (Managers.Game.IsPause)
+            {
+                yield return null;
+                continue;
+            }
+
             var pointerEventData = new UnityEngine.EventSystems.PointerEventData(EventSystem.current);
             pointerEventData.position = Input.mousePosition;
             pointerEventData.button = PointerEventData.InputButton.Left;
@@ -716,7 +781,28 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
     #endregion
 
+    public void OnPasueStateEnter() 
+    {
+        Managers.Keyword.CurrentDragKeywordReset();
+        Managers.Game.DestinationPanel.gameObject.SetActive(false);
+        onPauseUi.gameObject.SetActive(false);
+ 
+    }
+    public void OnPasueStateExit()
+    {
+        Managers.Game.DestinationPanel.gameObject.SetActive(true);
+        Managers.Game.DestinationPanel.Close();
+        onPauseUi.gameObject.SetActive(true);
+    }
     #region SetState
+    public void RevertState()
+    {
+        playerStateController.RevertToPrevState();
+    }
+    public void SetStatePause() 
+    {
+        playerStateController.ChangeState(PlayerPause.Instance);
+    }
     public void SetStateInteraction()
     {
         playerStateController.ChangeState(PlayerInteraction.Instance);

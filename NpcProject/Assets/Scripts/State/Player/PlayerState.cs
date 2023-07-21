@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
 {
     public void Init()
@@ -26,6 +25,9 @@ public class PlayerIdle : Singleton<PlayerIdle>, IState<PlayerController>
 
     public void UpdateActive(PlayerController stateController)
     {
+
+        stateController.PauseModInputCheck();
+        stateController.RunCheck();
         stateController.PlayerInputCheck();
         stateController.DebugModEnterInputCheck();
     }
@@ -52,6 +54,9 @@ public class PlayerWalk : Singleton<PlayerWalk>, IState<PlayerController>
 
     public void UpdateActive(PlayerController stateController)
     {
+
+        stateController.PauseModInputCheck();
+        stateController.RunCheck();
         stateController.InteractionInputCheck();
         stateController.DebugModEnterInputCheck();
     }
@@ -80,6 +85,8 @@ public class PlayerRun : Singleton<PlayerRun>, IState<PlayerController>
 
     public void UpdateActive(PlayerController stateController)
     {
+        stateController.PauseModInputCheck();
+        stateController.RunCheck();
         stateController.InteractionInputCheck();
         stateController.DebugModEnterInputCheck();
     }
@@ -107,7 +114,6 @@ public class PlayerStop : Singleton<PlayerStop>, IState<PlayerController>
     {
     }
 }
-
 
 public class PlayerInteraction : Singleton<PlayerInteraction>, IState<PlayerController>
 {
@@ -157,6 +163,31 @@ public class PlayerBombDeath : Singleton<PlayerBombDeath>, IState<PlayerControll
 
     public void UpdateActive(PlayerController stateController)
     {
+    }
+}
+
+public class PlayerPause : Singleton<PlayerPause>, IState<PlayerController>
+{
+    public void Init()
+    {
+    }
+    public void Enter(PlayerController stateController)
+    {
+        stateController.OnPasueStateEnter();
+    }
+
+    public void Exit(PlayerController stateController)
+    {
+        stateController.OnPasueStateExit();
+    }
+
+    public void FixedUpdateActive(PlayerController stateController)
+    {
+    }
+
+    public void UpdateActive(PlayerController stateController)
+    {
+        stateController.PauseModInputCheck();
     }
 }
 

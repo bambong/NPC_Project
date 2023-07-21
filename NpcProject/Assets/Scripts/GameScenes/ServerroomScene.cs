@@ -15,8 +15,6 @@ public class ServerroomScene : BaseScene
     [SerializeField]
     private DialogueExcel tutorialSceneTalkData;
     
-    [SerializeField]
-    private Vector3 playerSpawnSpot;
 
     [SerializeField]
     private string playerType = "Player_Real";
@@ -32,7 +30,7 @@ public class ServerroomScene : BaseScene
         var player = Managers.Game.Spawn(Define.WorldObject.Player, playerType);
         player.transform.position = playerSpawnSpot;
         Managers.Camera.InitCamera(new CameraInfo(vircam, player.transform));
-        Managers.Data.LoadGame(SceneManager.GetActiveScene().name);
+       
         Managers.Talk.LoadTalkData(tutorialSceneTalkData);
 
        // Managers.UI.MakeSceneUI()

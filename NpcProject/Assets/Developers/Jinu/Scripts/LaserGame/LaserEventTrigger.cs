@@ -24,10 +24,10 @@ public class LaserEventTrigger : MonoBehaviour
         {
             curmat = target.GetComponent<Renderer>().material;            
 
-            originmat = curmat;            
+            originmat = curmat;
             first = false;
         }
-        laserColorController.SetLaserColor(hitcolor);
+        //laserColorController.SetLaserColor(hitcolor);
         curmat = hitmat;
     }
 
