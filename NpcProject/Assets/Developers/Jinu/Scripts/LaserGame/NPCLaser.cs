@@ -6,9 +6,10 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class NPCLaser : MonoBehaviour
 {
-
     [SerializeField]
-    private string[] layerName;
+    public Define.LaserLayer defaultLaserLayer;
+    [SerializeField]
+    private Define.LaserLayer hitLaserLayer;
     [Header("LaserProperty")]
     [SerializeField]
     private LaserColorData laserColorData;
@@ -56,14 +57,18 @@ public class NPCLaser : MonoBehaviour
 
 
         SetColorOverLifeTime();
-        SetLayerMask();
+        ignoreLayerMask = GetLayerMask(defaultLaserLayer);
+        actionLayerMask = GetLayerMask(hitLaserLayer);
         SetIgnoreLayerMask();
         LaserExit();
     }
 
     private void Update()
     {
-        if(shoot)
+        if (!shoot)
+        {
+            return;
+        }
         ShootLaser();
     }
 
@@ -119,12 +124,17 @@ public class NPCLaser : MonoBehaviour
     }
 
     #region LaserSetting
-    public void SetLayerMask()
+    public LayerMask GetLayerMask(Define.LaserLayer laserLayer)
     {
-        for (int i = 0; i < layerName.Length; i++)
+        LayerMask mask = LayerMask.GetMask("Layer0"); // 기본 레이어 추가
+
+        for (int i = 0; i <= 31; i++)
         {
-            actionLayerMask |= 1 << LayerMask.NameToLayer(layerName[i]);
+            if (((int)laserLayer & (1 << i)) != 0)
+                mask |= 1 << i;
         }
+
+        return mask;
     }
 
     public void SetIgnoreLayerMask()

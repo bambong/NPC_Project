@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Define 
 { 
@@ -54,6 +55,27 @@ public class Define
         Purple,
         Red,
         Yellow
+    }
+
+    [Flags]
+    public enum LaserLayer
+    {
+        Default = 1 << 0,
+        TransparentFX = 1 << 1,
+        IgnoreRaycast = 1 << 2,
+        Player = 1 << 3,
+        Water = 1 << 4,
+        UI = 1 << 5,
+        keywordFrame = 1 << 6,
+        Cam = 1 << 7,
+        Interaction = 1 << 8,
+        Puzzle = 1 << 9,
+        InteractionDetector = 1 << 10,
+        Wall = 1 << 11,
+        EventTrigger = 1 << 12,
+        Slope = 1 << 13,
+        PlayerDeath = 1 << 14,
+        DontPlayerShadow = 1 << 15
     }
 
     public enum BGM
