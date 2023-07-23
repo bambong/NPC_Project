@@ -11,13 +11,18 @@ public class EnergeItemController : MonoBehaviour , ISpawnAble
 {
 
     [SerializeField]
+    private string targetKeywordId  = "AttackKeyword";
+    
+    [SerializeField]
     private float rotateSpeed = 100f;
 
     [SerializeField]
     private int gaugeAmount = 1;
+    
     [SerializeField]
     private bool isOn = false;
-    
+
+
     private SpawnController parentSpawner;
     private Transform spawnSpot;
 
@@ -42,7 +47,7 @@ public class EnergeItemController : MonoBehaviour , ISpawnAble
             isOn = false;
             Managers.Effect.PlayEffect(Define.EFFECT.EnergeItemEffect,transform);
             Managers.Sound.PlaySFX(Define.SOUND.Item);
-            Managers.Keyword.AddKeywordMakerGauge(gaugeAmount);
+            Managers.Keyword.AddKeywordMakerGauge(targetKeywordId, gaugeAmount);
             if(parentSpawner != null) 
             {
                 parentSpawner.RemoveItem(spawnSpot);

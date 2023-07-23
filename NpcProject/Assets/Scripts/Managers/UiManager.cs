@@ -104,10 +104,10 @@ public class UIManager
         if (string.IsNullOrEmpty(name))
             name = typeof(T).Name;
 
-        GameObject go = Managers.Resource.Instantiate($"UI/SubItem/{name}");
+        GameObject go = Managers.Resource.Instantiate($"UI/SubItem/{name}", parent);
         if (parent != null) 
         {
-            go.transform.SetParent(parent);
+            //go.transform.SetParent(parent);
             go.transform.localScale = Vector3.one;
         }
 

@@ -11,24 +11,33 @@ public class PlayerKeywordPanelController : UI_Base
     [SerializeField]
     private Transform debugGaugePanel; 
     [SerializeField]
-    private KeywordMakerGaugeController keywordMakerGaugeController;
-    [SerializeField]
     private PlayerKeywordLayoutTrigger trigger;
     [SerializeField]
     private CanvasGroup debugModGroup;
+
+    private Dictionary<string,KeywordMakerGaugeController> keywordMakers = new Dictionary<string, KeywordMakerGaugeController>();
+
     public Transform LayoutParent { get => layoutParent; }
     public Transform DebugGaugePanel { get => debugGaugePanel; }
 
     private const float OPEN_ANIM_TIME = 0.5f;
     private const float CLOSE_ANIM_TIME = 0.5f;
+    private const string KETWORD_MAKER_NAME = "KeywordMakerGauge";
     public override void Init()
     {
 
         
     }
-    public void AddKeywordMakerGauge(int amount) 
+    public void AddKeywordMakerGauge(string id, int amount) 
     {
-        keywordMakerGaugeController.AddCount(amount);
+        if (!keywordMakers.ContainsKey(id)) 
+        {
+            var maker =  Managers.UI.MakeSubItem<KeywordMakerGaugeController>(transform, KETWORD_MAKER_NAME);
+            maker.name = $"KeywordMakerGauge_{id}";
+            maker.SetTarget(id, 3);
+            keywordMakers.Add(id,maker);
+        }
+        keywordMakers[id].AddCount(amount);
     }
     public void Open() 
     {
@@ -38,7 +47,11 @@ public class PlayerKeywordPanelController : UI_Base
     }
     public void ClearForPool()
     {
-        keywordMakerGaugeController.StopAllCoroutines();
+        foreach(var item in keywordMakers) 
+        {
+            item.Value.StopAllCoroutines();
+        }
+        //keywordMakerGaugeController.StopAllCoroutines();
     }
    
     public void Close() 

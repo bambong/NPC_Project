@@ -2,19 +2,18 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Android.Types;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class KeywordMakerGaugeController : MonoBehaviour
+public class KeywordMakerGaugeController : UI_Base
 {
-    [SerializeField]
-    private int needForMakeCount = 3;
     [SerializeField]
     private CanvasGroup canvasGroup;
     [SerializeField]
     private Image fillImage;
 
-    [SerializeField]
+    private int needForMakeCount = 3;
     private string targeKeywordName;
     private Queue<Func<IEnumerator>> addAnimQueue = new Queue<Func<IEnumerator>>();
 
@@ -25,10 +24,20 @@ public class KeywordMakerGaugeController : MonoBehaviour
 
     private int curCount = 0;
     private bool isOpne = false;
+    public override void Init()
+    {
+
+    }
+
     private void Start()
     {
         Managers.Scene.OnSceneUnload += () => { 
             StopAllCoroutines(); };
+    }
+    public void SetTarget(string target, int needCount) 
+    {
+        needForMakeCount = needCount;
+        targeKeywordName = target;
     }
     public void AddCount(int amount)
     {
