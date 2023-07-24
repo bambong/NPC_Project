@@ -57,6 +57,11 @@ public static class KeySetting
     {
         tempKeys = new Dictionary<KEY_TYPE, KeyCode>(currentKeys);
     }
+
+    public static KeyCode GetKeyCode(KEY_TYPE keyType)
+    {
+        return currentKeys[keyType];
+    }
 }
 
 
@@ -105,11 +110,11 @@ public class KeyMappingController : MonoBehaviour
 
     public void ApplyTempKeyMap()
     {
-        Debug.Log("TempKeys contents:");
-        foreach (var kvp in KeySetting.tempKeys)
-        {
-            Debug.Log(kvp.Key + ": " + kvp.Value);
-        }
+        //Debug.Log("TempKeys contents:");
+        //foreach (var kvp in KeySetting.tempKeys)
+        //{
+        //    Debug.Log(kvp.Key + ": " + kvp.Value);
+        //}
 
         CheckRepeatedKeys();
     }
