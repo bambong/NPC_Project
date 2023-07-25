@@ -83,12 +83,11 @@ public class KeyMappingController : MonoBehaviour
     private int key = -1;
     private bool isPanel = false;
 
-    private void FixedUpdate()
+    private void Update()
     {
         if(isPanel && Input.anyKey)
         {
             OffInputBackgroundPanel();
-            isPanel = false;
         }
     }
 
@@ -99,6 +98,7 @@ public class KeyMappingController : MonoBehaviour
 
     public void SetAllKeysToDefault() //init
     {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
         KeySetting.SetAllKeysToDefault();
     }
 
@@ -115,7 +115,7 @@ public class KeyMappingController : MonoBehaviour
         //{
         //    Debug.Log(kvp.Key + ": " + kvp.Value);
         //}
-
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
         CheckRepeatedKeys();
     }
 
@@ -151,6 +151,7 @@ public class KeyMappingController : MonoBehaviour
 
     public void CancelTempKeyMap()
     {
+        //Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
         if (KeySetting.tempKeys != KeySetting.currentKeys) //저장 안했다
         {
             KeySetting.tempKeys = new Dictionary<KEY_TYPE, KeyCode>(KeySetting.currentKeys);
@@ -178,19 +179,21 @@ public class KeyMappingController : MonoBehaviour
     public void ChangeKey(int num)
     {
         //할당 하라는 문구 ON
-        OnInputBackgroundPanel();
-        isPanel = true;
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
+        OnInputBackgroundPanel();        
         key = num;
     }
 
     private void OnInputBackgroundPanel()
     {
         InputBackgroundPanel.SetActive(true);
+        isPanel = true;
     }
 
     private void OffInputBackgroundPanel()
     {
         InputBackgroundPanel.SetActive(false);
+        isPanel = false;
     }
 }
 
