@@ -13,9 +13,9 @@ public class CutSceneController : MonoBehaviour
     [SerializeField]
     private List<int> cutSceneTalk = new List<int>();
     [SerializeField]
-    private GameObject left;
+    private CharacterInfo left;
     [SerializeField]
-    private GameObject right;
+    private CharacterInfo right;
 
     [SerializeField]
     private UnityEvent allTalkComplete;

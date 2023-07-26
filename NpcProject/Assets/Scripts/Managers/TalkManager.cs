@@ -22,8 +22,8 @@ public class TalkEvent : GameEvent
     private int curIndex = 0;
     public bool iscutScene = false;
 
-    public GameObject leftObject;
-    public GameObject rightObject;
+    public CharacterInfo leftObject;
+    public CharacterInfo rightObject;
 
     public TalkEvent() 
     {
@@ -218,12 +218,12 @@ public class TalkManager
     }
 
     #region CutSceneTalk Function
-    public void PlayDialogue(Dialogue dialogue, GameObject left, GameObject right)
+    public void PlayDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
     {
         talkPanel.PlayDialogue(dialogue, left, right);
     }
 
-    public void PlayCutSceneTalk(TalkEvent talk, GameObject left, GameObject right)
+    public void PlayCutSceneTalk(TalkEvent talk, CharacterInfo left, CharacterInfo right)
     {
         Managers.Game.SetStateEvent();
 
@@ -241,7 +241,7 @@ public class TalkManager
         });
     }
 
-    IEnumerator ProgresscutSceneTalk(GameObject left, GameObject right)
+    IEnumerator ProgresscutSceneTalk(CharacterInfo left, CharacterInfo right)
     {
 
         PlayDialogue(curTalkEvent.GetCurrentDialogue(), left, right);

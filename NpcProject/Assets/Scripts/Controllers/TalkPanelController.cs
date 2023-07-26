@@ -138,11 +138,12 @@ public class TalkPanelController : UI_Base
     }
     #endregion
     #region CutSceneTalk
-    public void SetDialogue(Dialogue dialogue, GameObject left, GameObject right)
+    public void SetDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
     {
         //init
-        leftRenderer = left.GetComponent<SpriteRenderer>();
-        rightRenderer = right.GetComponent<SpriteRenderer>();
+        leftRenderer = left.charRenderer;
+        rightRenderer = right.charRenderer;
+        
         leftmaterial = leftRenderer.material;
         rightmaterial = rightRenderer.material;
         leftColor = leftmaterial.color;
@@ -154,7 +155,7 @@ public class TalkPanelController : UI_Base
             continue;
         }
 
-        if (dialogue.speaker.charName == left.name)
+        if (dialogue.speaker.Id == left.id)
         {
             rightmaterial.color = gray;
             rightRenderer.material = rightmaterial;
@@ -162,7 +163,7 @@ public class TalkPanelController : UI_Base
             leftmaterial.color = leftColor;
             leftRenderer.material = leftmaterial;
         }
-        if (dialogue.speaker.charName == right.name)
+        if (dialogue.speaker.Id == right.id)
         {
             leftmaterial.color = gray;
             leftRenderer.material = leftmaterial;
@@ -176,7 +177,7 @@ public class TalkPanelController : UI_Base
         dialogueText.text = "";
     }
 
-    public void PlayDialogue(Dialogue dialogue, GameObject left, GameObject right)
+    public void PlayDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
     {
         dialogueText.text = "";
         isNext = false;
@@ -187,7 +188,7 @@ public class TalkPanelController : UI_Base
             leftRights[i].DOFade(0, 0);
             continue;
         }        
-        if (dialogue.speaker.charName == left.name)
+        if (dialogue.speaker.Id == left.id)
         {
             rightmaterial.color = gray;
             rightRenderer.material = rightmaterial;
@@ -195,7 +196,7 @@ public class TalkPanelController : UI_Base
             leftmaterial.color = leftColor;
             leftRenderer.material = leftmaterial;
         }
-        if (dialogue.speaker.charName == right.name)
+        if (dialogue.speaker.Id == right.id)
         {
             leftmaterial.color = gray;
             leftRenderer.material = leftmaterial;
