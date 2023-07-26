@@ -15,6 +15,9 @@ public class InputSettingPanelController : ButtonBasePanelController
     private List<KeyMappingButtonController> keyMappingButtons;
 
     [SerializeField]
+    private RunToggleButtonController runToggle;
+
+    [SerializeField]
     private Button defaultButton;
 
     private bool isPanel = false;
@@ -26,10 +29,8 @@ public class InputSettingPanelController : ButtonBasePanelController
     {
         CopyCurrentToTemp();
         base.OnOpen();
-        for (int i = 0; i < keyMappingButtons.Count; ++i)
-        {
-            keyMappingButtons[i].UpdateText();
-        }
+        runToggle.Open();
+        UpdateButtonText();
         defaultButton.onClick.AddListener(OnDefaultSettingButtonActive);
     }
 
@@ -60,7 +61,8 @@ public class InputSettingPanelController : ButtonBasePanelController
                 KeySetting.tempKeys[curKeyButton.MyType] = curCode;
                 OffInputBackgroundPanel();
                 isPanel = false;
-                curKeyButton.UpdateText();
+
+                UpdateButtonText();
                 curKeyButton = null;
                 yield break;
             }
@@ -101,8 +103,9 @@ public class InputSettingPanelController : ButtonBasePanelController
         KeySetting.SetAllKeysToDefault();
     }   
 
-    public void ApplyTempKeyMap()
+    public void OnApplyButtonActive()
     {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
         Debug.Log("TempKeys contents:");
         foreach (var kvp in KeySetting.tempKeys)
         {
@@ -144,12 +147,15 @@ public class InputSettingPanelController : ButtonBasePanelController
 
     public void OnDefaultSettingButtonActive()
     {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
         SetAllKeysToDefault();
-        for(int i = 0; i < keyMappingButtons.Count; ++i)
+        UpdateButtonText();
+    }
+    private void UpdateButtonText() 
+    {
+        for (int i = 0; i < keyMappingButtons.Count; ++i)
         {
             keyMappingButtons[i].UpdateText();
         }
-
     }
-
 }

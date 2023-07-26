@@ -1,4 +1,3 @@
-
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,8 +26,6 @@ public class KeyMappingButtonController : MonoBehaviour
     private Color repeatColor;
     public KEY_TYPE MyType { get => myType; }
 
-
-
     public void SetSelected() 
     {
         image.color = selectedColor;
@@ -36,7 +33,6 @@ public class KeyMappingButtonController : MonoBehaviour
 
     public void UpdateText() 
     {
-
         if (KeySetting.tempKeys[myType] != KeySetting.defaultKeys[myType])
         {
             image.color = changedColor;
@@ -63,6 +59,7 @@ public class KeyMappingButtonController : MonoBehaviour
 
     public void OnButtonActive()
     {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
         inputSetting.ChangeKey(this);
     }
 

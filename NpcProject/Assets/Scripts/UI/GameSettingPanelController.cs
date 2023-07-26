@@ -35,10 +35,12 @@ public class GameSettingPanelController : BasePanelController
     }
     public void OnSoundSettingButtonActive() 
     {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
         ChangeMainPanel(soundSettingPanel); 
     }
     public void OnInputSettingButtonActive()
     {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
         ChangeMainPanel(inputSettingPanel); 
     }
 
