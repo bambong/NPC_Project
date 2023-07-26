@@ -110,7 +110,6 @@ public class KeyMappingController : MonoBehaviour
         {
             Debug.Log(kvp.Key + ": " + kvp.Value);
         }
-
         CheckRepeatedKeys();
     }
 
@@ -167,7 +166,7 @@ public class KeyMappingController : MonoBehaviour
 
     public KeyCode ReturnKey(KEY_TYPE keyType)
     {
-        return KeySetting.defaultKeys[keyType];
+        return KeySetting.currentKeys[keyType];
     }
 
     public void ChangeKey(int num)

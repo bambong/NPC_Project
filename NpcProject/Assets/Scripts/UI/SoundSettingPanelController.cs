@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SoundSettingPanelController : BasePanelController
+public class SoundSettingPanelController : ButtonBasePanelController
 {
     [SerializeField]
     private PausePanelController pausePanelController;
@@ -23,6 +23,23 @@ public class SoundSettingPanelController : BasePanelController
     [SerializeField]
     private TextMeshProUGUI sfxText;
 
+    [SerializeField]
+    private Button defaultButton;
+
+    protected override void OnOpen()
+    {
+        base.OnOpen();
+        bgmSlider.value = Managers.Data.CurrentSettingData.bgmVolume;
+        sfxSlider.value = Managers.Data.CurrentSettingData.sfxVolume;
+        defaultButton.onClick.AddListener(OnDefaultSettingButtonActive);
+    }
+
+    protected override void OnClose()
+    {
+        base.OnClose();
+        defaultButton.onClick.RemoveListener(OnDefaultSettingButtonActive);
+    }
+
     public override void Init()
     {
         panel.gameObject.SetActive(false);
@@ -31,12 +48,6 @@ public class SoundSettingPanelController : BasePanelController
         sfxSlider.onValueChanged.AddListener(OnChangeSfxVolume);
     }
   
-    protected override void OnOpen() 
-    {
-        base.OnOpen();
-        bgmSlider.value = Managers.Data.CurrentSettingData.bgmVolume;
-        sfxSlider.value = Managers.Data.CurrentSettingData.sfxVolume;
-    }
     public void OnCloseButtonActive() 
     {
         Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
