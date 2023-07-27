@@ -90,6 +90,7 @@ public class RetryPanelController : UI_Base
             {
                 Managers.Sound.PlaySFX(Define.SOUND.ResetButton);
                 Managers.Sound.StopBGM();
+                Managers.Data.DataRemoveForResetButton(SceneManager.GetActiveScene().name);
                 Managers.Scene.ReLoadCurrentScene();
                 //  Close();
                 yield break;

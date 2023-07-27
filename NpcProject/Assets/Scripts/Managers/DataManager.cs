@@ -95,13 +95,13 @@ public class DataManager
    
     public void DataRemoveForResetButton(string sceneName) 
     {
-        if (!Managers.Data.SceneGameData.ContainsKey(sceneName))
+        if (!Managers.Data.SceneGameData.ContainsKey(sceneName) || Managers.Keyword.CurDebugZone == null)
         {
             return;
         }
         var guid = Managers.Keyword.CurDebugZone.GuId;
         Managers.Data.SceneGameData[sceneName].playerPos = Managers.Keyword.CurDebugZone.PlayerDefaultPos;
-        Managers.Data.SceneGameData[sceneName].playerKeywords.Remove(guid);
+        Managers.Data.SceneGameData[sceneName].debugZoneDatas.Remove(guid);
         Managers.Data.SceneGameData[sceneName].keywordEntityDatas.Remove(guid);
     }
     public bool LoadGame(string sceneName)

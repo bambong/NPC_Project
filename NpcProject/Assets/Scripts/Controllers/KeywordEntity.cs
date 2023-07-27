@@ -671,13 +671,19 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
 
     public void SaveData(GameData gameData)
     {
+        var debugZoneGuid = parentDebugZone.GuId;
+        if (!gameData.keywordEntityDatas.ContainsKey(debugZoneGuid)) 
+        {
+            gameData.keywordEntityDatas.Add(debugZoneGuid, new Dictionary<string, KeywordEntityData>());
+        }
 
         var data = new KeywordEntityData();
         data.isEnable = gameObject.activeSelf;
+      
        
         if (!gameObject.activeSelf)
         {
-            gameData.keywordEntityDatas.AddOrUpdateValue(guId, data);
+            gameData.keywordEntityDatas[debugZoneGuid].AddOrUpdateValue(guId, data);
             return;
         }
 
@@ -696,16 +702,20 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
                 frameData.id = keywordFrames[i].CurFrameInnerKeyword.KewordId;
             }
         }
-        gameData.keywordEntityDatas.AddOrUpdateValue(guId, data);
+        gameData.keywordEntityDatas[debugZoneGuid].AddOrUpdateValue(guId, data);
     }
     public void LoadData(GameData gameData)
     {
-        if (!gameData.keywordEntityDatas.ContainsKey(guId)) 
+        var debugZoneGuid = parentDebugZone.GuId;
+        if (!gameData.keywordEntityDatas.ContainsKey(debugZoneGuid)) 
         {
             return;
         }
-  
-        var data = gameData.keywordEntityDatas[guId];
+        if (!gameData.keywordEntityDatas[debugZoneGuid].ContainsKey(GuId))
+        {
+            return;
+        }
+        var data = gameData.keywordEntityDatas[debugZoneGuid][GuId];
         if (!data.isEnable)
         {
             gameObject.SetActive(false);

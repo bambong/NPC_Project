@@ -11,8 +11,8 @@ public class GameData
 {
    public string sceneName;
    public Vector3 playerPos;
-   public Dictionary<string, DebugZoneData> playerKeywords = new Dictionary<string, DebugZoneData>();
-   public Dictionary<string, KeywordEntityData> keywordEntityDatas = new Dictionary<string, KeywordEntityData>();
+   public Dictionary<string, DebugZoneData> debugZoneDatas = new Dictionary<string, DebugZoneData>();
+   public Dictionary<string,Dictionary<string, KeywordEntityData>> keywordEntityDatas = new Dictionary<string, Dictionary<string, KeywordEntityData>>();
 }
 public class GameSettingData
 {
@@ -36,5 +36,6 @@ public class KeywordEntityData
 }
 public class DebugZoneData
 {
-    public List<string> playerFramDatas = new List<string>(); 
+    public List<string> playerFramDatas = new List<string>();
+   
 }

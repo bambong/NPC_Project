@@ -207,11 +207,11 @@ public class DebugZone : GuIdBehaviour, IDataHandler
 
     public void LoadData(GameData gameData)
     {
-        if(!gameData.playerKeywords.ContainsKey(GuId)) 
+        if(!gameData.debugZoneDatas.ContainsKey(GuId)) 
         {
             return;
         }
-        var frameDatas = gameData.playerKeywords[GuId].playerFramDatas;
+        var frameDatas = gameData.debugZoneDatas[GuId].playerFramDatas;
         List<GameObject> temp = new List<GameObject>();
         for(int i =0; i < frameDatas.Count; ++i) 
         {
@@ -240,6 +240,6 @@ public class DebugZone : GuIdBehaviour, IDataHandler
             }
            // data.playerFramDatas.Add("");
         }
-        gameData.playerKeywords.AddOrUpdateValue(guId, data);
+        gameData.debugZoneDatas.AddOrUpdateValue(guId, data);
     }
 }
