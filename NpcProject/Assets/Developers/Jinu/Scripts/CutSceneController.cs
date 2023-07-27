@@ -37,8 +37,8 @@ public class CutSceneController : MonoBehaviour
 
 
         talk.OnStart(() => talk.iscutScene = true);
-        talk.OnStart(() => talk.leftObject = left);
-        talk.OnStart(() => talk.rightObject = right);
+        talk.OnStart(() => talk.left = left);
+        talk.OnStart(() => talk.right = right);
 
         talk.OnComplete(() => talkCount++);
         //재시작        
