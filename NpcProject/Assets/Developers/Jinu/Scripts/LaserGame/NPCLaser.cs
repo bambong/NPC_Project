@@ -12,6 +12,8 @@ public class NPCLaser : MonoBehaviour
     private Define.LaserLayer hitLaserLayer;
     [Header("LaserProperty")]
     [SerializeField]
+    private bool shoot = true;
+    [SerializeField]
     private LaserColorData laserColorData;
     [SerializeField]
     private Define.LaserColor laserBaseColor;
@@ -44,7 +46,6 @@ public class NPCLaser : MonoBehaviour
     private ParticleSystem.ColorOverLifetimeModule glowEndColor;
 
     private bool enter = false;
-    private bool shoot = true;
     private int ignoreLayerMask = 0;
     private int actionLayerMask = 0;
 
@@ -59,7 +60,7 @@ public class NPCLaser : MonoBehaviour
         SetColorOverLifeTime();
         ignoreLayerMask = GetLayerMask(defaultLaserLayer);
         actionLayerMask = GetLayerMask(hitLaserLayer);
-        SetIgnoreLayerMask();
+        //SetIgnoreLayerMask();
         LaserExit();
     }
 
@@ -182,12 +183,14 @@ public class NPCLaser : MonoBehaviour
     #region LaserAction
     public void StartLaser()
     {
+        this.gameObject.SetActive(true);
         shoot = true;
     }
 
     public void StopLaser()
     {
         shoot = false;
+        this.gameObject.SetActive(false);
     }
 
     public void StartLaserAction(RaycastHit hit)
