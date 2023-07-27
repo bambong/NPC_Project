@@ -57,6 +57,7 @@ public static class KeySetting
     {
         tempKeys = new Dictionary<KEY_TYPE, KeyCode>(currentKeys);
     }
+    public static KeyCode GetKeyCode(KEY_TYPE type) => currentKeys[type];
 }
 
 
@@ -162,6 +163,18 @@ public class KeyMappingController : MonoBehaviour
             KeySetting.tempKeys[(KEY_TYPE)key] = keyEvent.keyCode;
             key = -1;
         }
+    }
+
+    public float GetHorizontal()
+    {
+        var horizontalValue = Input.GetKey(KeySetting.GetKeyCode(KEY_TYPE.RIGHT_KEY)) ? 1f : (Input.GetKey(KeySetting.GetKeyCode(KEY_TYPE.LEFT_KEY)) ? -1f : 0f);
+        return horizontalValue;
+    }
+
+    public float GetVertical()
+    {
+        var verticalValue = Input.GetKey(KeySetting.GetKeyCode(KEY_TYPE.UP_KEY)) ? 1f : (Input.GetKey(KeySetting.GetKeyCode(KEY_TYPE.DOWN_KEY)) ? -1f : 0f);
+        return verticalValue;
     }
 
     public KeyCode ReturnKey(KEY_TYPE keyType)

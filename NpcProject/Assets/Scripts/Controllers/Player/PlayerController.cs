@@ -144,12 +144,6 @@ public class PlayerController : MonoBehaviour , IDataHandler
             var factor = 1 / transform.lossyScale.x;
             transform.localScale *= factor;
         }
-
-        //if (Input.GetKeyDown(KeyCode.Escape)) 
-        //{
-        //    Managers.Data.UpdateProgress(Managers.Data.Progress + 1);
-               
-        //}
     }
     private void FixedUpdate()
     {
@@ -197,8 +191,8 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
     public void PlayerWalkUpdate()
     {
-        var hor = Input.GetAxis("Horizontal");
-        var ver = Input.GetAxis("Vertical");
+        var hor = Managers.Game.Key.GetHorizontal();
+        var ver = Managers.Game.Key.GetVertical();
         //bool isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
 
         if (isRun)
@@ -255,8 +249,8 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
     public void PlayerRunUpdate()
     {
-        var hor = Input.GetAxis("Horizontal");
-        var ver = Input.GetAxis("Vertical");
+        var hor = Managers.Game.Key.GetHorizontal();
+        var ver = Managers.Game.Key.GetVertical();
         //var isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
 
         if (!isRun)
@@ -439,9 +433,9 @@ public class PlayerController : MonoBehaviour , IDataHandler
             return;
         }
 
-        var hor = Input.GetAxis("Horizontal");
-        var ver = Input.GetAxis("Vertical");
-        
+        var hor = Managers.Game.Key.GetHorizontal();
+        var ver = Managers.Game.Key.GetVertical();
+
         if (IsOnSlope(Vector3.zero))
         {
             rigid.useGravity = false;
@@ -673,7 +667,6 @@ public class PlayerController : MonoBehaviour , IDataHandler
     }
     public void ExitDebugMod()
     {
-        //SetstateStop();
         if (debugModeInput != null)
         {
             StopCoroutine(debugModeInput);

@@ -20,6 +20,9 @@ public class PausePanelController : BasePanelController
     [SerializeField]
     private PauseTutorialPanelController tutorialPanelController;
 
+    [SerializeField]
+    private KeyMenuPanelController keyMenuPanelController;
+
     private BasePanelController currentPanel;
 
     private bool isTransition;
@@ -28,6 +31,7 @@ public class PausePanelController : BasePanelController
     public bool IsTransition { get => isTransition || gameSettingPanel.IsTransition; }
     public PauseMenuPanelController PauseMenuPanel { get => pauseMenuPanel;  }
     public PauseTutorialPanelController TutorialPanelController { get => tutorialPanelController; }
+    public KeyMenuPanelController KeyMenuPanelController { get => keyMenuPanelController; }
 
     public override void Init()
     {
@@ -78,6 +82,8 @@ public class PausePanelController : BasePanelController
     }
     public void ChangeMainPanel(BasePanelController panel)
     {
+        Debug.Log(panel);
+
         if (isTransition) 
         {
             return;
@@ -98,4 +104,10 @@ public class PausePanelController : BasePanelController
         seq.Play();
     }
 
+    public void KeyMenusButtonActive()
+    {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
+        ChangeMainPanel(keyMenuPanelController);
+        EventSystem.current.SetSelectedGameObject(null);
+    }
 }
