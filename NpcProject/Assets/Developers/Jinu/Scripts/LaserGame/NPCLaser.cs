@@ -80,7 +80,7 @@ public class NPCLaser : MonoBehaviour
         RaycastHit maxLengthHit;
         if(Physics.Raycast(ray, out maxLengthHit, maxLength, ignoreLayerMask))
         {
-            float hitLength = Vector3.Distance(transform.position, maxLengthHit.point);
+            float hitLength = Vector3.Distance(transform.position, maxLengthHit.point) + 1.0f;
             if (Physics.Raycast(ray, out curHit, hitLength, actionLayerMask))
             {
                 if(preHit.collider != null && enter)
