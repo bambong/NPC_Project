@@ -15,9 +15,6 @@ public class ServerroomMonsterScene : BaseScene
     private DialogueExcel tutorialSceneTalkData;
 
     [SerializeField]
-    private Vector3 playerSpawnSpot;
-
-    [SerializeField]
     private int monsterNeedCount = 5;
     [SerializeField]
     private int curMonsterDeathCount = 0;

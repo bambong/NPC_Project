@@ -15,8 +15,6 @@ public class InteractionDetectController : MonoBehaviour
     {
         interactionUi = Managers.UI.MakeWorldSpaceUI<InteractionUiController>(Managers.Scene.CurrentScene.transform,"InteractionUI");
         interactionUi.gameObject.SetActive(false);
-
-
     }
     public void SwitchDebugMod(bool isOn)
     {

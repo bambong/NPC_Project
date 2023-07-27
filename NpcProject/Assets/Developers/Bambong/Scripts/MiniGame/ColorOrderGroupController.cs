@@ -14,6 +14,8 @@ public class ColorOrderGroupController : UI_Base
     private CanvasGroup imageGroup;
     [SerializeField]
     private Transform resultNodeLayout;
+    [SerializeField]
+    private HorizontalLayoutGroup layoutGroup;
 
     private List<ResultNodeController> orderNodes = new List<ResultNodeController>();
     private int curIndex = 0;
@@ -22,6 +24,10 @@ public class ColorOrderGroupController : UI_Base
     public bool IsStart { get => curIndex > 0; } 
     public bool IsEnd { get => curIndex >= orderNodes.Count; }
 
+    private void Start()
+    {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
+    }
     public bool CompareKey(string key)
     {
         return orderNodes[curIndex].AnswerKey == key; 
@@ -133,8 +139,7 @@ public class ColorOrderGroupController : UI_Base
     }
     public override void Init()
     {
-        transform.localScale = Vector3.one;
-        transform.localPosition = Vector3.zero;
-
+        //transform.localScale = Vector3.one;
+        // transform.localPosition = Vector3.zero;
     }
 }

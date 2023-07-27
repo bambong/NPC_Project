@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class GameStateController : StateController<GameManager>
 {
     public GameStateController(GameManager owner) : base(owner)
@@ -14,7 +15,6 @@ public class GameStateController : StateController<GameManager>
     }
 
 }
-
 public class GameManager
 {
     private GameStateController gameStateController;
@@ -22,13 +22,21 @@ public class GameManager
     private PlayerController player;
     private Vector3 prevGravity;
     private RetryPanelController retryPanel;
+    private PausePanelController pausePanel;
+    private BasePanelController blurPanel;
+
     private DestinationPanelController destinationPanel;
+    private float prevTimeScale = 1f;
     private bool isDebugMod = false;
     public PlayerController Player { get => player; }
     public KeyMappingController Key { get => key;}
     public IState<GameManager> CurState { get => gameStateController.CurState; }
     public bool IsDebugMod { get => isDebugMod; }
+    public bool IsPause { get => gameStateController.CurState == GamePauseState.Instance; }
     public RetryPanelController RetryPanel { get => retryPanel; }
+    public PausePanelController PausePanel { get => pausePanel; }
+    public BasePanelController BlurPanel { get => blurPanel; }
+    public DestinationPanelController DestinationPanel { get => destinationPanel; }
 
     private float DEBUG_TIME_SCALE = 0.2f;
 
@@ -37,6 +45,8 @@ public class GameManager
     {
         gameStateController = new GameStateController(this);
         retryPanel = Managers.UI.MakeSceneUI<RetryPanelController>(null, "RetryPanelUI");
+        pausePanel = Managers.UI.MakeSceneUI<PausePanelController>(null, "PausePanel");
+        blurPanel = Managers.UI.MakeCameraSpaceUI<BasePanelController>(1,null,"BlurPanel");
         destinationPanel = Managers.UI.MakeSceneUI<DestinationPanelController>(null, "DestinationPanel");
         prevGravity = Physics.gravity;
         SetStateNormal();
@@ -49,6 +59,7 @@ public class GameManager
     public void OnSceneLoaded()
     {
         retryPanel = Managers.UI.MakeSceneUI<RetryPanelController>(null, "RetryPanelUI");
+        blurPanel = Managers.UI.MakeCameraSpaceUI<BasePanelController>(1, null, "BlurPanel");
         SetStateNormal();
     
 
@@ -57,7 +68,15 @@ public class GameManager
     #region SetState
     public void SetStateNormal() => gameStateController.ChangeState(GameNormalState.Instance);
     public void SetStateEvent() => gameStateController.ChangeState(GameEventState.Instance);
-    public void SetEnableDebugMod() 
+    public void SetStatePause()
+    {
+        if (Managers.Scene.IsTransitioning)
+        {
+            return;
+        }
+        gameStateController.ChangeState(GamePauseState.Instance);
+    }
+        public void SetEnableDebugMod() 
     {
         isDebugMod = true;
         OnDebugModStateEnter();
@@ -100,6 +119,17 @@ public class GameManager
         prevGravity = Physics.gravity;
         Physics.gravity = prevGravity * DEBUG_TIME_SCALE;
     }
+    public void OnPauseStateEnter()
+    {
+        pausePanel.Open();
+        blurPanel.Open();
+     
+       
+        player.SetStatePause();
+        prevTimeScale = Time.timeScale;
+        Time.timeScale = 0;
+
+    }
     #endregion StateEnter
     #region StateExit
     public void OnDebugModStateExit()
@@ -107,6 +137,13 @@ public class GameManager
         Managers.Sound.PlaySFX(Define.SOUND.DebugModeExit);
         Physics.gravity = prevGravity;
         Managers.Time.SetTimeScale(TIME_TYPE.NONE_PLAYER, 1);
+    }
+    public void OnPauseStateExit()
+    {
+        player.RevertState();
+        pausePanel.Close();
+        blurPanel.Close();
+        Time.timeScale = prevTimeScale;
     }
     #endregion StateExit
 }

@@ -4,9 +4,6 @@ using UnityEngine;
 using Cinemachine;
 public class GameScene : BaseScene
 {
-
-    [SerializeField]
-    private Vector3 playerSpawnSpot;
     [SerializeField]
     private CinemachineVirtualCamera vircam;
 
@@ -24,7 +21,7 @@ public class GameScene : BaseScene
         var player  = Managers.Game.Spawn(Define.WorldObject.Player, "Player");
         player.transform.position = playerSpawnSpot;
         Managers.Camera.InitCamera(new CameraInfo(vircam,player.transform));
-
+        
         //StartBgm();
         Invoke("StartTalk", 2f);
         Managers.Talk.LoadTalkData(gamaSceneTalkData);

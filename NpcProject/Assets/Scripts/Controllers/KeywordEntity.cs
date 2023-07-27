@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using UnityEditor.Searcher;
 using UnityEngine;
 public class KeywordAction 
 {
@@ -279,6 +280,11 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     {
         while (Managers.Game.IsDebugMod) 
         {
+            if (Managers.Game.IsPause) 
+            {
+                yield return null;
+                continue;
+            }
             Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
             var factor = SCREEN_OFFSET / new Vector2(Screen.width, Screen.height).magnitude;
             pos.z = 0;
@@ -430,7 +436,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         {
             return;
         }
-        originMat.SetColor(WIRE_FRAME_EMM_COLOR_NAME, new Color(0,0,0,0));
+        originMat.SetColor(WIRE_FRAME_EMM_COLOR_NAME, Color.clear);
     }
     private void InitColisionLayer() 
     {
@@ -475,7 +481,6 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     {
         var pos = col.transform.position;
 
-        RaycastHit hit;
         vec.x = math.abs(vec.x) < MINMUM_DIR_AMOUNT ? 0 : vec.x;
         vec.z = math.abs(vec.z) < MINMUM_DIR_AMOUNT ? 0 : vec.z;
         if (vec.magnitude == 0) 
@@ -485,28 +490,42 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     
         var boxSize = Util.VectorMultipleScale(col.size / 2, transform.lossyScale);
         boxSize.y = boxSize.y * 0.99f;
-        var vecXSize = Mathf.Abs(vec.x);
-        var vecZSize = Mathf.Abs(vec.z);
-        //var boxXdiff = boxSize.x * 0.01f;
-        //var boxZdiff = boxSize.z * 0.01f;
-
-        //if (vecXSize == 0 || vecXSize >= boxXdiff)
-        //{ 
-        //    boxSize.x *= 0.99f;
-        //}
-        //if(vecZSize == 0 || vecZSize >= boxZdiff)
-        //{ 
-        //   // boxSize.z *= 0.99f;
-        //}
+        //boxSize.x = boxSize.x * 0.99f;
+        //boxSize.z = boxSize.z * 0.99f;
 #if UNITY_EDITOR
         ExtDebug.DrawBox(pos + vec, boxSize, KeywordTransformFactor.rotation, Color.blue);
+        //ExtDebug.DrawBoxCastBox(pos , boxSize, KeywordTransformFactor.rotation, vec.normalized, vec.magnitude, Color.blue);
 #endif
-        var hits = Physics.OverlapBox(pos+vec, boxSize, KeywordTransformFactor.rotation, colisionCheckLayer, QueryTriggerInteraction.Ignore);
-        
-        for(int i = 0; i< hits.Length; ++i) 
+        var hits = Physics.OverlapBox(pos + vec, boxSize, KeywordTransformFactor.rotation, colisionCheckLayer, QueryTriggerInteraction.Ignore);
+        //var castHits = Physics.BoxCastAll(pos , boxSize, vec.normalized, KeywordTransformFactor.rotation,vec.magnitude, colisionCheckLayer, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i< hits.Length; ++i) 
         {
             if(hits[i] != col) 
             {
+                var castHits = Physics.BoxCastAll(pos, boxSize, vec.normalized, KeywordTransformFactor.rotation, vec.magnitude, colisionCheckLayer, QueryTriggerInteraction.Ignore);
+                
+                foreach (var cast in castHits)
+                {
+                    if (cast.collider == hits[i])
+                    {
+                        Debug.Log(cast.distance + " " + vec.magnitude);
+
+                        if ((cast.distance - MINMUM_DIR_AMOUNT) > 0.001f)
+                        {
+                            var dis = cast.distance - MINMUM_DIR_AMOUNT;
+                            KeywordTransformFactor.position += dis * vec.normalized;
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+
+                //if ((castHits[i].distance - MINMUM_DIR_AMOUNT) > 0.001f)
+                //{
+                //    var dis = castHits[i].distance - MINMUM_DIR_AMOUNT;
+                //    KeywordTransformFactor.position += dis * vec.normalized;
+                //    return true;
+                //}
                 return false;
             }
         }
@@ -652,13 +671,19 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
 
     public void SaveData(GameData gameData)
     {
+        var debugZoneGuid = parentDebugZone.GuId;
+        if (!gameData.keywordEntityDatas.ContainsKey(debugZoneGuid)) 
+        {
+            gameData.keywordEntityDatas.Add(debugZoneGuid, new Dictionary<string, KeywordEntityData>());
+        }
 
         var data = new KeywordEntityData();
         data.isEnable = gameObject.activeSelf;
+      
        
         if (!gameObject.activeSelf)
         {
-            gameData.keywordEntityDatas.AddOrUpdateValue(guId, data);
+            gameData.keywordEntityDatas[debugZoneGuid].AddOrUpdateValue(guId, data);
             return;
         }
 
@@ -677,16 +702,20 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
                 frameData.id = keywordFrames[i].CurFrameInnerKeyword.KewordId;
             }
         }
-        gameData.keywordEntityDatas.AddOrUpdateValue(guId, data);
+        gameData.keywordEntityDatas[debugZoneGuid].AddOrUpdateValue(guId, data);
     }
     public void LoadData(GameData gameData)
     {
-        if (!gameData.keywordEntityDatas.ContainsKey(guId)) 
+        var debugZoneGuid = parentDebugZone.GuId;
+        if (!gameData.keywordEntityDatas.ContainsKey(debugZoneGuid)) 
         {
             return;
         }
-  
-        var data = gameData.keywordEntityDatas[guId];
+        if (!gameData.keywordEntityDatas[debugZoneGuid].ContainsKey(GuId))
+        {
+            return;
+        }
+        var data = gameData.keywordEntityDatas[debugZoneGuid][GuId];
         if (!data.isEnable)
         {
             gameObject.SetActive(false);

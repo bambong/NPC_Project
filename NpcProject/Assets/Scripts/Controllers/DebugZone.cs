@@ -10,6 +10,10 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class DebugZone : GuIdBehaviour, IDataHandler
 {
+    [Header("플레이어 초기화 기본 위치")]
+    [SerializeField]
+    private Vector3 playerDefaultPos;
+
     [Space(10)]
     [Header("디버그 모드 제한 시간 -1  = Infinity")]
     [SerializeField]
@@ -36,17 +40,20 @@ public class DebugZone : GuIdBehaviour, IDataHandler
     public int PlayerSlotCount { get => playerSlotCount; }
     public List<Material> WireMaterials { get => wireMaterials; }
     public bool IsDebugAble { get => isDebugAble; }
+    public Vector3 PlayerDefaultPos { get => playerDefaultPos; }
+
     protected override void Start()
     {
         base.Start();
         MakeFrame();
         InitKeywords();
-       
         MakeDebugGaugeUi();
-        
-     
         WireMaterialClear();
         boxSize = GetComponent<BoxCollider>().bounds.size;
+        if(playerDefaultPos == Vector3.zero) 
+        {
+            playerDefaultPos = Managers.Scene.CurrentScene.PlayerSpawnSpot;
+        }
     }
     private void MakeFrame() 
     {
@@ -184,6 +191,7 @@ public class DebugZone : GuIdBehaviour, IDataHandler
             Managers.Keyword.SetDebugZone(this);
             Managers.Game.Player.isDebugButton();
             Managers.Game.RetryPanel.OpenResetButton();
+            Managers.Data.SaveGame();
         }
     }
 
@@ -199,11 +207,11 @@ public class DebugZone : GuIdBehaviour, IDataHandler
 
     public void LoadData(GameData gameData)
     {
-        if(!gameData.playerKeywords.ContainsKey(GuId)) 
+        if(!gameData.debugZoneDatas.ContainsKey(GuId)) 
         {
             return;
         }
-        var frameDatas = gameData.playerKeywords[GuId].playerFramDatas;
+        var frameDatas = gameData.debugZoneDatas[GuId].playerFramDatas;
         List<GameObject> temp = new List<GameObject>();
         for(int i =0; i < frameDatas.Count; ++i) 
         {
@@ -232,6 +240,6 @@ public class DebugZone : GuIdBehaviour, IDataHandler
             }
            // data.playerFramDatas.Add("");
         }
-        gameData.playerKeywords.AddOrUpdateValue(guId, data);
+        gameData.debugZoneDatas.AddOrUpdateValue(guId, data);
     }
 }

@@ -1,0 +1,67 @@
+using DG.Tweening;
+
+using UnityEngine;
+
+
+public class PauseTutorialPanelController :BasePanelController
+{
+    [SerializeField]
+    private PausePanelController pausePanelController;
+    [SerializeField]
+    private CanvasGroup tutorialCanvasGroup;
+    [SerializeField]
+    private TutorialDescriptionPanelController tutorialDescriptionPanel;
+    [SerializeField]
+    private TutorialNodePanelController tutorialNodePanel;
+   
+    private BasePanelController currentPanel;
+
+    private bool isTransition;
+    private readonly float TRANSITION_TIME = 0.7f;
+
+    public bool IsTransition { get => isTransition || pausePanelController.IsTransition;  }
+
+ 
+    protected override void OnOpen()
+    {
+        base.OnOpen();
+        tutorialNodePanel.Open();
+        currentPanel = tutorialNodePanel;
+        tutorialDescriptionPanel.Close();
+    }
+    protected override void OnClose()
+    {
+        base.OnClose();
+    }
+
+    public void OnCloseButtonActive()
+    {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
+        pausePanelController.ChangeToMainMenuPanel();
+    }
+
+    public void OnDescriptionPanelOpen()
+    {
+        ChangeMainPanel(tutorialDescriptionPanel);
+    }
+
+    public void ChangeMainPanel(BasePanelController panel)
+    {
+        if (isTransition)
+        {
+            return;
+        }
+        isTransition = true;
+        Sequence seq = DOTween.Sequence().SetUpdate(true);
+        seq.Append(tutorialCanvasGroup.DOFade(0, TRANSITION_TIME / 2));
+        seq.AppendCallback(() =>
+        {
+            currentPanel.Close();
+            panel.Open();
+            currentPanel = panel;
+        });
+        seq.Append(tutorialCanvasGroup.DOFade(1, TRANSITION_TIME / 2));
+        seq.OnComplete(() => isTransition = false);
+        seq.Play();
+    }
+}

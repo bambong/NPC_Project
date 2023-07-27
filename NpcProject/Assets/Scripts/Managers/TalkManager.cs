@@ -22,8 +22,8 @@ public class TalkEvent : GameEvent
     private int curIndex = 0;
     public bool iscutScene = false;
 
-    public CharacterInfo leftObject;
-    public CharacterInfo rightObject;
+    public GameObject leftObject;
+    public GameObject rightObject;
 
     public TalkEvent() 
     {
@@ -200,7 +200,7 @@ public class TalkManager
                 break;
             }
 
-            if((Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.TALK_KEY)) && talkPanel.IsNext == true && !talkPanel.IsChoice) || talkPanel.GetIsSelect()) 
+            if(((Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY))) && talkPanel.IsNext == true && !talkPanel.IsChoice) || talkPanel.GetIsSelect()) 
             {
                 talkPanel.InputIsSelect(false);
 
@@ -218,12 +218,12 @@ public class TalkManager
     }
 
     #region CutSceneTalk Function
-    public void PlayDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
+    public void PlayDialogue(Dialogue dialogue, GameObject left, GameObject right)
     {
         talkPanel.PlayDialogue(dialogue, left, right);
     }
 
-    public void PlayCutSceneTalk(TalkEvent talk, CharacterInfo left, CharacterInfo right)
+    public void PlayCutSceneTalk(TalkEvent talk, GameObject left, GameObject right)
     {
         Managers.Game.SetStateEvent();
 
@@ -241,7 +241,7 @@ public class TalkManager
         });
     }
 
-    IEnumerator ProgresscutSceneTalk(CharacterInfo left, CharacterInfo right)
+    IEnumerator ProgresscutSceneTalk(GameObject left, GameObject right)
     {
 
         PlayDialogue(curTalkEvent.GetCurrentDialogue(), left, right);
@@ -254,7 +254,7 @@ public class TalkManager
                 break;
             }
 
-            if ((Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.TALK_KEY)) && talkPanel.IsNext == true && !talkPanel.IsChoice) || talkPanel.GetIsSelect())
+            if (((Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.SKIP_KEY))) && talkPanel.IsNext == true && !talkPanel.IsChoice) || talkPanel.GetIsSelect())
             {
                 talkPanel.InputIsSelect(false);
 

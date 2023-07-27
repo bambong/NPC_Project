@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using DG.Tweening;
 
 public class KeyUIController : MonoBehaviour
 {
@@ -10,15 +11,15 @@ public class KeyUIController : MonoBehaviour
     {
         for(int i=0; i< btnTxt.Length; i++)
         {
-            btnTxt[i].text = KeySetting.keys[(KEY_TYPE)i].ToString();
-        }        
+            btnTxt[i].text = KeySetting.defaultKeys[(KEY_TYPE)i].ToString();
+        }
     }
 
     void Update()
     {
         for (int i = 0; i < btnTxt.Length; i++)
         {
-            btnTxt[i].text = KeySetting.keys[(KEY_TYPE)i].ToString();
+            btnTxt[i].text = KeySetting.tempKeys[(KEY_TYPE)i].ToString();
         }
     }
 }

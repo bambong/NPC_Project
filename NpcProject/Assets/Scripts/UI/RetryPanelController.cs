@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RetryPanelController : UI_Base
@@ -33,6 +34,7 @@ public class RetryPanelController : UI_Base
         Managers.Sound.PlaySFX(Define.SOUND.ResetButton);
         Managers.Sound.StopBGM();
         resetButton.interactable = false;
+        Managers.Data.DataRemoveForResetButton(SceneManager.GetActiveScene().name);
         Managers.Scene.ReLoadCurrentScene();
     }
     public void OpenResetButton() 
@@ -69,7 +71,7 @@ public class RetryPanelController : UI_Base
         seq.Append(canvasGroup.DOFade(1, FADE_OPEN_TIME));
         seq.AppendCallback(() =>
         {
-            //StartCoroutine(RetryInputCheck());
+            StartCoroutine(RetryInputCheck());
             retryText.gameObject.SetActive(true);
         });
         seq.Play();
@@ -80,20 +82,21 @@ public class RetryPanelController : UI_Base
         gameObject.SetActive(false);
     }
 
-    //IEnumerator RetryInputCheck()
-    //{
-    //    while (true)
-    //    {
-    //        if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.RETRY_KEY)))
-    //        {
-    //            Managers.Sound.PlaySFX(Define.SOUND.ResetButton);
-    //            Managers.Sound.StopBGM();
-    //            Managers.Scene.ReLoadCurrentScene();
-    //            //  Close();
-    //            yield break;
-    //        }
-    //        yield return null;
-    //    }
+    IEnumerator RetryInputCheck()
+    {
+        while (true)
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                Managers.Sound.PlaySFX(Define.SOUND.ResetButton);
+                Managers.Sound.StopBGM();
+                Managers.Data.DataRemoveForResetButton(SceneManager.GetActiveScene().name);
+                Managers.Scene.ReLoadCurrentScene();
+                //  Close();
+                yield break;
+            }
+            yield return null;
+        }
 
-    //}
+    }
 }

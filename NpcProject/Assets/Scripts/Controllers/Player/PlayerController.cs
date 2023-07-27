@@ -84,7 +84,9 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private Coroutine debugModeInput;
     private RaycastHit slopeHit;
     private int slopeLayer;
-    private bool togglemode = false;
+
+    private Transform onPauseUi;
+
     private bool isRun = false;
 
     private KeywordController isFocusKeyword;
@@ -122,6 +124,11 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         purposePanel = Managers.UI.MakeSceneUI<PurposePanelController>(null,"PurposePanel");
         signalPanel = Managers.UI.MakeSceneUI<SignalPanelController>(null,"SignalPanel");
+        onPauseUi = new GameObject("OnPauseUI").transform;
+        Managers.Keyword.PlayerKeywordPanel.transform.SetParent(onPauseUi);
+        purposePanel.transform.SetParent(onPauseUi);
+        Managers.Game.RetryPanel.transform.SetParent(onPauseUi);
+
     }
     void Update()
     {
@@ -137,12 +144,6 @@ public class PlayerController : MonoBehaviour , IDataHandler
             var factor = 1 / transform.lossyScale.x;
             transform.localScale *= factor;
         }
-
-        //if (Input.GetKeyDown(KeyCode.Escape)) 
-        //{
-        //    Managers.Data.UpdateProgress(Managers.Data.Progress + 1);
-               
-        //}
     }
     private void FixedUpdate()
     {
@@ -190,8 +191,8 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
     public void PlayerWalkUpdate()
     {
-        var hor = Input.GetAxis("Horizontal");
-        var ver = Input.GetAxis("Vertical");
+        var hor = Managers.Game.Key.GetHorizontal();
+        var ver = Managers.Game.Key.GetVertical();
         //bool isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
 
         if (isRun)
@@ -248,8 +249,8 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
     public void PlayerRunUpdate()
     {
-        var hor = Input.GetAxis("Horizontal");
-        var ver = Input.GetAxis("Vertical");
+        var hor = Managers.Game.Key.GetHorizontal();
+        var ver = Managers.Game.Key.GetVertical();
         //var isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
 
         if (!isRun)
@@ -305,7 +306,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
     public void RunCheck()
     {
-        if(togglemode)
+        if(Managers.Data.CurrentSettingData.isToggleRun)
         {
             if(Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY)))
             {
@@ -316,12 +317,6 @@ public class PlayerController : MonoBehaviour , IDataHandler
         {
             isRun = Input.GetKey(Managers.Game.Key.ReturnKey(KEY_TYPE.RUN_KEY));
         }
-    }
-
-    public void ToggleSwitch()
-    {
-        Debug.Log("RunMode:" + togglemode);
-        togglemode = !togglemode;
     }
 
     public void ChangeToRunSpeed(bool run)
@@ -438,9 +433,9 @@ public class PlayerController : MonoBehaviour , IDataHandler
             return;
         }
 
-        var hor = Input.GetAxis("Horizontal");
-        var ver = Input.GetAxis("Vertical");
-        
+        var hor = Managers.Game.Key.GetHorizontal();
+        var ver = Managers.Game.Key.GetVertical();
+
         if (IsOnSlope(Vector3.zero))
         {
             rigid.useGravity = false;
@@ -496,11 +491,46 @@ public class PlayerController : MonoBehaviour , IDataHandler
         return false;
     }
 
+    public void PauseModInputCheck() 
+    {
+        if (Input.GetKeyDown(KeyCode.Escape)/*Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.PAUSE_KEY))*/)
+        {
+            if (Managers.Game.IsPause)
+            {
+                if (Managers.Game.PausePanel.IsTransition) 
+                {
+                    return;
+                }
+
+                if (!Managers.Game.PausePanel.PauseMenuPanel.IsOpen) 
+                {
+                    Managers.Game.PausePanel.ChangeToMainMenuPanel();
+                    return;
+                }
+                Managers.Game.SetStateNormal();
+            }
+            else
+            {
+                Managers.Game.SetStatePause();
+            }
+         
+        }
+
+    }
+
+
     IEnumerator DebugModInputCo() 
     {
 
         while (Managers.Game.IsDebugMod && !PlayerIsDeathState()) 
         {
+
+            if (Managers.Game.IsPause)
+            {
+                yield return null;
+                continue;
+            }
+
             var pointerEventData = new UnityEngine.EventSystems.PointerEventData(EventSystem.current);
             pointerEventData.position = Input.mousePosition;
             pointerEventData.button = PointerEventData.InputButton.Left;
@@ -637,7 +667,6 @@ public class PlayerController : MonoBehaviour , IDataHandler
     }
     public void ExitDebugMod()
     {
-        //SetstateStop();
         if (debugModeInput != null)
         {
             StopCoroutine(debugModeInput);
@@ -739,7 +768,28 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
     #endregion
 
+    public void OnPasueStateEnter() 
+    {
+        Managers.Keyword.CurrentDragKeywordReset();
+        Managers.Game.DestinationPanel.gameObject.SetActive(false);
+        onPauseUi.gameObject.SetActive(false);
+ 
+    }
+    public void OnPasueStateExit()
+    {
+        Managers.Game.DestinationPanel.gameObject.SetActive(true);
+        Managers.Game.DestinationPanel.Close();
+        onPauseUi.gameObject.SetActive(true);
+    }
     #region SetState
+    public void RevertState()
+    {
+        playerStateController.RevertToPrevState();
+    }
+    public void SetStatePause() 
+    {
+        playerStateController.ChangeState(PlayerPause.Instance);
+    }
     public void SetStateInteraction()
     {
         playerStateController.ChangeState(PlayerInteraction.Instance);
