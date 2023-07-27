@@ -74,8 +74,8 @@ public class Define
         Wall = 1 << 11,
         EventTrigger = 1 << 12,
         Slope = 1 << 13,
-        PlayerDeath = 1 << 14,
-        DontPlayerShadow = 1 << 15
+        PlayerDeath = 1 << 15,
+        DontPlayerShadow = 1 << 16
     }
 
     public enum BGM

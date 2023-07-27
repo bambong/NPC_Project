@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LaserAction : MonoBehaviour, ILaserAction
+public abstract class LaserAction : MonoBehaviour, ILaserAction
 {
     [SerializeField]
     private float waitTime;
@@ -55,13 +55,7 @@ public class LaserAction : MonoBehaviour, ILaserAction
         }
     }
 
-    public virtual void StartLaserEvent()
-    {
+    public abstract void StartLaserEvent();
 
-    }
-
-    public virtual void StopLaserEvent()
-    {
-
-    }
+    public abstract void StopLaserEvent();
 }
