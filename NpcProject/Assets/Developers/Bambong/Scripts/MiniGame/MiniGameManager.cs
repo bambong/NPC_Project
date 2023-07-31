@@ -752,7 +752,16 @@ public class MiniGameManager : BaseScene
         //seq.Append(resultText.DOText("PRESS ENTER", 0.5f));
        
     }
-
+    public void OnClickRetryButton() 
+    {
+        if (isGameEnd || !helpButton.IsOpen) 
+        {
+            return;
+        }
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
+        SetStateInit();
+        SetStateGameReset();
+    }
     public override void Clear()
     {
         

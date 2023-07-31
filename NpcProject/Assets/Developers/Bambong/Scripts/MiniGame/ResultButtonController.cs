@@ -7,18 +7,20 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
+
 
 
 public class ResultButtonController : MonoBehaviour ,IPointerEnterHandler ,IPointerExitHandler,IPointerClickHandler
-    
+
 {
+    [SerializeField]
+    private Image focusImage;
     [SerializeField]
     private CanvasGroup focusImageCanvas;
     [SerializeField]
     private TextMeshProUGUI titleText;
-    [SerializeField]
-    private Color focusColor;
+ 
+
 
     [SerializeField]
     private float blinkTime = 0.3f;
@@ -32,18 +34,21 @@ public class ResultButtonController : MonoBehaviour ,IPointerEnterHandler ,IPoin
     [SerializeField]
     private float focusCloseTime = 0.2f;
 
+    private Color focusColor;
     private Action onClick;
     private bool iSAvailable = false;
     private void Start()
     {
         Clear();
     }
-    public void Open(float interval , string text , Action click , Action onComplete = null)
+    public void Open(float interval , string text , Color color , Action click , Action onComplete = null)
     {
         if (iSAvailable) 
         {
             return;
         }
+        focusColor = color;
+        focusImage.color = color;
         iSAvailable = true;
         Clear();
         onClick = click;

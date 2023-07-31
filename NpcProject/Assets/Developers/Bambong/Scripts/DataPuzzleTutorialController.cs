@@ -82,7 +82,7 @@ public class DataPuzzleTutorialController : GuIdBehaviour
         {
             return;
         }
-
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
         isOpen = true;
         curIndex = 0;
         rootGroup.alpha = 0;

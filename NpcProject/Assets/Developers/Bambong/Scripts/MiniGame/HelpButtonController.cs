@@ -26,6 +26,7 @@ public class HelpButtonController : MonoBehaviour
 
     private bool isOpen = false;
 
+    public bool IsOpen { get => isOpen;  }
 
     public void Init(Action action)
     {
