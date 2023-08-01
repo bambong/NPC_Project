@@ -19,26 +19,26 @@ public class PlayerKeywordLayoutTrigger : MonoBehaviour
 
     private void Update()
     {
-        if (!Managers.Game.IsDebugMod)
-        {
-            // 마우스 위치를 가져옴
-            Vector3 mousePos = Input.mousePosition;
+        //if (!Managers.Game.IsDebugMod)
+        //{
+        //    // 마우스 위치를 가져옴
+        //    Vector3 mousePos = Input.mousePosition;
 
-            // 이미지 RectTransform을 가져옴
-            RectTransform imageRect = rectTransform;
+        //    // 이미지 RectTransform을 가져옴
+        //    RectTransform imageRect = rectTransform;
 
-            // 이미지 내부에 있는지 확인
-            if (RectTransformUtility.RectangleContainsScreenPoint(imageRect, mousePos))
-            {
-                controller.Open();
-            }
-            else
-            {
-                controller.Close();
-            }
+        //    // 이미지 내부에 있는지 확인
+        //    if (RectTransformUtility.RectangleContainsScreenPoint(imageRect, mousePos))
+        //    {
+        //        controller.Open();
+        //    }
+        //    else
+        //    {
+        //        controller.Close();
+        //    }
 
-            return;
-        }
+        //    return;
+        //}
  
        
 
