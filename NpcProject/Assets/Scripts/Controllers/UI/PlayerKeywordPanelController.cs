@@ -43,7 +43,7 @@ public class PlayerKeywordPanelController : UI_Base
     {
         DebugModGroupOpen();
         //gameObject.SetActive(true);
-        Managers.Keyword.CurDebugZone.OpenPlayerLayout();
+       // Managers.Keyword.CurDebugZone.OpenPlayerLayout();
     }
     public void ClearForPool()
     {

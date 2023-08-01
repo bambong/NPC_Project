@@ -169,7 +169,7 @@ public class KeywordController : UI_Base
         {
             return;
         }
-        isMove = true;
+        SetMoveState(true);
         transform.SetParent(startParent);
         transform.SetSiblingIndex(prevSibilintIndex);
         rectTransform.DOLocalMove(startDragPoint,START_END_ANIM_TIME,true).SetUpdate(true).OnComplete(
@@ -177,7 +177,6 @@ public class KeywordController : UI_Base
             { 
                 curFrame.OnEndDrag();
                 SetMoveState(false);
-                isMove = false;
                 rectTransform.localScale = Vector3.one;
             });
     }
@@ -186,6 +185,7 @@ public class KeywordController : UI_Base
         transform.SetParent(startParent);
         transform.SetSiblingIndex(prevSibilintIndex);
         rectTransform.localPosition = startDragPoint;
+        rectTransform.localScale = Vector3.one;
         SetMoveState(false);
         SetDragState(false);
         curFrame.OnEndDrag();
