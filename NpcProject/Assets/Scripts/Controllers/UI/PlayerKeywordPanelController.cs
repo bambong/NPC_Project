@@ -15,6 +15,9 @@ public class PlayerKeywordPanelController : UI_Base
     [SerializeField]
     private CanvasGroup debugModGroup;
 
+    [SerializeField]
+    private CanvasGroup playerKeywordGroup;
+
     private Dictionary<string,KeywordMakerGaugeController> keywordMakers = new Dictionary<string, KeywordMakerGaugeController>();
 
     public Transform LayoutParent { get => layoutParent; }
@@ -25,8 +28,15 @@ public class PlayerKeywordPanelController : UI_Base
     private const string KETWORD_MAKER_NAME = "KeywordMakerGauge";
     public override void Init()
     {
-
-        
+        playerKeywordGroup.alpha = 0;
+    }
+    public void PlayerGroupOpen()
+    {
+        playerKeywordGroup.alpha = 1.0f;
+    }
+    public void PlayerGroupClose()
+    {
+        playerKeywordGroup.alpha = 0;
     }
     public void AddKeywordMakerGauge(string id, int amount) 
     {

@@ -36,8 +36,7 @@ public class TestLogo : MonoBehaviour
     private float renderfadeTim = 2f;
     [SerializeField]
     private float interval = 1f;
-    [SerializeField]
-    private CanvasGroup buttonGroup;
+
 
  
     private readonly float EFFECT_START_TIME = 0.5f;
@@ -48,17 +47,17 @@ public class TestLogo : MonoBehaviour
         panelCanvasGroup.alpha = 0;
         outLineCanvasGroup.alpha = 1;
         renderCanvasGroup2.alpha = 0;
-        buttonGroup.alpha = 0;
-        buttonGroup.interactable = false;
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(1f);
         sequence.Append(panelCanvasGroup.DOFade(1, panelfadeTim));
         sequence.AppendInterval(interval);
         sequence.AppendCallback(() => { StartCoroutine(GlitchOnce()); });
         sequence.AppendInterval(EFFECT_START_TIME+ EFFECT_END_TIME);
-        sequence.Append(panelCanvasGroup.DOFade(0, 1.5f));
-        sequence.Append(buttonGroup.DOFade(1, 1f));
-        sequence.OnComplete(() => { buttonGroup.interactable = true; });
+        sequence.Append(panelCanvasGroup.DOFade(0, 1f));
+      //  sequence.Append(buttonGroup.DOFade(1, 1f));
+        sequence.OnComplete(() => { 
+            Managers.Scene.LoadScene(Define.Scene.Chapter_02_Forest); 
+        });
         sequence.Play();
 
     }

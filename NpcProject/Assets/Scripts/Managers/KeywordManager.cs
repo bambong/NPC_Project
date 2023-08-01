@@ -115,14 +115,20 @@ public class KeywordManager
     }
     public void SetDebugZone(DebugZone zone)
     {
-        if (zone == null && Managers.Game.IsDebugMod)
+        if(zone == null) 
         {
-            curDebugZone?.OnExitDebugMod();
-            Managers.Game.Player.ExitDebugMod();
+            if (Managers.Game.IsDebugMod)
+            {
+                curDebugZone?.OnExitDebugMod();
+                Managers.Game.Player.ExitDebugMod();
+            }
+            playerKeywordPanel.PlayerGroupClose();
         }
-
+        else 
+        {
+            playerKeywordPanel.PlayerGroupOpen();
+        }
         curDebugZone = zone;
-      
     }
 
     public KeywordController MakeKeywordToCurPlayerPanel(string name) 
