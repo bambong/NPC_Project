@@ -14,7 +14,6 @@ public class PlayerKeywordLayoutController : MonoBehaviour
     [SerializeField]
     CanvasGroup noticeCanvasGroup;
 
-
     [SerializeField]
     private float moveTime = 1f;
     [SerializeField]
@@ -23,7 +22,9 @@ public class PlayerKeywordLayoutController : MonoBehaviour
     private Vector3 startPos;
 
     private bool isOpen;
-    
+
+    public bool IsOpen { get => isOpen;}
+
     void Start()
     {
         rectTransform.anchoredPosition = startPos;
