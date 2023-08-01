@@ -105,6 +105,7 @@ public class MiniGameManager : BaseScene
         {
             nodeMap.Add(new List<MiniGameNodeController>());
         }
+        Managers.Keyword.PlayerKeywordPanel.gameObject.SetActive(false);
         DOTween.SetTweensCapacity(200, 100);
         orderColorLayout.Init(miniGameLevelData.answerColorKey, this);
         InitCurGameKeys();
