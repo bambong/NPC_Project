@@ -1,4 +1,6 @@
 using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -10,6 +12,7 @@ using UnityEngine.Video;
 [Serializable]
 public class ServerroomTutorialData 
 {
+    public Sprite descriptionImage;
     public VideoClip videoClip;
     public Sprite keywordImage;
     [TextArea(2,10)]
@@ -39,6 +42,8 @@ public class ServerroomTutorialController : GuIdBehaviour
     private Image keywordImage;
     [SerializeField]
     private RawImage renderImage;
+    [SerializeField]
+    private Image descriptionImage;
 
     [SerializeField]
     private TextMeshProUGUI descriptionText;
@@ -58,7 +63,6 @@ public class ServerroomTutorialController : GuIdBehaviour
     [SerializeField]
     private float changeAnimTime = 0.3f;
 
-
     [SerializeField]
     private UnityEvent onStart;
     [SerializeField]
@@ -74,7 +78,7 @@ public class ServerroomTutorialController : GuIdBehaviour
 
     private int curIndex;
     private bool isPlaying;
-    private const float VIDEO_VISIBLE_TIME = 0.3f;
+    private const float VIDEO_VISIBLE_TIME = 0.2f;
     protected override void Start()
     {
         for ( int i = tutorialData.Count; i < pageMarks.Count; ++i) 
@@ -84,6 +88,9 @@ public class ServerroomTutorialController : GuIdBehaviour
         clickNotice.anchoredPosition = startPos;
         rootGroup.alpha = 0;
         innerGroup.alpha = 0;
+        renderImage.color = new Color(1, 1, 1, 0);
+        descriptionImage.color = new Color(1, 1, 1, 0);
+
         Open();
     }
 
@@ -125,24 +132,32 @@ public class ServerroomTutorialController : GuIdBehaviour
         seq.Append(innerGroup.DOFade(0, changeAnimTime));
         seq.AppendCallback(() =>
         {
-            videoPlayer.clip = tutorialData[curIndex].videoClip;
-            renderImage.color = new Color(1,1,1,0);
-            videoPlayer.Prepare();
+            renderImage.color = new Color(1, 1, 1, 0);
+            descriptionImage.color = new Color(1, 1, 1, 0);
+            if (tutorialData[curIndex].descriptionImage == null) 
+            {
+                videoPlayer.clip = tutorialData[curIndex].videoClip;
+                videoPlayer.Prepare();
+                videoPlayer.Play();
+            }
+            else 
+            {
+                descriptionImage.sprite = tutorialData[curIndex].descriptionImage;
+                videoPlayer.Stop();
+            }
+            
+
            // videoPlayer.Play();
             descriptionText.text = tutorialData[curIndex].descriptionText;
             keywordImage.sprite = tutorialData[curIndex].keywordImage;
-            videoPlayer.Play();
-        });
-        seq.Append(innerGroup.DOFade(1, changeAnimTime));
-        seq.AppendCallback(() => 
-        {
             if (curIndex > 0)
             {
-                pageMarks[curIndex - 1].DOColor(Color.white, 0.2f);
+                pageMarks[curIndex - 1].color = Color.white;
             }
+            pageMarks[curIndex].color = pageMarkColor;
         });
-        seq.Join(pageMarks[curIndex].DOColor(pageMarkColor, 0.2f));
-        seq.Append(renderImage.DOFade(1, VIDEO_VISIBLE_TIME));
+        seq.Append(innerGroup.DOFade(1, changeAnimTime));
+        seq.Append(FadeImage(tutorialData[curIndex].descriptionImage == null));
         seq.OnComplete(() =>
         {
             isPlaying = false;
@@ -150,6 +165,14 @@ public class ServerroomTutorialController : GuIdBehaviour
             nextButton.interactable = true;
         });
         seq.Play();
+    }
+    private TweenerCore<Color, Color, ColorOptions> FadeImage(bool isOn) 
+    {
+        if (isOn) 
+        {
+            return renderImage.DOFade(1, VIDEO_VISIBLE_TIME);
+        }
+        return descriptionImage.DOFade(1, VIDEO_VISIBLE_TIME);
     }
     private void UpdateNextPage()
     {
