@@ -50,6 +50,10 @@ public class GameSettingPanelController : BasePanelController
         {
             return;
         }
+        if(currentPanel == panel) 
+        {
+            return;
+        }
         isTransition = true;
         currentPanel.SetSelected(false);
         panel.SetSelected(true);
