@@ -31,6 +31,7 @@ public class GameSettingPanelController : BasePanelController
         soundSettingPanel.SetSelected(true);
         inputSettingPanel.Close();
         inputSettingPanel.SetSelected(false);
+
         currentPanel = soundSettingPanel;
     }
     public void OnSoundSettingButtonActive() 

@@ -1,4 +1,6 @@
 using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,6 +21,7 @@ public class PauseTutorialData
 public class PauseTutorialPartData
 {
     public string title;
+    public Sprite descriptionImage;
     public VideoClip videoClip;
     [TextArea(2, 10)]
     public string descriptionText;
@@ -33,6 +36,9 @@ public class TutorialDescriptionPanelController : BasePanelController
     private CanvasGroup innerGroup;
     [SerializeField]
     private RawImage renderImage;
+    [SerializeField]
+    private Image descriptionImage;
+
 
     [SerializeField]
     private VideoPlayer videoPlayer;
@@ -66,19 +72,39 @@ public class TutorialDescriptionPanelController : BasePanelController
             }
         }
         SetPageUpdate();
-        videoPlayer.Prepare();
     }
     protected override void OnOpen()
     {
         base.OnOpen();
         renderImage.color = Color.white;
       
+        if(currentData.pauseTutorialPartDatas[currentIndex].descriptionImage == null) 
+        {
+            renderImage.color = new Color(1, 1, 1, 1);
+        }
+        else 
+        {
+            descriptionImage.color = new Color(1, 1, 1, 1);
+        }
         videoPlayer.Play();
     }
     public void SetPageUpdate() 
     {
         //Time.timeScale = 1;
-        videoPlayer.clip = currentData.pauseTutorialPartDatas[currentIndex].videoClip;
+        if (currentData.pauseTutorialPartDatas[currentIndex].descriptionImage == null)
+        {
+            descriptionImage.color = new Color(1, 1, 1, 0);
+            videoPlayer.clip = currentData.pauseTutorialPartDatas[currentIndex].videoClip;
+            videoPlayer.Prepare();
+            videoPlayer.Play();
+        }
+        else
+        {
+            renderImage.color = new Color(1, 1, 1, 0);
+            descriptionImage.sprite = currentData.pauseTutorialPartDatas[currentIndex].descriptionImage;
+            videoPlayer.Stop();
+        }
+
         descriptionText.text = currentData.pauseTutorialPartDatas[currentIndex].descriptionText;
     
     }
@@ -105,22 +131,27 @@ public class TutorialDescriptionPanelController : BasePanelController
         seq.Append(innerGroup.DOFade(0, TRANSITION_TIME / 2));
         seq.AppendCallback(() =>
         {
-            renderImage.color = new Color(1,1,1,0);
             SetPageUpdate();
-          
+
+            renderImage.color = new Color(1, 1, 1, 0);
+            descriptionImage.color = new Color(1, 1, 1, 0);
+
         });
         seq.Append(innerGroup.DOFade(1, TRANSITION_TIME / 2));
-        seq.AppendCallback(() => {
-            videoPlayer.Prepare();
-            videoPlayer.Play();
-        });
-        seq.AppendInterval(0.2f);
-        seq.Append(renderImage.DOFade(1, 0.5f));
+        seq.Append(FadeImage(currentData.pauseTutorialPartDatas[currentIndex].descriptionImage == null, 0.3f));
         seq.OnComplete(() =>
         {
             isTransition = false;
         }
         );
         seq.Play();
+    }
+    private TweenerCore<Color, Color, ColorOptions> FadeImage(bool isOn ,float time)
+    {
+        if (isOn)
+        {
+            return renderImage.DOFade(1, time);
+        }
+        return descriptionImage.DOFade(1, time);
     }
 }

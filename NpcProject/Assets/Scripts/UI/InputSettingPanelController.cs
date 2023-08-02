@@ -27,8 +27,8 @@ public class InputSettingPanelController : ButtonBasePanelController
 
     protected override void OnOpen()
     {
-        CopyCurrentToTemp();
         base.OnOpen();
+        CopyCurrentToTemp();
         runToggle.Open();
         UpdateButtonText();
         defaultButton.onClick.AddListener(OnDefaultSettingButtonActive);
