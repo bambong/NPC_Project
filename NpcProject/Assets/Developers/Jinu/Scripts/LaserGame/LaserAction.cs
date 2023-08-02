@@ -6,14 +6,21 @@ public abstract class LaserAction : MonoBehaviour, ILaserAction
 {
     [SerializeField]
     private float waitTime;
-
+    [SerializeField]
     private int hitcount = 0;
+    [SerializeField]
     private float second = 0;
+    [SerializeField]
+    private bool isPlay = false;
 
     public void OnLaserHit()
     {
         hitcount++;
-        StartCoroutine(PlusTime());
+        if(!isPlay)
+        {
+            isPlay = true;
+            StartCoroutine(PlusTime());
+        }
     }
 
     public void OffLaserHit()
@@ -21,6 +28,7 @@ public abstract class LaserAction : MonoBehaviour, ILaserAction
         hitcount--;
         if (hitcount <= 0)
         {
+            isPlay = false;
             StartCoroutine(MinusTime());
             StopLaserEvent();
         }

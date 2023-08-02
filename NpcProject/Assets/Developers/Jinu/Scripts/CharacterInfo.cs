@@ -6,8 +6,4 @@ public class CharacterInfo : MonoBehaviour
 {
     public Renderer charRenderer;
     public int id;
-
-    private void Start()
-    {
-    }
 }

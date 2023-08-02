@@ -40,6 +40,7 @@ public class NPCLaser : MonoBehaviour
     private ILaserAction laserAction;
     private RaycastHit preHit;
     private Renderer curMat;
+    private RaycastHit curHit;
     private ParticleSystem.ColorOverLifetimeModule laserStartColor;
     private ParticleSystem.ColorOverLifetimeModule laserEndColor;
     private ParticleSystem.ColorOverLifetimeModule glowStartColor;
@@ -76,7 +77,6 @@ public class NPCLaser : MonoBehaviour
     private void ShootLaser()
     {
         Ray ray = new Ray(transform.position, transform.forward);
-        RaycastHit curHit;
         RaycastHit maxLengthHit;
         if(Physics.Raycast(ray, out maxLengthHit, maxLength, ignoreLayerMask))
         {
@@ -185,12 +185,14 @@ public class NPCLaser : MonoBehaviour
     public void StartLaser()
     {
         this.gameObject.SetActive(true);
+        enter = false;
         shoot = true;
     }
 
     public void StopLaser()
     {
         shoot = false;
+        EndLaserAction(curHit);
         this.gameObject.SetActive(false);
     }
 
@@ -215,7 +217,27 @@ public class NPCLaser : MonoBehaviour
 
     public void EndLaserAction(RaycastHit hit)
     {
-        LaserExit();
+        if(shoot)
+        {
+            LaserExit();
+        }
+        if (hit.collider == null)
+        {
+            return;
+        }
+        var preLaserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
+        if (preLaserAction != null)
+        {
+            preLaserAction.OffLaserHit();
+        }
+    }
+
+    public void EndLaserAction(RaycastHit hit, bool connect)
+    {
+        if (connect)
+        {
+            LaserExit();
+        }
         if (hit.collider == null)
         {
             return;
