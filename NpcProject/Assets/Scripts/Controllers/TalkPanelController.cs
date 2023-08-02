@@ -464,6 +464,18 @@ public class TalkPanelController : UI_Base
                 isChoiceText = true;
                 continue;
             }
+            if(item == "debugmode")
+            {
+                string text = "[" + KeySetting.defaultKeys[KEY_TYPE.DEBUGMOD_KEY].ToString() + "]";
+                textDialogue += text;
+                continue;
+            }
+            if(item == "runkey")
+            {
+                string text = "[" + KeySetting.defaultKeys[KEY_TYPE.RUN_KEY].ToString() + "]";
+                textDialogue += text;
+                continue;
+            }
             textDialogue += item;
         }
     }
