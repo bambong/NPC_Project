@@ -46,7 +46,7 @@ public class NPCLaser : MonoBehaviour
     private ParticleSystem.ColorOverLifetimeModule glowStartColor;
     private ParticleSystem.ColorOverLifetimeModule glowEndColor;
 
-    private bool enter = false;
+    private bool enter = false;    
     private int ignoreLayerMask = 0;
     private int actionLayerMask = 0;
 
@@ -185,14 +185,16 @@ public class NPCLaser : MonoBehaviour
     public void StartLaser()
     {
         this.gameObject.SetActive(true);
-        enter = false;
         shoot = true;
     }
 
     public void StopLaser()
     {
         shoot = false;
+        enter = false;
+
         EndLaserAction(curHit);
+        curHit = default;
         this.gameObject.SetActive(false);
     }
 
@@ -218,23 +220,6 @@ public class NPCLaser : MonoBehaviour
     public void EndLaserAction(RaycastHit hit)
     {
         if(shoot)
-        {
-            LaserExit();
-        }
-        if (hit.collider == null)
-        {
-            return;
-        }
-        var preLaserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
-        if (preLaserAction != null)
-        {
-            preLaserAction.OffLaserHit();
-        }
-    }
-
-    public void EndLaserAction(RaycastHit hit, bool connect)
-    {
-        if (connect)
         {
             LaserExit();
         }
