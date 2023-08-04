@@ -10,12 +10,21 @@ public enum TIME_TYPE
 }
 
 public class TimeManager
-{    
-    Dictionary<TIME_TYPE, float> timeScale = new Dictionary<TIME_TYPE, float>()
+{
+    Dictionary<TIME_TYPE, float> timeScale;
+
+    public void Init()
     {
-        {TIME_TYPE.PLAYER, 1.0f},
-        {TIME_TYPE.NONE_PLAYER, 1.0f}
-    };
+        timeScale = new Dictionary<TIME_TYPE, float>();
+        timeScale.Add(TIME_TYPE.PLAYER, 1.0f);
+        timeScale.Add(TIME_TYPE.NONE_PLAYER, 1.0f);
+    }
+    public void OnSceneLoaded()
+    {
+        timeScale.Add(TIME_TYPE.PLAYER, 1.0f);
+        timeScale.Add(TIME_TYPE.NONE_PLAYER, 1.0f);
+    }
+
 
     public void SetTimeScale(float timeScale)
     {
@@ -59,9 +68,6 @@ public class TimeManager
     }
     public void Clear()
     {
-        foreach (var temp in timeScale) 
-        {
-            timeScale[temp.Key] = 1.0f;
-        }
+        timeScale.Clear();
     }
 }
