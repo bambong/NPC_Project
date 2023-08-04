@@ -74,6 +74,10 @@ public class GameManager
         {
             return;
         }
+        if(gameStateController.CurState == GameEventState.Instance)
+        {
+            return;
+        }
         gameStateController.ChangeState(GamePauseState.Instance);
     }
         public void SetEnableDebugMod() 

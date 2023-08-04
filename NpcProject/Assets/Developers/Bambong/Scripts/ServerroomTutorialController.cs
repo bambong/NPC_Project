@@ -37,7 +37,8 @@ public class ServerroomTutorialController : GuIdBehaviour
 
     [SerializeField]
     private Button nextButton;
-
+    [SerializeField]
+    private Button prevButton;
     [SerializeField]
     private Image keywordImage;
     [SerializeField]
@@ -103,7 +104,8 @@ public class ServerroomTutorialController : GuIdBehaviour
         rootGroup.interactable = true;
         clickNotice.anchoredPosition = startPos;
         Managers.Game.RetryPanel.CloseResetButton();
-        Managers.Game.Player.SetstateStop();
+        Managers.Game.SetStateEvent();
+        //Managers.Game.Player.SetstateStop();
         var seq = DOTween.Sequence();
         seq.AppendInterval(startDelay);
         seq.AppendCallback(() =>
@@ -120,13 +122,18 @@ public class ServerroomTutorialController : GuIdBehaviour
     {
         isPlaying = true;
         nextButton.onClick.RemoveAllListeners();
+        prevButton.onClick.RemoveAllListeners();
+        if (curIndex > 0) 
+        {
+            prevButton.onClick.AddListener(() => UpdatePage(-1));
+        }
         if (curIndex >= tutorialData.Count - 1) 
         {
             nextButton.onClick.AddListener(Close);
         }
         else 
         {
-            nextButton.onClick.AddListener(UpdateNextPage);
+            nextButton.onClick.AddListener(()=>UpdatePage(+1));
         }
         var seq = DOTween.Sequence();
         seq.Append(innerGroup.DOFade(0, changeAnimTime));
@@ -154,6 +161,10 @@ public class ServerroomTutorialController : GuIdBehaviour
             {
                 pageMarks[curIndex - 1].color = Color.white;
             }
+            if(curIndex+1 < pageMarks.Count) 
+            {
+                pageMarks[curIndex + 1].color = Color.white;
+            }
             pageMarks[curIndex].color = pageMarkColor;
         });
         seq.Append(innerGroup.DOFade(1, changeAnimTime));
@@ -161,7 +172,7 @@ public class ServerroomTutorialController : GuIdBehaviour
         seq.OnComplete(() =>
         {
             isPlaying = false;
-          
+            prevButton.interactable = true;
             nextButton.interactable = true;
         });
         seq.Play();
@@ -174,7 +185,7 @@ public class ServerroomTutorialController : GuIdBehaviour
         }
         return descriptionImage.DOFade(1, VIDEO_VISIBLE_TIME);
     }
-    private void UpdateNextPage()
+    private void UpdatePage(int amount)
     {
         if (isPlaying) 
         {
@@ -182,8 +193,9 @@ public class ServerroomTutorialController : GuIdBehaviour
         }
         Managers.Sound.PlaySFX(Define.SOUND.AssignmentKeyword);
         isPlaying = true;
+        prevButton.interactable = false;
         nextButton.interactable = false;
-        ++curIndex;
+        curIndex+= amount;
         SetTutorial();
     }
     public void Close() 
@@ -194,6 +206,7 @@ public class ServerroomTutorialController : GuIdBehaviour
         }
         Managers.Sound.PlaySFX(Define.SOUND.AssignmentKeyword);
         isPlaying = true;
+        prevButton.interactable = false;
         nextButton.interactable = false;
         var seq = DOTween.Sequence();
         seq.Append(rootGroup.DOFade(0, openAnimTime));
@@ -201,7 +214,7 @@ public class ServerroomTutorialController : GuIdBehaviour
         seq.OnComplete(() =>
         {
             Managers.Game.RetryPanel.OpenResetButton();
-            Managers.Game.Player.SetStateIdle();
+            Managers.Game.SetStateNormal();
             rootGroup.interactable = false;
             onComplete?.Invoke();
         });

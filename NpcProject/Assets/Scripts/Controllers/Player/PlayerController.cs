@@ -128,6 +128,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
         Managers.Keyword.PlayerKeywordPanel.transform.SetParent(onPauseUi);
         purposePanel.transform.SetParent(onPauseUi);
         Managers.Game.RetryPanel.transform.SetParent(onPauseUi);
+        Managers.Game.RetryPanel.PasueButtonOpen();
 
     }
     void Update()
