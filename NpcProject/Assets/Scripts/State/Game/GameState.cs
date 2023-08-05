@@ -99,3 +99,27 @@ public class GameOverState : Singleton<GameOverState>, IState<GameManager>
     }
 }
 
+public class GameTutorialState : Singleton<GameTutorialState>, IState<GameManager>
+{
+    public void Init()
+    {
+    }
+    public void Enter(GameManager stateController)
+    {
+        Managers.Game.Player.SetstateStop();
+       
+    }
+
+    public void Exit(GameManager stateController)
+    {
+        Managers.Game.Player.SetStateIdle();
+    }
+
+    public void FixedUpdateActive(GameManager stateController)
+    {
+    }
+
+    public void UpdateActive(GameManager stateController)
+    {
+    }
+}

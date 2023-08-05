@@ -15,6 +15,9 @@ public class ServerroomTutorialData
     public Sprite descriptionImage;
     public VideoClip videoClip;
     public Sprite keywordImage;
+    [Header("제목")]
+    public string title;
+    [Header("설명")]
     [TextArea(2,10)]
     public string descriptionText;
 }
@@ -46,6 +49,8 @@ public class ServerroomTutorialController : GuIdBehaviour
     [SerializeField]
     private Image descriptionImage;
 
+    [SerializeField]
+    private TextMeshProUGUI titleText;
     [SerializeField]
     private TextMeshProUGUI descriptionText;
 
@@ -104,7 +109,7 @@ public class ServerroomTutorialController : GuIdBehaviour
         rootGroup.interactable = true;
         clickNotice.anchoredPosition = startPos;
         Managers.Game.RetryPanel.CloseResetButton();
-        Managers.Game.SetStateEvent();
+        Managers.Game.SetStateTutorial();
         //Managers.Game.Player.SetstateStop();
         var seq = DOTween.Sequence();
         seq.AppendInterval(startDelay);
@@ -152,9 +157,10 @@ public class ServerroomTutorialController : GuIdBehaviour
                 descriptionImage.sprite = tutorialData[curIndex].descriptionImage;
                 videoPlayer.Stop();
             }
-            
 
-           // videoPlayer.Play();
+            
+            // videoPlayer.Play();
+            titleText.text = tutorialData[curIndex].title;
             descriptionText.text = tutorialData[curIndex].descriptionText;
             keywordImage.sprite = tutorialData[curIndex].keywordImage;
             if (curIndex > 0)
