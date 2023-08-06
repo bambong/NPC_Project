@@ -22,7 +22,7 @@ public class ServerroomTutorialData
 public class ServerroomTutorialController : GuIdBehaviour
 {
     [SerializeField]
-    private bool isEventOnce;
+    protected bool isEventOnce;
 
     [SerializeField]
     private float startDelay;
@@ -30,10 +30,10 @@ public class ServerroomTutorialController : GuIdBehaviour
     [SerializeField]
     private VideoPlayer videoPlayer;
     [SerializeField]
-    private CanvasGroup rootGroup;
+    protected CanvasGroup rootGroup;
 
     [SerializeField]
-    private CanvasGroup innerGroup;
+    protected CanvasGroup innerGroup;
 
     [SerializeField]
     private Button nextButton;
@@ -42,18 +42,18 @@ public class ServerroomTutorialController : GuIdBehaviour
     [SerializeField]
     private Image keywordImage;
     [SerializeField]
-    private RawImage renderImage;
+    protected RawImage renderImage;
     [SerializeField]
-    private Image descriptionImage;
+    protected Image descriptionImage;
 
     [SerializeField]
     private TextMeshProUGUI descriptionText;
 
     [SerializeField]
-    private List<ServerroomTutorialData> tutorialData;
+    protected List<ServerroomTutorialData> tutorialData;
 
     [SerializeField]
-    private List<Image> pageMarks;
+    protected List<Image> pageMarks;
   
     [SerializeField]
     private Color pageMarkColor;
@@ -70,10 +70,10 @@ public class ServerroomTutorialController : GuIdBehaviour
     private UnityEvent onComplete;
 
     [SerializeField]
-    private RectTransform clickNotice;
+    protected RectTransform clickNotice;
 
     [SerializeField]
-    private Vector3 startPos;
+    protected Vector3 startPos;
     [SerializeField]
     private Vector3 desirePos;
 
