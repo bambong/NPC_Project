@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class ResolutionSettingPanelController : ButtonBasePanelController
 {
+    [Header("Controllers")]
     [SerializeField]
     private StartPausePanelController startPausePanelController;
 
+    [Header("Dropdowns")]
     [SerializeField]
     private TMP_Dropdown resolutionDropdown;
     [SerializeField]
@@ -17,16 +19,35 @@ public class ResolutionSettingPanelController : ButtonBasePanelController
     [SerializeField]
     private vSyncToggleButtonController vSyncToggle;
 
+    [Header("ApplyTextUI")]
+    [SerializeField]
+    private GameObject textGo;
+    [SerializeField]
+    private TMP_Text applyText;
+    [SerializeField]
+    private Color applyColor;
+
     private List<Resolution> resolutions = new List<Resolution>();
     private List<FullScreenMode> screenmodes = new List<FullScreenMode>();
     private List<int> rates = new List<int>();
     private int resolutionNum;
     private int screenmodeNum;
     private int rateNum;
+    private Sequence seq;
+    private bool isPlay = false;
 
     private void Start()
-    {     
+    {
+        textGo.transform.localScale = Vector3.zero;
         Init();
+    }
+
+    private void Awake()
+    {
+        isPlay = false;
+        seq = null;
+
+        //현재 적용된 값들 드롭다운에 표시
     }
 
     public override void Init()
@@ -125,6 +146,40 @@ public class ResolutionSettingPanelController : ButtonBasePanelController
     {
         Screen.SetResolution(resolutions[resolutionNum].width, resolutions[resolutionNum].height, screenmodes[screenmodeNum]);
         SetFrameRate(rates[rateNum]);
+
+        if(isPlay)
+        {
+            return;
+        }
+        isPlay = true;
+        applyText.color = applyColor;
+
+        ApplyingCoroutine();
+    }
+
+    public void ApplyingCoroutine()
+    {
+        if (seq != null)
+        {
+            seq.Kill();
+        }
+        textGo.SetActive(true);
+        textGo.transform.localScale = new Vector3(1f, 1f, 1f);
+        Vector3 targetScale = new Vector3(1.1f, 1.1f, 1.1f);
+        Transform warningTransfom = textGo.gameObject.transform;
+        seq = DOTween.Sequence().SetUpdate(true);
+        seq.Append(warningTransfom.DOScale(targetScale, 1f).SetEase(Ease.OutElastic));
+        seq.Join(warningTransfom.DOShakePosition(1f));
+        seq.AppendInterval(1.5f);
+        seq.AppendCallback(
+            () =>
+            {
+                isPlay = false;
+                textGo.gameObject.SetActive(false);
+                seq = null;
+            }
+        );
+        seq.Play();
     }
 
     public void PlayButtonSound() => Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);

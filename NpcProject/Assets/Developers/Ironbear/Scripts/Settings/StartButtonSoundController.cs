@@ -6,13 +6,13 @@ using UnityEngine.EventSystems;
 public class StartButtonSoundController : MonoBehaviour 
 {
     [SerializeField]
-    private StartPausePanelController startPausePanelController;
+    private StartPausePanelController PausePanelController;
 
     private Coroutine pointerCo;
  
     public void StartPointerUpCheck() 
     {
-        if (startPausePanelController.IsTransition) 
+        if (PausePanelController.IsTransition) 
         {
             return;
         }

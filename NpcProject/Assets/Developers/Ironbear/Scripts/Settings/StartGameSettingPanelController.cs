@@ -6,7 +6,7 @@ public class StartGameSettingPanelController : BasePanelController
     [SerializeField]
     private CanvasGroup innerCanvasGroup;
     [SerializeField]
-    private SoundSettingPanelController soundSettingPanel;
+    private StartSoundSettingPanelController soundSettingPanel;
     [SerializeField]
     private InputSettingPanelController inputSettingPanel;
     [SerializeField]
