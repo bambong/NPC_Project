@@ -13,6 +13,8 @@ public class TextPanelController : UI_Base
     private TMP_Text tmpText;
     [SerializeField]
     private Define.Scene transitionSceneName;
+    [SerializeField]
+    private TMP_Text continueTxt;
 
     private float fadeDuration = 1f;
     private float typeSpeed = 0.04f;    
@@ -22,6 +24,7 @@ public class TextPanelController : UI_Base
 
     private float soundSpeed = 0.1f;
     private bool textplayed;
+    private bool isTextComplete = false;
 
     public override void Init()
     {
@@ -32,6 +35,7 @@ public class TextPanelController : UI_Base
     {
         canvas = GetComponent<CanvasGroup>();
         seq = DOTween.Sequence();
+        continueTxt.gameObject.SetActive(false);
         TypeAnimation();
     }
 
@@ -61,18 +65,24 @@ public class TextPanelController : UI_Base
 
         seq.OnComplete(() =>
         {
-            DOVirtual.DelayedCall(0.5f, () =>
-             {
-                 canvas.DOFade(0f, fadeDuration).SetEase(Ease.OutQuad).OnComplete(() =>
-                 {
-                     Managers.Scene.LoadScene(transitionSceneName.ToString());
-                 });
-                 
-             });           
+            isTextComplete = true;
+            continueTxt.gameObject.SetActive(true);
         });
 
         seq.Play();
 
+    }
+
+    private void Update()
+    {
+        if(isTextComplete && Input.anyKeyDown)
+        {
+            isTextComplete = false;
+            canvas.DOFade(0f, fadeDuration).SetEase(Ease.OutQuad).OnComplete(() =>
+            {
+                Managers.Scene.LoadScene(transitionSceneName.ToString());
+            });
+        }
     }
 
     public void TextSound(float time)
