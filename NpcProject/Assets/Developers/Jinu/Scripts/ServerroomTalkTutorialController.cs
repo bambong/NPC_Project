@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ServerroomTalkTutorialController : ServerroomTutorialController
 {
     [SerializeField]
     private int talkId;
+    [SerializeField]
+    private UnityEvent secondEvent;
 
     protected override void Start()
     {
@@ -23,9 +26,12 @@ public class ServerroomTalkTutorialController : ServerroomTutorialController
         {
             return;
         }
+
         var talk = Managers.Talk.GetTalkEvent(talkId);
         Managers.Talk.PlayTalk(talk);
+
         talk.OnComplete(() => Open());
         talk.OnComplete(() => Managers.Data.ClearEvent(guId));
+
     }
 }

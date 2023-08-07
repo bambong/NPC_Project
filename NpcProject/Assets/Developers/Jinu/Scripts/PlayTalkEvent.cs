@@ -1,12 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class PlayTalkEvent : MonoBehaviour
+public class PlayTalkEvent : GuIdBehaviour
 {
-    public void PlayDialogue(int id)
+    [SerializeField]
+    private int[] talkId;
+    [SerializeField]
+    private UnityEvent clearEvent;
+
+    private int count = 0;
+
+    public void PlayDialogue()
     {
-        var talk = Managers.Talk.GetTalkEvent(id);
+        if (Managers.Data.IsClearEvent(guId))
+        {
+            return;
+        }
+
+        var talk = Managers.Talk.GetTalkEvent(talkId[count]);
         Managers.Talk.PlayTalk(talk);
+
+        if (count == talkId.Length - 1)
+        {
+            talk.OnComplete(() => clearEvent?.Invoke());
+            talk.OnComplete(() => Managers.Data.ClearEvent(guId));
+        }
+        else
+        {
+            talk.OnComplete(() => count++);
+            talk.OnComplete(() => PlayDialogue());
+        }
     }
 }
