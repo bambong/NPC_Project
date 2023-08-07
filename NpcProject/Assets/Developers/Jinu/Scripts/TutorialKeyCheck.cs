@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class TutorialKeyCheck : MonoBehaviour
+public class TutorialKeyCheck : GuIdBehaviour
 {
     [SerializeField]
     private KEY_TYPE key;
     [SerializeField]
     private UnityEvent talkEvent;
 
-    public void Start()
+    protected override void Start()
     {
-        if(Managers.Data.Progress == 5)
+        if(Managers.Data.IsClearEvent(guId))
         {
             CheckKey();
         }
@@ -29,6 +29,7 @@ public class TutorialKeyCheck : MonoBehaviour
         {
             if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(key)))
             {
+                Managers.Data.ClearEvent(guId);
                 talkEvent?.Invoke();
                 yield break;
             }
