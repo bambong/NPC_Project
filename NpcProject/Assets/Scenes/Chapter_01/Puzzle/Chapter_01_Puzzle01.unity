@@ -123,6 +123,66 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &85134371
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 85134373}
+  - component: {fileID: 85134372}
+  m_Layer: 0
+  m_Name: CheckDebugMod
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &85134372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 85134371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd37b8268792540deb56987464dff576, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: 1
+  talkEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 258183635}
+        m_TargetAssemblyTypeName: PlayTalkEvent, Assembly-CSharp
+        m_MethodName: PlayDialogue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!4 &85134373
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 85134371}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &117869438
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,7 +267,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &141596911
 MonoBehaviour:
@@ -252,7 +312,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4669338842192853953, guid: 0d9326a3edaefd542810de2e2196d66f, type: 3}
       propertyPath: m_RootOrder
-      value: 15
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 4669338842192853953, guid: 0d9326a3edaefd542810de2e2196d66f, type: 3}
       propertyPath: m_LocalScale.x
@@ -321,6 +381,55 @@ Camera:
   m_CorrespondingSourceObject: {fileID: 250774299, guid: 38038d513bf28944fa482e10df267d83, type: 3}
   m_PrefabInstance: {fileID: 4362839248511363923}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &258183633
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 258183634}
+  - component: {fileID: 258183635}
+  m_Layer: 0
+  m_Name: DebugModeTalk
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &258183634
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258183633}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2112435820}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &258183635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258183633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9e20210b0981046922e53959349ebc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guId: 5975cbfa-ac42-4878-9f8d-c7ee68ae25ee
+  talkId: 18270000
+  clearEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &286656826
 GameObject:
   m_ObjectHideFlags: 0
@@ -1161,7 +1270,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1246006197
 GameObject:
@@ -4318,7 +4427,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4669338842192853953, guid: 0d9326a3edaefd542810de2e2196d66f, type: 3}
       propertyPath: m_RootOrder
-      value: 16
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 4669338842192853953, guid: 0d9326a3edaefd542810de2e2196d66f, type: 3}
       propertyPath: m_LocalScale.x
@@ -5183,18 +5292,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
+      propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2089485276}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
+      propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 85134372}
+    - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
+      propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
@@ -5202,8 +5323,16 @@ PrefabInstance:
       value: UpdateProgress
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
+      propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: CheckKey
+      objectReference: {fileID: 0}
+    - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: ProgressUpdateController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
+      propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: TutorialKeyCheck, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
@@ -5211,6 +5340,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
+      propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186729711012, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
