@@ -196,6 +196,7 @@ public class TalkManager
         {
             if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.EXIT_KEY)))
             {
+                talkPanel.PanelClear();
                 curTalkEvent.MoveEnd();
                 break;
             }
