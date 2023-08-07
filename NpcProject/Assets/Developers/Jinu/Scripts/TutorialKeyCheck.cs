@@ -10,6 +10,14 @@ public class TutorialKeyCheck : MonoBehaviour
     [SerializeField]
     private UnityEvent talkEvent;
 
+    public void Start()
+    {
+        if(Managers.Data.Progress == 5)
+        {
+            CheckKey();
+        }
+    }
+
     public void CheckKey()
     {
         StartCoroutine(Check(key));
