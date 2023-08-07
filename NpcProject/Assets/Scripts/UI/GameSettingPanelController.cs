@@ -27,11 +27,16 @@ public class GameSettingPanelController : BasePanelController
     protected override void OnOpen()
     {
         base.OnOpen();
+        //soundSettingPanel.Close();
+        //soundSettingPanel.SetSelected(false);
+        //inputSettingPanel.Open();
+        //inputSettingPanel.SetSelected(true);
+        inputSettingPanel.CopyCurrentToTemp();
+        inputSettingPanel.UpdateButtonText();
         soundSettingPanel.Open();
         soundSettingPanel.SetSelected(true);
         inputSettingPanel.Close();
         inputSettingPanel.SetSelected(false);
-
         currentPanel = soundSettingPanel;
     }
     public void OnSoundSettingButtonActive() 

@@ -11,7 +11,7 @@ public class KeyUIController : MonoBehaviour
     {
         for(int i=0; i< btnTxt.Length; i++)
         {
-            btnTxt[i].text = KeySetting.defaultKeys[(KEY_TYPE)i].ToString();
+            btnTxt[i].text = KeySetting.Instance.defaultKeys[(KEY_TYPE)i].ToString();
         }
     }
 
@@ -19,7 +19,7 @@ public class KeyUIController : MonoBehaviour
     {
         for (int i = 0; i < btnTxt.Length; i++)
         {
-            btnTxt[i].text = KeySetting.tempKeys[(KEY_TYPE)i].ToString();
+            btnTxt[i].text = KeySetting.Instance.tempKeys[(KEY_TYPE)i].ToString();
         }
     }
 }

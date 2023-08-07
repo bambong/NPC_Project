@@ -15,13 +15,13 @@ public enum KEY_TYPE
     KEY_COUNT
 }
 
-public static class KeySetting 
+public class KeySetting : Singleton<KeySetting>,IInit
 {
-    public static Dictionary<KEY_TYPE, KeyCode> defaultKeys;
-    public static Dictionary<KEY_TYPE, KeyCode> tempKeys;
-    public static Dictionary<KEY_TYPE, KeyCode> currentKeys;
+    public Dictionary<KEY_TYPE, KeyCode> defaultKeys;
+    public Dictionary<KEY_TYPE, KeyCode> tempKeys;
+    public Dictionary<KEY_TYPE, KeyCode> currentKeys;
 
-    static KeySetting()
+    public KeySetting()
     {
         defaultKeys = new Dictionary<KEY_TYPE, KeyCode>()
         {
@@ -40,24 +40,29 @@ public static class KeySetting
         tempKeys = new Dictionary<KEY_TYPE, KeyCode>(defaultKeys); //empty -> 오류떠서 default로 채우기
     }
 
-    public static void ApplyTempKeys() //apply button
+    public void ApplyTempKeys() //apply button
     {
         currentKeys = new Dictionary<KEY_TYPE, KeyCode>(tempKeys);
         tempKeys = new Dictionary<KEY_TYPE, KeyCode>(currentKeys);
     }
 
 
-    public static void SetAllKeysToDefault() //init button
+    public  void SetAllKeysToDefault() //init button
     {
         tempKeys = new Dictionary<KEY_TYPE, KeyCode>(defaultKeys);
         currentKeys = new Dictionary<KEY_TYPE, KeyCode>(defaultKeys);
     }
 
-    public static void CopyCurrentToTemp() //메뉴 버튼에 할당
+    public  void CopyCurrentToTemp() //메뉴 버튼에 할당
     {
         tempKeys = new Dictionary<KEY_TYPE, KeyCode>(currentKeys);
     }
-    public static KeyCode GetKeyCode(KEY_TYPE type) => currentKeys[type];
+    public KeyCode GetKeyCode(KEY_TYPE type) => currentKeys[type];
+
+    public void Init()
+    {
+       
+    }
 }
 
 
@@ -90,24 +95,24 @@ public class KeyMappingController : MonoBehaviour
 
     public void CopyCurrentToTemp()
     {
-        KeySetting.CopyCurrentToTemp();
+        KeySetting.Instance.CopyCurrentToTemp();
     }
 
     public void SetAllKeysToDefault() //init
     {
-        KeySetting.SetAllKeysToDefault();
+        KeySetting.Instance.SetAllKeysToDefault();
     }
 
     #region
     public void StoreTempKeyMap()
     {
-        KeySetting.tempKeys = new Dictionary<KEY_TYPE, KeyCode>(KeySetting.defaultKeys);
+        KeySetting.Instance.tempKeys = new Dictionary<KEY_TYPE, KeyCode>(KeySetting.Instance.defaultKeys);
     }
 
     public void ApplyTempKeyMap()
     {
         Debug.Log("TempKeys contents:");
-        foreach (var kvp in KeySetting.tempKeys)
+        foreach (var kvp in KeySetting.Instance.tempKeys)
         {
             Debug.Log(kvp.Key + ": " + kvp.Value);
         }
@@ -120,7 +125,7 @@ public class KeyMappingController : MonoBehaviour
         bool hasDuplicated = false;
         int index = 0;
 
-        foreach(var kvp in KeySetting.tempKeys)
+        foreach(var kvp in KeySetting.Instance.tempKeys)
         {
             if (index < (int)KEY_TYPE.KEY_COUNT)
             {
@@ -140,15 +145,15 @@ public class KeyMappingController : MonoBehaviour
 
         if(!hasDuplicated)
         {
-            KeySetting.ApplyTempKeys();
+            KeySetting.Instance.ApplyTempKeys();
         }
     }
 
     public void CancelTempKeyMap()
     {
-        if (KeySetting.tempKeys != KeySetting.currentKeys) //저장 안했다
+        if (KeySetting.Instance.tempKeys != KeySetting.Instance.currentKeys) //저장 안했다
         {
-            KeySetting.tempKeys = new Dictionary<KEY_TYPE, KeyCode>(KeySetting.currentKeys);
+            KeySetting.Instance.tempKeys = new Dictionary<KEY_TYPE, KeyCode>(KeySetting.Instance.currentKeys);
         }
     }
     #endregion
@@ -160,26 +165,26 @@ public class KeyMappingController : MonoBehaviour
 
         if (keyEvent.isKey)
         {
-            KeySetting.tempKeys[(KEY_TYPE)key] = keyEvent.keyCode;
+            KeySetting.Instance.tempKeys[(KEY_TYPE)key] = keyEvent.keyCode;
             key = -1;
         }
     }
 
     public float GetHorizontal()
     {
-        var horizontalValue = Input.GetKey(KeySetting.GetKeyCode(KEY_TYPE.RIGHT_KEY)) ? 1f : (Input.GetKey(KeySetting.GetKeyCode(KEY_TYPE.LEFT_KEY)) ? -1f : 0f);
+        var horizontalValue = Input.GetKey(KeySetting.Instance.GetKeyCode(KEY_TYPE.RIGHT_KEY)) ? 1f : (Input.GetKey(KeySetting.Instance.GetKeyCode(KEY_TYPE.LEFT_KEY)) ? -1f : 0f);
         return horizontalValue;
     }
 
     public float GetVertical()
     {
-        var verticalValue = Input.GetKey(KeySetting.GetKeyCode(KEY_TYPE.UP_KEY)) ? 1f : (Input.GetKey(KeySetting.GetKeyCode(KEY_TYPE.DOWN_KEY)) ? -1f : 0f);
+        var verticalValue = Input.GetKey(KeySetting.Instance.GetKeyCode(KEY_TYPE.UP_KEY)) ? 1f : (Input.GetKey(KeySetting.Instance.GetKeyCode(KEY_TYPE.DOWN_KEY)) ? -1f : 0f);
         return verticalValue;
     }
 
     public KeyCode ReturnKey(KEY_TYPE keyType)
     {
-        return KeySetting.currentKeys[keyType];
+        return KeySetting.Instance.currentKeys[keyType];
     }
 
     public void ChangeKey(int num)

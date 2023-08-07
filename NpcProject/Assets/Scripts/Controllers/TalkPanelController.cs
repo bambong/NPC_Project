@@ -466,13 +466,13 @@ public class TalkPanelController : UI_Base
             }
             if(item == "debugmode")
             {
-                string text = "[" + KeySetting.defaultKeys[KEY_TYPE.DEBUGMOD_KEY].ToString() + "]";
+                string text = "[" + KeySetting.Instance.currentKeys[KEY_TYPE.DEBUGMOD_KEY].ToString() + "]";
                 textDialogue += text;
                 continue;
             }
             if(item == "runkey")
             {
-                string text = "[" + KeySetting.defaultKeys[KEY_TYPE.RUN_KEY].ToString() + "]";
+                string text = "[" + KeySetting.Instance.currentKeys[KEY_TYPE.RUN_KEY].ToString() + "]";
                 textDialogue += text;
                 continue;
             }

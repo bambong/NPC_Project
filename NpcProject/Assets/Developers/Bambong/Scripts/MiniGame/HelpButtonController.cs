@@ -24,19 +24,23 @@ public class HelpButtonController : MonoBehaviour
     [SerializeField]
     private Button myButton;
 
+    [SerializeField]
+    private DataPuzzleTutorialController tutorialController;
+
     private bool isOpen = false;
 
     public bool IsOpen { get => isOpen;  }
 
-    public void Init(Action action)
+    public void Start()
     {
         isOpen = true;
         rootGroup.alpha = 1;
         openGroup.alpha = 1;
         closeGroup.alpha = 0;
         buttonImage.color = Color.white;
-        myButton.onClick.RemoveAllListeners();
-        myButton.onClick.AddListener(() => { action?.Invoke(); });
+        myButton.onClick.AddListener(() => {
+            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
+            tutorialController.Open(); });
     }
     public void SetPlayMod(bool isOn)
     {
