@@ -68,6 +68,7 @@ public class GameManager
     #region SetState
     public void SetStateNormal() => gameStateController.ChangeState(GameNormalState.Instance);
     public void SetStateEvent() => gameStateController.ChangeState(GameEventState.Instance);
+    public void SetStateTutorial() => gameStateController.ChangeState(GameTutorialState.Instance);
     public void SetStatePause()
     {
         if (Managers.Scene.IsTransitioning)

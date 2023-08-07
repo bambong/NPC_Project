@@ -99,11 +99,13 @@ public class PlayerStop : Singleton<PlayerStop>, IState<PlayerController>
     }
     public void Enter(PlayerController stateController)
     {
-        stateController.ClearMoveAnim();        
+        stateController.ClearMoveAnim();
+        stateController.SetActivePauseUi(false);
     }
 
     public void Exit(PlayerController stateController)
     {
+        stateController.SetActivePauseUi(true);
     }
 
     public void FixedUpdateActive(PlayerController stateController)
