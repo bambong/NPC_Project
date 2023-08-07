@@ -96,9 +96,9 @@ public class ServerroomTutorialController : GuIdBehaviour
         innerGroup.alpha = 0;
         renderImage.color = new Color(1, 1, 1, 0);
         descriptionImage.color = new Color(1, 1, 1, 0);
-
         Open();
     }
+  
 
     public void Open()
     {
@@ -223,6 +223,7 @@ public class ServerroomTutorialController : GuIdBehaviour
             Managers.Game.SetStateNormal();
             rootGroup.interactable = false;
             onComplete?.Invoke();
+            gameObject.SetActive(false);
         });
         seq.Play();
     }

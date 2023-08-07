@@ -72,6 +72,11 @@ public class DataPuzzleTutorialController : GuIdBehaviour
         rootGroup.alpha = 0;
         innerGroup.alpha = 0;
         helpButton.Init(Open);
+        if (!Managers.Data.IsClearEvent(GuId)) 
+        {
+            Open();
+            onComplete.AddListener(() => Managers.Data.ClearEvent(GuId));
+        }
     }
 
 
