@@ -40,6 +40,7 @@ public class ResolutionSettingPanelController : ButtonBasePanelController
     {
         textGo.transform.localScale = Vector3.zero;
         Init();
+        SetDefaultValues();
     }
 
     private void Awake()
@@ -48,6 +49,9 @@ public class ResolutionSettingPanelController : ButtonBasePanelController
         seq = null;
 
         //현재 적용된 값들 드롭다운에 표시
+        resolutionDropdown.value = resolutionNum;
+        screenmodeDropdown.value = screenmodeNum;
+        framerateDropdown.value = rateNum;
     }
 
     public override void Init()
@@ -110,9 +114,47 @@ public class ResolutionSettingPanelController : ButtonBasePanelController
             optionNum++;
         }
         framerateDropdown.RefreshShownValue();
+    }
 
-        //int curFramerate = PlayerPrefs.GetInt("FrameRate", 60);
-        //SetFrameRate(curFramerate);
+    public void SetDefaultValues()
+    {
+        int defaultResolutionIndex = 0;
+        for (int i = 0; i < resolutions.Count; i++)
+        {
+            if (resolutions[i].width == 1920 && resolutions[i].height == 1080)
+            {
+                defaultResolutionIndex = i;
+                break;
+            }
+        }
+
+        int defaultScreenmodeIndex = 0;
+        for (int i = 0; i < screenmodes.Count; i++)
+        {
+            if (screenmodes[i] == FullScreenMode.FullScreenWindow)
+            {
+                defaultScreenmodeIndex = i;
+                break;
+            }
+        }
+
+        int defaultRateIndex = 0;
+        for (int i = 0; i < rates.Count; i++)
+        {
+            if (rates[i] == 144)
+            {
+                defaultRateIndex = i;
+                break;
+            }
+        }
+
+        // 드롭다운 메뉴에 기본 값을 설정하고 변수에 저장
+        resolutionDropdown.value = defaultResolutionIndex;
+        screenmodeDropdown.value = defaultScreenmodeIndex;
+        framerateDropdown.value = defaultRateIndex;
+        resolutionNum = defaultResolutionIndex;
+        screenmodeNum = defaultScreenmodeIndex;
+        rateNum = defaultRateIndex;
     }
 
     private void SetFrameRate(int framerate)
@@ -146,6 +188,10 @@ public class ResolutionSettingPanelController : ButtonBasePanelController
     {
         Screen.SetResolution(resolutions[resolutionNum].width, resolutions[resolutionNum].height, screenmodes[screenmodeNum]);
         SetFrameRate(rates[rateNum]);
+
+        resolutionNum = resolutionDropdown.value;
+        screenmodeNum = screenmodeDropdown.value;
+        rateNum = framerateDropdown.value;
 
         if(isPlay)
         {
