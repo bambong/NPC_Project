@@ -21,9 +21,9 @@ public class StartPausePanelController : BasePanelController
 
     public bool IsTransition { get => isTransition || gameSettingPanel.IsTransition; }
 
+
     public override void Init()
     {
-        DontDestroyOnLoad(panel.gameObject);
         panel.gameObject.SetActive(false);
         gameSettingPanel.Init();
     }
