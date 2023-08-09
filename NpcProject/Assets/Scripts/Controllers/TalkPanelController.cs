@@ -237,7 +237,6 @@ public class TalkPanelController : UI_Base
 
         if (isChoice)
         {
-            spekerName.text = "";
             textDialogue = TextExtraction(textDialogue);
         }
 
