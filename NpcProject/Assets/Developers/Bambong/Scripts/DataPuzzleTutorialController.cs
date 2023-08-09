@@ -27,7 +27,8 @@ public class DataPuzzleTutorialController : BaseTutorialController
         }
         else
         {
-            Close();
+            rootGroup.interactable = false;
+            gameObject.SetActive(false);
         }
 
     }
@@ -85,7 +86,7 @@ public class DataPuzzleTutorialController : BaseTutorialController
             renderImage.color = new Color(1, 1, 1, 0);
             descriptionImage.color = new Color(1, 1, 1, 0);
             pageMarks[curIndex].color = Color.white;
-            curIndex = 0;
+            curIndex = 0;    
             gameObject.SetActive(false);
         });
         seq.Play();
