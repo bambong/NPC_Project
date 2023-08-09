@@ -44,6 +44,4 @@ public class StartButtonSoundController : MonoBehaviour
             pointerCo = null;
         }
     }
-
-
 }

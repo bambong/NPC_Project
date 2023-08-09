@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEditor;
 using TMPro;
 
 public class CreateInstructions : MonoBehaviour
@@ -9,15 +10,17 @@ public class CreateInstructions : MonoBehaviour
     private GameObject prefab;
     [SerializeField]
     private Transform[] spawnParent;
+    [SerializeField]
+    private KEY_TYPE[] keyTypes;
 
-    private string[] keyStrings = new string[6];
+    private string[] keyStrings;
     private KeySetting keySetting;
 
     private void Awake()
     {
         keySetting = KeySetting.Instance;
 
-        keyStrings = new string[6];
+        keyStrings = new string[keyTypes.Length];
 
         keyStrings = GetInstructionStrings();
 
@@ -34,19 +37,10 @@ public class CreateInstructions : MonoBehaviour
 
     private string[] GetInstructionStrings()
     {
-        KeyCode upKey = keySetting.currentKeys[KEY_TYPE.UP_KEY];
-        KeyCode leftKey = keySetting.currentKeys[KEY_TYPE.LEFT_KEY];
-        KeyCode downKey = keySetting.currentKeys[KEY_TYPE.DOWN_KEY];
-        KeyCode rightKey = keySetting.currentKeys[KEY_TYPE.RIGHT_KEY];
-        KeyCode interactionKey = keySetting.currentKeys[KEY_TYPE.INTERACTION_KEY];
-        KeyCode runKey = keySetting.currentKeys[KEY_TYPE.RUN_KEY];
-
-        keyStrings[0] = upKey.ToString();
-        keyStrings[1] = leftKey.ToString();
-        keyStrings[2] = downKey.ToString();
-        keyStrings[3] = rightKey.ToString();
-        keyStrings[4] = interactionKey.ToString();
-        keyStrings[5] = runKey.ToString();
+        for (int i = 0; i < keyTypes.Length; i++)
+        {
+            keyStrings[i] = keySetting.currentKeys[keyTypes[i]].ToString();
+        }
 
         return keyStrings;
     }

@@ -48,12 +48,6 @@ public class StartSoundSettingPanelController : ButtonBasePanelController
         sfxSlider.onValueChanged.AddListener(OnChangeSfxVolume);
     }
   
-    //public void OnCloseButtonActive() 
-    //{
-    //    Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
-    //    startPausePanelController.ChangeToMainMenuPanel();
-    //}
-
     public void OnChangeBgmVolume(float value) 
     {
         Managers.Data.SetBgmVolumeData(value);
