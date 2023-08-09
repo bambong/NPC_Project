@@ -24,7 +24,7 @@ interface ISpawnAble
 public class SpawnController : MonoBehaviour
 {
     [SerializeField]
-    private string targetItemName = "EnergeItem";
+    private string targetItemName = "KeywordGaugeItem";
 
     [SerializeField]
     private List<Transform> spawnSpots;
