@@ -66,6 +66,7 @@ public class TalkPanelController : UI_Base
 
     private int buttonCount;
     private string choiceText;
+    private string preDialogueText;
 
     private Renderer leftRenderer;
     private Renderer rightRenderer;
@@ -103,7 +104,7 @@ public class TalkPanelController : UI_Base
             }
             leftRights[i].DOFade(1, 0);
         }
-        spekerName.text = $"-{dialogue.speaker.charName}-";
+        spekerName.text = $"{dialogue.speaker.charName}";
         choiceButton.Inactive();
         dialogueText.text = "";
     }
@@ -133,7 +134,7 @@ public class TalkPanelController : UI_Base
             leftRights[i].DOFade(1, 0);
         }
 
-        spekerName.text = $"-{dialogue.speaker.charName}-";
+        spekerName.text = $"{dialogue.speaker.charName}";
         skipCoroutine = SkipDelayTime();
         StartCoroutine(skipCoroutine);
         StartCoroutine(PlayTextAnimation());
@@ -174,7 +175,7 @@ public class TalkPanelController : UI_Base
             rightRenderer.material = rightmaterial;
         }
 
-        spekerName.text = $"-{dialogue.speaker.charName}-";
+        spekerName.text = $"{dialogue.speaker.charName}";
         choiceButton.Inactive();
         dialogueText.text = "";
     }
@@ -207,7 +208,7 @@ public class TalkPanelController : UI_Base
             rightRenderer.material = rightmaterial;
         }
 
-        spekerName.text = $"-{dialogue.speaker.charName}-";
+        spekerName.text = $"{dialogue.speaker.charName}";
         StartCoroutine(SkipDelayTime());
         StartCoroutine(PlayTextAnimation());
     }
@@ -238,6 +239,10 @@ public class TalkPanelController : UI_Base
         if (isChoice)
         {
             textDialogue = TextExtraction(textDialogue);
+            dialogueText.text = preDialogueText;
+            choiceButton.Active(buttonCount);
+            StartCoroutine(ChoiceSelect());
+            yield break;
         }
 
         int textSize = ClcTextLength(textDialogue, textDialogue.Length);
@@ -588,6 +593,11 @@ public class TalkPanelController : UI_Base
         random = new System.Random();
         string charcters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         return "<color=black>" + new string(Enumerable.Repeat(charcters, length).Select(s => s[random.Next(s.Length)]).ToArray()) + "</color>";
+    }
+
+    public void SaveText()
+    {
+        preDialogueText = dialogueText.text;
     }
     #endregion
 
