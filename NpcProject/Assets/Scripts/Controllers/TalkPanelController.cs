@@ -237,6 +237,7 @@ public class TalkPanelController : UI_Base
 
         if (isChoice)
         {
+            spekerName.text = "";
             textDialogue = TextExtraction(textDialogue);
         }
 
@@ -357,10 +358,6 @@ public class TalkPanelController : UI_Base
     public void SetChoiceTextB()
     {
         choiceText = choiceButton.choiceTextB.text;
-    }
-    public void SetChoiceTextC()
-    {
-        choiceText = choiceButton.choiceTextC.text;
     }
 
     public void PanelClear()
@@ -560,12 +557,12 @@ public class TalkPanelController : UI_Base
             choiceButton.choiceTextA.text = matchedStrings[0];
             choiceButton.choiceTextB.text = matchedStrings[1];
         }
-        if (buttonCount == 3)
-        {
-            choiceButton.choiceTextA.text = matchedStrings[0];
-            choiceButton.choiceTextB.text = matchedStrings[1];
-            choiceButton.choiceTextC.text = matchedStrings[2];
-        }
+        //if (buttonCount == 3)
+        //{
+        //    choiceButton.choiceTextA.text = matchedStrings[0];
+        //    choiceButton.choiceTextB.text = matchedStrings[1];
+        //    choiceButton.choiceTextC.text = matchedStrings[2];
+        //}
     }
     #endregion
 

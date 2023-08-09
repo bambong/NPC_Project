@@ -11,8 +11,6 @@ public class ChoiceButtonController : UI_Base
     private Button choiceA;
     [SerializeField]
     private Button choiceB;
-    [SerializeField]
-    private Button choiceC;
 
     [SerializeField]
     private CanvasGroup backPanelGroup;
@@ -24,16 +22,10 @@ public class ChoiceButtonController : UI_Base
     [SerializeField]
     private Vector3 layoutStartPos;
 
-    [SerializeField]
-    private Image backimageA;
-    [SerializeField]
-    private Image backimageB;
-
     public bool IsSelect { get => isSelect; }
     
     public TextMeshProUGUI choiceTextA;
     public TextMeshProUGUI choiceTextB;
-    public TextMeshProUGUI choiceTextC;
 
     public int backid;
 
@@ -46,7 +38,6 @@ public class ChoiceButtonController : UI_Base
     {
         choiceA.interactable = false;
         choiceB.interactable = false;
-        choiceC.interactable = false;
         backPanelGroup.alpha = 0;
         layoutCanvasGroup.alpha = 0;
         layoutRect.anchoredPosition = layoutStartPos;
@@ -56,7 +47,6 @@ public class ChoiceButtonController : UI_Base
         Debug.Log("Add Button Event");
         choiceA.onClick.AddListener(ChoiceSelected);
         choiceB.onClick.AddListener(ChoiceSelected);
-        choiceC.onClick.AddListener(ChoiceSelected);
     }
 
     public void Active(int activeCount)
@@ -66,8 +56,6 @@ public class ChoiceButtonController : UI_Base
         
         if (activeCount == 2)
         {
-            backimageA.gameObject.SetActive(true);
-            backimageB.gameObject.SetActive(true);
             seq.Append(backPanelGroup.DOFade(1, 1f));
             seq.Append(layoutCanvasGroup.DOFade(1, 0.5f));
             seq.Join(layoutRect.DOAnchorPos(Vector3.zero,0.5f));
@@ -77,22 +65,6 @@ public class ChoiceButtonController : UI_Base
                 choiceB.interactable = true;
             });
             seq.SetId("ChoiceButtonAni");
-            seq.Play();
-        }
-        else if(activeCount ==3)
-        {
-            choiceA.gameObject.SetActive(true);
-            choiceB.gameObject.SetActive(true);
-            choiceC.gameObject.SetActive(true);
-            seq.Append(backPanelGroup.DOFade(1, 1f));
-            seq.Append(layoutCanvasGroup.DOFade(1, 0.5f));
-            seq.Join(layoutRect.DOAnchorPos(Vector3.zero, 0.5f));
-            seq.OnComplete(() =>
-            {
-                choiceA.interactable = true;
-                choiceB.interactable = true;
-                choiceC.interactable = true;
-            });
             seq.Play();
         }
         else
@@ -105,9 +77,6 @@ public class ChoiceButtonController : UI_Base
     public void Inactive()
     {
         AnimClear();
-        backimageA.gameObject.SetActive(false);
-        backimageB.gameObject.SetActive(false);
-        choiceC.gameObject.SetActive(false);
     }
 
     public void ChoiceSelected()

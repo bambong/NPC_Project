@@ -12,6 +12,8 @@ public class TutorialKeyCheck : GuIdBehaviour
 
     protected override void Start()
     {
+        base.Start();
+
         if(Managers.Data.IsClearEvent(guId))
         {
             CheckKey();
