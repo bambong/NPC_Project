@@ -7,12 +7,12 @@ public class ButtonHighlightController : UI_Base, IPointerEnterHandler, IPointer
 {
     [SerializeField]
     private Image highlightImage;
+    [SerializeField]
+    private Color highlightColor = new Color(1f, 1f, 1f, 1f); //이거 수정하면 된당!
 
     private Tweener highlightTween;
-
     private float highlightDuration = 0.2f;
     private Color transparentColor = new Color(1f, 1f, 1f, 0f);
-    private Color highlightColor = new Color(1f, 1f, 1f, 1f); //이거 수정하면 된당!
     private bool btnSoundPlay = true;
 
     public override void Init()
