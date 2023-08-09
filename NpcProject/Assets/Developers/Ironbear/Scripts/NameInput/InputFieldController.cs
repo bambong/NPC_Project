@@ -161,7 +161,8 @@ public class InputFieldController : UI_Base
     public void DisableInputForDuratoin()
     {
         inputDisabled = true;
+        playerNameInput.interactable = false;
         disabledEndTime = Time.time + disableDuration;
-        Input.ResetInputAxes();
+        //Input.ResetInputAxes();       
     }
 }
