@@ -15,6 +15,6 @@ public class TutorialNodePanelController : BasePanelController
             return;
         }
         tutorialDescriptionPanel.SelectTutorialNode(node);
-        pauseTutorialPanelController.ChangeMainPanel(tutorialDescriptionPanel);
+        pauseTutorialPanelController.OnDescriptionPanelOpen();
     }
 }
