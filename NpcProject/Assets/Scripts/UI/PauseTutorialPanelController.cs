@@ -1,7 +1,7 @@
 using DG.Tweening;
 
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class PauseTutorialPanelController :BasePanelController
 {
@@ -13,6 +13,9 @@ public class PauseTutorialPanelController :BasePanelController
     private TutorialDescriptionPanelController tutorialDescriptionPanel;
     [SerializeField]
     private TutorialNodePanelController tutorialNodePanel;
+    [SerializeField]
+    private Button backButton;
+
    
     private BasePanelController currentPanel;
 
@@ -28,23 +31,45 @@ public class PauseTutorialPanelController :BasePanelController
         tutorialNodePanel.Open();
         currentPanel = tutorialNodePanel;
         tutorialDescriptionPanel.Close();
+        backButton.onClick.RemoveAllListeners();
+        backButton.onClick.AddListener(OnNodePanelBackButtonActive);
     }
     protected override void OnClose()
     {
         base.OnClose();
     }
 
-    public void OnCloseButtonActive()
+    public void OnNodePanelBackButtonActive()
     {
         Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
         pausePanelController.ChangeToMainMenuPanel();
     }
+    public void OnDescriptionPanelBackButtonActive()
+    {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
+        OnNodePanelOpen();
+    }
 
     public void OnDescriptionPanelOpen()
     {
+        if (isTransition)
+        {
+            return;
+        }
+        backButton.onClick.RemoveAllListeners();
+        backButton.onClick.AddListener(OnDescriptionPanelBackButtonActive);
         ChangeMainPanel(tutorialDescriptionPanel);
     }
-
+    public void OnNodePanelOpen()
+    {
+        if (isTransition)
+        {
+            return;
+        }
+        backButton.onClick.RemoveAllListeners();
+        backButton.onClick.AddListener(OnNodePanelBackButtonActive);
+        ChangeMainPanel(tutorialNodePanel);
+    }
     public void ChangeMainPanel(BasePanelController panel)
     {
         if (isTransition)

@@ -207,6 +207,7 @@ public class TalkManager
 
                 if(curTalkEvent.MoveNext())
                 {
+                    talkPanel.SaveText();
                     PlayDialogue(curTalkEvent.GetCurrentDialogue());
                 }
                 else 
@@ -261,6 +262,7 @@ public class TalkManager
 
                 if (curTalkEvent.MoveNext())
                 {
+                    talkPanel.SaveText();
                     PlayDialogue(curTalkEvent.GetCurrentDialogue(), left, right);
                 }
                 else
