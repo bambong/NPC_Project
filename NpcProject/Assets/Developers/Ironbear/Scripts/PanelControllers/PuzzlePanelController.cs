@@ -61,14 +61,39 @@ public class PuzzlePanelController : MonoBehaviour
                 currentFrameIndex++;
                 isFilled = false;
             }
-            else if (currentFrameIndex == frames.Length - 1)
-            {
-                //마지막 퍼즐이 완성되면 다음 패널 로딩
-                keywordsCanvasgroup.alpha = 0f;
-                keywordsCanvasgroup.blocksRaycasts = false;              
-                panelsController.CanvasFadeOut();
-            }
-        });       
+            //else if (currentFrameIndex == frames.Length - 1)
+            //{
+            //    //마지막 퍼즐이 완성되면 다음 패널 로딩
+            //    keywordsCanvasgroup.blocksRaycasts = false;
+            //    keywordsCanvasgroup.alpha = 0f;
+            //    panelsController.CanvasFadeOut();
+            //}
+        });
+
+        if (currentFrameIndex == frames.Length - 1)
+        {
+            //마지막 퍼즐이 완성되면 다음 패널 로딩
+            keywordsCanvasgroup.blocksRaycasts = false;
+            keywordsCanvasgroup.alpha = 0f;
+            panelsController.CanvasFadeOut();
+        }
+
+
+        //if (currentFrameIndex < frames.Length - 1)
+        //{
+        //    IntroKeywordFrameController nextFrame = frames[currentFrameIndex + 1];
+        //    nextFrame.FadeIn();
+
+        //    currentFrameIndex++;
+        //    isFilled = false;
+        //}
+        //else if (currentFrameIndex == frames.Length - 1)
+        //{
+        //    // 마지막 퍼즐이 완성되면 다음 패널 로딩
+        //    keywordsCanvasgroup.blocksRaycasts = false;
+        //    keywordsCanvasgroup.alpha = 0f;
+        //    panelsController.CanvasFadeOut();
+        //}
     }
 
     public void SetFilled()

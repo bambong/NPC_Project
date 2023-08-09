@@ -1,7 +1,6 @@
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
-using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class TextPanelController : UI_Base
@@ -20,7 +19,9 @@ public class TextPanelController : UI_Base
     private float typeSpeed = 0.04f;    
 
     private Sequence seq;
+    private Sequence txtSeq;
     private CanvasGroup canvas;
+    private CanvasGroup txtCanvas;
 
     private float soundSpeed = 0.1f;
     private bool textplayed;
@@ -33,9 +34,13 @@ public class TextPanelController : UI_Base
 
     private void Start()
     {
+        txtCanvas = continueTxt.gameObject.GetComponent<CanvasGroup>();
         canvas = GetComponent<CanvasGroup>();
         seq = DOTween.Sequence();
+        txtSeq = DOTween.Sequence();
+
         continueTxt.gameObject.SetActive(false);
+        txtCanvas.alpha = 0f;
         TypeAnimation();
     }
 
@@ -65,12 +70,17 @@ public class TextPanelController : UI_Base
 
         seq.OnComplete(() =>
         {
-            isTextComplete = true;
+            //isTextComplete = true;
             continueTxt.gameObject.SetActive(true);
+
+            txtSeq.Append(continueTxt.gameObject.transform.DOLocalMoveY(continueTxt.gameObject.transform.position.y - 70f, 1f));
+            txtSeq.Join(txtCanvas.DOFade(1f, 1f));
+            txtSeq.Play();
+
+            isTextComplete = true;
         });
 
         seq.Play();
-
     }
 
     private void Update()
