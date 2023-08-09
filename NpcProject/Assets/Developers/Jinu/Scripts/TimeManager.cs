@@ -21,6 +21,7 @@ public class TimeManager
     }
     public void OnSceneLoaded()
     {
+        timeScale.Clear();
         timeScale.Add(TIME_TYPE.PLAYER, 1.0f);
         timeScale.Add(TIME_TYPE.NONE_PLAYER, 1.0f);
     }
@@ -33,6 +34,7 @@ public class TimeManager
 
     public void SetTimeScale(TIME_TYPE type, float scale)
     {
+
         timeScale[type] = scale;
     }
 
@@ -68,6 +70,5 @@ public class TimeManager
     }
     public void Clear()
     {
-        timeScale.Clear();
     }
 }

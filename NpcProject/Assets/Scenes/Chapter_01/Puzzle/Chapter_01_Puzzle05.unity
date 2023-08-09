@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 358f52f58c572ff45be0dc4ccba0458d, type: 2}
+  m_LightingDataAsset: {fileID: 112000000, guid: 02bc9cc639e1ac047bfc642beef62805, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 477cc4148fad3449482a3bc3178594e2, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -516,7 +516,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: f08568b8c98471e49b081ae075327ee2, type: 2}
     - target: {fileID: 7882417281698441377, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
       propertyPath: destinationText
-      value: "\uBA40\uC5B4\uC9C0\uAE30"
+      value: "\uD0A4\uC6CC\uB4DC \uC751\uC6A9(\uBA40\uC5B4\uC9C0\uAE30)"
       objectReference: {fileID: 0}
     - target: {fileID: 7893893709234455981, guid: 6ceef39e58f82574181b83c081bdd508, type: 3}
       propertyPath: m_RootOrder
@@ -638,6 +638,42 @@ PrefabInstance:
     - target: {fileID: 4362839247362582666, guid: 38038d513bf28944fa482e10df267d83, type: 3}
       propertyPath: m_Name
       value: ServerroomSceneController
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: startDelay
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 558702756}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: UpdateProgress
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ProgressUpdateController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38038d513bf28944fa482e10df267d83, type: 3}
@@ -4048,7 +4084,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6981
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 4.716599e-38, y: 0, z: NaN, w: 0}
+  m_BoundingSphereOverride: {x: 1.02e-43, y: 0, z: 0, w: -2.1282928e-27}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -5082,7 +5118,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1758320018846539720, guid: 0294148f8a9b3e348bff509fa84ae780, type: 3}
       propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
-      value: 7
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 1758320018846539720, guid: 0294148f8a9b3e348bff509fa84ae780, type: 3}
       propertyPath: onInteract.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName

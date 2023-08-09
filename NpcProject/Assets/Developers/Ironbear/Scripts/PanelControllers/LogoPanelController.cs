@@ -26,17 +26,16 @@ public class LogoPanelController : UI_Base
 
     private Image rend;
 
-    //private float moveDuration = 0.8f;
-    //private float moveDelay = 0.1f;
-
     [SerializeField]
     private CanvasGroup firstPanelCanvas;
     [SerializeField]
     private CanvasGroup txtCanvasGroup;
-    private float fadeInDuration = 1f;
 
+    private float fadeInDuration = 1f;
     private float fadeOutDuration = 1f;
     private float blinkInterval = 1f;
+
+    private bool isEndEffect = false;
 
 
     public override void Init()
@@ -54,22 +53,14 @@ public class LogoPanelController : UI_Base
         rend.material.SetFloat("_AutoManualAnimation", 0);
         firstPanel.SetActive(true);
         secondPanel.SetActive(false);
+        btns.GetComponent<CanvasGroup>().alpha = 0f;
 
-        Blink();
-        //logos.transform.localPosition = new Vector3(-1100, 0, 0);
-        //for (int i = 0; i < btnsList.Length; i++)
-        //{
-        //    GameObject btn = btnsList[i];
-        //    var pos = btn.transform.localPosition;
-        //    pos.x -= 400;
-        //    btn.transform.localPosition = pos; 
-        //}
-        //MoveObject();      
+        Blink();   
     }
 
     private void Update()
     {
-        if(Input.anyKeyDown)
+        if(Input.anyKeyDown && isEndEffect)
         {
             FadePanelEffect();
         }
@@ -77,23 +68,24 @@ public class LogoPanelController : UI_Base
 
     private void FadePanelEffect()
     {
-        firstPanelCanvas.DOFade(0f, fadeInDuration / 2)
-            .SetEase(Ease.InOutQuad)
+        firstPanelCanvas.DOFade(0f, fadeInDuration)
+            .SetEase(Ease.Linear)
             .OnComplete(() =>
             {
                 firstPanel.SetActive(false);
                 secondPanel.SetActive(true);
+                btns.GetComponent<CanvasGroup>().DOFade(1f, fadeInDuration * 2.5f).SetEase(Ease.Linear);
             });
     }
 
     private void Blink()
     {
         txtCanvasGroup.DOFade(0f, fadeInDuration)
-            .SetEase(Ease.InOutQuad)
+            .SetEase(Ease.Linear)
             .OnComplete(() =>
             {
                 txtCanvasGroup.DOFade(1f, fadeOutDuration)
-                    .SetEase(Ease.InOutQuad)
+                    .SetEase(Ease.Linear)
                     .OnComplete(() =>
                     {
                         DOVirtual.DelayedCall(blinkInterval, Blink);
@@ -103,44 +95,9 @@ public class LogoPanelController : UI_Base
         Invoke("RestoreMaterial", 1.6f);
     }
 
-    //private void MoveObject()
-    //{
-    //    logos.transform.DOLocalMoveX(logos.transform.localPosition.x + 1100, moveDuration).SetEase(Ease.OutQuad);
-
-    //    for (int i = 0; i < btnsList.Length; i++)
-    //    {
-    //        GameObject btn = btnsList[i];
-    //        float delay = i * moveDelay * 0.5f;
-
-    //        btn.transform.DOLocalMoveX(btn.transform.localPosition.x + 400, moveDuration).SetEase(Ease.OutQuad).SetDelay(delay);
-    //    }
-
-    //    EnableButtonInteractable();
-  
-    //    Invoke("RestoreMaterial", moveDuration + 0.8f);
-    //}
-
     private void RestoreMaterial()
     {
         rend.material.SetFloat("_AutoManualAnimation", 1);
-    }
-
-    private void EnableButtonInteractable()
-    {
-        for (int i = 0; i < btnsList.Length; i++)
-        {
-            btnsList[i].GetComponent<Button>().interactable = true;
-        }
-    }
-
-    public void DisableButtonInteractable()
-    {
-        for (int i = 0; i < btnsList.Length; i++)
-        {
-            CanvasGroup btnCanvas = btnsList[i].GetComponent<CanvasGroup>();
-
-            btnCanvas.blocksRaycasts = false;
-            btnCanvas.interactable = false;
-        }
+        isEndEffect = true;
     }
 }
