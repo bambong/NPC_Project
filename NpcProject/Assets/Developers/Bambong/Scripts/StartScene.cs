@@ -11,13 +11,7 @@ public class StartScene : BaseScene
     private void Awake()
     {
         letterBoxPanelController = Managers.UI.MakeCameraSpaceUI<LetterBoxPanelController>(1f, null, "LetterBoxPanel");
-        letterBoxPanelController.Init();
-        letterBoxPanelController.AnimationLetterBoxIn();
-        Invoke("delay", 5f);
-    }
-
-    private void delay()
-    {
-        letterBoxPanelController.AnimationLetterBoxOut();
+        //letterBoxPanelController.Init();
+        //letterBoxPanelController.AnimationLetterBoxIn();
     }
 }

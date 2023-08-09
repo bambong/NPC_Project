@@ -11,9 +11,12 @@ public class CreateInstructions : MonoBehaviour
     private Transform[] spawnParent;
 
     private string[] keyStrings = new string[6];
+    private KeySetting keySetting;
 
     private void Awake()
     {
+        keySetting = KeySetting.Instance;
+
         keyStrings = new string[6];
 
         keyStrings = GetInstructionStrings();
@@ -31,12 +34,12 @@ public class CreateInstructions : MonoBehaviour
 
     private string[] GetInstructionStrings()
     {
-        KeyCode upKey = KeySetting.currentKeys[KEY_TYPE.UP_KEY];
-        KeyCode leftKey = KeySetting.currentKeys[KEY_TYPE.LEFT_KEY];
-        KeyCode downKey = KeySetting.currentKeys[KEY_TYPE.DOWN_KEY];
-        KeyCode rightKey = KeySetting.currentKeys[KEY_TYPE.RIGHT_KEY];
-        KeyCode interactionKey = KeySetting.currentKeys[KEY_TYPE.INTERACTION_KEY];
-        KeyCode runKey = KeySetting.currentKeys[KEY_TYPE.RUN_KEY];
+        KeyCode upKey = keySetting.currentKeys[KEY_TYPE.UP_KEY];
+        KeyCode leftKey = keySetting.currentKeys[KEY_TYPE.LEFT_KEY];
+        KeyCode downKey = keySetting.currentKeys[KEY_TYPE.DOWN_KEY];
+        KeyCode rightKey = keySetting.currentKeys[KEY_TYPE.RIGHT_KEY];
+        KeyCode interactionKey = keySetting.currentKeys[KEY_TYPE.INTERACTION_KEY];
+        KeyCode runKey = keySetting.currentKeys[KEY_TYPE.RUN_KEY];
 
         keyStrings[0] = upKey.ToString();
         keyStrings[1] = leftKey.ToString();
