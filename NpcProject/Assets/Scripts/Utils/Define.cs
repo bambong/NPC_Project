@@ -44,7 +44,7 @@ public class Define
     }
     public enum EFFECT
     {
-        EnergeItemEffect,
+        KeywordGaugeItemEffect,
         BombEffect,
         MonsterDeathEffect
     }

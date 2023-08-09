@@ -33,6 +33,11 @@ public class TutorialDescriptionPanelController : BasePanelController
     private PausePanelController pausePanel;
 
     [SerializeField]
+    private Image titleImage;
+    [SerializeField]
+    private TextMeshProUGUI titleText;
+
+    [SerializeField]
     private CanvasGroup innerGroup;
     [SerializeField]
     private RawImage renderImage;
@@ -57,6 +62,9 @@ public class TutorialDescriptionPanelController : BasePanelController
     {
         currentIndex = 0;
         currentData = node.PauseTutorialData;
+
+        titleImage.sprite = currentData.iconImage;
+        titleText.text = currentData.iconTitle;
 
         for (int i = 0; i < sideButtonControllers.Count; ++i)
         {
@@ -104,7 +112,7 @@ public class TutorialDescriptionPanelController : BasePanelController
             descriptionImage.sprite = currentData.pauseTutorialPartDatas[currentIndex].descriptionImage;
             videoPlayer.Stop();
         }
-
+   
         descriptionText.text = currentData.pauseTutorialPartDatas[currentIndex].descriptionText;
     
     }

@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     private RaycastHit slopeHit;
     private int slopeLayer;
 
-    private Transform onPauseUi;
+    private CanvasGroup onPauseUi;
 
     private bool isRun = false;
 
@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
-        onPauseUi = new GameObject("OnPauseUI").transform;
+        onPauseUi = new GameObject("OnPauseUI").AddComponent<CanvasGroup>();
 
         hp = maxHp;
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null, "GlitchEffect");
@@ -126,9 +126,9 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         purposePanel = Managers.UI.MakeSceneUI<PurposePanelController>(null,"PurposePanel");
         signalPanel = Managers.UI.MakeSceneUI<SignalPanelController>(null,"SignalPanel");
-        Managers.Keyword.PlayerKeywordPanel.transform.SetParent(onPauseUi);
-        purposePanel.transform.SetParent(onPauseUi);
-        Managers.Game.RetryPanel.transform.SetParent(onPauseUi);
+        Managers.Keyword.PlayerKeywordPanel.transform.SetParent(onPauseUi.transform);
+        purposePanel.transform.SetParent(onPauseUi.transform);
+        Managers.Game.RetryPanel.transform.SetParent(onPauseUi.transform);
         Managers.Game.RetryPanel.PasueButtonOpen();
 
     }
@@ -770,7 +770,9 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
     public void SetActivePauseUi(bool isOn) 
     {
-        onPauseUi.gameObject.SetActive(isOn);
+        onPauseUi.alpha = isOn ? 1 : 0;
+        onPauseUi.interactable = isOn;
+        //onPauseUi.gameObject.SetActive(isOn);
     }
     #endregion
 

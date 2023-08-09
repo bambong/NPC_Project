@@ -54,7 +54,7 @@ public class DataPuzzleTutorialController : BaseTutorialController
         });
         seq.Append(rootGroup.DOFade(1, openAnimTime));
         seq.Join(clickNotice.DOAnchorPos(desirePos, openAnimTime));
-        seq.Join(gameLayout.DOFade(0, openAnimTime));
+        seq.Join(gameLayout.DOFade(0.01f, openAnimTime));
         seq.OnComplete(SetTutorial);
         seq.Play();
         return true;

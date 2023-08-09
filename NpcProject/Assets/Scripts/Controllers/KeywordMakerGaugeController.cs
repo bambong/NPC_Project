@@ -22,7 +22,7 @@ public class KeywordMakerGaugeController : UI_Base
     private readonly float ACTIVE_ANIMTIME = 0.2f;  
 
     private int curCount = 0;
-    private bool isOpne = false;
+    private bool isOpen = false;
     public override void Init()
     {
 
@@ -44,7 +44,7 @@ public class KeywordMakerGaugeController : UI_Base
         { 
             addAnimQueue.Enqueue(AddOnceAnim);
         }
-            Open();
+        Open();
     }
     public IEnumerator AddOnceAnim() 
     {
@@ -57,6 +57,7 @@ public class KeywordMakerGaugeController : UI_Base
   
     IEnumerator PlayOpenAnim()
     {
+        Debug.Log("키워드 제작 시작");
         canvasGroup.DOFade(1, ACTIVE_ANIMTIME);
 
         while(addAnimQueue.Count >0) 
@@ -71,6 +72,7 @@ public class KeywordMakerGaugeController : UI_Base
     }
     public IEnumerator MakeKeyword()
     {
+        Debug.Log("키워드 제작");
         curCount -= needForMakeCount;
         var keywordMake = Managers.Keyword.MakeKeywordToCurPlayerPanel(targeKeywordName);
 
@@ -85,22 +87,42 @@ public class KeywordMakerGaugeController : UI_Base
 
     private void Open()
     { 
-        if(isOpne)
+        if(isOpen)
         {
             return;
         }
-        isOpne = true;
+        isOpen = true;
         StartCoroutine(PlayOpenAnim());
     }
     private void Close() 
     {
-        if (!isOpne)
+        if (!isOpen)
         {
             return;
         }
-        isOpne = false;
+        isOpen = false;
         canvasGroup.DOFade(0, ACTIVE_ANIMTIME);
     }
+    private void OnEnable()
+    {
+        if (isOpen) 
+        {
+            StartCoroutine(PlayOpenAnim());
+        }
+    }
 
+    private void OnDisable()
+    {
+        while(curCount >= needForMakeCount)
+        {
+            isOpen = false;
+            curCount -= needForMakeCount;
+            Managers.Keyword.MakeKeywordToCurPlayerPanel(targeKeywordName);
+            fillImage.fillAmount = 0;
+            canvasGroup.alpha = 0;
+        }
 
+    }
 }
+
+
