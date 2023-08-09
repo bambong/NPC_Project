@@ -10,10 +10,12 @@ public class CreateInstructions : MonoBehaviour
     [SerializeField]
     private Transform[] spawnParent;
 
-    private string[] keyStrings = new string[5];
+    private string[] keyStrings = new string[6];
 
     private void Awake()
     {
+        keyStrings = new string[6];
+
         keyStrings = GetInstructionStrings();
 
         for (int i = 0; i < keyStrings.Length; i++)
@@ -34,12 +36,14 @@ public class CreateInstructions : MonoBehaviour
         KeyCode downKey = KeySetting.currentKeys[KEY_TYPE.DOWN_KEY];
         KeyCode rightKey = KeySetting.currentKeys[KEY_TYPE.RIGHT_KEY];
         KeyCode interactionKey = KeySetting.currentKeys[KEY_TYPE.INTERACTION_KEY];
+        KeyCode runKey = KeySetting.currentKeys[KEY_TYPE.RUN_KEY];
 
         keyStrings[0] = upKey.ToString();
         keyStrings[1] = leftKey.ToString();
         keyStrings[2] = downKey.ToString();
         keyStrings[3] = rightKey.ToString();
         keyStrings[4] = interactionKey.ToString();
+        keyStrings[5] = runKey.ToString();
 
         return keyStrings;
     }

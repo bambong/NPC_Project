@@ -19,10 +19,12 @@ public class InputFieldController : UI_Base
     [SerializeField]
     private Button submitBtn;
     [SerializeField]
-    private TMP_Text outputText;
+    private TMP_Text outputText; 
 
     [SerializeField]
     private Vector3 targetScale;
+    [SerializeField]
+    private float disableDuration = 1.5f;
 
     private ContractPanelController contractPanel;
     private TMP_InputField inputField;
@@ -35,6 +37,9 @@ public class InputFieldController : UI_Base
     public bool isSelect = false;
     private bool isRestrict = false;
     private bool isShake = false;
+    private bool inputDisabled = false;
+
+    private float disabledEndTime;
     
 
     public override void Init()
@@ -52,7 +57,15 @@ public class InputFieldController : UI_Base
 
         inputField.onEndEdit.AddListener(OnEndEdit);
     }
-    
+
+    private void Update()
+    {
+        if (inputDisabled && Time.time >= disabledEndTime)
+        {
+            inputDisabled = false;
+        }
+    }
+
     private void OnEndEdit(string text)
     {
         if(Input.GetKeyDown(KeyCode.Return))
@@ -145,29 +158,10 @@ public class InputFieldController : UI_Base
         outputText.text = inputValue;
     }
 
-    //public void HangleInputCheck()
-    //{
-    //    isSelect = true;
-    //    Debug.Log("한글 입력 감지 시작");
-    //    StartCoroutine(HangleCheck());
-    //}    
-
-    //public void HangleCheckOut()
-    //{
-    //    Debug.Log("한글 입력 나가기");
-    //    isSelect = false;
-    //}
-
-    //private IEnumerator HangleCheck()
-    //{
-    //    while(isSelect)
-    //    {
-    //        if (i)
-    //        {
-    //            Debug.Log("한글 입력 감지");
-    //            Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleGood);
-    //        }
-    //        yield return null;
-    //    }        
-    //}
+    public void DisableInputForDuratoin()
+    {
+        inputDisabled = true;
+        disabledEndTime = Time.time + disableDuration;
+        Input.ResetInputAxes();
+    }
 }
