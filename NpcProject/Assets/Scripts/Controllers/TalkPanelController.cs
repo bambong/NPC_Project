@@ -71,6 +71,7 @@ public class TalkPanelController : UI_Base
     private Renderer rightRenderer;
     private Material leftmaterial;
     private Material rightmaterial;
+    private IEnumerator skipCoroutine;
 
     private Color leftColor;
     private Color rightColor;
@@ -133,7 +134,8 @@ public class TalkPanelController : UI_Base
         }
 
         spekerName.text = $"-{dialogue.speaker.charName}-";
-        StartCoroutine(SkipDelayTime());
+        skipCoroutine = SkipDelayTime();
+        StartCoroutine(skipCoroutine);
         StartCoroutine(PlayTextAnimation());
     }
     #endregion
@@ -361,6 +363,19 @@ public class TalkPanelController : UI_Base
         choiceText = choiceButton.choiceTextC.text;
     }
 
+    public void PanelClear()
+    {        
+        isSkip = false;
+        isNext = false;
+        isTrans = false;
+        isChoice = false;
+        isChoiceText = false;
+        isComplete = false;
+        hanglechange = false;
+        stopsound = false;
+        StopCoroutine(skipCoroutine);
+    }
+
     IEnumerator SkipTextani()
     {
         while (!isNext)
@@ -417,9 +432,6 @@ public class TalkPanelController : UI_Base
         isComplete = false;
         isChoiceText = false;
     }
-
-
-
     IEnumerator SkipDelayTime()
     {
         yield return new WaitForSeconds(SKIP_DELAY_TIME);
