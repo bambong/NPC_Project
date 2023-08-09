@@ -40,6 +40,8 @@ public class TalkPanelController : UI_Base
     private TextMeshProUGUI dialogueText;
     [SerializeField]
     private Transform talkPanelInner;
+    [SerializeField]
+    public Button skipButton;
 
     [SerializeField]
     private ChoiceButtonController choiceButton;
@@ -86,7 +88,9 @@ public class TalkPanelController : UI_Base
     #region TalkEvent
     public void SetDialogue(Dialogue dialogue)
     {
-        for(int i =0; i < dialogue.leftRights.Length; ++i ) 
+        skipButton.interactable = true;
+
+        for (int i =0; i < dialogue.leftRights.Length; ++i ) 
         {            
             if(dialogue.leftRights[i] == null) 
             {
@@ -624,5 +628,12 @@ public class TalkPanelController : UI_Base
     public bool GetIsSelect()
     {
         return choiceButton.IsSelect;
+    }
+
+    public void SkipDialogue()
+    {
+        skipButton.interactable = false;
+        choiceButton.Inactive();
+        Managers.Talk.SkipDialogue();
     }
 }

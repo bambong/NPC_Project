@@ -148,7 +148,8 @@ public class TalkManager
     public void PlayTalk(TalkEvent talk) 
     {
         Managers.Game.SetStateEvent();
-        
+        talkPanel.skipButton.gameObject.SetActive(false);
+
         curTalkEvent = talk;
        
         talkPanel.SetDialogue(curTalkEvent.GetCurrentDialogue());
@@ -158,6 +159,7 @@ public class TalkManager
             talkPanel.gameObject.SetActive(true);
             talkPanel.TalkPanelInner.DOScale(Vector3.one, ENTER_ANIM_SPEED).OnComplete(() =>
             {
+                talkPanel.skipButton.gameObject.SetActive(true);
                 Managers.Scene.CurrentScene.StartCoroutine(ProgressTalk());
             });
         });
@@ -186,6 +188,12 @@ public class TalkManager
     public void Clear() 
     {
         currentSceneTalkDatas.Clear();
+    }
+
+    public void SkipDialogue()
+    {
+        talkPanel.PanelClear();
+        curTalkEvent.MoveEnd();
     }
     IEnumerator ProgressTalk() 
     {
