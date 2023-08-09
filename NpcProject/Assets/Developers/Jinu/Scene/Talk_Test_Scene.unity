@@ -401,6 +401,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1fea234fbb8ab7444aa0674102e62ccc, type: 3}
+--- !u!114 &19717166 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7763242574584075858, guid: 1fea234fbb8ab7444aa0674102e62ccc, type: 3}
+  m_PrefabInstance: {fileID: 19717165}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc9a96fe48a044516a7e58d772394e52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &29521325
 GameObject:
   m_ObjectHideFlags: 0
@@ -17759,7 +17770,8 @@ MonoBehaviour:
   - {fileID: 404597834}
   - {fileID: 1296261212}
   myseat: {fileID: 1861019976}
-  wasdCanvasGroup: {fileID: 0}
+  wasd: {fileID: 0}
+  here: {fileID: 0}
 --- !u!114 &660355992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17798,11 +17810,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 660355989}
   m_CullTransparentMesh: 1
---- !u!1 &664234841 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3206049017688793275, guid: 1fea234fbb8ab7444aa0674102e62ccc, type: 3}
-  m_PrefabInstance: {fileID: 19717165}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &664234842 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3206049017688793254, guid: 1fea234fbb8ab7444aa0674102e62ccc, type: 3}
@@ -25834,6 +25841,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db8da78ef5edea24392dd3edd1f2b860, type: 3}
+--- !u!114 &1022848369 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6028567072928095069, guid: db8da78ef5edea24392dd3edd1f2b860, type: 3}
+  m_PrefabInstance: {fileID: 1022848368}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc9a96fe48a044516a7e58d772394e52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1024348735
 GameObject:
   m_ObjectHideFlags: 0
@@ -37253,6 +37271,9 @@ MonoBehaviour:
   startposition: {fileID: 57475440}
   cutsceneplayer: {fileID: 8047939838994623445}
   isLeft: 1
+  onComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!320 &1474018133
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -48083,6 +48104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statePanel: {fileID: 1375578911}
+  here: {fileID: 0}
 --- !u!65 &1861019978
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -49705,6 +49727,7 @@ MonoBehaviour:
   signCanvasGroup: {fileID: 1939123755}
   inputField: {fileID: 599480971}
   kakaoPanel: {fileID: 660355989}
+  mouse: {fileID: 0}
 --- !u!1 &1910822553
 GameObject:
   m_ObjectHideFlags: 0
@@ -50939,11 +50962,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!1 &1940057541 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3916827558628015881, guid: db8da78ef5edea24392dd3edd1f2b860, type: 3}
-  m_PrefabInstance: {fileID: 1022848368}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1940057542 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3916827558628015886, guid: db8da78ef5edea24392dd3edd1f2b860, type: 3}
@@ -52952,6 +52970,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statePanel: {fileID: 1375578911}
   myseat: {fileID: 1861019976}
+  arrow: {fileID: 0}
 --- !u!1 &2044415791
 GameObject:
   m_ObjectHideFlags: 0
@@ -54204,9 +54223,10 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
+  playerSpawnSpot: {x: 304.68, y: 3, z: 79}
   vircam: {fileID: 1882251690}
   tutorialSceneTalkData: {fileID: 11400000, guid: 7d50e8233f93f1845b8c4519239f8d8d, type: 2}
-  playerSpawnSpot: {x: 304.68, y: 3, z: 79}
+  playerType: Player_Real
 --- !u!4 &2089485275
 Transform:
   m_ObjectHideFlags: 0
@@ -56522,6 +56542,7 @@ MonoBehaviour:
   cutScenePlayer: {fileID: 1027293471556011098}
   curPlayable: {fileID: 0}
   transitionScene: 0
+  transitionSound: 0
 --- !u!4 &1027293471556011093
 Transform:
   m_ObjectHideFlags: 0
@@ -57014,9 +57035,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curCutScene: {fileID: 1027293472747865067}
-  cutSceneTalk: 11270000
-  left: {fileID: 664234841}
-  right: {fileID: 1940057541}
+  cutSceneTalk: 2027000020270000
+  left: {fileID: 1022848369}
+  right: {fileID: 19717166}
+  allTalkComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1027293472420494495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57350,6 +57374,9 @@ MonoBehaviour:
   startposition: {fileID: 0}
   cutsceneplayer: {fileID: 0}
   isLeft: 0
+  onComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1027293472747865065
 GameObject:
   m_ObjectHideFlags: 0
@@ -57593,6 +57620,9 @@ MonoBehaviour:
   cutSceneTalk: 12270000
   left: {fileID: 3101208047865020361}
   right: {fileID: 1864883195}
+  allTalkComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &5331682591154391492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58283,6 +58313,7 @@ MonoBehaviour:
   cutScenePlayer: {fileID: 8907736408222943064}
   curPlayable: {fileID: 1474018133}
   transitionScene: 3
+  transitionSound: 0
 --- !u!1 &8907736408222943064
 GameObject:
   m_ObjectHideFlags: 0

@@ -54,6 +54,7 @@ public class KeywordController : UI_Base
     {
          KewordId = GetType().ToString();
     }
+
     public void SetFrame(KeywordFrameBase frame)
     {
         curFrame = frame;
@@ -136,24 +137,26 @@ public class KeywordController : UI_Base
 
     public void OnPointerEnter()
     {
-        if (isLock)
+        if (isLock || isMove)
         {
             return;
         }
         Managers.Sound.PlaySFX(Define.SOUND.ButtonHover);
-
-        var animTime = START_END_ANIM_TIME * (1 - ((transform.localScale.x -1) / (FOCUSING_SCALE-1)));
-
+        transform.DOKill();
+        var animTime = START_END_ANIM_TIME * (1 - ((transform.localScale.x - 1) / (FOCUSING_SCALE - 1)));
         transform.DOScale(FOCUSING_SCALE, animTime);
+       // rectTransform.localScale = new Vector3(FOCUSING_SCALE, FOCUSING_SCALE, 1);
     }
     public void OnPointerExit()
     {
-        if (isLock)
+        if (isLock || isMove)
         {
             return;
         }
-        var animTime = START_END_ANIM_TIME * ((transform.localScale.x -1) / (FOCUSING_SCALE - 1));
+        transform.DOKill();
+        var animTime = START_END_ANIM_TIME * ((transform.localScale.x - 1) / (FOCUSING_SCALE - 1));
         transform.DOScale(Vector3.one, animTime);
+        //rectTransform.localScale = Vector3.one;
     }
     public DG.Tweening.Core.TweenerCore<Vector3,Vector3,DG.Tweening.Plugins.Options.VectorOptions> SetToKeywordFrame(Vector3 pos) 
     {
@@ -166,7 +169,7 @@ public class KeywordController : UI_Base
         {
             return;
         }
-        
+        SetMoveState(true);
         transform.SetParent(startParent);
         transform.SetSiblingIndex(prevSibilintIndex);
         rectTransform.DOLocalMove(startDragPoint,START_END_ANIM_TIME,true).SetUpdate(true).OnComplete(
@@ -174,6 +177,7 @@ public class KeywordController : UI_Base
             { 
                 curFrame.OnEndDrag();
                 SetMoveState(false);
+                rectTransform.localScale = Vector3.one;
             });
     }
     public void DragReset() 
@@ -181,6 +185,7 @@ public class KeywordController : UI_Base
         transform.SetParent(startParent);
         transform.SetSiblingIndex(prevSibilintIndex);
         rectTransform.localPosition = startDragPoint;
+        rectTransform.localScale = Vector3.one;
         SetMoveState(false);
         SetDragState(false);
         curFrame.OnEndDrag();

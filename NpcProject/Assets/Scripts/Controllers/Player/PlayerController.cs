@@ -113,6 +113,8 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         playerStateController = new PlayerStateController(this);
         interactionDetecter.Init();
+        onPauseUi = new GameObject("OnPauseUI").transform;
+
         hp = maxHp;
         glitchEffectController = Managers.UI.MakeSceneUI<DebugModGlitchEffectController>(null, "GlitchEffect");
         slopeLayer = (1 << LayerMask.NameToLayer("Slope"));
@@ -124,10 +126,10 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         purposePanel = Managers.UI.MakeSceneUI<PurposePanelController>(null,"PurposePanel");
         signalPanel = Managers.UI.MakeSceneUI<SignalPanelController>(null,"SignalPanel");
-        onPauseUi = new GameObject("OnPauseUI").transform;
         Managers.Keyword.PlayerKeywordPanel.transform.SetParent(onPauseUi);
         purposePanel.transform.SetParent(onPauseUi);
         Managers.Game.RetryPanel.transform.SetParent(onPauseUi);
+        Managers.Game.RetryPanel.PasueButtonOpen();
 
     }
     void Update()
@@ -766,20 +768,25 @@ public class PlayerController : MonoBehaviour , IDataHandler
         deathUIController.DeathUIClose();
     }
 
+    public void SetActivePauseUi(bool isOn) 
+    {
+        onPauseUi.gameObject.SetActive(isOn);
+    }
     #endregion
 
     public void OnPasueStateEnter() 
     {
         Managers.Keyword.CurrentDragKeywordReset();
         Managers.Game.DestinationPanel.gameObject.SetActive(false);
-        onPauseUi.gameObject.SetActive(false);
- 
+        SetActivePauseUi(false);
+
+
     }
     public void OnPasueStateExit()
     {
         Managers.Game.DestinationPanel.gameObject.SetActive(true);
         Managers.Game.DestinationPanel.Close();
-        onPauseUi.gameObject.SetActive(true);
+        SetActivePauseUi(true);
     }
     #region SetState
     public void RevertState()

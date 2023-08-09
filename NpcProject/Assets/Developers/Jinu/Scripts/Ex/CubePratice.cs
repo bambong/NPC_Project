@@ -7,6 +7,11 @@ public class CubePratice : MonoBehaviour
     [SerializeField]
     float setScale = 1.0f;
 
+    public void PracticeGame()
+    {
+        this.gameObject.SetActive(false);
+    }
+
     private void OnTriggerEnter(Collider other)
     {        
         if (other.tag == "Player")

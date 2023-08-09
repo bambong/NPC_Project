@@ -27,10 +27,10 @@ public class InputSettingPanelController : ButtonBasePanelController
 
     protected override void OnOpen()
     {
-        CopyCurrentToTemp();
         base.OnOpen();
+        //CopyCurrentToTemp();
         runToggle.Open();
-        UpdateButtonText();
+      // UpdateButtonText();
         defaultButton.onClick.AddListener(OnDefaultSettingButtonActive);
     }
 
@@ -58,7 +58,7 @@ public class InputSettingPanelController : ButtonBasePanelController
                     }
                 }
  
-                KeySetting.tempKeys[curKeyButton.MyType] = curCode;
+                KeySetting.Instance.tempKeys[curKeyButton.MyType] = curCode;
                 OffInputBackgroundPanel();
                 isPanel = false;
 
@@ -95,19 +95,19 @@ public class InputSettingPanelController : ButtonBasePanelController
     }
     public void CopyCurrentToTemp()
     {
-        KeySetting.CopyCurrentToTemp();
+        KeySetting.Instance.CopyCurrentToTemp();
     }
 
     public void SetAllKeysToDefault() //init
     {
-        KeySetting.SetAllKeysToDefault();
+        KeySetting.Instance.SetAllKeysToDefault();
     }   
 
     public void OnApplyButtonActive()
     {
         Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
         Debug.Log("TempKeys contents:");
-        foreach (var kvp in KeySetting.tempKeys)
+        foreach (var kvp in KeySetting.Instance.tempKeys)
         {
             Debug.Log(kvp.Key + ": " + kvp.Value);
         }
@@ -120,7 +120,7 @@ public class InputSettingPanelController : ButtonBasePanelController
         bool hasDuplicated = false;
         int index = 0;
 
-        foreach (var kvp in KeySetting.tempKeys)
+        foreach (var kvp in KeySetting.Instance.tempKeys)
         {
             if (index < (int)KEY_TYPE.KEY_COUNT)
             {
@@ -141,7 +141,7 @@ public class InputSettingPanelController : ButtonBasePanelController
         if (!hasDuplicated)
         {
             keyMappingStatus.SetMappingSuccess(true);
-            KeySetting.ApplyTempKeys();
+            KeySetting.Instance.ApplyTempKeys();
         }
     }
 
@@ -151,7 +151,7 @@ public class InputSettingPanelController : ButtonBasePanelController
         SetAllKeysToDefault();
         UpdateButtonText();
     }
-    private void UpdateButtonText() 
+    public void UpdateButtonText() 
     {
         for (int i = 0; i < keyMappingButtons.Count; ++i)
         {

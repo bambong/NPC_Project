@@ -17,6 +17,8 @@ public class CutScenePlayerController : MonoBehaviour
     private PlayableDirector curPlayable;
     [SerializeField]
     private Define.Scene transitionScene;
+    [SerializeField]
+    private Define.SOUND transitionSound;
 
     private Transform startpoint;
     private bool isleft;    
@@ -61,7 +63,7 @@ public class CutScenePlayerController : MonoBehaviour
 
     public void SignalSceneLoad()
     {
-        Managers.Sound.PlaySFX(Define.SOUND.Door);
+        Managers.Sound.PlaySFX(transitionSound);
         Managers.Scene.LoadScene(transitionScene);
     }
 

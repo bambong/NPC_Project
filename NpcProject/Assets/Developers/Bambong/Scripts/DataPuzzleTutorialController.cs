@@ -8,176 +8,99 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
-[Serializable]
-public class DataPuzzleTutorialData 
+
+public class DataPuzzleTutorialController : BaseTutorialController
 {
-    public Sprite descriptionImage;
-    [TextArea(2,10)]
-    public string descriptionText;
-}
-
-public class DataPuzzleTutorialController : GuIdBehaviour
-{
-
-    [SerializeField]
-    private CanvasGroup rootGroup;
-
-    [SerializeField]
-    private CanvasGroup innerGroup;
-
-    [SerializeField]
-    private Button nextButton;
-
     [SerializeField]
     private HelpButtonController helpButton;
-
     [SerializeField]
-    private Image descriptionImage;
-
-    [SerializeField]
-    private TextMeshProUGUI descriptionText;
-
-    [SerializeField]
-    private List<DataPuzzleTutorialData> tutorialData;
-
-    [SerializeField]
-    private List<Image> pageMarks;
-  
-    [SerializeField]
-    private Color pageMarkColor;
-
-    [SerializeField]
-    private float openAnimTime = 0.5f;
-
-    [SerializeField]
-    private float changeAnimTime = 0.3f;
+    private CanvasGroup gameLayout;
 
 
-    [SerializeField]
-    private UnityEvent onStart;
-    [SerializeField]
-    private UnityEvent onComplete;
-
-    private int curIndex;
-    private bool isPlaying;
-    private bool isOpen;
-    private const float IMAGE_VISIBLE_TIME = 0.3f;
     protected override void Start()
     {
-        for ( int i = tutorialData.Count; i < pageMarks.Count; ++i) 
+         base.Start();
+        if (!Managers.Data.IsClearEvent(GuId))
         {
-            pageMarks[i].gameObject.SetActive(false);
+            Open();
+            onComplete.AddListener(() => Managers.Data.ClearEvent(GuId));
         }
-        rootGroup.blocksRaycasts = false;
-        rootGroup.alpha = 0;
-        innerGroup.alpha = 0;
-        helpButton.Init(Open);
+        else
+        {
+            Close();
+        }
+
     }
 
-
-
-    public void Open()
+    public override bool Open()
     {
-        if (isOpen) 
+        if (isOpen)
         {
-            return;
+            return false;
         }
-
         isOpen = true;
-        curIndex = 0;
-        rootGroup.alpha = 0;
-        innerGroup.alpha = 0;
+        gameObject.SetActive(true);
+
+        OnOpen();
 
         rootGroup.interactable = true;
-        rootGroup.blocksRaycasts = true;
+        clickNotice.anchoredPosition = startPos;
+
         var seq = DOTween.Sequence();
+        seq.AppendInterval(startDelay);
         seq.AppendCallback(() =>
         {
             onStart?.Invoke();
         });
         seq.Append(rootGroup.DOFade(1, openAnimTime));
+        seq.Join(clickNotice.DOAnchorPos(desirePos, openAnimTime));
+        seq.Join(gameLayout.DOFade(0, openAnimTime));
         seq.OnComplete(SetTutorial);
         seq.Play();
+        return true;
     }
-
-    private void SetTutorial() 
+    public override bool Close()
     {
-        isPlaying = true;
-        nextButton.onClick.RemoveAllListeners();
-        if (curIndex >= tutorialData.Count - 1) 
+        if (isPlaying || !isOpen)
         {
-            nextButton.onClick.AddListener(Close);
-        }
-        else 
-        {
-            nextButton.onClick.AddListener(UpdateNextPage);
-        }
-        var seq = DOTween.Sequence();
-        seq.Append(innerGroup.DOFade(0, changeAnimTime));
-        seq.AppendCallback(() =>
-        {
-            descriptionImage.sprite = tutorialData[curIndex].descriptionImage;
-            descriptionImage.color = new Color(1,1,1,0);
-            descriptionText.text = tutorialData[curIndex].descriptionText;
-        });
-        seq.Append(innerGroup.DOFade(1, changeAnimTime));
-        seq.AppendCallback(() => 
-        {
-            for (int i = 0 ; i < pageMarks.Count; ++i)
-            {
-                if(curIndex == i)
-                {
-                    pageMarks[i].color = pageMarkColor;
-                    continue;
-                }
-                pageMarks[i].color = Color.white;
-            }
-            helpButton.SetCloseMod(Close, changeAnimTime);
-        });
-        seq.Append(descriptionImage.DOFade(1, IMAGE_VISIBLE_TIME));
-        seq.OnComplete(() =>
-        {
-            isPlaying = false;
-          
-            nextButton.interactable = true;
-        });
-        seq.Play();
-    }
-    private void UpdateNextPage()
-    {
-        if (isPlaying) 
-        {
-            return;
+            return false;
         }
         Managers.Sound.PlaySFX(Define.SOUND.AssignmentKeyword);
         isPlaying = true;
+        prevButton.interactable = false;
         nextButton.interactable = false;
-        ++curIndex;
-        SetTutorial();
-    }
-
-    public void Close() 
-    {
-        if (isPlaying || !isOpen) 
-        {
-            return;
-        }
-        Managers.Sound.PlaySFX(Define.SOUND.AssignmentKeyword);
-        isPlaying = true;
-        nextButton.interactable = false;
-
-        helpButton.SetOpenMod(Open, openAnimTime);
         var seq = DOTween.Sequence();
         seq.Append(rootGroup.DOFade(0, openAnimTime));
+        seq.Join(clickNotice.DOAnchorPos(startPos, openAnimTime));
+        seq.Join(gameLayout.DOFade(1, openAnimTime));
         seq.OnComplete(() =>
         {
-            rootGroup.blocksRaycasts = false;
+            OnClose();
             rootGroup.interactable = false;
             isOpen = false;
             onComplete?.Invoke();
+            clickNotice.anchoredPosition = startPos;
+            rootGroup.alpha = 0;
+            innerGroup.alpha = 0;
+            renderImage.color = new Color(1, 1, 1, 0);
+            descriptionImage.color = new Color(1, 1, 1, 0);
+            pageMarks[curIndex].color = Color.white;
+            curIndex = 0;
+            gameObject.SetActive(false);
         });
         seq.Play();
+        return true;
     }
-  
+
+    protected override void OnOpen()
+    {
+        helpButton.SetCloseMod(()=> { Close(); }, changeAnimTime);
+    }
+    protected override void OnClose()
+    {
+        helpButton.SetOpenMod(() => { Open(); }, openAnimTime);
+    }
+
+
 
 }

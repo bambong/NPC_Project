@@ -13,6 +13,8 @@ public class RetryPanelController : UI_Base
     private TextMeshProUGUI retryText;
     [SerializeField]
     private Button resetButton;
+    [SerializeField]
+    private Button pauseButton;
 
     [SerializeField]
     private RectTransform resetButtonRect;
@@ -29,7 +31,16 @@ public class RetryPanelController : UI_Base
     public override void Init()
     {
     }
-    public void ButtonActive()
+    public void PasueButtonOpen() 
+    {
+        pauseButton.gameObject.SetActive(true);
+    }
+    public void PauseButtonActive()
+    {
+        Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
+        Managers.Game.SetStatePause();
+    }
+    public void RetryButtonActive()
     {
         Managers.Sound.PlaySFX(Define.SOUND.ResetButton);
         Managers.Sound.StopBGM();

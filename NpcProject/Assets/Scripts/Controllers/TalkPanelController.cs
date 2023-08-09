@@ -71,6 +71,7 @@ public class TalkPanelController : UI_Base
     private Renderer rightRenderer;
     private Material leftmaterial;
     private Material rightmaterial;
+    private IEnumerator skipCoroutine;
 
     private Color leftColor;
     private Color rightColor;
@@ -133,16 +134,18 @@ public class TalkPanelController : UI_Base
         }
 
         spekerName.text = $"-{dialogue.speaker.charName}-";
-        StartCoroutine(SkipDelayTime());
+        skipCoroutine = SkipDelayTime();
+        StartCoroutine(skipCoroutine);
         StartCoroutine(PlayTextAnimation());
     }
     #endregion
     #region CutSceneTalk
-    public void SetDialogue(Dialogue dialogue, GameObject left, GameObject right)
+    public void SetDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
     {
         //init
-        leftRenderer = left.GetComponent<SpriteRenderer>();
-        rightRenderer = right.GetComponent<SpriteRenderer>();
+        leftRenderer = left.charRenderer;
+        rightRenderer = right.charRenderer;
+        
         leftmaterial = leftRenderer.material;
         rightmaterial = rightRenderer.material;
         leftColor = leftmaterial.color;
@@ -154,7 +157,7 @@ public class TalkPanelController : UI_Base
             continue;
         }
 
-        if (dialogue.speaker.charName == left.name)
+        if (dialogue.speaker.Id == left.id)
         {
             rightmaterial.color = gray;
             rightRenderer.material = rightmaterial;
@@ -162,7 +165,7 @@ public class TalkPanelController : UI_Base
             leftmaterial.color = leftColor;
             leftRenderer.material = leftmaterial;
         }
-        if (dialogue.speaker.charName == right.name)
+        if (dialogue.speaker.Id == right.id)
         {
             leftmaterial.color = gray;
             leftRenderer.material = leftmaterial;
@@ -176,7 +179,7 @@ public class TalkPanelController : UI_Base
         dialogueText.text = "";
     }
 
-    public void PlayDialogue(Dialogue dialogue, GameObject left, GameObject right)
+    public void PlayDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
     {
         dialogueText.text = "";
         isNext = false;
@@ -187,7 +190,7 @@ public class TalkPanelController : UI_Base
             leftRights[i].DOFade(0, 0);
             continue;
         }        
-        if (dialogue.speaker.charName == left.name)
+        if (dialogue.speaker.Id == left.id)
         {
             rightmaterial.color = gray;
             rightRenderer.material = rightmaterial;
@@ -195,7 +198,7 @@ public class TalkPanelController : UI_Base
             leftmaterial.color = leftColor;
             leftRenderer.material = leftmaterial;
         }
-        if (dialogue.speaker.charName == right.name)
+        if (dialogue.speaker.Id == right.id)
         {
             leftmaterial.color = gray;
             leftRenderer.material = leftmaterial;
@@ -360,6 +363,19 @@ public class TalkPanelController : UI_Base
         choiceText = choiceButton.choiceTextC.text;
     }
 
+    public void PanelClear()
+    {        
+        isSkip = false;
+        isNext = false;
+        isTrans = false;
+        isChoice = false;
+        isChoiceText = false;
+        isComplete = false;
+        hanglechange = false;
+        stopsound = false;
+        StopCoroutine(skipCoroutine);
+    }
+
     IEnumerator SkipTextani()
     {
         while (!isNext)
@@ -416,9 +432,6 @@ public class TalkPanelController : UI_Base
         isComplete = false;
         isChoiceText = false;
     }
-
-
-
     IEnumerator SkipDelayTime()
     {
         yield return new WaitForSeconds(SKIP_DELAY_TIME);
@@ -461,6 +474,18 @@ public class TalkPanelController : UI_Base
             if (item == "choicetext")
             {
                 isChoiceText = true;
+                continue;
+            }
+            if(item == "debugmode")
+            {
+                string text = "[" + KeySetting.Instance.currentKeys[KEY_TYPE.DEBUGMOD_KEY].ToString() + "]";
+                textDialogue += text;
+                continue;
+            }
+            if(item == "runkey")
+            {
+                string text = "[" + KeySetting.Instance.currentKeys[KEY_TYPE.RUN_KEY].ToString() + "]";
+                textDialogue += text;
                 continue;
             }
             textDialogue += item;

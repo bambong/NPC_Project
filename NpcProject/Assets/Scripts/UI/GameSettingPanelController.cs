@@ -27,6 +27,12 @@ public class GameSettingPanelController : BasePanelController
     protected override void OnOpen()
     {
         base.OnOpen();
+        //soundSettingPanel.Close();
+        //soundSettingPanel.SetSelected(false);
+        //inputSettingPanel.Open();
+        //inputSettingPanel.SetSelected(true);
+        inputSettingPanel.CopyCurrentToTemp();
+        inputSettingPanel.UpdateButtonText();
         soundSettingPanel.Open();
         soundSettingPanel.SetSelected(true);
         inputSettingPanel.Close();
@@ -47,6 +53,10 @@ public class GameSettingPanelController : BasePanelController
     public void ChangeMainPanel(ButtonBasePanelController panel)
     {
         if (isTransition)
+        {
+            return;
+        }
+        if(currentPanel == panel) 
         {
             return;
         }

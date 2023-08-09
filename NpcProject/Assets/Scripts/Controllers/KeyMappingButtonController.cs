@@ -33,7 +33,7 @@ public class KeyMappingButtonController : MonoBehaviour
 
     public void UpdateText() 
     {
-        if (KeySetting.tempKeys[myType] != KeySetting.defaultKeys[myType])
+        if (KeySetting.Instance.tempKeys[myType] != KeySetting.Instance.defaultKeys[myType])
         {
             image.color = changedColor;
         }
@@ -42,19 +42,19 @@ public class KeyMappingButtonController : MonoBehaviour
             image.color = normalColor;
         }
 
-        foreach (var item  in KeySetting.tempKeys) 
+        foreach (var item  in KeySetting.Instance.tempKeys) 
         {
             if(item.Key == myType) 
             {
                 continue;
             }
-            if (KeySetting.tempKeys[myType] == item.Value) 
+            if (KeySetting.Instance.tempKeys[myType] == item.Value) 
             {
                 image.color = repeatColor;
                 break;
             }
         }
-        innerText.text = KeySetting.tempKeys[myType].ToString();
+        innerText.text = KeySetting.Instance.tempKeys[myType].ToString();
     }
 
     public void OnButtonActive()

@@ -36,7 +36,7 @@ public class DataManager
     public void ClearCurrentProgress() 
     {
         ++progress;
-        if (Managers.Game.Player != null)
+        if (Managers.Game.Player != null && Managers.Game.Player.PurposePanel != null)
         {
             Managers.Game.Player.PurposePanel.ClearPurpose();
         }

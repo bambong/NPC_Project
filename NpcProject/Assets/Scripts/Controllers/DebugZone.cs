@@ -144,7 +144,7 @@ public class DebugZone : GuIdBehaviour, IDataHandler
     public void OnExitDebugMod() 
     {
         Managers.Game.Player.CloseWireEffect();
-        ClosePlayerLayout();
+        
         debugGaugeUi.Close();
         StartCoroutine(NormalModeTimeUpdate());
     }
@@ -192,6 +192,7 @@ public class DebugZone : GuIdBehaviour, IDataHandler
             Managers.Game.Player.isDebugButton();
             Managers.Game.RetryPanel.OpenResetButton();
             Managers.Data.SaveGame();
+            OpenPlayerLayout();
         }
     }
 
@@ -202,6 +203,7 @@ public class DebugZone : GuIdBehaviour, IDataHandler
             Managers.Keyword.SetDebugZone(null);
             Managers.Game.Player.isDebugButton();
             Managers.Game.RetryPanel.CloseResetButton();
+            ClosePlayerLayout();
         }
     }
 
