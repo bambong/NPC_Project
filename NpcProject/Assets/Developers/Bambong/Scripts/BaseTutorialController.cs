@@ -115,6 +115,7 @@ public class BaseTutorialController : GuIdBehaviour
             pageMarks[i].gameObject.SetActive(false);
         }
         exitButton.onClick.AddListener(()=>Close());
+        exitButton.gameObject.SetActive(false);
         clickNotice.anchoredPosition = startPos;
         rootGroup.alpha = 0;
         innerGroup.alpha = 0;

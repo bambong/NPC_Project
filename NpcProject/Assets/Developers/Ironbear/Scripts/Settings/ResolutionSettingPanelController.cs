@@ -39,7 +39,6 @@ public class ResolutionSettingPanelController : ButtonBasePanelController
     private void Start()
     {
         textGo.transform.localScale = Vector3.zero;
-        Init();
         SetDefaultValues();
     }
 

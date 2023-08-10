@@ -61,7 +61,6 @@ public class RetryPanelController : UI_Base
     }
     public void CloseResetButton()
     {
-
         resetButtonRect.DOKill();
         resetButton.gameObject.SetActive(false);
     }

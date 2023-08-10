@@ -17,12 +17,10 @@ public class ServerroomTutorialController : BaseTutorialController
 
     protected override void OnOpen()
     {
-        Managers.Game.RetryPanel.CloseResetButton();
         Managers.Game.SetStateTutorial();
     }
     protected override void OnClose()
     {
-        Managers.Game.RetryPanel.OpenResetButton();
         Managers.Game.SetStateNormal();
     }
 
