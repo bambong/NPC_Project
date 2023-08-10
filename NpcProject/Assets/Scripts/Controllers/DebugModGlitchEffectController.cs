@@ -106,6 +106,10 @@ public class DebugModGlitchEffectController : UI_Base
         }
         progress = 1;
         volume.weight = 1;
+        if(Managers.Keyword.CurDebugZone == null) 
+        {
+            yield break;
+        }
         Managers.Keyword.EnterDebugMod();
        // tonemapping.active = true;
         yield return new WaitForSeconds(thirdTime);
