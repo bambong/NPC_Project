@@ -95,7 +95,7 @@ public class DataPuzzleTutorialController : BaseTutorialController
 
     protected override void OnOpen()
     {
-        helpButton.SetCloseMod(()=> { Close(); }, changeAnimTime);
+        helpButton.SetCloseMod(()=> { Close(); }, openAnimTime);
     }
     protected override void OnClose()
     {
