@@ -65,7 +65,8 @@ public class TalkPanelController : UI_Base
     private bool isComplete = false;
     private bool hanglechange = false;
     private bool stopsound = false;
-
+    public bool isClick = false;
+    
     private int buttonCount;
     private string choiceText;
     private string preDialogueText;
@@ -633,7 +634,6 @@ public class TalkPanelController : UI_Base
     public void SkipDialogue()
     {
         skipButton.interactable = false;
-        choiceButton.Inactive();
-        Managers.Talk.SkipDialogue();
+        isClick = true;
     }
 }
