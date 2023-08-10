@@ -52,6 +52,7 @@ public class TransTextAnimation : MonoBehaviour
             for (int j = 0; j < text[i].Length; j++)
             {
                 outputText.text = text[i].Substring(0, j + 1) + RandomText(text[i].Length - j - 1);
+                Managers.Sound.PlaySFX(Define.SOUND.TextSound);
                 yield return new WaitForSeconds(0.1f);
             }
             yield return new WaitForSeconds(1.0f);
@@ -67,6 +68,6 @@ public class TransTextAnimation : MonoBehaviour
     {
         var random = new System.Random();
         string charcters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        return "<color=white>" + new string(Enumerable.Repeat(charcters, length).Select(s => s[random.Next(s.Length)]).ToArray()) + "</color>";
+        return "<color=red>" + new string(Enumerable.Repeat(charcters, length).Select(s => s[random.Next(s.Length)]).ToArray()) + "</color>";
     }
 }
