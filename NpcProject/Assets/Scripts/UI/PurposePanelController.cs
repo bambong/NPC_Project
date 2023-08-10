@@ -16,7 +16,6 @@ public class PurposeData
 
 public class PurposePanelController : UI_Base
 {
-
     [SerializeField]
     private Image panel;
 
@@ -25,7 +24,8 @@ public class PurposePanelController : UI_Base
 
     [SerializeField]
     private CanvasGroup canvasGroup;
-
+    [SerializeField]
+    private CanvasGroup innerGroup;
 
     [SerializeField]
     private TextMeshProUGUI purposeTitle;
@@ -56,6 +56,7 @@ public class PurposePanelController : UI_Base
         }
         isOpen = true;
         panel.color = originPanelColor;
+        innerGroup.alpha = 1;
         UpdateData(temp);
         canvasGroup.DOKill();
         var animTime = OPEN_ANIM_TIME * (1 - canvasGroup.alpha);
@@ -65,7 +66,7 @@ public class PurposePanelController : UI_Base
 
     private void UpdateData(PurposeData data) 
     {
-        purposeTitle.text = $"[{data.title}]";
+        purposeTitle.text = data.title;
         purposeText.text = data.description != string.Empty ? $"- {data.description}" : string.Empty;
     }
 
@@ -87,9 +88,11 @@ public class PurposePanelController : UI_Base
     {
         var seq = DOTween.Sequence();
         seq.Append(panel.DOColor(Color.white, CHANGE_PURPOSE_ANIM_OPEN_TIME));
+        seq.Join(innerGroup.DOFade(0, CHANGE_PURPOSE_ANIM_OPEN_TIME));
         seq.AppendCallback(() => { UpdateData(data); });
         seq.AppendInterval(0.2f);
         seq.Append(panel.DOColor(defaultPanelColor, CHANGE_PURPOSE_ANIM_CLOSE_TIME));
+        seq.Join(innerGroup.DOFade(1, CHANGE_PURPOSE_ANIM_CLOSE_TIME));
         seq.Play();
     }
     public void UpdatePurpose()
@@ -112,8 +115,10 @@ public class PurposePanelController : UI_Base
     {
         var seq = DOTween.Sequence();
         seq.Append(panel.DOColor(Color.white, CHANGE_PURPOSE_ANIM_OPEN_TIME));
+        seq.Join(innerGroup.DOFade(0, CHANGE_PURPOSE_ANIM_OPEN_TIME));
         seq.AppendInterval(0.2f);
         seq.AppendCallback(() => {
+            purposeTitle.text = string.Empty;
             purposeText.text = string.Empty; });
         seq.Append(canvasGroup.DOFade(0, CLOSE_ANIM_TIME));
         seq.Play();

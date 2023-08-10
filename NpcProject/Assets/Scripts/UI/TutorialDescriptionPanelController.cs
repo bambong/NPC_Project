@@ -96,6 +96,31 @@ public class TutorialDescriptionPanelController : BasePanelController
         }
         videoPlayer.Play();
     }
+    private string KeywordTextParse(string str)
+    {
+        char[] sep = { '#', '#' };
+
+        string[] result = str.Split(sep);
+        string resultText = "";
+
+        foreach (var item in result)
+        {
+            switch (item)
+            {
+                case "debugmode":
+                    resultText += "[" + KeySetting.Instance.currentKeys[KEY_TYPE.DEBUGMOD_KEY].ToString() + "]";
+                    break;
+                case "player":
+                    resultText += Managers.Talk.GetSpeakerName(101);
+                    break;
+
+                default:
+                    resultText += item;
+                    break;
+            }
+        }
+        return resultText;
+    }
     public void SetPageUpdate() 
     {
         //Time.timeScale = 1;
@@ -113,7 +138,7 @@ public class TutorialDescriptionPanelController : BasePanelController
             videoPlayer.Stop();
         }
    
-        descriptionText.text = currentData.pauseTutorialPartDatas[currentIndex].descriptionText;
+        descriptionText.text = KeywordTextParse(currentData.pauseTutorialPartDatas[currentIndex].descriptionText);
     
     }
     public void CurIndexUpdate(int index) 
