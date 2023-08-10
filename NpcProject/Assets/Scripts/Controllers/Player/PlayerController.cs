@@ -780,11 +780,13 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         Managers.Keyword.CurrentDragKeywordReset();
         Managers.Game.DestinationPanel.gameObject.SetActive(false);
+        SetActivePauseUi(false);
     }
     public void OnPasueStateExit()
     {
         Managers.Game.DestinationPanel.gameObject.SetActive(true);
         Managers.Game.DestinationPanel.Close();
+        SetActivePauseUi(true);
     }
     #region SetState
     public void RevertState()
