@@ -17,8 +17,8 @@ public class GameData
 public class GameSettingData
 {
     public float masterVolume = 1;
-    public float bgmVolume = 0.5f;
-    public float sfxVolume = 0.5f;
+    public float bgmVolume = 1;
+    public float sfxVolume = 1;
     public bool isToggleRun = false;
     public bool isvSync = false;
 }

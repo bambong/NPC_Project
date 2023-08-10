@@ -6,7 +6,7 @@ using System.Text;
 using TMPro;
 using UnityEditor.Rendering;
 using UnityEngine;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
+//using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 using UnityEngine.Analytics;
 
 public class ResultPanelController : MonoBehaviour
