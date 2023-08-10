@@ -19,17 +19,13 @@ public class TestLogo : MonoBehaviour
 
     [SerializeField]
     private CanvasGroup panelCanvasGroup;
-    [SerializeField]
-    private CanvasGroup outLineCanvasGroup;
-    [SerializeField]
-    private Image glowImage;
+
     [SerializeField]
     private Transform player;
     [SerializeField]
     private Vector3 playerMovePos;
 
-    [SerializeField]
-    private CanvasGroup renderCanvasGroup2;
+
     [SerializeField]
     private float panelfadeTim = 2f;
     [SerializeField]
@@ -45,8 +41,6 @@ public class TestLogo : MonoBehaviour
     private void Start()
     {
         panelCanvasGroup.alpha = 0;
-        outLineCanvasGroup.alpha = 1;
-        renderCanvasGroup2.alpha = 0;
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(1f);
         sequence.Append(panelCanvasGroup.DOFade(1, panelfadeTim));
