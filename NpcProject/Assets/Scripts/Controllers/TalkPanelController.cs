@@ -149,6 +149,8 @@ public class TalkPanelController : UI_Base
     public void SetDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
     {
         //init
+        skipButton.interactable = true;
+
         leftRenderer = left.charRenderer;
         rightRenderer = right.charRenderer;
         
@@ -213,8 +215,9 @@ public class TalkPanelController : UI_Base
             rightRenderer.material = rightmaterial;
         }
 
-        spekerName.text = $"{dialogue.speaker.charName}";
-        StartCoroutine(SkipDelayTime());
+        spekerName.text = $"{dialogue.speaker.charName}"; 
+        skipCoroutine = SkipDelayTime();
+        StartCoroutine(skipCoroutine);
         StartCoroutine(PlayTextAnimation());
     }
 
