@@ -202,10 +202,11 @@ public class TalkManager
         
         while(true) 
         {
-            if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.EXIT_KEY)))
+            if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.EXIT_KEY)) || talkPanel.isClick)
             {
                 talkPanel.PanelClear();
                 curTalkEvent.MoveEnd();
+                talkPanel.isClick = false;
                 break;
             }
 
@@ -258,9 +259,11 @@ public class TalkManager
 
         while (true)
         {
-            if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.EXIT_KEY)))
+            if (Input.GetKeyDown(Managers.Game.Key.ReturnKey(KEY_TYPE.EXIT_KEY)) || talkPanel.isClick)
             {
+                talkPanel.PanelClear();
                 curTalkEvent.MoveEnd();
+                talkPanel.isClick = false;
                 break;
             }
 

@@ -65,7 +65,8 @@ public class TalkPanelController : UI_Base
     private bool isComplete = false;
     private bool hanglechange = false;
     private bool stopsound = false;
-
+    public bool isClick = false;
+    
     private int buttonCount;
     private string choiceText;
     private string preDialogueText;
@@ -148,6 +149,8 @@ public class TalkPanelController : UI_Base
     public void SetDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
     {
         //init
+        skipButton.interactable = true;
+
         leftRenderer = left.charRenderer;
         rightRenderer = right.charRenderer;
         
@@ -212,8 +215,9 @@ public class TalkPanelController : UI_Base
             rightRenderer.material = rightmaterial;
         }
 
-        spekerName.text = $"{dialogue.speaker.charName}";
-        StartCoroutine(SkipDelayTime());
+        spekerName.text = $"{dialogue.speaker.charName}"; 
+        skipCoroutine = SkipDelayTime();
+        StartCoroutine(skipCoroutine);
         StartCoroutine(PlayTextAnimation());
     }
 
@@ -633,7 +637,6 @@ public class TalkPanelController : UI_Base
     public void SkipDialogue()
     {
         skipButton.interactable = false;
-        choiceButton.Inactive();
-        Managers.Talk.SkipDialogue();
+        isClick = true;
     }
 }

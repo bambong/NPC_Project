@@ -1,11 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PurposeData", menuName = "Scriptable Data/PurposeData", order = 3)]
-public class PurposeData : ScriptableObject
+
+[CreateAssetMenu(fileName = "PurposeDataContainer", menuName = "Scriptable Data/PurposeData", order = 3)]
+public class PurposeDataContainer : ScriptableObject
 {
-    [TextArea]
-    public List<string> progressPurposes;
+    public List<PurposeData> progressPurposes;
 }
 
