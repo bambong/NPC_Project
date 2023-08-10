@@ -68,6 +68,6 @@ public class TransTextAnimation : MonoBehaviour
     {
         var random = new System.Random();
         string charcters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        return "<color=red>" + new string(Enumerable.Repeat(charcters, length).Select(s => s[random.Next(s.Length)]).ToArray()) + "</color>";
+        return "<color=white>" + new string(Enumerable.Repeat(charcters, length).Select(s => s[random.Next(s.Length)]).ToArray()) + "</color>";
     }
 }
