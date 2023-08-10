@@ -11,6 +11,8 @@ using DG.Tweening;
 
 public class TransTextAnimation : MonoBehaviour
 {
+    private readonly float textSpeed = 0.07f;
+
     [SerializeField]
     private TextMeshProUGUI outputText;
     [SerializeField]
