@@ -61,9 +61,13 @@ public class RetryPanelController : UI_Base
     }
     public void CloseResetButton()
     {
-        isOpenButton = false;
+
         resetButtonRect.DOKill();
         resetButton.gameObject.SetActive(false);
+    }
+    public void ClosePauseButton()
+    {
+        pauseButton.gameObject.SetActive(false);
     }
     public void OpenRetryPanel()
     {
@@ -76,6 +80,7 @@ public class RetryPanelController : UI_Base
         {
             CloseResetButton();
         }
+        ClosePauseButton();
         canvasGroup.gameObject.SetActive(true);
         Sequence seq = DOTween.Sequence();
         seq.AppendInterval(OPEN_INTERVAL);
