@@ -105,4 +105,10 @@ public class LogoPanelController : UI_Base
     {
         btns.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = false;
     }
+
+    public void InteractiveButtons()
+    {
+        btns.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = true;
+        btnsList[2].gameObject.GetComponent<CanvasGroup>().blocksRaycasts = false;
+    }
 }
