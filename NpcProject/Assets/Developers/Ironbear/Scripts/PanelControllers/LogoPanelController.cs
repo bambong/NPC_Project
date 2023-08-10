@@ -100,4 +100,9 @@ public class LogoPanelController : UI_Base
         rend.material.SetFloat("_AutoManualAnimation", 1);
         isEndEffect = true;
     }
+
+    public void UninteractiveButtons()
+    {
+        btns.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = false;
+    }
 }
