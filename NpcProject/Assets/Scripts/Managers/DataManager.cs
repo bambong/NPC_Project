@@ -29,7 +29,7 @@ public class DataManager
     public void Init()
     {
         lastGameData = new GameData();
-        purposeData = Resources.Load<PurposeDataContainer>("Data/PurposeDataContainer");
+        purposeData = Resources.Load<PurposeDataContainer>("Data/PurposeData");
         ClearSetting();
     }
 
