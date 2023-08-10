@@ -39,7 +39,7 @@ public class ResolutionSettingPanelController : ButtonBasePanelController
     private void Start()
     {
         textGo.transform.localScale = Vector3.zero;
-        Init();
+        //Init();
         SetDefaultValues();
     }
 
@@ -56,7 +56,6 @@ public class ResolutionSettingPanelController : ButtonBasePanelController
 
     public override void Init()
     {
-        //panel.gameObject.SetActive(false);
         resolutions.AddRange(Screen.resolutions);
         screenmodes.Add(FullScreenMode.Windowed);
         screenmodes.Add(FullScreenMode.FullScreenWindow);
@@ -71,7 +70,7 @@ public class ResolutionSettingPanelController : ButtonBasePanelController
         framerateDropdown.ClearOptions();
 
         //resolution
-        int optionNum = 0;
+        int resolutionOptionNum = 0;
         foreach(Resolution item in resolutions)
         {
             TMP_Dropdown.OptionData option = new TMP_Dropdown.OptionData();
@@ -80,13 +79,14 @@ public class ResolutionSettingPanelController : ButtonBasePanelController
 
             if(item.width==Screen.width && item.height==Screen.height)
             {
-                resolutionDropdown.value = optionNum;
+                resolutionDropdown.value = resolutionOptionNum;
             }
-            optionNum++;
+            resolutionOptionNum++;
         }
         resolutionDropdown.RefreshShownValue();
 
         //screenmode
+        int ScreenmodeOptionNum = 0;
         foreach (FullScreenMode mode in screenmodes)
         {
             TMP_Dropdown.OptionData option = new TMP_Dropdown.OptionData();
@@ -95,12 +95,14 @@ public class ResolutionSettingPanelController : ButtonBasePanelController
 
             if (mode==Screen.fullScreenMode)
             {
-                screenmodeDropdown.value = optionNum;
+                screenmodeDropdown.value = ScreenmodeOptionNum;
             }
-            optionNum++;
+            ScreenmodeOptionNum++;
         }
         screenmodeDropdown.RefreshShownValue();
 
+        //frame rate
+        int rateOptionNum = 0;
         foreach (int rate in rates)
         {
             TMP_Dropdown.OptionData option = new TMP_Dropdown.OptionData();
@@ -109,9 +111,9 @@ public class ResolutionSettingPanelController : ButtonBasePanelController
 
             if (rate == Application.targetFrameRate)
             {
-                framerateDropdown.value = optionNum;
+                framerateDropdown.value = rateOptionNum;
             }
-            optionNum++;
+            rateOptionNum++;
         }
         framerateDropdown.RefreshShownValue();
     }
