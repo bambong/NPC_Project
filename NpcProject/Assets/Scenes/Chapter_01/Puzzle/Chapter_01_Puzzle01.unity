@@ -1326,6 +1326,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7975317186530639219, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
   m_PrefabInstance: {fileID: 7975317186924579012}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &911878720 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
+  m_PrefabInstance: {fileID: 7975317186924579012}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 911878719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2a7eb2ac1674a145b5f46421535087f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &961259328
 GameObject:
   m_ObjectHideFlags: 0
@@ -5155,8 +5166,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd37b8268792540deb56987464dff576, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guId: 
+  guId: 000e8b62-8d87-47fc-9c79-b949e41272d2
   key: 1
+  preEvent: {fileID: 911878720}
   talkEvent:
     m_PersistentCalls:
       m_Calls:
@@ -6093,7 +6105,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -6118,7 +6130,7 @@ PrefabInstance:
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 1769038070}
+      objectReference: {fileID: 911878720}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -6141,7 +6153,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: CheckKey
+      value: ClearGuIdEvent
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -6153,7 +6165,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: TutorialKeyCheck, Assembly-CSharp
+      value: ServerroomTutorialController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument

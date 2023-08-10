@@ -8,13 +8,15 @@ public class TutorialKeyCheck : GuIdBehaviour
     [SerializeField]
     private KEY_TYPE key;
     [SerializeField]
+    private GuIdBehaviour preEvent;
+    [SerializeField]
     private UnityEvent talkEvent;
 
     protected override void Start()
     {
         base.Start();
 
-        if(Managers.Data.IsClearEvent(guId))
+        if(Managers.Data.IsClearEvent(preEvent.GuId) && !Managers.Data.IsClearEvent(guId))
         {
             CheckKey();
         }
