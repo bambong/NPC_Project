@@ -110,8 +110,10 @@ public class InputFieldController : UI_Base
         {
             Managers.Sound.PlaySFX(Define.SOUND.Sign);
             SubmitName();
-            if(contractPanel!=null)
+            if (contractPanel != null)
             {
+                isRestrict = true;
+                DisableInputForDuratoin();
                 contractPanel.UiOff();
             }           
         }        
@@ -163,6 +165,6 @@ public class InputFieldController : UI_Base
         inputDisabled = true;
         playerNameInput.interactable = false;
         disabledEndTime = Time.time + disableDuration;
-        //Input.ResetInputAxes();       
+        Input.ResetInputAxes();       
     }
 }
