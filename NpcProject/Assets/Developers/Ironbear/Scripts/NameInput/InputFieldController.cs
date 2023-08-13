@@ -113,7 +113,7 @@ public class InputFieldController : UI_Base
             if (contractPanel != null)
             {
                 isRestrict = true;
-                DisableInputForDuratoin();
+                StartCoroutine(DisableInputForDurationCoroutine());
                 contractPanel.UiOff();
             }           
         }        
@@ -160,11 +160,12 @@ public class InputFieldController : UI_Base
         outputText.text = inputValue;
     }
 
-    public void DisableInputForDuratoin()
+    private IEnumerator DisableInputForDurationCoroutine()
     {
         inputDisabled = true;
         playerNameInput.interactable = false;
-        disabledEndTime = Time.time + disableDuration;
-        Input.ResetInputAxes();       
+        yield return new WaitForSeconds(disableDuration);
+        playerNameInput.interactable = true;
+        inputDisabled = false;
     }
 }
