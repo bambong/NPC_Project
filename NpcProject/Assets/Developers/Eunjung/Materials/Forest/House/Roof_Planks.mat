@@ -16,6 +16,8 @@ Material:
   - _NORMALMAP
   m_InvalidKeywords:
   - TCP2_UV_NORMALS_FULL
+  - _BLENDNORMALS_ON
+  - _COVERAGEOVERLAYMETHOD_WORLD_NORMAL
   - _SMOOTHNESSSOURCE_METALLIC_ALPHA
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -122,18 +124,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _AlphaCutoff: 0
@@ -179,8 +169,6 @@ Material:
     - _OutlineTextureType: 0
     - _OutlineWidth: 1
     - _Parallax: 0.02
-    - _QueueControl: 0
-    - _QueueOffset: 0
     - _RampBands: 4
     - _RampBandsSmoothing: 0.1
     - _RampOffset: 0
@@ -226,7 +214,7 @@ Material:
     - _ZWrite: 1
     - __dirty: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 0.7529412, g: 0.59607846, b: 0.56078434, a: 1}
     - _Color: {r: 0.753, g: 0.5963562, b: 0.560985, a: 1}
     - _CoverageColor: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
