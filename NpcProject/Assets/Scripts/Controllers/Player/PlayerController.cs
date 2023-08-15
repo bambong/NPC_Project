@@ -10,6 +10,7 @@ using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour , IDataHandler
 {
+
     [Header("Player Element")]
     [Space(1)]
     [SerializeField]
@@ -48,7 +49,9 @@ public class PlayerController : MonoBehaviour , IDataHandler
     [SerializeField]
     private float moveEnableDis = 0.5f;
     [SerializeField]
-    private float stepHeight = 1.0f;
+    private float upStepSize;
+    [SerializeField]
+    private float downStepSize;
 
     [Space(1)]
     [Header("Player HP")]
@@ -332,11 +335,11 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
     private Vector3 MoveRayCheck(Vector3 moveVec, bool isSlope )
     {
-        var pos = transform.position + (Vector3.down* box.size.y * 0.5f) + (Vector3.down*stepHeight* 0.5f);
+        var pos = transform.position + (Vector3.down* box.size.y * 0.5f) + (Vector3.down*((upStepSize + downStepSize)* 0.5f - upStepSize));
         var boxHalfSize = box.size.x * 0.5f;
         var checkWidth = box.size.x * CHECK_RAY_WIDTH;
         float moveEnableWidth = box.size.x * 0.25f;
-        float boxHeight = (stepHeight / 2);
+        float boxHeight = ((upStepSize + downStepSize) * 0.5f);
         int layer = (-1) - (1 << LayerMask.NameToLayer("Player"));
         if (Mathf.Abs(moveVec.x) > 0)
         {
@@ -352,11 +355,11 @@ public class PlayerController : MonoBehaviour , IDataHandler
             ExtDebug.DrawBox(xPos + dir + new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, Color.red);
             ExtDebug.DrawBox(xPos + dir - new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, Color.red);
     
-            if (!Physics.CheckBox(xPos + dir - new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            if ( Physics.OverlapBox(xPos + dir - new Vector3(0, 0, checkWidth),boxSize,Quaternion.identity, layer, QueryTriggerInteraction.Ignore).Length < 1)
             {
                 moveVec.x = 0;
             }
-            else if (!Physics.CheckBox(xPos + dir + new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            else if (Physics.OverlapBox(xPos + dir + new Vector3(0, 0, checkWidth), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore).Length < 1)
             {
                 moveVec.x = 0;
             }
@@ -378,11 +381,11 @@ public class PlayerController : MonoBehaviour , IDataHandler
             var boxSize = new Vector3(moveEnableWidth, boxHeight + slopeAmountY, moveEnableDis / 2);
             ExtDebug.DrawBox(zPos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
             ExtDebug.DrawBox(zPos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, Color.red);
-            if (!Physics.CheckBox(zPos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer ,QueryTriggerInteraction.Ignore))
+            if (Physics.OverlapBox(zPos + dir + new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer ,QueryTriggerInteraction.Ignore).Length < 1)
             {
                 moveVec.z = 0;
             }
-            else if (!Physics.CheckBox(zPos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore))
+            else if (Physics.OverlapBox(zPos + dir - new Vector3(checkWidth, 0, 0), boxSize, Quaternion.identity, layer, QueryTriggerInteraction.Ignore).Length < 1)
             {
                 moveVec.z = 0;
             }
@@ -721,12 +724,12 @@ public class PlayerController : MonoBehaviour , IDataHandler
     public bool IsOnSlope(Vector3 dir)
     {
         var dirPos = transform.position;
-        Debug.DrawRay(dirPos, Vector3.down *(box.bounds.extents.y + stepHeight), Color.blue);
-        if (Physics.Raycast(dirPos, Vector3.down, out slopeHit, (box.bounds.extents.y + stepHeight), slopeLayer))
+        Debug.DrawRay(dirPos, Vector3.down *(box.bounds.extents.y + upStepSize+downStepSize), Color.blue);
+        if (Physics.Raycast(dirPos, Vector3.down, out slopeHit, (box.bounds.extents.y + upStepSize + downStepSize), slopeLayer))
         {
             var angle = Vector3.Angle(Vector3.up, slopeHit.normal);
             if (angle < maxSlopeAngle)
-            {   
+            {
                 return true;   
             }
             return false;
