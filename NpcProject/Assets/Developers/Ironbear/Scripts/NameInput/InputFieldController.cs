@@ -163,9 +163,8 @@ public class InputFieldController : UI_Base
     private IEnumerator DisableInputForDurationCoroutine()
     {
         inputDisabled = true;
+        yield return new WaitForEndOfFrame();
         playerNameInput.interactable = false;
-        yield return new WaitForSeconds(disableDuration);
-        playerNameInput.interactable = true;
         inputDisabled = false;
     }
 }
