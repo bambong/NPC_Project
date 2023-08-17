@@ -66,13 +66,26 @@ public class ResolutionController : MonoBehaviour
 
             if (item.width == Screen.width && item.height == Screen.height)
             {
-                resolutionDropdown.value = optionNum;
+                //resolutionDropdown.value = optionNum;
                 optionNum++;
             }
         }
+        resolutionDropdown.value = FindCurrentResolutionIndex();
         resolutionDropdown.RefreshShownValue();
 
         fullscreenToggle.isOn = Screen.fullScreenMode.Equals(FullScreenMode.FullScreenWindow) ? true : false;
+    }
+
+    int FindCurrentResolutionIndex()
+    {
+        for (int i = 0; i < resolutions.Count; i++)
+        {
+            if (resolutions[i].width == Screen.width && resolutions[i].height == Screen.height)
+            {
+                return i;
+            }
+        }
+        return 0;
     }
 
     public void DropboxOptionChange(int x)
