@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1733587144653377306}
   - component: {fileID: 3432072528996106431}
   - component: {fileID: 596125028477596789}
+  - component: {fileID: 1126813191871229096}
   m_Layer: 0
   m_Name: Ivy_2
   m_TagString: Untagged
@@ -62,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3a8fd0215176548418e9f8ce3f76185c, type: 2}
+  - {fileID: 2100000, guid: c87c09ed91ee05049b3893c2a26fe38c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -84,6 +85,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!205 &1126813191871229096
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388552335987299744}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0.039639473, y: 0.059622943, z: 0.017394789}
+  m_Size: 1.979873
+  m_FadeMode: 1
+  m_AnimateCrossFading: 1
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.30072588
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 596125028477596789}
+  - screenRelativeHeight: 0.032957345
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 8205781898711538626}
+  m_Enabled: 1
 --- !u!1 &1733854790784266678
 GameObject:
   m_ObjectHideFlags: 0
@@ -145,7 +169,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3a8fd0215176548418e9f8ce3f76185c, type: 2}
+  - {fileID: 2100000, guid: c87c09ed91ee05049b3893c2a26fe38c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
