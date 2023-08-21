@@ -10,6 +10,8 @@ public class LaserActionDestroy : LaserAction
     public override void StartLaserEvent()
     {
         destroyObj.SetActive(false);
+        Managers.Effect.PlayEffect(Define.EFFECT.MonsterDeathEffect, this.transform);
+        Managers.Sound.PlaySFX(Define.SOUND.DeathPlayer);
         Destroy(this);
     }
 
