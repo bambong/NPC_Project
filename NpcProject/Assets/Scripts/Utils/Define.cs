@@ -47,7 +47,8 @@ public class Define
     {
         KeywordGaugeItemEffect,
         BombEffect,
-        MonsterDeathEffect
+        MonsterDeathEffect,
+        MonsterDeathEffectBig
     }
 
     public enum LaserColor

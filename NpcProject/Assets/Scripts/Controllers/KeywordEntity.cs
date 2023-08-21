@@ -93,6 +93,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     private bool isInit = false;
     private WireColorStateController wireColorController;
     private bool isMoveAble = true;
+    private bool isDestroy = false;
     public Dictionary<KeywordController,KeywordAction> CurrentRegisterKeyword { get => currentRegisterKeyword; }
     public virtual Transform KeywordTransformFactor { get => transform; }
     public Vector3 OriginScale { get; private set; }
@@ -106,6 +107,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     public float RevAbleDistance { get => revAbleDistance; }
     public DebugZone ParentDebugZone { get => parentDebugZone;  }
     public bool IsMoveAble { get => isMoveAble; set => isMoveAble = value; }
+    public bool IsDestroy { get => isDestroy; set => isDestroy = value; }
 
     private readonly float SLOT_UI_DISTANCE = 120f;
     private readonly float SCREEN_OFFSET = new Vector2(1920, 1080).magnitude;
