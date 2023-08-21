@@ -5,15 +5,18 @@ using UnityEngine;
 public abstract class LaserAction : MonoBehaviour, ILaserAction
 {
     [SerializeField]
-    private float waitTime;
+    protected float waitTime = 2.0f;
 
-    private int hitcount = 0;
-    private float second = 0;    
+    protected int hitcount = 0;
+    protected float second = 0;    
 
     public void OnLaserHit()
     {
         hitcount++;
-        StartCoroutine(PlusTime());
+        if(hitcount == 1)
+        {
+            StartCoroutine(PlusTime());
+        }
     }
 
     public void OffLaserHit()
