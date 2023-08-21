@@ -63,9 +63,9 @@ public class KeywordManager
         Init();
     }
 
-    public void AddKeywordMakerGauge(string id,int amount)
+    public void AddKeywordMakerGauge(KeywordController keyword,int amount)
     {
-        playerKeywordPanel.AddKeywordMakerGauge(id,amount);
+        playerKeywordPanel.AddKeywordMakerGauge(keyword, amount);
     }
     public List<RaycastResult> GetRaycastList(PointerEventData pointerEventData)
     {

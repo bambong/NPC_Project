@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static StylizedWater2.ShaderConfigurator;
 
 public class PlayerKeywordPanelController : UI_Base
 {
@@ -38,16 +39,17 @@ public class PlayerKeywordPanelController : UI_Base
     {
         playerKeywordGroup.alpha = 0;
     }
-    public void AddKeywordMakerGauge(string id, int amount) 
+    public void AddKeywordMakerGauge(KeywordController keyword, int amount) 
     {
-        if (!keywordMakers.ContainsKey(id)) 
+        if (!keywordMakers.ContainsKey(keyword.KeywordId)) 
         {
             var maker =  Managers.UI.MakeSubItem<KeywordMakerGaugeController>(transform, KETWORD_MAKER_NAME);
-            maker.name = $"KeywordMakerGauge_{id}";
-            maker.SetTarget(id, 3);
-            keywordMakers.Add(id,maker);
+            maker.name = $"KeywordMakerGauge_{keyword.KeywordId}";
+            
+            maker.SetTarget(keyword.GetType().ToString(), keyword.NeedMakeGauge);
+            keywordMakers.Add(keyword.KeywordId, maker);
         }
-        keywordMakers[id].AddCount(amount);
+        keywordMakers[keyword.KeywordId].AddCount(amount);
     }
     public void Open() 
     {

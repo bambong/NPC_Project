@@ -237,7 +237,7 @@ public class DebugZone : GuIdBehaviour, IDataHandler
         {
             if (playerFrames[i].HasKeyword)
             {
-                data.playerFramDatas.Add(playerFrames[i].CurFrameInnerKeyword.KewordId);
+                data.playerFramDatas.Add(playerFrames[i].CurFrameInnerKeyword.KeywordId);
                 continue;
             }
            // data.playerFramDatas.Add("");

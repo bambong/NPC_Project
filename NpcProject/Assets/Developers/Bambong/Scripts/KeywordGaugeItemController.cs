@@ -11,7 +11,7 @@ public class KeywordGaugeItemController : MonoBehaviour , ISpawnAble
 {
 
     [SerializeField]
-    private string targetKeywordId  = "AttackKeyword";
+    private GameObject keywordGo;
     
     [SerializeField]
     private Color myColor;
@@ -51,7 +51,7 @@ public class KeywordGaugeItemController : MonoBehaviour , ISpawnAble
             isOn = false;
             Managers.Effect.PlayEffect(Define.EFFECT.KeywordGaugeItemEffect,transform);
             Managers.Sound.PlaySFX(Define.SOUND.Item);
-            Managers.Keyword.AddKeywordMakerGauge(targetKeywordId, gaugeAmount);
+            Managers.Keyword.AddKeywordMakerGauge(keywordGo.GetComponent<KeywordController>(), gaugeAmount);
             if(parentSpawner != null) 
             {
                 parentSpawner.RemoveItem(spawnSpot);
