@@ -5,23 +5,34 @@ using UnityEngine;
 public abstract class LaserAction : MonoBehaviour, ILaserAction
 {
     [SerializeField]
-    private float waitTime;
+    private GameObject parent;
+    [SerializeField]
+    protected float waitTime = 2.0f;
 
-    private int hitcount = 0;
-    private float second = 0;    
+    protected float second = 0;
+    [SerializeField]
+    protected int hitcount = 0;
+    
 
     public void OnLaserHit()
     {
         hitcount++;
-        StartCoroutine(PlusTime());
+        if(hitcount == 1)
+        {
+            StartCoroutine(PlusTime());
+        }
     }
 
-    public void OffLaserHit()
+    public virtual void OffLaserHit()
     {
         hitcount--;
         if (hitcount <= 0)
         {
             hitcount = 0;
+            if (!parent.activeSelf)
+            {
+                return;
+            }
             StartCoroutine(MinusTime());
             StopLaserEvent();
         }
@@ -42,7 +53,7 @@ public abstract class LaserAction : MonoBehaviour, ILaserAction
         }
     }
 
-    IEnumerator MinusTime()
+    protected IEnumerator MinusTime()
     {
         while (second > 0 && hitcount <= 0)
         {

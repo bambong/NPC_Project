@@ -37,7 +37,7 @@ public class NPCLaser : MonoBehaviour
     [SerializeField]
     private ParticleSystem glowEnd;
 
-    private ILaserAction laserAction;
+    private ILaserAction[] laserAction;
     private RaycastHit preHit;
     private Renderer curMat;
     private RaycastHit curHit;
@@ -49,6 +49,20 @@ public class NPCLaser : MonoBehaviour
     private bool enter = false;    
     private int ignoreLayerMask = 0;
     private int actionLayerMask = 0;
+
+    private void OnEnable()
+    {
+        shoot = true;
+    }
+
+    public void OnDisable()
+    {
+        shoot = false;
+        enter = false;
+
+        EndLaserAction(curHit);
+        curHit = default;
+    }
 
     private void Start()
     {
@@ -120,8 +134,8 @@ public class NPCLaser : MonoBehaviour
                 enter = false;
             }
             lineRenderer.SetPosition(0, transform.position);
-            lineRenderer.SetPosition(1, transform.position + transform.forward * maxLength);
-            hitEffect.gameObject.transform.localPosition = transform.forward * maxLength;
+            lineRenderer.SetPosition(1, transform.position + (transform.forward * maxLength));
+            hitEffect.gameObject.transform.position = transform.position + (transform.forward * maxLength);
         }
     }
 
@@ -182,29 +196,13 @@ public class NPCLaser : MonoBehaviour
     #endregion
 
     #region LaserAction
-    public void StartLaser()
-    {
-        this.gameObject.SetActive(true);
-        shoot = true;
-    }
-
-    public void StopLaser()
-    {
-        shoot = false;
-        enter = false;
-
-        EndLaserAction(curHit);
-        curHit = default;
-        this.gameObject.SetActive(false);
-    }
-
     public void StartLaserAction(RaycastHit hit)
     {
         if(hit.collider == null)
         {
             return;
         }
-        laserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
+        laserAction = hit.collider.gameObject.GetComponents<ILaserAction>();
         if (laserAction == null)
         {
             LaserExit();
@@ -213,7 +211,13 @@ public class NPCLaser : MonoBehaviour
         else
         {
             LaserEnter();
-            laserAction.OnLaserHit();
+            foreach (var action in laserAction)
+            {
+                if(action != null)
+                {
+                    action.OnLaserHit();
+                }                
+            }
         }
     }
 
@@ -227,11 +231,30 @@ public class NPCLaser : MonoBehaviour
         {
             return;
         }
-        var preLaserAction = hit.collider.gameObject.GetComponent<ILaserAction>();
-        if (preLaserAction != null)
+        var preLaserAction = hit.collider.gameObject.GetComponents<ILaserAction>();
+
+        foreach(var action in preLaserAction)
         {
-            preLaserAction.OffLaserHit();
+            if(action != null)
+            {
+                action.OffLaserHit();
+            }
         }
     }
+    //public void StartLaser()
+    //{
+    //    this.gameObject.SetActive(true);
+    //    shoot = true;
+    //}
+
+    //public void StopLaser()
+    //{
+    //    shoot = false;
+    //    enter = false;
+
+    //    EndLaserAction(curHit);
+    //    curHit = default;
+    //    this.gameObject.SetActive(false);
+    //}
     #endregion
 }

@@ -752,6 +752,8 @@ public class PlayerController : MonoBehaviour , IDataHandler
         if (hp <= 0)
         {
             SetstateDeath();
+            Managers.Sound.PlaySFX(Define.SOUND.HitPlayer);
+            hitFeedback.PlayFeedbacks();
             return;
         }
         Managers.Sound.PlaySFX(Define.SOUND.HitPlayer);
