@@ -50,6 +50,20 @@ public class NPCLaser : MonoBehaviour
     private int ignoreLayerMask = 0;
     private int actionLayerMask = 0;
 
+    private void OnEnable()
+    {
+        shoot = true;
+    }
+
+    public void OnDisable()
+    {
+        shoot = false;
+        enter = false;
+
+        EndLaserAction(curHit);
+        curHit = default;
+    }
+
     private void Start()
     {
         curMat = GetComponent<Renderer>();
@@ -182,22 +196,6 @@ public class NPCLaser : MonoBehaviour
     #endregion
 
     #region LaserAction
-    public void StartLaser()
-    {
-        this.gameObject.SetActive(true);
-        shoot = true;
-    }
-
-    public void StopLaser()
-    {
-        shoot = false;
-        enter = false;
-
-        EndLaserAction(curHit);
-        curHit = default;
-        this.gameObject.SetActive(false);
-    }
-
     public void StartLaserAction(RaycastHit hit)
     {
         if(hit.collider == null)
@@ -243,5 +241,20 @@ public class NPCLaser : MonoBehaviour
             }
         }
     }
+    //public void StartLaser()
+    //{
+    //    this.gameObject.SetActive(true);
+    //    shoot = true;
+    //}
+
+    //public void StopLaser()
+    //{
+    //    shoot = false;
+    //    enter = false;
+
+    //    EndLaserAction(curHit);
+    //    curHit = default;
+    //    this.gameObject.SetActive(false);
+    //}
     #endregion
 }

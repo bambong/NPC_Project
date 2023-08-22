@@ -30,10 +30,11 @@ public class PlayerUIController : UI_Base
    
     public void SetHp(int damage)
     {
-        UIEnable();
 
-        if (Managers.Game.Player.Hp <= Managers.Game.Player.MaxHp || Managers.Game.Player.Hp >= 0)
+        if (Managers.Game.Player.Hp <= Managers.Game.Player.MaxHp && Managers.Game.Player.Hp >= 0)
         {
+            UIEnable();
+
             float exHp = (float)(Managers.Game.Player.Hp + damage) / Managers.Game.Player.MaxHp;
             float hp = (float)Managers.Game.Player.Hp / Managers.Game.Player.MaxHp;
 

@@ -10,6 +10,7 @@ public abstract class LaserAction : MonoBehaviour, ILaserAction
     protected float waitTime = 2.0f;
 
     protected float second = 0;
+    [SerializeField]
     protected int hitcount = 0;
     
 
@@ -28,8 +29,7 @@ public abstract class LaserAction : MonoBehaviour, ILaserAction
         if (hitcount <= 0)
         {
             hitcount = 0;
-
-            if(!parent.activeSelf)
+            if (!parent.activeSelf)
             {
                 return;
             }

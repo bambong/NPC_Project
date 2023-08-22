@@ -10,18 +10,6 @@ public class LaserActionDestroy : LaserAction
     public override void StartLaserEvent()
     {
         keyword.IsDestroy = true;
-        
-        //foreach(var key in keyword.CurrentRegisterKeyword)
-        //{
-        //    if(key.Key.KewordId == "AttachKeyword")
-        //    {
-        //        Managers.Effect.PlayEffect(Define.EFFECT.MonsterDeathEffect, this.transform);
-        //        Managers.Sound.PlaySFX(Define.SOUND.ErrorEffectKeyword);
-        //        keyword.DestroyKeywordEntity();
-        //        Destroy(this);
-        //        return;
-        //    }
-        //}
     }
 
     public override void StopLaserEvent()
