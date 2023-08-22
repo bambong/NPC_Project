@@ -110,7 +110,6 @@ public class GameManager
     public void Clear() 
     {
         gameStateController.ChangeState(GameNormalState.Instance);
-        player = null;
         Physics.gravity = prevGravity;
         Managers.Time.SetTimeScale(TIME_TYPE.NONE_PLAYER, 1);
         destinationPanel.Close();

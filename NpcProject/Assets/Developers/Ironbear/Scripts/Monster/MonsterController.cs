@@ -152,7 +152,7 @@ public class MonsterController : KeywordEntity , ISpawnAble
 
     public void FlipToDestination() 
     {
-        var det = Vector3.Cross(monsterNav.destination - transform.position , transform.forward);
+        var det = Vector3.Cross(monsterNav.desiredVelocity.normalized  , transform.forward);
          spriteRenderer.flipX = 0 > Vector3.Dot( Vector3.up ,det );
     }
 
@@ -503,7 +503,7 @@ public class MonsterController : KeywordEntity , ISpawnAble
 
         if (curChaseTime >= chaseTime)
         {
-            if(chaseDistance < monsterNav.remainingDistance) 
+            if(chaseDistance < monsterNav.remainingDistance || monsterNav.remainingDistance == 0) 
             {
                 SetStateWait();
                 return;

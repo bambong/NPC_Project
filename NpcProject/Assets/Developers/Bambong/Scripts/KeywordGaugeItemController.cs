@@ -12,7 +12,8 @@ public class KeywordGaugeItemController : MonoBehaviour , ISpawnAble
 
     [SerializeField]
     private GameObject keywordGo;
-    
+    [SerializeField]
+    private Color baseColor = Color.white;
     [SerializeField]
     private Color myColor;
 
@@ -30,6 +31,7 @@ public class KeywordGaugeItemController : MonoBehaviour , ISpawnAble
     private void Start()
     {
         GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", myColor);
+        GetComponent<MeshRenderer>().material.SetColor("_BaseColor", baseColor);
     }
     private void FixedUpdate()
     {
