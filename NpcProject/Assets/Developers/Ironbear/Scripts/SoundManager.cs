@@ -47,15 +47,13 @@ public class SoundManager
     {
         if (param == null)
         {
-            //second parameter: fadeout value
-            bgmEmitter.ChangeEvent(bgm, true);
+            bgmEmitter.ChangeEvent(bgm);
         }
         else
         {
             bgmEmitter.SetParameter(param, value);
         }
     }
-
     public void PlayBGM()
     {
         bgmEmitter.Play();

@@ -11,7 +11,9 @@ GameObject:
   - component: {fileID: 6165529417177038481}
   - component: {fileID: 1143877599143071604}
   - component: {fileID: 7822099789834703897}
-  m_Layer: 0
+  - component: {fileID: 4740864315585869985}
+  - component: {fileID: 8502132788250504602}
+  m_Layer: 8
   m_Name: Temple_Pilliar_for_puzzle_razer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,3 +86,41 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4740864315585869985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1477476683757591262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24651d961476c7a4ca00d46866546750, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guId: 
+  parentDebugZone: {fileID: 0}
+  availableKeywordType: -1
+  maxHeight: 3
+  maxScale: {x: 2, y: 2, z: 2}
+  revAbleDistance: 1000
+  keywords:
+  - isLock: 0
+    keywordGo: {fileID: 0}
+  statusSlotLayoutName: KeywordStatusLayoutController
+--- !u!114 &8502132788250504602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1477476683757591262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44f30c2a92c4649c9a6f187420fc4b86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parent: {fileID: 1477476683757591262}
+  waitTime: 1
+  hitcount: 0
+  keyword: {fileID: 4740864315585869985}
