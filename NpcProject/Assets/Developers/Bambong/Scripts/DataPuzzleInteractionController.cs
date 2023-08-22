@@ -87,4 +87,13 @@ public class DataPuzzleInteractionController : MonoBehaviour, IInteraction
         Managers.Game.Player.SetstateStop();
         Managers.Scene.LoadScene(Define.Scene.DataPuzzle);
     }
+    [ContextMenu("Success")]
+    public void SuccessContextMenu() 
+    {
+        Managers.Data.ClearEvent(successEventGuid.GuId);
+        SuccessDataCube();
+        var seq = DOTween.Sequence();
+        seq.AppendInterval(5f);
+        seq.AppendCallback(() => { onSuccess?.Invoke(); });
+    }
 }

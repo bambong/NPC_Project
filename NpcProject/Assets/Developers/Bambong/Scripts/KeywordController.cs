@@ -22,7 +22,8 @@ public class KeywordController : UI_Base
     private Image image;
     [SerializeField]
     private E_KEYWORD_TYPE keywordType = E_KEYWORD_TYPE.DEFALUT;
-
+    [SerializeField]
+    private int needMakeGauge = 3;
     private int prevSibilintIndex;
     private Transform startParent;
     private Vector3 startDragPoint;
@@ -35,11 +36,12 @@ public class KeywordController : UI_Base
     private bool isDrag = false;
     public bool isPlay = false;
     public Image Image { get => image; }
-    public string KewordId { get; private set; }
+    public string KeywordId { get; private set; }
     public KeywordFrameBase CurFrame { get => curFrame;}
     public RectTransform RectTransform { get => rectTransform;  }
     public E_KEYWORD_TYPE KeywordType { get => keywordType;  }
     public bool IsLock { get => isLock; }
+    public int NeedMakeGauge { get => needMakeGauge;  }
 
     private Color originColor;
    
@@ -52,7 +54,7 @@ public class KeywordController : UI_Base
 
     private void Awake()
     {
-         KewordId = GetType().ToString();
+         KeywordId = GetType().ToString();
     }
 
     public void SetFrame(KeywordFrameBase frame)

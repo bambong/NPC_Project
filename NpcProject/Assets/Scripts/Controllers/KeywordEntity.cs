@@ -366,7 +366,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
 
         fixedUpdateAction -= action.OnFixecUpdate;
         updateAction -= action.OnUpdate;
-        if (newKeyword == null || registerkeyword.KewordId != newKeyword.KewordId) 
+        if (newKeyword == null || registerkeyword.KeywordId != newKeyword.KeywordId) 
         {
             currentRegisterKeyword[registerkeyword]?.OnRemove(this);
         }
@@ -391,7 +391,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
             return;
         }
 
-        var keywordId = newKeyword.KewordId;
+        var keywordId = newKeyword.KeywordId;
         var keywordAciton = new KeywordAction(newKeyword);
         KeywordAction overAction;
         // 키워드가 오버라이딩 되어 있는지 확인하고 키워드 액션에 할당
@@ -452,7 +452,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     {
         foreach(var item in currentRegisterKeyword) 
         {
-            if(item.Key.KewordId == id) 
+            if(item.Key.KeywordId == id) 
             {
                 return true;
             }
@@ -701,7 +701,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
             if (keywordFrames[i].HasKeyword) 
             {
                 frameData.isLock = keywordFrames[i].CurFrameInnerKeyword.IsLock;
-                frameData.id = keywordFrames[i].CurFrameInnerKeyword.KewordId;
+                frameData.id = keywordFrames[i].CurFrameInnerKeyword.KeywordId;
             }
         }
         gameData.keywordEntityDatas[debugZoneGuid].AddOrUpdateValue(guId, data);
