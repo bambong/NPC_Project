@@ -167,4 +167,12 @@ public class InputFieldController : UI_Base
         playerNameInput.interactable = false;
         inputDisabled = false;
     }
+
+    public void LoadNextScene()
+    {
+        if(!isRestrict && playerName != null)
+        {
+            Managers.Scene.LoadScene(Define.Scene.Chapter_02_Forest.ToString());
+        }
+    }
 }
