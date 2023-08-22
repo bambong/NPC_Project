@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Text;
 using System;
 using UnityEngine.Playables;
+using Cinemachine;
 
 public class CutScenePlayerController : MonoBehaviour
 {
@@ -38,7 +39,9 @@ public class CutScenePlayerController : MonoBehaviour
     #region Signal
     public void CutScenePlayerSpawn()
     {
-        cutScenePlayer.transform.position = Managers.Game.Player.gameObject.transform.position;
+        var cam = CinemachineCore.Instance.GetActiveBrain(0).ActiveVirtualCamera;
+        cam.Follow = cutScenePlayer.transform;
+        cutScenePlayer.transform.position = Managers.Game.Player.gameObject.transform.position;        
         Managers.Game.Player.gameObject.SetActive(false);
     }
 
@@ -87,6 +90,8 @@ public class CutScenePlayerController : MonoBehaviour
 
     public void PlayerSpawn()
     {
+        var cam = CinemachineCore.Instance.GetActiveBrain(0).ActiveVirtualCamera;
+        cam.Follow = Managers.Game.Player.transform;
         Managers.Game.Player.gameObject.SetActive(true);
         Managers.Game.Player.gameObject.transform.position = cutScenePlayer.transform.position;
     }
