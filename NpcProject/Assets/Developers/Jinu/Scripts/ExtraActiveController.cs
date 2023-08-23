@@ -1,0 +1,20 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ExtraActiveController : MonoBehaviour
+{
+    [SerializeField]
+    private int progress;
+    public void Start()
+    {
+        if(Managers.Data.Progress == progress)
+        {
+            this.gameObject.SetActive(true);
+        }
+        else
+        {
+            this.gameObject.SetActive(false);
+        }
+    }
+}
