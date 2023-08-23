@@ -75,6 +75,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{e3b4d456-6252-4f88-a2c7-969f88f811d3}">
+		<relationship name="modulators">
+			<destination>{345d41e0-7ebd-4a48-9a49-2f4a01620084}</destination>
+		</relationship>
 		<relationship name="effectChain">
 			<destination>{7106d922-354d-4ab0-ace6-f317e7b1ed11}</destination>
 		</relationship>
@@ -106,9 +109,6 @@
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
-		<relationship name="modulators">
-			<destination>{5e56cdbb-0922-4594-9e99-ccb41d705721}</destination>
-		</relationship>
 		<relationship name="effectChain">
 			<destination>{abadfc29-15f7-48f6-91de-bac1a89a61ad}</destination>
 		</relationship>
@@ -133,6 +133,32 @@
 			<destination>{278fa6bc-e26f-4cc0-a175-7ee62537ce59}</destination>
 		</relationship>
 	</object>
+	<object class="ADSRModulator" id="{345d41e0-7ebd-4a48-9a49-2f4a01620084}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>volume</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>2200</value>
+		</property>
+		<property name="attackShape">
+			<value>0.276249498</value>
+		</property>
+		<property name="peakValue">
+			<value>-0.577777863</value>
+		</property>
+		<property name="releaseTime">
+			<value>5000</value>
+		</property>
+		<property name="releaseShape">
+			<value>0.23367238</value>
+		</property>
+		<property name="finalValue">
+			<value>-80</value>
+		</property>
+	</object>
 	<object class="MixerBusEffectChain" id="{7106d922-354d-4ab0-ace6-f317e7b1ed11}">
 		<relationship name="effects">
 			<destination>{712ccebb-b23c-428a-b7af-3c48e0dc0d96}</destination>
@@ -147,17 +173,6 @@
 		<relationship name="endPoint">
 			<destination>{2c68f8c3-2de4-4a99-accd-f1f346930c72}</destination>
 		</relationship>
-	</object>
-	<object class="ADSRModulator" id="{5e56cdbb-0922-4594-9e99-ccb41d705721}">
-		<property name="nameOfPropertyBeingModulated">
-			<value>volume</value>
-		</property>
-		<property name="initialValue">
-			<value>-80</value>
-		</property>
-		<property name="finalValue">
-			<value>-80</value>
-		</property>
 	</object>
 	<object class="MixerBusEffectChain" id="{abadfc29-15f7-48f6-91de-bac1a89a61ad}">
 		<relationship name="effects">

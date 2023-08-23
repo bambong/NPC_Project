@@ -7,6 +7,8 @@ public class LogoPanelController : UI_Base
 {
     [SerializeField]
     private EventReference bgm;
+    [SerializeField]
+    private GameObject fakeBgm;
 
     [SerializeField]
     private GameObject logos;
@@ -82,8 +84,10 @@ public class LogoPanelController : UI_Base
         }
         isOpenPanel = true;
 
-        Managers.Sound.ChangeBGM(bgm);
-        Managers.Sound.PlayBGM();
+        Managers.Sound.StopBGM();
+        fakeBgm.SetActive(true);
+        //Managers.Sound.ChangeBGM(bgm);
+        //Managers.Sound.PlayBGM();
         secondPanel.interactable = true;
         secondPanel.blocksRaycasts = true;
         Sequence seq = DOTween.Sequence();

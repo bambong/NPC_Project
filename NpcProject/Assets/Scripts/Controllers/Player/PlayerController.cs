@@ -713,6 +713,14 @@ public class PlayerController : MonoBehaviour , IDataHandler
         AnimIdleEnter();
         rigid.velocity = Vector3.zero;
     }
+    public void AnimIdleEnter(PlayerAnimationController.MoveDir dir)
+    {
+        animationController.SetIdleAnim(dir);
+    }
+    public void AnimMoveEnter(PlayerAnimationController.MoveDir dir, Vector3 moveVec)
+    {
+        animationController.SetWalkAnim(dir, moveVec);
+    }
     private bool PlayerIsStopState()
     {
         return playerStateController.CurState == PlayerStop.Instance;
@@ -900,4 +908,6 @@ public class PlayerController : MonoBehaviour , IDataHandler
     {
         gameData.playerPos = transform.position;
     }
+
+
 }
