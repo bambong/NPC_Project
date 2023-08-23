@@ -6,6 +6,8 @@ public class ExtraActiveController : MonoBehaviour
 {
     [SerializeField]
     private int progress;
+    [SerializeField]
+    private Animator anim;
     public void Start()
     {
         if(Managers.Data.Progress == progress)
@@ -17,4 +19,9 @@ public class ExtraActiveController : MonoBehaviour
             this.gameObject.SetActive(false);
         }
     }
+
+    public void SideIdle()
+    {
+        anim.Play("Meria_Idle_Side");
+    }    
 }
