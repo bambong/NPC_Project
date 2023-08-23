@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 7822099789834703897}
   - component: {fileID: 4740864315585869985}
   - component: {fileID: 8502132788250504602}
+  - component: {fileID: 914608424660161875}
+  - component: {fileID: 6211014254190524360}
   m_Layer: 8
   m_Name: Temple_Pilliar_for_puzzle_razer
   m_TagString: Untagged
@@ -42,7 +44,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1477476683757591262}
-  m_Mesh: {fileID: 8231982028345868771, guid: 58530145b3a3a1940a252c1298f5ae3f, type: 3}
+  m_Mesh: {fileID: 8231982028345868771, guid: 10a86a74d38785e44815b51ef367431d, type: 3}
 --- !u!23 &7822099789834703897
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -124,3 +126,32 @@ MonoBehaviour:
   waitTime: 1
   hitcount: 0
   keyword: {fileID: 4740864315585869985}
+--- !u!65 &914608424660161875
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1477476683757591262}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 7.636094, y: 13.465643, z: 7.7417073}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &6211014254190524360
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1477476683757591262}
+  serializedVersion: 2
+  m_Mass: 100
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

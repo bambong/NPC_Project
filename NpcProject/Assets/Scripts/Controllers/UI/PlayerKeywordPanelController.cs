@@ -41,15 +41,16 @@ public class PlayerKeywordPanelController : UI_Base
     }
     public void AddKeywordMakerGauge(KeywordController keyword, int amount) 
     {
-        if (!keywordMakers.ContainsKey(keyword.KeywordId)) 
+        var id = keyword.GetType().ToString();
+        if (!keywordMakers.ContainsKey(id)) 
         {
             var maker =  Managers.UI.MakeSubItem<KeywordMakerGaugeController>(transform, KETWORD_MAKER_NAME);
-            maker.name = $"KeywordMakerGauge_{keyword.KeywordId}";
+            maker.name = $"KeywordMakerGauge_{id}";
             
             maker.SetTarget(keyword.GetType().ToString(), keyword.NeedMakeGauge);
-            keywordMakers.Add(keyword.KeywordId, maker);
+            keywordMakers.Add(id, maker);
         }
-        keywordMakers[keyword.KeywordId].AddCount(amount);
+        keywordMakers[id].AddCount(amount);
     }
     public void Open() 
     {
