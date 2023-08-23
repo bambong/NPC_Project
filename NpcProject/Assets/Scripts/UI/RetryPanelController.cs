@@ -9,8 +9,7 @@ public class RetryPanelController : UI_Base
 {
     [SerializeField]
     private CanvasGroup canvasGroup;
-    [SerializeField]
-    private TextMeshProUGUI retryText;
+
     [SerializeField]
     private Button resetButton;
     [SerializeField]
@@ -26,8 +25,7 @@ public class RetryPanelController : UI_Base
 
     private bool isOpenPanel;
     private bool isOpenButton;
-    private readonly float OPEN_INTERVAL = 0.5f;
-    private readonly float FADE_OPEN_TIME = 1f;
+    private readonly float OPEN_INTERVAL = 3f;
     public override void Init()
     {
     }
@@ -81,14 +79,11 @@ public class RetryPanelController : UI_Base
             CloseResetButton();
         }
         ClosePauseButton();
-        canvasGroup.gameObject.SetActive(true);
         Sequence seq = DOTween.Sequence();
         seq.AppendInterval(OPEN_INTERVAL);
-        seq.Append(canvasGroup.DOFade(1, FADE_OPEN_TIME));
         seq.AppendCallback(() =>
         {
             StartCoroutine(RetryInputCheck());
-            retryText.gameObject.SetActive(true);
         });
         seq.Play();
     }
@@ -102,7 +97,7 @@ public class RetryPanelController : UI_Base
     {
         while (true)
         {
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (Input.anyKeyDown)
             {
                 Managers.Sound.PlaySFX(Define.SOUND.ResetButton);
                 Managers.Sound.StopBGM();

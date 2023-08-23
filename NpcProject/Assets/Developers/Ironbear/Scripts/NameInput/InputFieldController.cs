@@ -110,8 +110,10 @@ public class InputFieldController : UI_Base
         {
             Managers.Sound.PlaySFX(Define.SOUND.Sign);
             SubmitName();
-            if(contractPanel!=null)
+            if (contractPanel != null)
             {
+                isRestrict = true;
+                StartCoroutine(DisableInputForDurationCoroutine());
                 contractPanel.UiOff();
             }           
         }        
@@ -158,11 +160,19 @@ public class InputFieldController : UI_Base
         outputText.text = inputValue;
     }
 
-    public void DisableInputForDuratoin()
+    private IEnumerator DisableInputForDurationCoroutine()
     {
         inputDisabled = true;
+        yield return new WaitForEndOfFrame();
         playerNameInput.interactable = false;
-        disabledEndTime = Time.time + disableDuration;
-        //Input.ResetInputAxes();       
+        inputDisabled = false;
+    }
+
+    public void LoadNextScene()
+    {
+        if(!isRestrict && playerName != null)
+        {
+            Managers.Scene.LoadScene(Define.Scene.Chapter_02_Forest.ToString());
+        }
     }
 }

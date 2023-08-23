@@ -774,6 +774,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     }
     public void OpenDeathUI()
     {
+        SetActivePauseUi(false);
         deathUIController.DeathUIOpen();
     }
     public void CloseDeathUI()
@@ -893,6 +894,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
     }
     public void PlayerDeathAnimEnd()
     {
+         
         OpenDeathUI();
     }
 

@@ -10,6 +10,7 @@ public class IntroStateWarningFrameController : MonoBehaviour, IDropHandler
 
 
     private bool isPlay = false;
+    private bool isAnimating = false;
 
     private void Start()
     {
@@ -18,7 +19,7 @@ public class IntroStateWarningFrameController : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (eventData.pointerDrag != null)
+        if (eventData.pointerDrag != null && !isAnimating)
         {
             warning.SetActive(true);
             StartCoroutine(WarningTextEffect());
@@ -52,6 +53,7 @@ public class IntroStateWarningFrameController : MonoBehaviour, IDropHandler
 
     private IEnumerator WarningTextEffect()
     {
+        isAnimating = true;
         warning.transform.localScale = new Vector3(1f, 1f, 1f);
         Vector3 targetScale = new Vector3(1.1f, 1.1f, 1.1f);
 
@@ -64,5 +66,6 @@ public class IntroStateWarningFrameController : MonoBehaviour, IDropHandler
 
         yield return new WaitForSeconds(1.5f);
         warning.gameObject.SetActive(false);
+        isAnimating = false;
     }
 }

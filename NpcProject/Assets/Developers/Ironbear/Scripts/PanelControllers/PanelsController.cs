@@ -14,6 +14,8 @@ public class PanelsController : UI_Base
     private GameObject puzzlePanel;
     [SerializeField]
     private GameObject textPanel;
+    [SerializeField]
+    private GameObject tempPanel;
 
     [SerializeField]
     private Texture2D noramlCursor;
@@ -40,6 +42,7 @@ public class PanelsController : UI_Base
         startPanel.SetActive(false);
         puzzlePanel.SetActive(false);
         textPanel.SetActive(false);
+        tempPanel.SetActive(false);
         isLogo = true;
     }
 
@@ -94,5 +97,13 @@ public class PanelsController : UI_Base
     {
         canvas.alpha = 0f;
         canvas.DOFade(1f, fadeDuration).SetEase(Ease.OutQuad);
+    }
+
+    public void TempPanelActive()
+    {
+        CanvasGroup tempCanvas = tempPanel.GetComponent<CanvasGroup>();
+
+        tempPanel.SetActive(true);
+        tempCanvas.alpha = 1f;
     }
 }
