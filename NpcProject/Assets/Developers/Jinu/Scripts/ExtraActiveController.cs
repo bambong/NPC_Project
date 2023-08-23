@@ -13,7 +13,7 @@ public class ExtraActiveController : MonoBehaviour
 
     public void Start()
     {
-        if(Managers.Data.Progress == progress)
+        if(progress == Managers.Data.Progress)
         {
             this.gameObject.SetActive(true);
         }
