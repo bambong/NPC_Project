@@ -21,6 +21,5 @@ public class RotateKeyword : KeywordController
     }
     public override void OnRemove(KeywordEntity entity)
     {
-        Managers.Sound.StopSFX();
     }
 }

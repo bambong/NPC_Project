@@ -75,6 +75,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{bfa04480-55e1-4d62-9fd4-f48c271a116f}">
+		<relationship name="modulators">
+			<destination>{4a4e5cb7-3868-4296-8e51-fb1d7634d114}</destination>
+		</relationship>
 		<relationship name="effectChain">
 			<destination>{c3574c3d-5921-4b9f-94b2-609b61435b6b}</destination>
 		</relationship>
@@ -101,14 +104,11 @@
 	</object>
 	<object class="EventMixerGroup" id="{91cd6949-64c0-4d9f-804e-6e6c6efa5d56}">
 		<property name="volume">
-			<value>-35</value>
+			<value>-12</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
-		<relationship name="modulators">
-			<destination>{763a67df-fc82-41b3-8ef5-ca8178ff32ce}</destination>
-		</relationship>
 		<relationship name="effectChain">
 			<destination>{9101ec3d-1aa4-44bd-94dd-7934d562e960}</destination>
 		</relationship>
@@ -133,6 +133,29 @@
 			<destination>{baf59b83-9c3b-4232-b2a3-3b2cf0b2e889}</destination>
 		</relationship>
 	</object>
+	<object class="ADSRModulator" id="{4a4e5cb7-3868-4296-8e51-fb1d7634d114}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>volume</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>2000</value>
+		</property>
+		<property name="attackShape">
+			<value>0.275108039</value>
+		</property>
+		<property name="releaseTime">
+			<value>4000</value>
+		</property>
+		<property name="releaseShape">
+			<value>-0.312405944</value>
+		</property>
+		<property name="finalValue">
+			<value>-80</value>
+		</property>
+	</object>
 	<object class="MixerBusEffectChain" id="{c3574c3d-5921-4b9f-94b2-609b61435b6b}">
 		<relationship name="effects">
 			<destination>{21af6836-dfe7-4fef-95e9-b97a9e92afdb}</destination>
@@ -140,17 +163,6 @@
 	</object>
 	<object class="MixerBusPanner" id="{d21115e5-c3ec-440e-9e11-e3de57058251}" />
 	<object class="MixerBusFader" id="{50428433-2a92-4187-b9b5-7d36828b63d1}" />
-	<object class="ADSRModulator" id="{763a67df-fc82-41b3-8ef5-ca8178ff32ce}">
-		<property name="nameOfPropertyBeingModulated">
-			<value>volume</value>
-		</property>
-		<property name="initialValue">
-			<value>-80</value>
-		</property>
-		<property name="finalValue">
-			<value>-80</value>
-		</property>
-	</object>
 	<object class="MixerBusEffectChain" id="{9101ec3d-1aa4-44bd-94dd-7934d562e960}">
 		<relationship name="effects">
 			<destination>{614a65d2-bf66-4756-ab40-4b610b05991f}</destination>

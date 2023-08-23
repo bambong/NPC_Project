@@ -14,6 +14,7 @@ public class KeywordMakerGaugeController : UI_Base
 
     private int needForMakeCount = 3;
     private string targeKeywordName;
+
     private Queue<Func<IEnumerator>> addAnimQueue = new Queue<Func<IEnumerator>>();
 
 

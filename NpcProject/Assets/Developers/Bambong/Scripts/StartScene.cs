@@ -17,4 +17,8 @@ public class StartScene : BaseScene
         //letterBoxPanelController.Init();
         //letterBoxPanelController.AnimationLetterBoxIn();
     }
+    private void Start()
+    {
+        PlayBgm();
+    }
 }

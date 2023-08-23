@@ -11,8 +11,9 @@ public class KeywordGaugeItemController : MonoBehaviour , ISpawnAble
 {
 
     [SerializeField]
-    private string targetKeywordId  = "AttackKeyword";
-    
+    private GameObject keywordGo;
+    [SerializeField]
+    private Color baseColor = Color.white;
     [SerializeField]
     private Color myColor;
 
@@ -30,6 +31,7 @@ public class KeywordGaugeItemController : MonoBehaviour , ISpawnAble
     private void Start()
     {
         GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", myColor);
+        GetComponent<MeshRenderer>().material.SetColor("_BaseColor", baseColor);
     }
     private void FixedUpdate()
     {
@@ -51,7 +53,7 @@ public class KeywordGaugeItemController : MonoBehaviour , ISpawnAble
             isOn = false;
             Managers.Effect.PlayEffect(Define.EFFECT.KeywordGaugeItemEffect,transform);
             Managers.Sound.PlaySFX(Define.SOUND.Item);
-            Managers.Keyword.AddKeywordMakerGauge(targetKeywordId, gaugeAmount);
+            Managers.Keyword.AddKeywordMakerGauge(keywordGo.GetComponent<KeywordController>(), gaugeAmount);
             if(parentSpawner != null) 
             {
                 parentSpawner.RemoveItem(spawnSpot);

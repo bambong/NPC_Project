@@ -42,7 +42,7 @@ public class SoundManager
     }
 
     #region BGMControl
-
+    
     public void ChangeBGM(EventReference bgm, string param = null, float value = 0)
     {
         if (param == null)
@@ -54,7 +54,6 @@ public class SoundManager
             bgmEmitter.SetParameter(param, value);
         }
     }
-
     public void PlayBGM()
     {
         bgmEmitter.Play();

@@ -95,16 +95,13 @@
 		<property name="length">
 			<value>111.96081632653062</value>
 		</property>
-		<relationship name="triggerConditions">
-			<destination>{c9ccc8ed-00b4-40e1-b08c-53a922038981}</destination>
-		</relationship>
 		<relationship name="audioFile">
 			<destination>{d338799a-8923-45bc-a71f-9f6f19ab2816}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{92308c30-3816-499c-bfd5-aabd7a1aa6fa}">
 		<property name="volume">
-			<value>-19.5</value>
+			<value>-14.5</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
@@ -144,11 +141,6 @@
 	</object>
 	<object class="MixerBusPanner" id="{403191a2-3c32-48c9-a577-f20b22eb289b}" />
 	<object class="MixerBusFader" id="{c329a1f0-9c3e-471c-93eb-29eff04eeda2}" />
-	<object class="EventCondition" id="{c9ccc8ed-00b4-40e1-b08c-53a922038981}">
-		<property name="eventState">
-			<value>1</value>
-		</property>
-	</object>
 	<object class="Automator" id="{9d031754-af47-4222-930c-e5574ac6b7bf}">
 		<property name="nameOfPropertyBeingAutomated">
 			<value>volume</value>
@@ -164,6 +156,9 @@
 	<object class="ObjectSpatialiserEffect" id="{8d8541c8-c933-4ae8-8391-9c8174906867}">
 		<property name="distanceRolloffType">
 			<value>1</value>
+		</property>
+		<property name="overrideRange">
+			<value>true</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{e3ec98b3-8011-48c3-a6fb-518d9a5292cf}" />

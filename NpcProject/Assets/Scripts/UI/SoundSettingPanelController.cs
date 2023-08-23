@@ -76,9 +76,9 @@ public class SoundSettingPanelController : ButtonBasePanelController
         Managers.Sound.PlaySFX(Define.SOUND.DataPuzzleDigital);
         OnChangeMasterVolume(1);
         masterSlider.value = 1;
-        OnChangeBgmVolume(0.5f);
-        bgmSlider.value = 0.5f;
-        OnChangeSfxVolume(0.5f);
-        sfxSlider.value = 0.5f;
+        OnChangeBgmVolume(1);
+        bgmSlider.value = 1;
+        OnChangeSfxVolume(1);
+        sfxSlider.value = 1;
     }
 }
