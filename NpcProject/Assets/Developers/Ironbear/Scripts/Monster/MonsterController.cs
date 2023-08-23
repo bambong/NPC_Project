@@ -194,12 +194,14 @@ public class MonsterController : KeywordEntity , ISpawnAble
     }
     public override void EnterDebugMod()
     {
+        spriteRenderer.materials[0].SetFloat("_GreyscaleBlend",1);
         MonsterAnimTimeScaleUpdate();
         MoveSpeedUpdate();
         base.EnterDebugMod();
     }
     public override void ExitDebugMod()
     {
+        spriteRenderer.materials[0].SetFloat("_GreyscaleBlend",0);
         MonsterAnimTimeScaleClear();
         monsterNav.speed = moveSpeed;
         base.ExitDebugMod();

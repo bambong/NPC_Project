@@ -18,6 +18,8 @@ public class DataPuzzleInteractionController : MonoBehaviour, IInteraction
     [SerializeField]
     private UnityEvent onSuccess;
 
+    [SerializeField]
+    private float scuccessInterval = 3f;
     public GameObject Go => gameObject;
     public bool IsInteractAble
     {
@@ -40,7 +42,7 @@ public class DataPuzzleInteractionController : MonoBehaviour, IInteraction
                 Managers.Data.ClearEvent(successEventGuid.GuId);
                 SuccessDataCube();
                 var seq = DOTween.Sequence();
-                seq.AppendInterval(5f);
+                seq.AppendInterval(scuccessInterval);
                 seq.AppendCallback(() => { onSuccess?.Invoke(); });
             }
             else 
