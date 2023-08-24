@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
-using UnityEditor.Searcher;
+//using UnityEditor.Searcher;
 using UnityEngine;
 public class KeywordAction 
 {
@@ -251,7 +251,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
             keywordFrames.Add(frame);
             frame.RegisterEntity(this, keywordWorldSlotLayout.KeywordStatusUis[i]);
            
-            // Å°¿öµå°¡ ¹Ì¸® »ý¼ºµÇ¾î ÀÖ´Â ½½·ÔÀÎÁö È®ÀÎ
+            // Å°ï¿½ï¿½ï¿½å°¡ ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
             if (keywords[i].keywordGo == null) 
             {
                 continue;
@@ -351,10 +351,10 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
 
         if(!currentRegisterKeyword.ContainsKey(registerkeyword))
         {
-            Debug.LogError("Æ÷ÇÔµÇÁö¾ÊÀº Å°¿öµå »èÁ¦ ½Ãµµ");
+            Debug.LogError("ï¿½ï¿½ï¿½Ôµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ãµï¿½");
             return;
         }
-        // ´Ù¸¥ ½½·Ô¿¡ µé¾î°¡ ÀÖ´ÂÁö È®ÀÎ
+        // ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½Ô¿ï¿½ ï¿½ï¿½î°¡ ï¿½Ö´ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         for(int i = 0; i < keywordFrames.Count; ++i) 
         {
             if(keywordFrames[i].CurFrameInnerKeyword == registerkeyword)
@@ -374,18 +374,18 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     }
     public void DecisionKeyword(KeywordFrameController keywordFrame , KeywordController newKeyword) 
     {
-        // ÇÁ·¹ÀÓ¾È¿¡ Å°¿öµå°¡ ¾ø´Ù¸é 
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ó¾È¿ï¿½ Å°ï¿½ï¿½ï¿½å°¡ ï¿½ï¿½ï¿½Ù¸ï¿½ 
         if (newKeyword == null)
         {
-            //¿ùµå Å°¿öµå UI ¸¦ ¸®¼ÂÇÏ°í ´Ù½Ã ¼øÈ¸ 
+            //ï¿½ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ï¿½ï¿½ UI ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½È¸ 
             keywordFrame.KeywordWorldSlot.UpdateUI(false);
             return;
         }
-        ////¿ùµå Å°¿öµå UI ¼³Á¤  
+        ////ï¿½ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ï¿½ï¿½ UI ï¿½ï¿½ï¿½ï¿½  
         keywordFrame.KeywordWorldSlot.UpdateUI(true);
         //keywordFrame.KeywordWorldSlot.SetSlotUI(curFrameInnerKeyword.Image);
 
-        // ÀÌ¹Ì µî·ÏµÈ Å°¿öµå¶ó¸é ´Ù½Ã ¼øÈ¸  
+        // ï¿½Ì¹ï¿½ ï¿½ï¿½Ïµï¿½ Å°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½È¸  
         if (currentRegisterKeyword.ContainsKey(newKeyword))
         {
             return;
@@ -394,12 +394,12 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         var keywordId = newKeyword.KeywordId;
         var keywordAciton = new KeywordAction(newKeyword);
         KeywordAction overAction;
-        // Å°¿öµå°¡ ¿À¹ö¶óÀÌµù µÇ¾î ÀÖ´ÂÁö È®ÀÎÇÏ°í Å°¿öµå ¾×¼Ç¿¡ ÇÒ´ç
+        // Å°ï¿½ï¿½ï¿½å°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ ï¿½Ç¾ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï°ï¿½ Å°ï¿½ï¿½ï¿½ï¿½ ï¿½×¼Ç¿ï¿½ ï¿½Ò´ï¿½
         if (keywrodOverrideTable.TryGetValue(keywordId, out overAction))
         {
             keywordAciton.OverrideKeywordAction(overAction);
         }
-        //Å°¿öµå ¾×¼ÇÀ» Ãß°¡
+        //Å°ï¿½ï¿½ï¿½ï¿½ ï¿½×¼ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
         AddAction(newKeyword, keywordAciton);
     }
     public void MoveAbleUpdate(bool isOn) 

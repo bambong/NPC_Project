@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static StylizedWater2.ShaderConfigurator;
+//using static StylizedWater2.ShaderConfigurator;
 
 public class PlayerKeywordPanelController : UI_Base
 {
