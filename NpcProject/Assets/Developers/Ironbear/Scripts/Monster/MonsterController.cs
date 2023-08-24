@@ -189,7 +189,6 @@ public class MonsterController : KeywordEntity , ISpawnAble
 
     public void MoveSpeedUpdate()
     {
-        
         monsterNav.speed = moveSpeed * Managers.Time.GetTimeSacle(TIME_TYPE.NONE_PLAYER);
     }
     public override void EnterDebugMod()

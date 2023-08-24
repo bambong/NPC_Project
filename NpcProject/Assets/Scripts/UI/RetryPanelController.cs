@@ -44,7 +44,7 @@ public class RetryPanelController : UI_Base
         Managers.Sound.StopBGM();
         resetButton.interactable = false;
         Managers.Data.DataRemoveForResetButton(SceneManager.GetActiveScene().name);
-        Managers.Scene.ReLoadCurrentScene();
+        Managers.Scene.ReLoadCurrentScene(()=>Managers.Game.Player.PurposePanel.Open());
     }
     public void OpenResetButton() 
     {
@@ -102,7 +102,7 @@ public class RetryPanelController : UI_Base
                 Managers.Sound.PlaySFX(Define.SOUND.ResetButton);
                 Managers.Sound.StopBGM();
                 Managers.Data.DataRemoveForResetButton(SceneManager.GetActiveScene().name);
-                Managers.Scene.ReLoadCurrentScene();
+                Managers.Scene.ReLoadCurrentScene(() => Managers.Game.Player.PurposePanel.Open());
                 //  Close();
                 yield break;
             }

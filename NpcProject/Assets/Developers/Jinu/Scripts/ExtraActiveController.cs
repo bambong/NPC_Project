@@ -8,9 +8,12 @@ public class ExtraActiveController : MonoBehaviour
     private int progress;
     [SerializeField]
     private Animator anim;
+    [SerializeField]
+    private Define.Scene transitionScene;
+
     public void Start()
     {
-        if(Managers.Data.Progress == progress)
+        if(progress == Managers.Data.Progress)
         {
             this.gameObject.SetActive(true);
         }
@@ -24,4 +27,10 @@ public class ExtraActiveController : MonoBehaviour
     {
         anim.Play("Meria_Idle_Side");
     }    
+
+    public void LoadScene()
+    {
+        Managers.Game.Player.SetstateStop();
+        Managers.Scene.LoadScene(transitionScene);
+    }
 }
