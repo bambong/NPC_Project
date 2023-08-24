@@ -23,6 +23,26 @@ public class PlayerTalkMove : MonoBehaviour
     public void MoveToPlayer()
     {
         Managers.Game.SetStateEvent();
+
+        //Vector3 gotovec = playerController.transform.position - startPosition.position;
+        //if (gotovec.x > 0)
+        //{
+        //    playerController.AnimMoveEnter(PlayerAnimationController.MoveDir.Right, gotovec);
+        //}
+        //else
+        //{
+        //    playerController.AnimMoveEnter(PlayerAnimationController.MoveDir.Left, gotovec);
+
+        //}
+        //playerController.AnimMoveEnter(playerController.transform.position - startPosition.position);
+        StartCoroutine(MovePoint());
+    }
+
+    IEnumerator MovePoint()
+    {
+        float distance = 10f;
+        
+        yield return null;
         Vector3 gotovec = playerController.transform.position - startPosition.position;
         if (gotovec.x > 0)
         {
@@ -33,13 +53,6 @@ public class PlayerTalkMove : MonoBehaviour
             playerController.AnimMoveEnter(PlayerAnimationController.MoveDir.Left, gotovec);
 
         }
-        //playerController.AnimMoveEnter(playerController.transform.position - startPosition.position);
-        StartCoroutine(MovePoint());
-    }
-
-    IEnumerator MovePoint()
-    {
-        float distance = 10f;
 
         while (distance > 0.5f)
         {
