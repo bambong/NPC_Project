@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System;
 using DG.Tweening;
 using System.Linq;
 using System.Text;
@@ -501,12 +500,14 @@ public class TalkPanelController : UI_Base
             textDialogue += item;
         }
     }
-
+   
     public string HangleChange(string item)
     {
-        string name = Managers.Talk.GetSpeakerName(101);
-        string lastname = name.Substring(name.Length - 1);
-        int unicodeValue = (int)lastname[0];
+        
+        string name = Managers.Talk.GetSpeakerName(101).Trim();
+
+        int unicodeValue = GetLastname(name);
+
         //English
         if (unicodeValue < 0xAC00 || unicodeValue > 0xD7A3)
         {
@@ -515,7 +516,7 @@ public class TalkPanelController : UI_Base
         //three word hangle
         if ((unicodeValue - 0xAC00) % 28 > 0)
         {
-            if(HangleChanger.hangleMap.ContainsKey(item))
+            if (HangleChanger.hangleMap.ContainsKey(item))
             {
                 return HangleChanger.hangleMap[item];
             }
@@ -530,6 +531,15 @@ public class TalkPanelController : UI_Base
             return item;
         }
     }
+
+    private char GetLastname(string name)
+    {
+        //string lastname = Regex.Replace(name, @"\s+", String.Empty);
+        //string lastname = name.Trim();
+        string lastname = name.Replace("\u200B", "");
+        return lastname[lastname.Length - 1];
+    }
+
     private string TextExtraction(string textDialogue)
     {
         MatchCollection matches = Regex.Matches(textDialogue, PATTERN);
