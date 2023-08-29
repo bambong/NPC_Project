@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using UnityEngine.Events;
-
+using System;
 
 public class InputFieldController : UI_Base
 {
@@ -55,7 +55,7 @@ public class InputFieldController : UI_Base
         playerNameInput.characterLimit = 8;
         textInitPosition = test.gameObject.transform.position;
 
-        inputField.onEndEdit.AddListener(OnEndEdit);
+        //inputField.onEndEdit.AddListener(OnEndEdit);
     }
 
     private void Update()
@@ -71,7 +71,7 @@ public class InputFieldController : UI_Base
         if(Input.GetKeyDown(KeyCode.Return))
         {
             StringCheck();
-            SaveUserName();
+            //SaveUserName();
         }
     }
 
@@ -106,7 +106,7 @@ public class InputFieldController : UI_Base
             }
         }
 
-        if (!isRestrict && playerName != null) 
+        if (!isRestrict && !string.IsNullOrWhiteSpace(playerName)) 
         {
             Managers.Sound.PlaySFX(Define.SOUND.Sign);
             SubmitName();
@@ -122,6 +122,7 @@ public class InputFieldController : UI_Base
     public void SaveUserName()
     {
         player.charName = playerName;
+        Debug.Log("SaveName");
     }
 
     private IEnumerator WarningTextEffect()
