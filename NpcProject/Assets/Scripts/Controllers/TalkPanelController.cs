@@ -503,10 +503,11 @@ public class TalkPanelController : UI_Base
    
     public string HangleChange(string item)
     {
-        
-        string name = Managers.Talk.GetSpeakerName(101).Trim();
 
-        int unicodeValue = GetLastname(name);
+        string name = Managers.Talk.GetSpeakerName(101);
+
+        int unicodeValue = name[name.Length - 1];
+        //int unicodeValue = GetLastname(name);
 
         //English
         if (unicodeValue < 0xAC00 || unicodeValue > 0xD7A3)
@@ -532,13 +533,13 @@ public class TalkPanelController : UI_Base
         }
     }
 
-    private char GetLastname(string name)
-    {
-        //string lastname = Regex.Replace(name, @"\s+", String.Empty);
-        //string lastname = name.Trim();
-        string lastname = name.Replace("\u200B", "");
-        return lastname[lastname.Length - 1];
-    }
+    //private char GetLastname(string name)
+    //{
+    //    //string lastname = Regex.Replace(name, @"\s+", String.Empty);
+    //    //string lastname = name.Trim();
+    //    string lastname = name.Replace("\u200B", "");
+    //    return lastname[lastname.Length - 1];
+    //}
 
     private string TextExtraction(string textDialogue)
     {

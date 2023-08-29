@@ -83,7 +83,7 @@ public class InputFieldController : UI_Base
     public void StringCheck()
     {
         isRestrict = false;
-        playerName = test.text;
+        playerName = playerNameInput.text;
 
         char[] restrictChars = { 'ㅏ', 'ㅑ', 'ㅓ', 'ㅕ', 'ㅗ', 'ㅛ', 'ㅜ', 'ㅠ', 'ㅡ', 'ㅣ', 'ㅐ', 'ㅒ', 'ㅔ', 'ㅖ', 'ㅚ', 'ㅟ', 'ㅙ', 'ㅞ', 'ㅝ', 'ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅅ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ', 'ㅆ', 'ㄸ', 'ㄲ', ' ' };
         char[] nameChars = new char[playerName.Length];
