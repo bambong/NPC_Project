@@ -63,5 +63,9 @@ public class KeyMappingButtonController : MonoBehaviour
         inputSetting.ChangeKey(this);
     }
 
-
+    public void InputSpace()
+    {
+        image.color = repeatColor;
+        innerText.text = "Spcae";
+    }
 }

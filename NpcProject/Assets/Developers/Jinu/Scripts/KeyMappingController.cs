@@ -67,13 +67,6 @@ public class KeySetting : Singleton<KeySetting>,IInit
 
 
 
-
-
-
-
-
-
-
 public class KeyMappingController : MonoBehaviour
 {
     [SerializeField]
