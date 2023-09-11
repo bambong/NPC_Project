@@ -16,7 +16,7 @@ public class KeyMappingStatusTextController : MonoBehaviour
     private Color failColor;
 
     private readonly string SUCCESS_TEXT = "키 변경이 적용되었습니다.";
-    private readonly string FAIL_TEXT = "중복되는 키가 있습니다.";
+    private readonly string FAIL_TEXT = "중복 혹은 사용할 수 없는 키가 있습니다.";
     private bool isPlay = false;
     private bool isSuccess = false;
     private Sequence sequence;
