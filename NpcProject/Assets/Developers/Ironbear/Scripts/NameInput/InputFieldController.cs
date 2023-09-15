@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 
 public class InputFieldController : UI_Base
@@ -29,10 +30,9 @@ public class InputFieldController : UI_Base
     private ContractPanelController contractPanel;
     private TMP_InputField inputField;
 
-    private Vector2 textInitPosition;
-
     private string previousText = "";
     private string playerName = null;
+    private string curSceneName = "";
 
     public bool isSelect = false;
     private bool isRestrict = false;
@@ -50,10 +50,10 @@ public class InputFieldController : UI_Base
     {
         contractPanel = GetComponentInParent<ContractPanelController>();
         inputField = GetComponent<TMP_InputField>();
+        curSceneName = SceneManager.GetActiveScene().name;
 
         inputField.onValueChanged.AddListener(UpdateOutputText);
         playerNameInput.characterLimit = 8;
-        textInitPosition = test.gameObject.transform.position;
 
         inputField.onEndEdit.AddListener(OnEndEdit);
     }
@@ -66,12 +66,16 @@ public class InputFieldController : UI_Base
         }
     }
 
-    private void OnEndEdit(string text)
+    public void OnEndEdit(string text)
     {
-        if(Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return))
         {
             StringCheck();
             SaveUserName();
+            if(curSceneName=="StartScene")
+            {
+                LoadNextScene();
+            }
         }
     }
 
@@ -168,7 +172,7 @@ public class InputFieldController : UI_Base
         inputDisabled = false;
     }
 
-    public void LoadNextScene()
+    private void LoadNextScene()
     {
         if(!isRestrict && playerName != null)
         {

@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using System.Collections;
 
 public class CapPanelController : MonoBehaviour
 {
@@ -10,11 +11,12 @@ public class CapPanelController : MonoBehaviour
     private float effectDuration = 1.5f;
     private CanvasGroup capPanel;
     private CanvasGroup mousePanel;
+    private float intervalTime = 2f;
 
     void Start()
     {
         capPanel = GetComponent<CanvasGroup>();
-        mousePanel = GetComponent<CanvasGroup>();
+        mousePanel = mouse.GetComponent<CanvasGroup>();
 
         capPanel.alpha = 0f;
 
@@ -23,7 +25,14 @@ public class CapPanelController : MonoBehaviour
 
     private void Awake()
     {
-        //Anim();
+        Anim();
+    }
+
+    private IEnumerator AnimCoroutine()
+    {
+        Anim();
+        yield return new WaitForSeconds(intervalTime);
+        StartCoroutine(AnimCoroutine());
     }
 
     private void Anim()
@@ -38,7 +47,7 @@ public class CapPanelController : MonoBehaviour
         Sequence seq = DOTween.Sequence();
 
 
-        seq.Append(mouse.transform.DOLocalMoveX(mouse.transform.localPosition.x + 450f, effectDuration).SetEase(Ease.OutQuad));
+        seq.Append(mouse.transform.DOLocalMoveX(mouse.transform.localPosition.x + 570f, effectDuration).SetEase(Ease.OutQuad));
         seq.OnComplete(() =>
         {
             mousePanel.DOFade(0f, 1f).SetEase(Ease.OutQuad);

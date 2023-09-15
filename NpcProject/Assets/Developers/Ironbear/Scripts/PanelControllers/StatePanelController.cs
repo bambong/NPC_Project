@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using DG.Tweening;
 using TMPro;
 
@@ -15,6 +16,8 @@ public class StatePanelController : MonoBehaviour
 
     private bool isAnim = false;
     private float effectDuration = 2f;
+    private float intervalTime = 4f;
+    private Vector3 startPos;
 
 
     void Start()
@@ -22,14 +25,17 @@ public class StatePanelController : MonoBehaviour
         door.transform.localPosition = new Vector3(1f, 0f, -68.5f);
         door.transform.rotation = Quaternion.Euler(0f, -90f, 0f);
         mouse.GetComponent<CanvasGroup>().alpha = 0f;
+        startPos = mouse.transform.localPosition;
 
         UpdateName();
-        Anim();
+        StartCoroutine(AnimCoroutine());
     }
 
-    private void Awake()
+    private IEnumerator AnimCoroutine()
     {
-        
+        Anim();
+        yield return new WaitForSeconds(intervalTime);
+        StartCoroutine(AnimCoroutine());
     }
 
     private void Anim()
@@ -40,6 +46,8 @@ public class StatePanelController : MonoBehaviour
         }
 
         isAnim = true;
+
+        mouse.transform.localPosition = startPos;
 
         Sequence seq = DOTween.Sequence();
 
