@@ -77,6 +77,26 @@ public class DebugZone : GuIdBehaviour, IDataHandler
             }
         }
     }
+    public bool MoveToKeyword(KeywordController keyword) 
+    {
+        var curFrame = keyword.CurFrame;
+        if (curFrame is PlayerKeywordFrame)
+        {
+            return false;
+        }
+        for (int i = 0; i < playerFrames.Count; ++i)
+        {
+            if (playerFrames[i].HasKeyword)
+            {
+                continue;
+            }
+           
+            playerFrames[i].ForceMoveKeyword(keyword);
+            return true;
+        }
+        return false;
+      
+    } 
     public KeywordController MakeKeyword(string name)
     {
         KeywordController keyword;

@@ -132,6 +132,34 @@ public abstract class KeywordFrameBase : UI_Base
             frameColorImages[i].DOKill();
         }
     }
+    public void ForceMoveKeyword(KeywordController keywordController) 
+    {
+            var prevFrame = keywordController.CurFrame;
+     
+            Managers.Sound.PlaySFX(Define.SOUND.AssignmentKeyword);
+            var prevCur = prevFrame.curFrameInnerKeyword;
+            var mCur = curFrameInnerKeyword;
+
+            prevFrame.SetKeyWord(null, () => {
+                prevFrame.DecisionKeyword(null);
+            });
+
+            if (prevFrame.masterEntity != null)
+            {
+                prevFrame.masterEntity.RemoveAction(prevCur, mCur);
+            }
+            if (masterEntity != null)
+            {
+                masterEntity.RemoveAction(mCur, keywordController);
+            }
+
+            SetFrameColor(hasKeywordColor);
+            keywordController.SetFrame(this);
+            curFrameInnerKeyword = keywordController;
+            keywordController.transform.SetParent(transform);
+            keywordController.transform.localPosition = Vector3.zero;
+            DecisionKeyword(keywordController);
+    }
     public void DragDropKeyword(KeywordController keywordController)
     {
         var prevFrame = keywordController.CurFrame;
