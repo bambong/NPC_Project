@@ -33,8 +33,6 @@ public class TalkPanelController : UI_Base
     private readonly float SKIP_DELAY_TIME = 0.1f;
     
     [SerializeField]
-    private List<Image> leftRights;
-    [SerializeField]
     private TextMeshProUGUI spekerName;
     [SerializeField]
     private TextMeshProUGUI dialogueText;
