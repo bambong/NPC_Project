@@ -11,12 +11,19 @@ public class GhostEffectColorPickerController : MonoBehaviour
     [SerializeField]
     private float colorTime = 0.2f;
 
+    [SerializeField]
+    private float sombraFade = 0.25f;
+    [SerializeField]
+    private Material sombraMat;
     private float curTime = 0;
     private int colorIndex = 0;
 
     private Color culColor = Color.white;
     public Color CurrentColor { get => culColor; }
-
+    private void Start()
+    {
+        sombraMat.SetFloat("_TextureFade", sombraFade); 
+    }
     public void OnEnterDebugMod() => Managers.Scene.CurrentScene.StartCoroutine(ColorUpdate());
     IEnumerator ColorUpdate()
     {

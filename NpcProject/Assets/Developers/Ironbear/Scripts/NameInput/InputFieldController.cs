@@ -4,7 +4,8 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using UnityEngine.Events;
-using System;
+using UnityEngine.SceneManagement;
+
 
 public class InputFieldController : UI_Base
 {
@@ -29,10 +30,9 @@ public class InputFieldController : UI_Base
     private ContractPanelController contractPanel;
     private TMP_InputField inputField;
 
-    private Vector2 textInitPosition;
-
     private string previousText = "";
     private string playerName = null;
+    private string curSceneName = "";
 
     public bool isSelect = false;
     private bool isRestrict = false;
@@ -50,12 +50,12 @@ public class InputFieldController : UI_Base
     {
         contractPanel = GetComponentInParent<ContractPanelController>();
         inputField = GetComponent<TMP_InputField>();
+        curSceneName = SceneManager.GetActiveScene().name;
 
         inputField.onValueChanged.AddListener(UpdateOutputText);
         playerNameInput.characterLimit = 8;
-        textInitPosition = test.gameObject.transform.position;
 
-        //inputField.onEndEdit.AddListener(OnEndEdit);
+        inputField.onEndEdit.AddListener(OnEndEdit);
     }
 
     private void Update()
@@ -66,12 +66,16 @@ public class InputFieldController : UI_Base
         }
     }
 
-    private void OnEndEdit(string text)
+    public void OnEndEdit(string text)
     {
-        if(Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return))
         {
             StringCheck();
-            //SaveUserName();
+            SaveUserName();
+            if(curSceneName=="StartScene")
+            {
+                LoadNextScene();
+            }
         }
     }
 
@@ -83,7 +87,7 @@ public class InputFieldController : UI_Base
     public void StringCheck()
     {
         isRestrict = false;
-        playerName = playerNameInput.text;
+        playerName = test.text;
 
         char[] restrictChars = { 'ㅏ', 'ㅑ', 'ㅓ', 'ㅕ', 'ㅗ', 'ㅛ', 'ㅜ', 'ㅠ', 'ㅡ', 'ㅣ', 'ㅐ', 'ㅒ', 'ㅔ', 'ㅖ', 'ㅚ', 'ㅟ', 'ㅙ', 'ㅞ', 'ㅝ', 'ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅅ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ', 'ㅆ', 'ㄸ', 'ㄲ', ' ' };
         char[] nameChars = new char[playerName.Length];
@@ -106,7 +110,7 @@ public class InputFieldController : UI_Base
             }
         }
 
-        if (!isRestrict && !string.IsNullOrWhiteSpace(playerName)) 
+        if (!isRestrict && playerName != null) 
         {
             Managers.Sound.PlaySFX(Define.SOUND.Sign);
             SubmitName();
@@ -122,7 +126,6 @@ public class InputFieldController : UI_Base
     public void SaveUserName()
     {
         player.charName = playerName;
-        Debug.Log("SaveName");
     }
 
     private IEnumerator WarningTextEffect()
@@ -169,7 +172,7 @@ public class InputFieldController : UI_Base
         inputDisabled = false;
     }
 
-    public void LoadNextScene()
+    private void LoadNextScene()
     {
         if(!isRestrict && playerName != null)
         {

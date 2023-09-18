@@ -25,6 +25,10 @@ public class ButtonHighlightController : UI_Base, IPointerEnterHandler, IPointer
         {
             highlightImage = GetComponent<Image>();
         }
+        ClearHighlightImage();
+    }
+    public void ClearHighlightImage() 
+    {
         highlightImage.color = transparentColor;
     }
 

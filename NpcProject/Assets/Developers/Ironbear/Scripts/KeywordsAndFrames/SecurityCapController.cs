@@ -16,8 +16,6 @@ public class SecurityCapController : MonoBehaviour, IDropHandler
     private GameObject unlocked;
     [SerializeField]
     private GameObject card;
-    //[SerializeField]
-    //private PlayableDirector doorCutScene;
 
     private CanvasGroup lockedCanvas;
     private CanvasGroup unlockedCanvas;

@@ -599,12 +599,21 @@ public class PlayerController : MonoBehaviour , IDataHandler
                         isFocusKeyword = nearKeyword;
                     }
                 }
-
+               
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
                     if (isFocusKeyword != null)
                     {
                         isFocusKeyword.OnBeginDrag(pointerEventData);
+                        isFocusKeyword.OnPointerExit();
+                        isFocusKeyword = null;
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.Mouse1))
+                {
+                    if (isFocusKeyword != null)
+                    {
+                        Managers.Keyword.CurDebugZone.MoveToKeyword(isFocusKeyword);
                         isFocusKeyword.OnPointerExit();
                         isFocusKeyword = null;
                     }

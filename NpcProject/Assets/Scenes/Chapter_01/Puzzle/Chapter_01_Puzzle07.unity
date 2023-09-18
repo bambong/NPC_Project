@@ -642,18 +642,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
       propertyPath: onStart.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
       propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
       propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1137142748}
     - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 349155194}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
       propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
@@ -661,11 +673,27 @@ PrefabInstance:
       value: PlayDialogue
       objectReference: {fileID: 0}
     - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: UpdateProgress
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
       propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: PlayTalkEvent, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: ProgressUpdateController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
       propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362839247362582671, guid: 38038d513bf28944fa482e10df267d83, type: 3}
+      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -4123,7 +4151,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7975317186530639228, guid: abff4aef09a77194dab31ed4faf0fd1c, type: 3}
       propertyPath: onComplete.m_PersistentCalls.m_Calls.Array.data[0].m_Mode

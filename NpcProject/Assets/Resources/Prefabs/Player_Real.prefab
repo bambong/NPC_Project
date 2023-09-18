@@ -246,11 +246,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colors:
-  - {r: 0, g: 1, b: 0.9616327, a: 0}
-  - {r: 0.25, g: 1, b: 0.36253262, a: 0}
-  - {r: 1, g: 0.33333337, b: 0.86634636, a: 0}
-  - {r: 0.25943398, g: 0.3264961, b: 1, a: 0}
-  colorTime: 0.25
+  - {r: 0.5, g: 1, b: 0.9803922, a: 0}
+  - {r: 0.5, g: 1, b: 0.57329845, a: 0}
+  - {r: 1, g: 0.5, b: 0.9000001, a: 0}
+  - {r: 0.5, g: 0.5449734, b: 1, a: 0}
+  colorTime: 0.15
+  sombraFade: 0.15
+  sombraMat: {fileID: 2100000, guid: 5f4071f00aa7e0b4388756d9f307f031, type: 2}
 --- !u!1 &4115200165453738017
 GameObject:
   m_ObjectHideFlags: 0
@@ -355,8 +357,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b160be91258e224196826593c3c5fd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upStepSize: 0.3
-  downStepSize: 1
   animationController: {fileID: 1065460366610905943}
   interactionDetecter: {fileID: 5137152168514951073}
   rotater: {fileID: 3074541703899278083}
@@ -371,7 +371,8 @@ MonoBehaviour:
   runSpeed: 900
   maxSlopeAngle: 60
   moveEnableDis: 0.5
-  stepHeight: 1
+  upStepSize: 0.3
+  downStepSize: 1
   maxHp: 4
   hp: 0
   wireEffectGo: {fileID: 8894137876106884633}
@@ -406,7 +407,7 @@ Rigidbody:
   m_AngularDrag: 10
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!75 &6728709929109359645

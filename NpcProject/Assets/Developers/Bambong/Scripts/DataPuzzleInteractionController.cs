@@ -8,6 +8,8 @@ using UnityEngine.Rendering;
 public class DataPuzzleInteractionController : MonoBehaviour, IInteraction
 {
     [SerializeField]
+    private Vector3 playerMovePos;
+    [SerializeField]
     private MiniGameLevelData miniGameLevel;
 
     [SerializeField]
@@ -41,6 +43,11 @@ public class DataPuzzleInteractionController : MonoBehaviour, IInteraction
             {
                 Managers.Data.ClearEvent(successEventGuid.GuId);
                 SuccessDataCube();
+                if(playerMovePos != Vector3.zero)
+                {
+                    Managers.Game.Player.transform.position = playerMovePos;
+                    Managers.Data.LastGameData.playerPos = playerMovePos;
+                }
                 var seq = DOTween.Sequence();
                 seq.AppendInterval(scuccessInterval);
                 seq.AppendCallback(() => { onSuccess?.Invoke(); });

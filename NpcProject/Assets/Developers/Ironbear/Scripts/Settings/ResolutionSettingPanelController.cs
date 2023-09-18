@@ -56,7 +56,14 @@ public class ResolutionSettingPanelController : ButtonBasePanelController
     public override void Init()
     {
         //panel.gameObject.SetActive(false);
-        resolutions.AddRange(Screen.resolutions);
+
+        for (int i = 0; i < Screen.resolutions.Length; i++)
+        {
+            if (Screen.resolutions[i].refreshRate == 60)
+            {
+                resolutions.Add(Screen.resolutions[i]);
+            }
+        }
         screenmodes.Add(FullScreenMode.Windowed);
         screenmodes.Add(FullScreenMode.FullScreenWindow);
         screenmodes.Add(FullScreenMode.MaximizedWindow);
