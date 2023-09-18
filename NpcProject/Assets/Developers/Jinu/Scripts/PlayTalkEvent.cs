@@ -27,8 +27,8 @@ public class PlayTalkEvent : GuIdBehaviour
 
         var talk = Managers.Talk.GetTalkEvent(talkId[count]);
         talk.OnStart(() => startEvent?.Invoke());
-
-        Managers.Talk.PlayTalk(talk);
+        
+        talk.Play();
 
         if (count == talkId.Length - 1)
         {

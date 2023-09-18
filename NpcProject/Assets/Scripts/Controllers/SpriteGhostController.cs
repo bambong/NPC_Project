@@ -32,9 +32,12 @@ public class SpriteGhostController : GhostEffectController
     {
         var sombra = Managers.Resource.Instantiate(SOMBRA_NAME).GetComponent<SombraController>();
         var color = colorPicker.CurrentColor;
+        sombra.hideFlags = HideFlags.HideInInspector;
         color.a = alpha;
         sombra.Init(playerSpriteRender.sprite, color, fadeTime);
-        sombra.transform.position = transform.position;
+
+        var pos = transform.position + (Camera.main.transform.forward.normalized * 0.01f);
+        sombra.transform.position = pos;
         sombra.transform.rotation = transform.rotation;
         sombra.transform.localScale = transform.lossyScale;
 

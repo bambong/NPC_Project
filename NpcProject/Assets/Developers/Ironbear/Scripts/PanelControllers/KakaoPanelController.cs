@@ -92,10 +92,19 @@ public class KakaoPanelController : MonoBehaviour
         wasd.SetActive(true);
         Sequence wasdSeq = DOTween.Sequence();
 
-        wasdSeq.Append(wasd.transform.DOLocalMoveY(wasd.transform.localPosition.y - 100f, 0.5f)).SetEase(Ease.InOutQuad);
-        wasdSeq.AppendInterval(5f);
-        wasdSeq.Append(wasd.transform.DOLocalMoveY(wasd.transform.localPosition.y, 0.5f)).SetEase(Ease.InOutQuad);
+        wasdSeq.Append(wasd.GetComponent<CanvasGroup>().DOFade(1f, 1f));
         wasdSeq.Play();
+    }
+
+    public void WASDOffEffect()
+    {
+        Sequence wasdSeq = DOTween.Sequence();
+
+        wasdSeq.Append(wasd.GetComponent<CanvasGroup>().DOFade(0f, 1f));
+        wasdSeq.Play();
+
+        wasd.SetActive(false);
+        Managers.Game.Player.SetStateIdle();
     }
 
     private void CloseAll()
@@ -148,7 +157,7 @@ public class KakaoPanelController : MonoBehaviour
         DOVirtual.DelayedCall(waitTime, () =>
         {
             CloseAll();
-            Managers.Game.Player.SetStateIdle();
+            //Managers.Game.Player.SetStateIdle();
             myseat.GetComponent<MySeatController>().InteractionOn();
         });
     }
@@ -166,7 +175,7 @@ public class KakaoPanelController : MonoBehaviour
         DOVirtual.DelayedCall(waitTime, () =>
         {
             CloseAll();
-            Managers.Game.Player.SetStateIdle();
+            //Managers.Game.Player.SetStateIdle();
             myseat.GetComponent<MySeatController>().InteractionOn();
         });
     }

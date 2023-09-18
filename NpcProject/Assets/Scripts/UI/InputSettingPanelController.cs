@@ -44,8 +44,28 @@ public class InputSettingPanelController : ButtonBasePanelController
     {
         while (isPanel) 
         {
-           
-            if (Input.anyKeyDown)
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                KeyCode curCode = KeyCode.None;
+
+                foreach (KeyCode keyCode in System.Enum.GetValues(typeof(KeyCode)))
+                {
+                    if (Input.GetKeyDown(keyCode))
+                    {
+                        curCode = keyCode;
+                        break;
+                    }
+                }
+
+                KeySetting.Instance.tempKeys[curKeyButton.MyType] = curCode;
+                curKeyButton.InputSpace();
+                OffInputBackgroundPanel();
+                isPanel = false;
+
+                curKeyButton = null;
+                yield break;
+            }
+            else if (Input.anyKeyDown)
             {
                 KeyCode curCode = KeyCode.None;
                 
@@ -124,7 +144,7 @@ public class InputSettingPanelController : ButtonBasePanelController
         {
             if (index < (int)KEY_TYPE.KEY_COUNT)
             {
-                if (keySet.Contains(kvp.Value))
+                if (keySet.Contains(kvp.Value) || kvp.Value == KeyCode.Space)
                 {
                     hasDuplicated = true;
                     keyMappingStatus.SetMappingSuccess(false);
@@ -158,4 +178,6 @@ public class InputSettingPanelController : ButtonBasePanelController
             keyMappingButtons[i].UpdateText();
         }
     }
+
+
 }
