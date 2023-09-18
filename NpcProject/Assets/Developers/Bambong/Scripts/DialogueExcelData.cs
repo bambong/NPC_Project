@@ -4,6 +4,6 @@ public class DialogueExcelData
 {
     public int eventID;
     public int speaker;
-    public int leftRight;
+    public string emotion;
     public string text;
 }

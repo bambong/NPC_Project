@@ -90,25 +90,7 @@ public class TalkPanelController : UI_Base
     public void SetDialogue(Dialogue dialogue)
     {
         skipButton.interactable = true;
-
-        for (int i =0; i < dialogue.leftRights.Length; ++i ) 
-        {            
-            if(dialogue.leftRights[i] == null) 
-            {
-                leftRights[i].DOFade(0, 0);
-                continue;
-            }
-            leftRights[i].sprite = dialogue.leftRights[i].sprite;
-            if (dialogue.speaker.sprite == dialogue.leftRights[i].sprite) 
-            {
-                leftRights[i].color = Color.white;
-            }
-            else 
-            {
-                leftRights[i].color = Color.gray;
-            }
-            leftRights[i].DOFade(1, 0);
-        }
+      
         spekerName.text = $"{dialogue.speaker.charName}";
         choiceButton.Inactive();
         dialogueText.text = "";
@@ -119,25 +101,6 @@ public class TalkPanelController : UI_Base
         dialogueText.text = "";
         isNext = false;        
         curDialogue = dialogue;
-
-        for (int i = 0; i < dialogue.leftRights.Length; ++i)
-        {
-            if (dialogue.leftRights[i] == null)
-            {
-                leftRights[i].DOFade(0, 0);
-                continue;
-            }
-            leftRights[i].sprite = dialogue.leftRights[i].sprite;
-            if (dialogue.speaker.sprite == dialogue.leftRights[i].sprite)
-            {
-                leftRights[i].color = Color.white;
-            }
-            else
-            {
-                leftRights[i].color = Color.gray;
-            }
-            leftRights[i].DOFade(1, 0);
-        }
 
         spekerName.text = $"{dialogue.speaker.charName}";
         skipCoroutine = SkipDelayTime();
@@ -158,12 +121,6 @@ public class TalkPanelController : UI_Base
         rightmaterial = rightRenderer.material;
         leftColor = leftmaterial.color;
         rightColor = rightmaterial.color;        
-
-        for (int i = 0; i < dialogue.leftRights.Length; ++i)
-        {
-            leftRights[i].DOFade(0, 0);
-            continue;
-        }
 
         if (dialogue.speaker.Id == left.id)
         {
@@ -192,12 +149,7 @@ public class TalkPanelController : UI_Base
         dialogueText.text = "";
         isNext = false;
         curDialogue = dialogue;
-        
-        for (int i = 0; i < dialogue.leftRights.Length; ++i)
-        {
-            leftRights[i].DOFade(0, 0);
-            continue;
-        }        
+          
         if (dialogue.speaker.Id == left.id)
         {
             rightmaterial.color = gray;
