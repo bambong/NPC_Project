@@ -13,6 +13,10 @@ public class PlayTalkEvent : GuIdBehaviour
     private UnityEvent clearEvent;
     [SerializeField]
     private Transform endPosition;
+    [SerializeField]
+    private CharacterInfo left;
+    [SerializeField]
+    private CharacterInfo right;
 
     private Transform playertransform;
 
@@ -28,7 +32,7 @@ public class PlayTalkEvent : GuIdBehaviour
         var talk = Managers.Talk.GetTalkEvent(talkId[count]);
         talk.OnStart(() => startEvent?.Invoke());
 
-        Managers.Talk.PlayTalk(talk);
+        Managers.Talk.PlayTalk(talk, left, right);
 
         if (count == talkId.Length - 1)
         {

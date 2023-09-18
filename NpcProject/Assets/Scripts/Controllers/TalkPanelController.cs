@@ -87,20 +87,50 @@ public class TalkPanelController : UI_Base
     }
 
     #region TalkEvent
-    public void SetDialogue(Dialogue dialogue)
+    public void SetDialogue(Dialogue dialogue, CharacterInfo one, CharacterInfo two)
     {
         skipButton.interactable = true;
       
+        if(one != null)
+        {
+            if (dialogue.speaker.Id == one.id)
+            {
+                one.anim.Play(dialogue.emotion);
+            }
+        }
+        if (two != null)
+        {
+            if(dialogue.speaker.Id == two.id)
+            {
+                two.anim.Play(dialogue.emotion);
+            }
+        }
+        
         spekerName.text = $"{dialogue.speaker.charName}";
         choiceButton.Inactive();
         dialogueText.text = "";
     }
 
-    public void PlayDialogue(Dialogue dialogue) 
+    public void PlayDialogue(Dialogue dialogue, CharacterInfo one, CharacterInfo two) 
     {        
         dialogueText.text = "";
         isNext = false;        
         curDialogue = dialogue;
+
+        if (one != null)
+        {
+            if (dialogue.speaker.Id == one.id)
+            {
+                one.anim.Play(dialogue.emotion);
+            }
+        }
+        if (two != null)
+        {
+            if (dialogue.speaker.Id == two.id)
+            {
+                two.anim.Play(dialogue.emotion);
+            }
+        }
 
         spekerName.text = $"{dialogue.speaker.charName}";
         skipCoroutine = SkipDelayTime();
@@ -109,7 +139,7 @@ public class TalkPanelController : UI_Base
     }
     #endregion
     #region CutSceneTalk
-    public void SetDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
+    public void SetCutSceneDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
     {
         //init
         skipButton.interactable = true;
@@ -124,6 +154,8 @@ public class TalkPanelController : UI_Base
 
         if (dialogue.speaker.Id == left.id)
         {
+            left.anim.Play(dialogue.emotion);
+
             rightmaterial.color = gray;
             rightRenderer.material = rightmaterial;
 
@@ -132,6 +164,8 @@ public class TalkPanelController : UI_Base
         }
         if (dialogue.speaker.Id == right.id)
         {
+            right.anim.Play(dialogue.emotion);
+
             leftmaterial.color = gray;
             leftRenderer.material = leftmaterial;
 
@@ -144,7 +178,7 @@ public class TalkPanelController : UI_Base
         dialogueText.text = "";
     }
 
-    public void PlayDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
+    public void PlayCutSceneDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
     {
         dialogueText.text = "";
         isNext = false;
@@ -152,6 +186,8 @@ public class TalkPanelController : UI_Base
           
         if (dialogue.speaker.Id == left.id)
         {
+            left.anim.Play(dialogue.emotion);
+
             rightmaterial.color = gray;
             rightRenderer.material = rightmaterial;
 
@@ -160,6 +196,8 @@ public class TalkPanelController : UI_Base
         }
         if (dialogue.speaker.Id == right.id)
         {
+            right.anim.Play(dialogue.emotion);
+
             leftmaterial.color = gray;
             leftRenderer.material = leftmaterial;
 
