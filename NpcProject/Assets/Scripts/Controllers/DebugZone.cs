@@ -210,7 +210,7 @@ public class DebugZone : GuIdBehaviour, IDataHandler
         {
             Managers.Keyword.SetDebugZone(this);
             Managers.Game.Player.isDebugButton();
-            Managers.Game.RetryPanel.OpenResetButton();
+            Managers.Game.RetryPanel.OpenDebugUi();
             Managers.Data.SaveGame();
             OpenPlayerLayout();
         }
@@ -222,7 +222,7 @@ public class DebugZone : GuIdBehaviour, IDataHandler
         {
             Managers.Keyword.SetDebugZone(null);
             Managers.Game.Player.isDebugButton();
-            Managers.Game.RetryPanel.CloseResetButton();
+            Managers.Game.RetryPanel.CloseDebugUi();
             ClosePlayerLayout();
         }
     }
