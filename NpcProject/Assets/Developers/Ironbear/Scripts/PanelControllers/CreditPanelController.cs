@@ -3,6 +3,7 @@ using DG.Tweening;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
 
 public class CreditPanelController : MonoBehaviour
 {
@@ -26,7 +27,12 @@ public class CreditPanelController : MonoBehaviour
     private GameObject spritePrefab;
 
     private Transform parentTransform;
+
     private int curIndex = 0;
+    private float animSpeed = 1f;
+    private float minValue = 1f;
+    private float maxValue = 2f;
+    private float progress = 0f;
 
     private void Start()
     {
@@ -37,6 +43,42 @@ public class CreditPanelController : MonoBehaviour
         PlayNextAnimation();
     }
 
+    private void FixedUpdate()
+    {
+        Debug.Log(animSpeed);
+        //if (Input.GetKey(KeyCode.Space) && !isIncreasing)
+        //{
+        //    isIncreasing = true;
+        //    animSpeed = maxValue;
+        //}
+        //else if (!Input.GetKey(KeyCode.Space) && isIncreasing)
+        //{
+        //    isIncreasing = false;
+        //    animSpeed = minValue;
+        //}
+
+        bool isSpacePressed = Input.GetKey(KeyCode.Space);
+
+        if (isSpacePressed && progress < 1f)
+        {
+            // 스페이스바를 누르고 있고, 아직 최대값에 도달하지 않았다면
+            progress += Time.deltaTime; // progress를 증가시켜서 전환을 부드럽게 함
+        }
+        else if (!isSpacePressed && progress > 0f)
+        {
+            // 스페이스바를 떼고 있고, 아직 최소값에 도달하지 않았다면
+            progress -= Time.deltaTime; // progress를 감소시켜서 전환을 부드럽게 함
+        }
+
+        // minValue에서 maxValue로 보간
+        animSpeed = Mathf.Lerp(minValue, maxValue, progress);
+    }
+
+    private float Sigmoid(float x)
+    {
+        return 1f / (1f + Mathf.Exp(-x));
+    }
+
     private void PlayNextAnimation()
     {
         var textSequence = DOTween.Sequence();
@@ -44,10 +86,10 @@ public class CreditPanelController : MonoBehaviour
         cTitle.text = creditItems[curIndex].creditTitle;
         cName.text = creditItems[curIndex].creditName;
 
-        textSequence.Append(txtCanvas.DOFade(1f, 1.5f).SetEase(Ease.Linear));
+        textSequence.Append(txtCanvas.DOFade(1f, 1.5f / animSpeed).SetEase(Ease.Linear));
         textSequence.AppendCallback(() => CreateBalls());
-        textSequence.AppendInterval(2f);
-        textSequence.Append(txtCanvas.DOFade(0f, 1.5f).SetEase(Ease.Linear)).OnComplete(() =>
+        textSequence.AppendInterval(2f / animSpeed);
+        textSequence.Append(txtCanvas.DOFade(0f, 1.5f / animSpeed).SetEase(Ease.Linear)).OnComplete(() =>
         {
             curIndex++;
             if (curIndex < creditItems.Count)
