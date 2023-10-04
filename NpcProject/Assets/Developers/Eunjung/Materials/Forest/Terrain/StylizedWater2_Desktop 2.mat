@@ -10,6 +10,7 @@ Material:
   m_Name: StylizedWater2_Desktop 2
   m_Shader: {fileID: -6465566751694194690, guid: d7b0192b9bf19c949900035fa781fdc4, type: 3}
   m_ValidKeywords:
+  - _ADVANCED_SHADING
   - _DISABLE_DEPTH_TEX
   - _DISTANCE_NORMALS
   - _FOAM
@@ -24,13 +25,15 @@ Material:
   - _DEPTHEXP_ON
   - _DEPTH_TEX
   - _SIMPLE_LIGHTING
+  - _VERTEXCOLORDEPTH_ON
   - _VERTEXCOLORWAVEFLATTENING_ON
   - _WORLDSPACEUV_ON
   - _ZCLIP_ON
+  - _ZWRITE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3001
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -200,15 +203,15 @@ Material:
     - _RimTiling: 0.025
     - _RiverModeOn: 1
     - _SHARP_INERSECTIONOn: 1
-    - _ShadingMode: 0
+    - _ShadingMode: 1
     - _ShadowStrength: 0.871
     - _ShoreLineLength: 0
     - _ShoreLineWaveDistance: 23
     - _ShoreLineWaveStr: 1
     - _SimpleLighting: 1
     - _SlopeFoam: 1
-    - _SlopeSpeed: 0.53
-    - _SlopeStretching: 0.064
+    - _SlopeSpeed: 1.63
+    - _SlopeStretching: 0.523
     - _SlopeThreshold: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -216,7 +219,7 @@ Material:
     - _SparkleSize: 0.552
     - _SpecularHighlights: 1
     - _SpecularReflectionsOn: 0
-    - _Speed: 1
+    - _Speed: 0.33
     - _SrcBlend: 1
     - _SunReflectionDistortion: 0.762
     - _SunReflectionPerturbance: 0.386
@@ -237,7 +240,7 @@ Material:
     - _TranslucencyStrength: 1
     - _UnderwaterRefractionOffset: 0.2
     - _UnderwaterSurfaceSmoothness: 0.8
-    - _VertexColorDepth: 0
+    - _VertexColorDepth: 1
     - _VertexColorFoam: 0
     - _VertexColorWaveFlattening: 1
     - _WaveCount: 2
@@ -251,12 +254,12 @@ Material:
     - _WorkflowMode: 1
     - _WorldSpaceUV: 1
     - _ZClip: 1
-    - _ZWrite: 0
+    - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0, g: 0.6218536, b: 1, a: 0.9647059}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _DepthMapBounds: {r: -402.3, g: -459.43, b: 0.0012693577, a: 0}
-    - _Direction: {r: 1, g: 1, b: 0, a: 0}
+    - _Direction: {r: 1, g: 1.69, b: 0, a: 0}
     - _DistanceNormalsFadeDist: {r: 0, g: 80.00005, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FoamColor: {r: 0.8632076, g: 1, b: 0.98382026, a: 0.27058825}
