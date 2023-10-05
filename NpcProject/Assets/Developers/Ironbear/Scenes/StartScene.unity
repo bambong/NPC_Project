@@ -798,9 +798,9 @@ RectTransform:
   m_Father: {fileID: 801567380}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 435, y: -50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &86738204
@@ -2802,6 +2802,59 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &632003867
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 632003868}
+  - component: {fileID: 632003869}
+  m_Layer: 5
+  m_Name: circleArea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &632003868
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632003867}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1266310242}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!58 &632003869
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632003867}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 100
 --- !u!1 &649776509
 GameObject:
   m_ObjectHideFlags: 0
@@ -3407,9 +3460,9 @@ RectTransform:
   m_Father: {fileID: 801567380}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 795, y: -50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &852132910
@@ -3768,9 +3821,9 @@ RectTransform:
   m_Father: {fileID: 801567380}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1155, y: -50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &878757599
@@ -3842,7 +3895,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1951410020}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1915654078}
+        m_TargetAssemblyTypeName: PanelsController, Assembly-CSharp
+        m_MethodName: Noninteractive
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1915654078}
+        m_TargetAssemblyTypeName: PanelsController, Assembly-CSharp
+        m_MethodName: CreditPanelActive
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &878757602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5046,7 +5123,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1085163754
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5137,6 +5214,7 @@ MonoBehaviour:
   - {fileID: 86738202}
   - {fileID: 852132908}
   - {fileID: 1193051035}
+  - {fileID: 878757597}
   effectMat: {fileID: 2100000, guid: 6d484fcf382f5e4468b6b1e172f13384, type: 2}
   logo: {fileID: 1513288603}
   firstPanel: {fileID: 2021900708}
@@ -5685,9 +5763,9 @@ RectTransform:
   m_Father: {fileID: 801567380}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1515, y: -50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1202403720
@@ -5930,13 +6008,14 @@ GameObject:
   - component: {fileID: 1266310244}
   - component: {fileID: 1266310243}
   - component: {fileID: 1266310245}
+  - component: {fileID: 1266310246}
   m_Layer: 5
   m_Name: creditPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1266310242
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5951,6 +6030,7 @@ RectTransform:
   m_Children:
   - {fileID: 1202403721}
   - {fileID: 1391876922}
+  - {fileID: 632003868}
   m_Father: {fileID: 1915654076}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6016,19 +6096,19 @@ MonoBehaviour:
   - creditTitle: Team Art
     creditName: "\uC774\uC740\uC815"
     creditSprite: {fileID: 21300000, guid: 0bf8cf652a353aa4881db1f760d92e14, type: 3}
-  - creditTitle: "\uBA54\uC2DC\uB791 \uCE5C\uD55C \uD2B8\uC704\uCE58 \uC2A4\uD2B8\uB9AC\uBA38"
+  - creditTitle: "\uC544\uAC8C\uB85C"
     creditName: "\uAC15\uADFC\uC6B0"
     creditSprite: {fileID: 21300000, guid: 7113ba2bd7c6fde4487258a40a92dbab, type: 3}
-  - creditTitle: "99\uB144\uC0DD\uC778\uB370 \uC560\uAC00 \uB458"
+  - creditTitle: "\uB204\uB172\u3148\u3148"
     creditName: "\uC774\uC5F0\uC218"
     creditSprite: {fileID: 21300000, guid: 3e1f256f33aad404e87fb3ba4a66d1fc, type: 3}
-  - creditTitle: "\uAE4C\uD0C8\uB8E8\uB0D0\uC758 \uC0DB\uBCC4"
+  - creditTitle: "\uC874\uC798\uB0A8"
     creditName: "\uD669\uC218\uC815"
     creditSprite: {fileID: 21300000, guid: 6ae93bb16a8a3ed4ba9ad965a369d494, type: 3}
   - creditTitle: Team Dev
     creditName: "\uC190\uBBFC\uADE0"
     creditSprite: {fileID: 21300000, guid: 1f9f19aef1332184e89c0e08a2d2a784, type: 3}
-  - creditTitle: "\uB2E4\uC74C \uB354\uBE44 4\uC6D4 \uAE54\uAE54"
+  - creditTitle: "\uBD80\uCE74\uC694~"
     creditName: "\uC774\uC9C4\uC6B0"
     creditSprite: {fileID: 21300000, guid: cb879c1216c3b2e4fbfadf3678b7a146, type: 3}
   - creditTitle: "\uCCB4\uB9AC\uB9C8\uB8E8 \uD638\uB450\uB9C8\uB8E8"
@@ -6038,6 +6118,19 @@ MonoBehaviour:
   cTitle: {fileID: 1647420646}
   cName: {fileID: 1732253202}
   spritePrefab: {fileID: 2590352622190773709, guid: 4bfd19a5df63d554baf9f8e4cfe533e6, type: 3}
+  circleArea: {fileID: 632003869}
+--- !u!225 &1266310246
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1266310241}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1268259774
 GameObject:
   m_ObjectHideFlags: 0
@@ -7422,9 +7515,9 @@ RectTransform:
   m_Father: {fileID: 801567380}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 75, y: -50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1678387808
@@ -7474,18 +7567,6 @@ MonoBehaviour:
       - m_Target: {fileID: 1915654078}
         m_TargetAssemblyTypeName: PanelsController, Assembly-CSharp
         m_MethodName: CanvasFadeOut
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1915654078}
-        m_TargetAssemblyTypeName: PanelsController, Assembly-CSharp
-        m_MethodName: Noninteractive
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9172,6 +9253,7 @@ MonoBehaviour:
   puzzlePanel: {fileID: 210937671}
   textPanel: {fileID: 1150766009}
   tempPanel: {fileID: 2055531379}
+  creditPanel: {fileID: 1266310241}
   noramlCursor: {fileID: 2800000, guid: 7d61a8edfef9a6540bbec719a6f4eeff, type: 3}
 --- !u!1 &1951410018
 GameObject:

@@ -25,6 +25,8 @@ public class CreditPanelController : MonoBehaviour
     private TMP_Text cName;
     [SerializeField]
     private GameObject spritePrefab;
+    [SerializeField]
+    private CircleCollider2D circleArea;
 
     private Transform parentTransform;
 
@@ -33,44 +35,34 @@ public class CreditPanelController : MonoBehaviour
     private float minValue = 1f;
     private float maxValue = 2f;
     private float progress = 0f;
+    private float distance;
 
     private void Start()
     {
         txtCanvas = txtCanvas.GetComponent<CanvasGroup>();
         txtCanvas.alpha = 0f;
         parentTransform = transform;
+        circleArea.radius = Mathf.Sqrt((Screen.width) * (Screen.width) + (Screen.height) * (Screen.height)) + 100f;
+        distance = circleArea.radius;
 
-        PlayNextAnimation();
+        //PlayNextAnimation();
     }
 
     private void FixedUpdate()
     {
         Debug.Log(animSpeed);
-        //if (Input.GetKey(KeyCode.Space) && !isIncreasing)
-        //{
-        //    isIncreasing = true;
-        //    animSpeed = maxValue;
-        //}
-        //else if (!Input.GetKey(KeyCode.Space) && isIncreasing)
-        //{
-        //    isIncreasing = false;
-        //    animSpeed = minValue;
-        //}
 
         bool isSpacePressed = Input.GetKey(KeyCode.Space);
 
         if (isSpacePressed && progress < 1f)
         {
-            // 스페이스바를 누르고 있고, 아직 최대값에 도달하지 않았다면
-            progress += Time.deltaTime; // progress를 증가시켜서 전환을 부드럽게 함
+            progress += Time.deltaTime;
         }
         else if (!isSpacePressed && progress > 0f)
         {
-            // 스페이스바를 떼고 있고, 아직 최소값에 도달하지 않았다면
-            progress -= Time.deltaTime; // progress를 감소시켜서 전환을 부드럽게 함
+            progress -= Time.deltaTime;
         }
 
-        // minValue에서 maxValue로 보간
         animSpeed = Mathf.Lerp(minValue, maxValue, progress);
     }
 
@@ -79,7 +71,7 @@ public class CreditPanelController : MonoBehaviour
         return 1f / (1f + Mathf.Exp(-x));
     }
 
-    private void PlayNextAnimation()
+    public void PlayNextAnimation()
     {
         var textSequence = DOTween.Sequence();
 
@@ -101,6 +93,9 @@ public class CreditPanelController : MonoBehaviour
 
     private void CreateBalls()
     {
+        float angle = UnityEngine.Random.Range(0f, 360f);
+        Vector3 spawnPos = new Vector3(Mathf.Sin(angle), Mathf.Cos(angle), 0f) * distance;
+
         GameObject spriteInstance = Instantiate(spritePrefab, parentTransform);
         if (spriteInstance != null)
         {
