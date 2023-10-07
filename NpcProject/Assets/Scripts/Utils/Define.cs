@@ -25,6 +25,7 @@ public class Define
         Chapter_01_Puzzle12,
         Chapter_01_Puzzle13,
         Chapter_02_Forest,
+        Chapter_02_Temple,
         TestLogo,
         EndLogo
     }

@@ -52,7 +52,4 @@ public class GameSequence : GameEvent
         onStart?.Invoke();
         firstEvent.Play();
     }
-
-
-
 }
