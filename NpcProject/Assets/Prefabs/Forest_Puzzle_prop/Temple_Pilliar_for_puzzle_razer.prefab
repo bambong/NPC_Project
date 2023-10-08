@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 1143877599143071604}
   - component: {fileID: 7822099789834703897}
   - component: {fileID: 4740864315585869985}
-  - component: {fileID: 8502132788250504602}
   - component: {fileID: 914608424660161875}
   - component: {fileID: 6211014254190524360}
+  - component: {fileID: 4222889051332242796}
   m_Layer: 8
   m_Name: Temple_Pilliar_for_puzzle_razer
   m_TagString: Untagged
@@ -31,9 +31,10 @@ Transform:
   m_GameObject: {fileID: 1477476683757591262}
   m_LocalRotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
   m_LocalPosition: {x: 208.8963, y: -14.804384, z: -228.4836}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 6733250836896669071}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -110,22 +111,6 @@ MonoBehaviour:
   - isLock: 0
     keywordGo: {fileID: 0}
   statusSlotLayoutName: KeywordStatusLayoutController
---- !u!114 &8502132788250504602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1477476683757591262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44f30c2a92c4649c9a6f187420fc4b86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parent: {fileID: 1477476683757591262}
-  waitTime: 1
-  hitcount: 0
-  keyword: {fileID: 4740864315585869985}
 --- !u!65 &914608424660161875
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -153,5 +138,106 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &4222889051332242796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1477476683757591262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f12c26a54b6840eea3721da8ba5f207, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parent: {fileID: 1477476683757591262}
+  waitTime: 0.7
+  hitcount: 0
+  npcLaser: {fileID: 6733250835898472334}
+--- !u!1001 &2528228044667919369
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 6165529417177038481}
+    m_Modifications:
+    - target: {fileID: 9108352077377793324, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+      propertyPath: m_Name
+      value: NPCLaser_Red
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108352077377793324, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108352077378044294, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108352077378044294, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108352077378044294, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108352077378044294, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108352077378044294, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108352077378044294, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108352077378044294, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108352077378044294, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108352077378044294, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108352077378044294, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108352077378044294, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108352077973162887, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+      propertyPath: maxLength
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108352077973162887, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+      propertyPath: laserHitColor
+      value: 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+--- !u!114 &6733250835898472334 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9108352077973162887, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+  m_PrefabInstance: {fileID: 2528228044667919369}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69b86cb7d04efd34dbd92d50136501e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &6733250836896669071 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9108352077378044294, guid: 3267d9c65906a402e98239f10f41c285, type: 3}
+  m_PrefabInstance: {fileID: 2528228044667919369}
+  m_PrefabAsset: {fileID: 0}
