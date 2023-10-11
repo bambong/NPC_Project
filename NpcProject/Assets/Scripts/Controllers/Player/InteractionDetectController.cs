@@ -35,10 +35,11 @@ public class InteractionDetectController : MonoBehaviour
 
     public void Interaction()
     {
-        if(Managers.Game.IsDebugMod)
-        {
-            return;
-        }
+        //if(Managers.Game.IsDebugMod)
+        //{
+        //    return;
+        //}
+
         if (curIteraction == null)
         {
             return;
@@ -76,20 +77,20 @@ public class InteractionDetectController : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (Managers.Game.IsDebugMod) 
-        {
-            return;
-        }
+        //if (Managers.Game.IsDebugMod) 
+        //{
+        //    return;
+        //}
         SetInteraction(other.gameObject);
     }
    
 
     private void OnTriggerExit(Collider other)
     {
-        if (Managers.Game.IsDebugMod)
-        {
-            return;
-        }
+        //if (Managers.Game.IsDebugMod)
+        //{
+        //    return;
+        //}
     
         if (CurIteraction == null)
         {

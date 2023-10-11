@@ -81,7 +81,7 @@ public class GameManager
         }
         gameStateController.ChangeState(GamePauseState.Instance);
     }
-        public void SetEnableDebugMod() 
+     public void SetEnableDebugMod() 
     {
         isDebugMod = true;
         OnDebugModStateEnter();

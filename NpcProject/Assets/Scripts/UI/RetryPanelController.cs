@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class RetryPanelController : UI_Base
 {
-    [SerializeField]
-    private CanvasGroup canvasGroup;
 
     [SerializeField]
     private Button resetButton;
@@ -17,14 +15,25 @@ public class RetryPanelController : UI_Base
 
     [SerializeField]
     private RectTransform resetButtonRect;
+    [SerializeField]
+    private RectTransform debugEnableNoti;
 
     [SerializeField]
-    private Vector3 startPos;
+    private Vector3 startResetButtonPos;
     [SerializeField]
-    private Vector3 desirePos;
+    private Vector3 desireResetButtonPos;
 
+
+    [SerializeField]
+    private Vector3 startNotiButtonPos;
+    [SerializeField]
+    private Vector3 desireNotiButtonPos;
+
+
+    [SerializeField]
+    private TextMeshProUGUI debugKeyText;
     private bool isOpenPanel;
-    private bool isOpenButton;
+    private bool isOpenDebugUi;
     private readonly float OPEN_INTERVAL = 3f;
     public override void Init()
     {
@@ -47,21 +56,48 @@ public class RetryPanelController : UI_Base
         Managers.Scene.ReLoadCurrentScene(()=>Managers.Game.Player.PurposePanel.Open());
     }
     public void OpenResetButton() 
-    {
-        if (isOpenPanel || isOpenButton)
-        {
-            return;
-        }
-        resetButtonRect.anchoredPosition = startPos;
+    { 
+        resetButtonRect.anchoredPosition = startResetButtonPos;
         resetButton.gameObject.SetActive(true);
-        resetButtonRect.DOAnchorPos(desirePos, 1f);
-        isOpenButton = true;
+        resetButtonRect.DOAnchorPos(desireResetButtonPos, 1f);
+    }
+    public void DebugKeyTextUpdate() => debugKeyText.text = KeySetting.Instance.currentKeys[KEY_TYPE.DEBUGMOD_KEY].ToString();
+    public void OpenDebugEnableNoti()
+    {
+        if (!isOpenDebugUi) return;
+
+        DebugKeyTextUpdate();
+        debugEnableNoti.anchoredPosition = startNotiButtonPos;
+        debugEnableNoti.gameObject.SetActive(true);
+        debugEnableNoti.DOAnchorPos(desireNotiButtonPos, 1f);
+        
+    }
+    public void CloseDebugEnableNoti() 
+    {
+        debugEnableNoti.DOKill();
+        debugEnableNoti.gameObject.SetActive(false);
     }
     public void CloseResetButton()
     {
-        isOpenButton = false;
         resetButtonRect.DOKill();
         resetButton.gameObject.SetActive(false);
+    }
+
+    public void OpenDebugUi()
+    {
+        if (isOpenPanel || isOpenDebugUi)
+        {
+            return;
+        }
+        isOpenDebugUi = true;
+        OpenDebugEnableNoti();
+        OpenResetButton();
+    }
+    public void CloseDebugUi() 
+    {
+        isOpenDebugUi = false;
+        CloseDebugEnableNoti();
+        CloseResetButton();
     }
     public void ClosePauseButton()
     {
@@ -74,9 +110,9 @@ public class RetryPanelController : UI_Base
             return; 
         }
         isOpenPanel = true;
-        if (isOpenButton)
+        if (isOpenDebugUi)
         {
-            CloseResetButton();
+            CloseDebugUi();
         }
         ClosePauseButton();
         Sequence seq = DOTween.Sequence();
