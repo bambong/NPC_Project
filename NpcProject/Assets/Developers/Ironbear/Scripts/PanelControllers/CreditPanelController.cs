@@ -26,7 +26,7 @@ public class CreditPanelController : UI_Base
     [SerializeField]
     private GameObject spritePrefab;
     [SerializeField]
-    private CircleCollider2D circleArea;
+    private BoxCollider2D boxArea;
     [SerializeField]
     private GameObject makingBtn;
 
@@ -36,17 +36,15 @@ public class CreditPanelController : UI_Base
     private int curIndex = 0;
     private float animSpeed = 1f;
     private float minValue = 1f;
-    private float maxValue = 2f;
+    private float maxValue = 3f;
     private float progress = 0f;
-    private float distance;
 
     private void Start()
     {
         txtCanvas = txtCanvas.GetComponent<CanvasGroup>();
         txtCanvas.alpha = 0f;
         parentTransform = transform;
-        circleArea.radius = Mathf.Sqrt((Screen.width) * (Screen.width) + (Screen.height) * (Screen.height)) + 100f;
-        distance = circleArea.radius;
+        boxArea.size = new Vector2(Screen.width + 100f, Screen.height + 1800f);
     }
 
     public override void Init()
@@ -85,13 +83,13 @@ public class CreditPanelController : UI_Base
         cTitle.text = creditItems[curIndex].creditTitle;
         cName.text = creditItems[curIndex].creditName;
 
-        curIndex++;
-
+        
         textSequence.Append(txtCanvas.DOFade(1f, 1.5f / animSpeed).SetEase(Ease.Linear));
         //textSequence.AppendCallback(() => CreateBalls());
         textSequence.AppendInterval(2f / animSpeed);
         textSequence.Append(txtCanvas.DOFade(0f, 1.5f / animSpeed).SetEase(Ease.Linear)).OnComplete(() =>
         {
+            curIndex++;
             if (curIndex < creditItems.Count)
             {
                 PlayNextAnimation();
