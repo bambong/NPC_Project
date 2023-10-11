@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System;
 using DG.Tweening;
 using System.Linq;
 using System.Text;
@@ -33,8 +32,6 @@ public class TalkPanelController : UI_Base
     private readonly float TEXT_SPEED = 0.05f;
     private readonly float SKIP_DELAY_TIME = 0.1f;
     
-    [SerializeField]
-    private List<Image> leftRights;
     [SerializeField]
     private TextMeshProUGUI spekerName;
     [SerializeField]
@@ -88,56 +85,49 @@ public class TalkPanelController : UI_Base
     }
 
     #region TalkEvent
-    public void SetDialogue(Dialogue dialogue)
+    public void SetDialogue(Dialogue dialogue, CharacterInfo one, CharacterInfo two)
     {
         skipButton.interactable = true;
-
-        for (int i =0; i < dialogue.leftRights.Length; ++i ) 
-        {            
-            if(dialogue.leftRights[i] == null) 
+      
+        if(one != null)
+        {
+            if (dialogue.speaker.Id == one.id)
             {
-                leftRights[i].DOFade(0, 0);
-                continue;
+                one.anim.Play(dialogue.emotion);
             }
-            leftRights[i].sprite = dialogue.leftRights[i].sprite;
-            if (dialogue.speaker.sprite == dialogue.leftRights[i].sprite) 
-            {
-                leftRights[i].color = Color.white;
-            }
-            else 
-            {
-                leftRights[i].color = Color.gray;
-            }
-            leftRights[i].DOFade(1, 0);
         }
+        if (two != null)
+        {
+            if(dialogue.speaker.Id == two.id)
+            {
+                two.anim.Play(dialogue.emotion);
+            }
+        }
+        
         spekerName.text = $"{dialogue.speaker.charName}";
         choiceButton.Inactive();
         dialogueText.text = "";
     }
 
-    public void PlayDialogue(Dialogue dialogue) 
+    public void PlayDialogue(Dialogue dialogue, CharacterInfo one, CharacterInfo two) 
     {        
         dialogueText.text = "";
         isNext = false;        
         curDialogue = dialogue;
 
-        for (int i = 0; i < dialogue.leftRights.Length; ++i)
+        if (one != null)
         {
-            if (dialogue.leftRights[i] == null)
+            if (dialogue.speaker.Id == one.id)
             {
-                leftRights[i].DOFade(0, 0);
-                continue;
+                one.anim.Play(dialogue.emotion);
             }
-            leftRights[i].sprite = dialogue.leftRights[i].sprite;
-            if (dialogue.speaker.sprite == dialogue.leftRights[i].sprite)
+        }
+        if (two != null)
+        {
+            if (dialogue.speaker.Id == two.id)
             {
-                leftRights[i].color = Color.white;
+                two.anim.Play(dialogue.emotion);
             }
-            else
-            {
-                leftRights[i].color = Color.gray;
-            }
-            leftRights[i].DOFade(1, 0);
         }
 
         spekerName.text = $"{dialogue.speaker.charName}";
@@ -147,7 +137,7 @@ public class TalkPanelController : UI_Base
     }
     #endregion
     #region CutSceneTalk
-    public void SetDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
+    public void SetCutSceneDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
     {
         //init
         skipButton.interactable = true;
@@ -160,14 +150,10 @@ public class TalkPanelController : UI_Base
         leftColor = leftmaterial.color;
         rightColor = rightmaterial.color;        
 
-        for (int i = 0; i < dialogue.leftRights.Length; ++i)
-        {
-            leftRights[i].DOFade(0, 0);
-            continue;
-        }
-
         if (dialogue.speaker.Id == left.id)
         {
+            left.anim.Play(dialogue.emotion);
+
             rightmaterial.color = gray;
             rightRenderer.material = rightmaterial;
 
@@ -176,6 +162,8 @@ public class TalkPanelController : UI_Base
         }
         if (dialogue.speaker.Id == right.id)
         {
+            right.anim.Play(dialogue.emotion);
+
             leftmaterial.color = gray;
             leftRenderer.material = leftmaterial;
 
@@ -188,19 +176,16 @@ public class TalkPanelController : UI_Base
         dialogueText.text = "";
     }
 
-    public void PlayDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
+    public void PlayCutSceneDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
     {
         dialogueText.text = "";
         isNext = false;
         curDialogue = dialogue;
-        
-        for (int i = 0; i < dialogue.leftRights.Length; ++i)
-        {
-            leftRights[i].DOFade(0, 0);
-            continue;
-        }        
+          
         if (dialogue.speaker.Id == left.id)
         {
+            left.anim.Play(dialogue.emotion);
+
             rightmaterial.color = gray;
             rightRenderer.material = rightmaterial;
 
@@ -209,6 +194,8 @@ public class TalkPanelController : UI_Base
         }
         if (dialogue.speaker.Id == right.id)
         {
+            right.anim.Play(dialogue.emotion);
+
             leftmaterial.color = gray;
             leftRenderer.material = leftmaterial;
 
@@ -501,12 +488,15 @@ public class TalkPanelController : UI_Base
             textDialogue += item;
         }
     }
-
+   
     public string HangleChange(string item)
     {
+
         string name = Managers.Talk.GetSpeakerName(101);
-        string lastname = name.Substring(name.Length - 1);
-        int unicodeValue = (int)lastname[0];
+
+        int unicodeValue = name[name.Length - 1];
+        //int unicodeValue = GetLastname(name);
+
         //English
         if (unicodeValue < 0xAC00 || unicodeValue > 0xD7A3)
         {
@@ -515,7 +505,7 @@ public class TalkPanelController : UI_Base
         //three word hangle
         if ((unicodeValue - 0xAC00) % 28 > 0)
         {
-            if(HangleChanger.hangleMap.ContainsKey(item))
+            if (HangleChanger.hangleMap.ContainsKey(item))
             {
                 return HangleChanger.hangleMap[item];
             }
@@ -530,6 +520,15 @@ public class TalkPanelController : UI_Base
             return item;
         }
     }
+
+    //private char GetLastname(string name)
+    //{
+    //    //string lastname = Regex.Replace(name, @"\s+", String.Empty);
+    //    //string lastname = name.Trim();
+    //    string lastname = name.Replace("\u200B", "");
+    //    return lastname[lastname.Length - 1];
+    //}
+
     private string TextExtraction(string textDialogue)
     {
         MatchCollection matches = Regex.Matches(textDialogue, PATTERN);
