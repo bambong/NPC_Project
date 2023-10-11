@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
 
-public class CreditPanelController : MonoBehaviour
+public class CreditPanelController : UI_Base
 {
     [System.Serializable]
     public class CreditItem
@@ -27,8 +27,11 @@ public class CreditPanelController : MonoBehaviour
     private GameObject spritePrefab;
     [SerializeField]
     private CircleCollider2D circleArea;
+    [SerializeField]
+    private GameObject makingBtn;
 
     private Transform parentTransform;
+    private Sequence textSequence;
 
     private int curIndex = 0;
     private float animSpeed = 1f;
@@ -44,14 +47,23 @@ public class CreditPanelController : MonoBehaviour
         parentTransform = transform;
         circleArea.radius = Mathf.Sqrt((Screen.width) * (Screen.width) + (Screen.height) * (Screen.height)) + 100f;
         distance = circleArea.radius;
+    }
 
-        //PlayNextAnimation();
+    public override void Init()
+    {
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            DeactivatedCredit();
+        }
     }
 
     private void FixedUpdate()
     {
         Debug.Log(animSpeed);
-
         bool isSpacePressed = Input.GetKey(KeyCode.Space);
 
         if (isSpacePressed && progress < 1f)
@@ -66,36 +78,35 @@ public class CreditPanelController : MonoBehaviour
         animSpeed = Mathf.Lerp(minValue, maxValue, progress);
     }
 
-    private float Sigmoid(float x)
-    {
-        return 1f / (1f + Mathf.Exp(-x));
-    }
-
     public void PlayNextAnimation()
     {
-        var textSequence = DOTween.Sequence();
+        textSequence = DOTween.Sequence();
 
         cTitle.text = creditItems[curIndex].creditTitle;
         cName.text = creditItems[curIndex].creditName;
 
+        curIndex++;
+
         textSequence.Append(txtCanvas.DOFade(1f, 1.5f / animSpeed).SetEase(Ease.Linear));
-        textSequence.AppendCallback(() => CreateBalls());
+        //textSequence.AppendCallback(() => CreateBalls());
         textSequence.AppendInterval(2f / animSpeed);
         textSequence.Append(txtCanvas.DOFade(0f, 1.5f / animSpeed).SetEase(Ease.Linear)).OnComplete(() =>
         {
-            curIndex++;
             if (curIndex < creditItems.Count)
             {
                 PlayNextAnimation();
             }
+            else
+            {
+                DeactivatedCredit();
+            }            
         });
+
+        textSequence.Play();
     }
 
     private void CreateBalls()
     {
-        float angle = UnityEngine.Random.Range(0f, 360f);
-        Vector3 spawnPos = new Vector3(Mathf.Sin(angle), Mathf.Cos(angle), 0f) * distance;
-
         GameObject spriteInstance = Instantiate(spritePrefab, parentTransform);
         if (spriteInstance != null)
         {
@@ -103,6 +114,27 @@ public class CreditPanelController : MonoBehaviour
             spriteInstance.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
             spriteImage.sprite = creditItems[curIndex].creditSprite;
         }
+    }
+
+    private void DeactivatedCredit()
+    {
+        textSequence.Kill();
+        
+        CanvasGroup creditCanvasGroup = this.GetComponent<CanvasGroup>();
+        creditCanvasGroup.DOFade(0f, 1.5f).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            var canvasGroup = makingBtn.GetComponent<CanvasGroup>();
+            var button = makingBtn.GetComponent<Button>();
+            canvasGroup.interactable = true;
+            canvasGroup.blocksRaycasts = true;
+            button.interactable = true;
+
+            curIndex = 0;
+            txtCanvas.alpha = 0f;
+
+            this.gameObject.SetActive(false);
+            DOTween.Clear(this);
+        });
     }
 }
     

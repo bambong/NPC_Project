@@ -122,6 +122,7 @@ public class PanelsController : UI_Base
         {
             isCredit = true;
             credit.PlayNextAnimation();
+            //credit.PlayScrollAnimation();
         });
     }
 }
