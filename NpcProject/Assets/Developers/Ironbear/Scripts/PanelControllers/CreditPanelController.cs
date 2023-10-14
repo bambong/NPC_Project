@@ -15,6 +15,9 @@ public class CreditPanelController : UI_Base
         public Sprite creditSprite;
     }
 
+    [HideInInspector]
+    public float animSpeed = 1f;
+
     [SerializeField]
     private List<CreditItem> creditItems = new List<CreditItem>();
     [SerializeField]
@@ -34,10 +37,11 @@ public class CreditPanelController : UI_Base
     private Sequence textSequence;
 
     private int curIndex = 0;
-    private float animSpeed = 1f;
     private float minValue = 1f;
     private float maxValue = 3f;
     private float progress = 0f;
+
+    
 
     private void Start()
     {
@@ -85,7 +89,7 @@ public class CreditPanelController : UI_Base
 
         
         textSequence.Append(txtCanvas.DOFade(1f, 1.5f / animSpeed).SetEase(Ease.Linear));
-        //textSequence.AppendCallback(() => CreateBalls());
+        textSequence.AppendCallback(() => CreateBalls());
         textSequence.AppendInterval(2f / animSpeed);
         textSequence.Append(txtCanvas.DOFade(0f, 1.5f / animSpeed).SetEase(Ease.Linear)).OnComplete(() =>
         {
@@ -109,7 +113,9 @@ public class CreditPanelController : UI_Base
         if (spriteInstance != null)
         {
             Image spriteImage = spriteInstance.GetComponent<Image>();
+            float randomX = UnityEngine.Random.Range(-Screen.width / 2, Screen.width / 2);
             spriteInstance.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+            spriteInstance.transform.localPosition = new Vector3(randomX, -(Screen.height / 2 + 150f), 0f);
             spriteImage.sprite = creditItems[curIndex].creditSprite;
         }
     }
