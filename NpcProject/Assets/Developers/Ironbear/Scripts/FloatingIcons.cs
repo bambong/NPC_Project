@@ -10,6 +10,7 @@ public class FloatingIcons : MonoBehaviour
 
     private void Awake()
     {
+        floatingSpeed = CreditPanelController.animSpeed;
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 

@@ -16,7 +16,7 @@ public class CreditPanelController : UI_Base
     }
 
     [HideInInspector]
-    public float animSpeed = 1f;
+    public static float animSpeed { get; set; } = 1f;
 
     [SerializeField]
     private List<CreditItem> creditItems = new List<CreditItem>();
@@ -90,7 +90,7 @@ public class CreditPanelController : UI_Base
         
         textSequence.Append(txtCanvas.DOFade(1f, 1.5f / animSpeed).SetEase(Ease.Linear));
         textSequence.AppendCallback(() => CreateBalls());
-        textSequence.AppendInterval(2f / animSpeed);
+        textSequence.AppendInterval(5f / animSpeed);
         textSequence.Append(txtCanvas.DOFade(0f, 1.5f / animSpeed).SetEase(Ease.Linear)).OnComplete(() =>
         {
             curIndex++;
@@ -123,7 +123,9 @@ public class CreditPanelController : UI_Base
     private void DeactivatedCredit()
     {
         textSequence.Kill();
-        
+
+        DeleteClones();
+
         CanvasGroup creditCanvasGroup = this.GetComponent<CanvasGroup>();
         creditCanvasGroup.DOFade(0f, 1.5f).SetEase(Ease.Linear).OnComplete(() =>
         {
@@ -139,6 +141,16 @@ public class CreditPanelController : UI_Base
             this.gameObject.SetActive(false);
             DOTween.Clear(this);
         });
+    }
+
+    private void DeleteClones()
+    {
+        GameObject[] clones = GameObject.FindGameObjectsWithTag(spritePrefab.tag);
+
+        foreach(GameObject clone in clones)
+        {
+            Destroy(clone);
+        }
     }
 }
     
