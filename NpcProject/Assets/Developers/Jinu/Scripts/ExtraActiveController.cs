@@ -35,6 +35,7 @@ public class ExtraActiveController : MonoBehaviour
         anim.Play("Meria_Idle_Side");
     }
 
+
     public void PlayerLeftIdle()
     {
         StartCoroutine(ChangePlayerAnim(PlayerAnimationController.MoveDir.Right));

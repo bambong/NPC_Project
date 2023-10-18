@@ -18,6 +18,8 @@ public class CutSceneController : MonoBehaviour
     private CharacterInfo right;
 
     [SerializeField]
+    private UnityEvent onTalkStart;
+    [SerializeField]
     private UnityEvent allTalkComplete;
 
     private int talkCount = 0;
@@ -62,7 +64,11 @@ public class CutSceneController : MonoBehaviour
         }
 
         curCutScene.Pause();
+
+
         var talk = Managers.Talk.GetTalkEvent(cutSceneTalk[talkCount]);
+        talk.OnStart(() => onTalkStart?.Invoke());
+
         talk.OnComplete(() => talkCount++);
         talk.OnComplete(() => Managers.Game.SetStateEvent());
         talk.OnComplete(() => curCutScene.Resume());
