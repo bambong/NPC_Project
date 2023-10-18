@@ -12,8 +12,8 @@ using DG.Tweening;
 public class Dialogue
 {
     public Speaker speaker;
-    public Speaker[] leftRights = new Speaker[2];
     public string text;
+    public string emotion;
 }
 
 public class TalkEvent : GameEvent
@@ -38,7 +38,7 @@ public class TalkEvent : GameEvent
         }
         else
         {
-            Managers.Talk.PlayTalk(this);
+            Managers.Talk.PlayTalk(this, left, right);
         }
         
     }
@@ -55,6 +55,19 @@ public class TalkEvent : GameEvent
         {
             curIndex = 0;
             Managers.Talk.EndTalk();
+            
+            if (left != null)
+            {
+                left.anim.Play("Idle");
+            }
+            if (right != null)
+            {
+                right.anim.Play("Idle");
+            }
+
+            left = null;
+            right = null;
+
             onComplete?.Invoke();
             return false;
         }
@@ -65,7 +78,20 @@ public class TalkEvent : GameEvent
     {        
         curIndex = 0;
         Managers.Talk.StopTextAnimation();
-        Managers.Talk.EndTalk();        
+        Managers.Talk.EndTalk();
+        
+        if(left != null)
+        {
+            left.anim.Play("Idle");
+        }
+        if(right != null)
+        {
+            right.anim.Play("Idle");
+        }
+        
+        left = null;
+        right = null;
+
         onComplete?.Invoke();
     }
 }
@@ -115,16 +141,9 @@ public class TalkManager
             TalkEvent talkEvent;
             Dialogue dialogue = new Dialogue();
             dialogue.text = data.text;
+            dialogue.emotion = data.emotion;
             dialogue.speaker = speakerDatas[data.speaker];
-            if(data.leftRight/ PARTICIPANT_NUM != 0) 
-            {
-                dialogue.leftRights[0] = speakerDatas[data.leftRight / PARTICIPANT_NUM];
-            }
-            if (data.leftRight % PARTICIPANT_NUM != 0)
-            {
-                dialogue.leftRights[1] = speakerDatas[data.leftRight % PARTICIPANT_NUM];
-            }
-
+                        
             if (!currentSceneTalkDatas.TryGetValue(data.eventID, out talkEvent))
             {
                 talkEvent = new TalkEvent();
@@ -135,9 +154,9 @@ public class TalkManager
 
         }
     }
-    public void PlayDialogue(Dialogue dialogue) 
+    public void PlayDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right) 
     {
-        talkPanel.PlayDialogue(dialogue);
+        talkPanel.PlayDialogue(dialogue, left, right);
     }
 
     public TalkEvent GetTalkEvent(int talkEventId) 
@@ -145,14 +164,14 @@ public class TalkManager
         return currentSceneTalkDatas[talkEventId];
     }
  
-    public void PlayTalk(TalkEvent talk) 
+    public void PlayTalk(TalkEvent talk, CharacterInfo left, CharacterInfo right) 
     {
         Managers.Game.SetStateEvent();
         talkPanel.skipButton.gameObject.SetActive(false);
 
         curTalkEvent = talk;
        
-        talkPanel.SetDialogue(curTalkEvent.GetCurrentDialogue());
+        talkPanel.SetDialogue(curTalkEvent.GetCurrentDialogue(), left, right);
 
         talkPanel.TalkPanelInner.DOScale(Vector3.zero, 0).OnStart(() =>
         {
@@ -160,7 +179,7 @@ public class TalkManager
             talkPanel.TalkPanelInner.DOScale(Vector3.one, ENTER_ANIM_SPEED).OnComplete(() =>
             {
                 talkPanel.skipButton.gameObject.SetActive(true);
-                Managers.Scene.CurrentScene.StartCoroutine(ProgressTalk());
+                Managers.Scene.CurrentScene.StartCoroutine(ProgressTalk(left, right));
             });
         });
     }
@@ -195,10 +214,10 @@ public class TalkManager
         talkPanel.PanelClear();
         curTalkEvent.MoveEnd();
     }
-    IEnumerator ProgressTalk() 
+    IEnumerator ProgressTalk(CharacterInfo left, CharacterInfo right) 
     {
 
-        PlayDialogue(curTalkEvent.GetCurrentDialogue());
+        PlayDialogue(curTalkEvent.GetCurrentDialogue(), left, right);
         
         while(true) 
         {
@@ -217,7 +236,7 @@ public class TalkManager
                 if(curTalkEvent.MoveNext())
                 {
                     talkPanel.SaveText();
-                    PlayDialogue(curTalkEvent.GetCurrentDialogue());
+                    PlayDialogue(curTalkEvent.GetCurrentDialogue(), left, right);
                 }
                 else 
                 {
@@ -229,9 +248,9 @@ public class TalkManager
     }
 
     #region CutSceneTalk Function
-    public void PlayDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
+    public void PlayCutSceneDialogue(Dialogue dialogue, CharacterInfo left, CharacterInfo right)
     {
-        talkPanel.PlayDialogue(dialogue, left, right);
+        talkPanel.PlayCutSceneDialogue(dialogue, left, right);
     }
 
     public void PlayCutSceneTalk(TalkEvent talk, CharacterInfo left, CharacterInfo right)
@@ -240,7 +259,7 @@ public class TalkManager
 
         curTalkEvent = talk;
 
-        talkPanel.SetDialogue(curTalkEvent.GetCurrentDialogue(), left, right);
+        talkPanel.SetCutSceneDialogue(curTalkEvent.GetCurrentDialogue(), left, right);
 
         talkPanel.TalkPanelInner.DOScale(Vector3.zero, 0).OnStart(() =>
         {

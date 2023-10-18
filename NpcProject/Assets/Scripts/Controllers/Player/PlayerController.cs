@@ -599,12 +599,21 @@ public class PlayerController : MonoBehaviour , IDataHandler
                         isFocusKeyword = nearKeyword;
                     }
                 }
-
+               
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
                     if (isFocusKeyword != null)
                     {
                         isFocusKeyword.OnBeginDrag(pointerEventData);
+                        isFocusKeyword.OnPointerExit();
+                        isFocusKeyword = null;
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.Mouse1))
+                {
+                    if (isFocusKeyword != null)
+                    {
+                        Managers.Keyword.CurDebugZone.MoveToKeyword(isFocusKeyword);
                         isFocusKeyword.OnPointerExit();
                         isFocusKeyword = null;
                     }
@@ -655,8 +664,8 @@ public class PlayerController : MonoBehaviour , IDataHandler
     public void EnterDebugMod()
     {
         Managers.Game.SetEnableDebugMod();
-
-        if(debugModeInput != null) 
+        Managers.Game.RetryPanel.CloseDebugEnableNoti();
+        if (debugModeInput != null) 
         {
             StopCoroutine(debugModeInput);
             
@@ -666,9 +675,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
         {
             animationController.OnEnterDebugMod();
         });
-        interactionDetecter.SwitchDebugMod(true);
-        
-
+        //interactionDetecter.SwitchDebugMod(true);
     }
     public void ExitDebugMod()
     {
@@ -677,10 +684,10 @@ public class PlayerController : MonoBehaviour , IDataHandler
             StopCoroutine(debugModeInput);
             debugModeInput = null;
         }
-        
+        Managers.Game.RetryPanel.OpenDebugEnableNoti();
         glitchEffectController.ExitDebugMod(() => {
             
-            interactionDetecter.SwitchDebugMod(false);
+           // interactionDetecter.SwitchDebugMod(false);
             animationController.OnExitDebugMod();
             isDebugButton();
         });
@@ -784,6 +791,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
     public void SetActivePauseUi(bool isOn) 
     {
+        if (isOn) Managers.Game.RetryPanel.DebugKeyTextUpdate();
         onPauseUi.alpha = isOn ? 1 : 0;
         onPauseUi.interactable = isOn;
         //onPauseUi.gameObject.SetActive(isOn);

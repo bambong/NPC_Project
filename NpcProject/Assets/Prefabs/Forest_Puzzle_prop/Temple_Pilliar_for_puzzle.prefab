@@ -30,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 8355917464464382888}
   m_LocalRotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
   m_LocalPosition: {x: 218.27, y: -14.804384, z: -228.4836}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2986181042205621321}
   m_Father: {fileID: 0}
@@ -193,8 +193,16 @@ PrefabInstance:
       value: NPCLaser_Blue
       objectReference: {fileID: 0}
     - target: {fileID: 5071558588438941754, guid: 491bc7a6cfce949c587f119505902e1d, type: 3}
+      propertyPath: maxLength
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5071558588438941754, guid: 491bc7a6cfce949c587f119505902e1d, type: 3}
       propertyPath: hitLaserLayer
       value: 264
+      objectReference: {fileID: 0}
+    - target: {fileID: 5071558588438941754, guid: 491bc7a6cfce949c587f119505902e1d, type: 3}
+      propertyPath: laserHitColor
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 491bc7a6cfce949c587f119505902e1d, type: 3}
