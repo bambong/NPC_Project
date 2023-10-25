@@ -10,6 +10,7 @@ public class BridgeController : MonoBehaviour
     [SerializeField]
     private float timeInterval;
     private bool isSuccess = false;
+    [ContextMenu("SUCCESS")]
     public void OnSuccess() 
     {
         if (isSuccess)
