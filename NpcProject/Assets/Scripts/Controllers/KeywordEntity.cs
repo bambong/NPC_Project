@@ -81,6 +81,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     private Action<KeywordEntity> updateAction = null;
     private Action<KeywordEntity> fixedUpdateAction = null;
     #endregion
+
     private Renderer mRenderer;
     private Material originMat;
    
@@ -114,6 +115,10 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     private readonly string WIRE_FRAME_COLOR_NAME = "_Wireframe_Color";
     private readonly string WIRE_FRAME_EMM_COLOR_NAME = "_EmmColor";
     private const float MINMUM_DIR_AMOUNT = 0.01f;
+    private const float BOX_DIFF_FACTOR = 0.99f;
+    private const float BOX_DIFF_FACTOR_FOR_FLOAT = 0.98f;
+    private const float FLOAT_ARRIVE_DIS = 0.1f;
+    private const float ATTACH_AMOUNT = 0.001f;
     protected override void Start()
     {
         base.Start();
@@ -128,7 +133,9 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
             }
             col = Util.GetOrAddComponent<BoxCollider>(gameObject);
         }
+
         TryGetComponent<Rigidbody>(out rigidbody);
+       
         if(rigidbody == null) 
         {
             rigidbody = gameObject.AddComponent<Rigidbody>();
@@ -138,11 +145,6 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         
         wireColorController = new WireColorStateController();
         wireColorController.Init(this);
-        //mRenderer = GetComponent<Renderer>();
-        //if (originMat == null)
-        //{
-        //    originMat = mRenderer.material;
-        //}
         
         SetDebugZoneWireMat();
         Init();
@@ -173,10 +175,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         ClearWireEmmColor();
 
         InitCrateKeywordOption();
-        
-       // DecisionKeyword();
         StartCoroutine(CheckInitDebugMod());
-       // wireColorController.UpdateColor();
     }
     IEnumerator CheckInitDebugMod() 
     {
@@ -210,7 +209,6 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
             Managers.Game.Player.transform.SetParent(null);
         }
 
-        //keywrodOverrideTable.Clear();
         currentRegisterKeyword.Clear();
         foreach(var frame in keywordFrames) 
         {
@@ -270,7 +268,6 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
     }
     public void SetDebugZoneWireMat()
     {
-        //parentDebugZone = zone;
         parentDebugZone.AddWireFrameMat(GetComponent<Renderer>().material);
     }
     public virtual void EnterDebugMod()
@@ -334,58 +331,55 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         }
         keywrodOverrideTable.Add(id,action);
     }
-    public virtual void AddAction(KeywordController controller,KeywordAction action) 
+    public virtual void AddAction(KeywordController controller,KeywordAction action) // 키워드 기능 추가
     {
-        action.OnEnter.Invoke(this);
-        fixedUpdateAction += action.OnFixecUpdate;
-        updateAction += action.OnUpdate;
-        currentRegisterKeyword[controller] = action;
+        action.OnEnter.Invoke(this); // 키워드 추가시 액션  실행
+        fixedUpdateAction += action.OnFixecUpdate; // FixedUpdate 액션 추가 
+        updateAction += action.OnUpdate; // Update 액션 추가
+        currentRegisterKeyword[controller] = action; // 현재 키워드를 등록 키워드 목록에 추가
     }
 
-    public void RemoveAction(KeywordController registerkeyword , KeywordController newKeyword)
+    public void RemoveAction(KeywordController registerkeyword , KeywordController newKeyword) // 등록된 키워드를 삭제시 실행하는 함수 
     {
-        if(registerkeyword == null)
+        if(registerkeyword == null) // 삭제 시도 키워드가 Null 인지 체크 
         {
             return;
         }
 
-        if(!currentRegisterKeyword.ContainsKey(registerkeyword))
+        if(!currentRegisterKeyword.ContainsKey(registerkeyword)) // 등록되지않은 키워드 삭제 시도 체크
         {
-            Debug.LogError("���Ե������� Ű���� ���� �õ�");
             return;
         }
-        // �ٸ� ���Կ� �� �ִ��� Ȯ��
-        for(int i = 0; i < keywordFrames.Count; ++i) 
+
+        for(int i = 0; i < keywordFrames.Count; ++i)  // 삭제 시도 키워드가 수신 오브젝트의 다른 프레임에 존재하는지 체크 (같은 수신 오브젝트 프레임내 에서 이동하는 경우)
         {
-            if(keywordFrames[i].CurFrameInnerKeyword == registerkeyword)
+            if(keywordFrames[i].CurFrameInnerKeyword == registerkeyword) 
             {
                 return;
             }
         }
         var action = currentRegisterKeyword[registerkeyword];
 
-        fixedUpdateAction -= action.OnFixecUpdate;
-        updateAction -= action.OnUpdate;
-        if (newKeyword == null || registerkeyword.KeywordId != newKeyword.KeywordId) 
+        fixedUpdateAction -= action.OnFixecUpdate; //현재 등록된 FixedUpdate 이벤트 삭제
+        updateAction -= action.OnUpdate; //현재 등록된 Update 이벤트 삭제
+
+        if (newKeyword == null || registerkeyword.KeywordId != newKeyword.KeywordId) // 똑같은 타입의 키워드 끼리 전환일 경우 Remove 이벤트를 발생시키지 않음
         {
-            currentRegisterKeyword[registerkeyword]?.OnRemove(this);
+            currentRegisterKeyword[registerkeyword]?.OnRemove(this); // 키워드 Remove 이벤트 호출
         }
-        currentRegisterKeyword.Remove(registerkeyword);
+        currentRegisterKeyword.Remove(registerkeyword); // 현재 등록된 키워드 목록에서 키워드 삭제
     }
-    public void DecisionKeyword(KeywordFrameController keywordFrame , KeywordController newKeyword) 
+    public void DecisionKeyword(KeywordFrameController keywordFrame , KeywordController newKeyword) // 키워드가 등록될 때 호출되는 함수 
     {
-        // �����Ӿȿ� Ű���尡 ���ٸ� 
-        if (newKeyword == null)
+  
+        if (newKeyword == null)  // 새로운 키워드가 없다면
         {
-            //���� Ű���� UI �� �����ϰ� �ٽ� ��ȸ 
-            keywordFrame.KeywordWorldSlot.UpdateUI(false);
+            keywordFrame.KeywordWorldSlot.UpdateUI(false); // 키워드 보유 표시 UI 업데이트 
             return;
         }
-        ////���� Ű���� UI ����  
-        keywordFrame.KeywordWorldSlot.UpdateUI(true);
-        //keywordFrame.KeywordWorldSlot.SetSlotUI(curFrameInnerKeyword.Image);
+     
+        keywordFrame.KeywordWorldSlot.UpdateUI(true);   // 키워드 보유 표시 UI 업데이트 
 
-        // �̹� ��ϵ� Ű������ �ٽ� ��ȸ  
         if (currentRegisterKeyword.ContainsKey(newKeyword))
         {
             return;
@@ -393,20 +387,23 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
 
         var keywordId = newKeyword.KeywordId;
         var keywordAciton = new KeywordAction(newKeyword);
+        
         KeywordAction overAction;
-        // Ű���尡 �������̵� �Ǿ� �ִ��� Ȯ���ϰ� Ű���� �׼ǿ� �Ҵ�
-        if (keywrodOverrideTable.TryGetValue(keywordId, out overAction))
+      
+        if (keywrodOverrideTable.TryGetValue(keywordId, out overAction)) // 현재 키워드에 대해 오버라이드된 기능이 있는지 확인
         {
-            keywordAciton.OverrideKeywordAction(overAction);
+            keywordAciton.OverrideKeywordAction(overAction); // 오버라이드된 기능이 있다면 덮어씌운다.
         }
-        //Ű���� �׼��� �߰�
-        AddAction(newKeyword, keywordAciton);
+
+        AddAction(newKeyword, keywordAciton); // 키워드가 가지고 있는 기능을 추가
     }
+
     public void MoveAbleUpdate(bool isOn) 
     {
         isMoveAble = isOn;
         wireColorController.MoveAbleUpdate(isOn);
     }
+
     public void SetWireFrameColor(Color color) 
     {
         if (!originMat.HasProperty(WIRE_FRAME_COLOR_NAME))
@@ -415,6 +412,7 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         }
         originMat.SetColor(WIRE_FRAME_COLOR_NAME, color);
     }
+
     public void ClearWireFrameColor() 
     {
         if (!originMat.HasProperty(WIRE_FRAME_COLOR_NAME))
@@ -479,28 +477,25 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         return true;
 
     }
-    public bool ColisionCheckMove(Vector3 vec)
+    public bool ColisionCheckMove(Vector3 vec) // 움직인 경우 True 아닌 경우 false 반환 
     {
         var pos = col.transform.position;
 
-        vec.x = math.abs(vec.x) < MINMUM_DIR_AMOUNT ? 0 : vec.x;
-        vec.z = math.abs(vec.z) < MINMUM_DIR_AMOUNT ? 0 : vec.z;
-        if (vec.magnitude == 0) 
+        vec.x = math.abs(vec.x) < MINMUM_DIR_AMOUNT ? 0 : vec.x; //최소 움직임 값보다 작다면 초기화
+        vec.z = math.abs(vec.z) < MINMUM_DIR_AMOUNT ? 0 : vec.z; 
+        if (vec.magnitude == 0)  // 움직임이 0 이라면 Return
         {
             return false;
         }
     
         var boxSize = Util.VectorMultipleScale(col.size / 2, transform.lossyScale);
-        boxSize.y = boxSize.y * 0.99f;
-        //boxSize.x = boxSize.x * 0.99f;
-        //boxSize.z = boxSize.z * 0.99f;
+        boxSize.y = boxSize.y * BOX_DIFF_FACTOR; // 과도한 검출을 피하기위해 Factor 값을 곱하여 줌  
+
 #if UNITY_EDITOR
-        ExtDebug.DrawBox(pos + vec, boxSize, KeywordTransformFactor.rotation, Color.blue);
-        //ExtDebug.DrawBoxCastBox(pos , boxSize, KeywordTransformFactor.rotation, vec.normalized, vec.magnitude, Color.blue);
+        ExtDebug.DrawBox(pos + vec, boxSize, KeywordTransformFactor.rotation, Color.blue); // Editor 상에 체크하는 박스를 그려줌
 #endif
-        var hits = Physics.OverlapBox(pos + vec, boxSize, KeywordTransformFactor.rotation, colisionCheckLayer, QueryTriggerInteraction.Ignore);
-        //var castHits = Physics.BoxCastAll(pos , boxSize, vec.normalized, KeywordTransformFactor.rotation,vec.magnitude, colisionCheckLayer, QueryTriggerInteraction.Ignore);
-        for (int i = 0; i< hits.Length; ++i) 
+        var hits = Physics.OverlapBox(pos + vec, boxSize, KeywordTransformFactor.rotation, colisionCheckLayer, QueryTriggerInteraction.Ignore); // 장애물로 인식할 레이어를 따로 지정하고 해당 레이어에대해 Ray 체크함 
+        for (int i = 0; i< hits.Length; ++i)  // 장애물이 있는 경우
         {
             if(hits[i] != col) 
             {
@@ -512,28 +507,22 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
                     {
                         Debug.Log(cast.distance + " " + vec.magnitude);
 
-                        if ((cast.distance - MINMUM_DIR_AMOUNT) > 0.001f)
+                        if ((cast.distance - MINMUM_DIR_AMOUNT) > ATTACH_AMOUNT) // 장애물까지 남은 거리가 붙어있다고 판정하는 거리보다 크다면   
                         {
                             var dis = cast.distance - MINMUM_DIR_AMOUNT;
-                            KeywordTransformFactor.position += dis * vec.normalized;
+                            KeywordTransformFactor.position += dis * vec.normalized; //장애물까지 남은 거리 만큼 붙도록 이동
                             return true;
                         }
+
                         return false;
                     }
                 }
 
-                //if ((castHits[i].distance - MINMUM_DIR_AMOUNT) > 0.001f)
-                //{
-                //    var dis = castHits[i].distance - MINMUM_DIR_AMOUNT;
-                //    KeywordTransformFactor.position += dis * vec.normalized;
-                //    return true;
-                //}
                 return false;
             }
         }
-        KeywordTransformFactor.position += vec;
+        KeywordTransformFactor.position += vec; // 장애물이 없는 경우 바로 이동
         return true;
-
     }
     public bool FloatMove(float speed)
     {
@@ -541,24 +530,24 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         RaycastHit hit;
 
         var boxSize = Util.VectorMultipleScale(col.size / 2,transform.lossyScale);
-        boxSize *= 0.98f;
-        boxSize.y = 0;
-        var rayDis = maxHeight + col.bounds.size.y;
+        boxSize *= BOX_DIFF_FACTOR_FOR_FLOAT; // 과도한 검출을 피하기위해 박스크기를 조정
+        boxSize.y = 0; 
+        var rayDis = maxHeight + col.bounds.size.y; 
 #if UNITY_EDITOR
-        ExtDebug.DrawBoxCastBox(pos,boxSize,KeywordTransformFactor.rotation, Vector3.down,rayDis,Color.red);
+        ExtDebug.DrawBoxCastBox(pos,boxSize,KeywordTransformFactor.rotation, Vector3.down,rayDis,Color.red); // Editor 상에 박스를 그려줌
 #endif
         Physics.BoxCast(pos,boxSize,Vector3.down,out hit,KeywordTransformFactor.rotation,rayDis, colisionCheckLayer);
         if (hit.collider != null)
         {
             var realDis = hit.distance - col.bounds.extents.y;
-            if(realDis <= maxHeight) 
+            if(realDis <= maxHeight)  // 위로 상승하는 움직임
             {
-                var remainDis = maxHeight - realDis;
-                if(remainDis < 0.1f)
+                var remainDis = maxHeight - realDis; // 남은 거리를 계산
+                if(remainDis < FLOAT_ARRIVE_DIS) // 남은 거리가 도착으로 판정할 거리보다 작다면 Return 
                 {
                     return true;
                 }
-                if(remainDis < speed)
+                if(remainDis < speed) // 현재 움직일려는 거리가 남은거리보다 큰지 체크
                 {
                     speed =  remainDis;
                 }
@@ -568,10 +557,10 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
                
                 return true;
             }
-            else 
+            else  // 아래로 내려오는 움직임
             {
                 var remainDis = realDis - maxHeight;
-                if (remainDis < 0.1f)
+                if (remainDis < FLOAT_ARRIVE_DIS)
                 {
                     return true;
                 }
@@ -586,43 +575,46 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
             }
            
         }
-        KeywordTransformFactor.position += Vector3.down * speed;
+        KeywordTransformFactor.position += Vector3.down * speed; // 바닥으로 레이가 닿지 않는다면 아래로 움직임
         MoveAbleUpdate(true);
         return false;
     }
     public bool ColisionCheckScale(Vector3 desireScale, GameObject dummyParent) 
     {
-        var desireBoxSize = Util.VectorMultipleScale(col.size / 2, desireScale);
-        var curBoxSize = Util.VectorMultipleScale(col.size / 2, transform.lossyScale);
-        var boxScaleDiff = (desireBoxSize - curBoxSize);
+        var desireBoxSize = Util.VectorMultipleScale(col.size / 2, desireScale); // 변하고자하는 BoxScale
+        var curBoxSize = Util.VectorMultipleScale(col.size / 2, transform.lossyScale); // 현재 BoxScale
+        var boxScaleDiff = (desireBoxSize - curBoxSize); // BoxScale 차이
 
-        Vector3 parentPos = Vector3.zero;
-        Vector3 rayBox = curBoxSize * 0.99f;
+        Vector3 parentPos = Vector3.zero; 
+        Vector3 rayBox = curBoxSize * BOX_DIFF_FACTOR; // 과도한 검출을 피하기 위한 Factor 값
 
         if (CheckAxis(transform.right * desireBoxSize.x, new Vector3(0, rayBox.y, rayBox.z), boxScaleDiff.x, curBoxSize.x, ref parentPos)
         || CheckAxis(transform.up * desireBoxSize.y, new Vector3(rayBox.x, 0, rayBox.z), boxScaleDiff.y, curBoxSize.y, ref parentPos)
-        || CheckAxis(transform.forward * desireBoxSize.z, new Vector3(rayBox.x, rayBox.y, 0), boxScaleDiff.z, curBoxSize.z, ref parentPos))
+        || CheckAxis(transform.forward * desireBoxSize.z, new Vector3(rayBox.x, rayBox.y, 0), boxScaleDiff.z, curBoxSize.z, ref parentPos)) // 박스의 X , Y , Z 축으로 커질 수 있는지 체크   
         {
-            return false;
+            return false; // 한 축 이라도 Scale 이 불가능할 경우 균등 Scale 이기 때문에 불가능
         }
-
-        dummyParent.transform.localScale = transform.lossyScale;
+        // 피봇을 옮겨서 Scale 조정을 위해 Dummy 를 만들고 부모로 만듬
+        dummyParent.transform.localScale = transform.lossyScale; 
         dummyParent.transform.rotation = transform.rotation;
-        dummyParent.transform.position = transform.position + parentPos;
-        transform.SetParent(dummyParent.transform);
-        dummyParent.transform.localScale = desireScale;
-        transform.SetParent(null);
+        dummyParent.transform.position = transform.position + parentPos; // 매핑해 놓았던 피봇 Pos 를 넣어줌
+        transform.SetParent(dummyParent.transform); // Dummy 를 부모로 만들고
+        dummyParent.transform.localScale = desireScale;  // Scale 변환
+        transform.SetParent(null); // Dummy 부모를 해제 
         return true;
     }
     private bool CheckAxis(Vector3 rayDir, Vector3 rayBox, float boxScaleDiff, float parentPosFactor, ref Vector3 parentPos)
     {
-        if (ColisionCheckBox(rayDir, rayBox))
+        // 축을 중심으로 한 뱡항으로라도 커질 수 있다면 False 반환
+        // 어느 쪽도 장애물이 없다면 피봇 매핑을 하지않고 양쪽으로 균등하게 커짐 
+
+        if (ColisionCheckBox(rayDir, rayBox)) // 한쪽 방향으로 장애물이 있을 경우
         {
-            if (ColisionCheckBox(AddDis(-rayDir, boxScaleDiff), rayBox))
+            if (ColisionCheckBox(AddDis(-rayDir, boxScaleDiff), rayBox)) // 반대쪽 방향도 장애물이 있을 경우
             {
-                return true;
+                return true; // 커질 수 없음
             }
-            parentPos += rayDir.normalized * parentPosFactor;
+            parentPos += rayDir.normalized * parentPosFactor; // 커질 수 있는 방향을 피봇에 매핑 
         }
         else if (ColisionCheckBox(-rayDir, rayBox))
         {
@@ -630,9 +622,9 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
             {
                 return true;
             }
-            parentPos -= rayDir.normalized * parentPosFactor;
+            parentPos -= rayDir.normalized * parentPosFactor; // 커질 수 있는 방향을 피봇에 매핑 
         }
-        return false;
+        return false; //커질 수 있는 방향이 한 곳 이라도 존재 
     }
     public bool ColisionCheckBox(Vector3 vec , Vector3 boxSize) 
     {
@@ -641,18 +633,18 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
         RaycastHit hit;
      
 #if UNITY_EDITOR
-        ExtDebug.DrawBox(pos + vec, boxSize, KeywordTransformFactor.rotation, Color.blue);
+        ExtDebug.DrawBox(pos + vec, boxSize, KeywordTransformFactor.rotation, Color.blue); // Editor 상에서 박스를 그려줌 
 #endif
         var hits = Physics.OverlapBox(pos + vec, boxSize, KeywordTransformFactor.rotation, colisionCheckLayer, QueryTriggerInteraction.Ignore);
 
         for (int i = 0; i < hits.Length; ++i)
         {
-            if (hits[i] != col)
+            if (hits[i] != col) // 이 Colider 가 아닌 Colider 중 부딪히는게 하나라도 있다면 True
             {
-                return true;
+                return true; 
             }
         }
-        return false;
+        return false; // 부딪히는게 없다면 False 
     }
     private Vector3 AddDis(Vector3 vec, float amount)
     {
@@ -689,7 +681,6 @@ public class KeywordEntity : GuIdBehaviour , IDataHandler
             return;
         }
 
-        //data.isEnable = gameObject.activeSelf;
         data.pos = transform.position;
         data.rot = transform.rotation;
         data.scale = transform.localScale;

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -523,84 +523,85 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
     }
 
-
-    IEnumerator DebugModInputCo() 
+    IEnumerator DebugModInputCo()
     {
-
-        while (Managers.Game.IsDebugMod && !PlayerIsDeathState()) 
+        // 디버그 모드이며 플레이어 상태가 적절한지 체크 
+        while (Managers.Game.IsDebugMod && !PlayerIsDeathState())
         {
 
-            if (Managers.Game.IsPause)
+            if (Managers.Game.IsPause) // 게임이 Pause 상태라면 이벤트 발생하지 안흥ㅁ
             {
                 yield return null;
                 continue;
             }
-
+            // 현재 마우스 포인터 이벤트 생성 
             var pointerEventData = new UnityEngine.EventSystems.PointerEventData(EventSystem.current);
             pointerEventData.position = Input.mousePosition;
             pointerEventData.button = PointerEventData.InputButton.Left;
-           
+
+            // 현재 키워드 캔버스에서 레이캐스트 리스트를 받아옴
             var raycasts = Managers.Keyword.GetRaycastList(pointerEventData);
             float minKeywordDist = float.MaxValue;
             float minFrameDist = float.MaxValue;
-           
+
             KeywordController nearKeyword = null;
             KeywordFrameBase nearFrame = null;
-            
-            for (int i = 0; i < raycasts.Count; ++i)
+
+            for (int i = 0; i < raycasts.Count; ++i) // 레이캐스트 목록에서 키워드가 있는지 체크
             {
                 if (raycasts[i].gameObject.CompareTag(KEYWORD_TAG))
                 {
                     var nowKeyword = raycasts[i].gameObject.GetComponent<KeywordController>();
-                    if (nowKeyword.IsLock) 
+                    if (nowKeyword.IsLock) // 잠금 상태의 키워드는 제외 
                     {
                         continue;
                     }
 
                     var nowDist = (nowKeyword.RectTransform.position - Input.mousePosition).magnitude;
-                    if (nowDist < minKeywordDist)
+                    if (nowDist < minKeywordDist) // 가장 가까운 키워드를 추출
                     {
                         nearKeyword = nowKeyword;
                         minKeywordDist = nowDist;
                     }
                 }
-                else if (raycasts[i].gameObject.CompareTag(KEYWORD_FRAME_TAG))
+                else if (raycasts[i].gameObject.CompareTag(KEYWORD_FRAME_TAG)) // 키워드 프레임인지 체크
                 {
                     var nowFrame = raycasts[i].gameObject.GetComponent<KeywordFrameBase>();
-                   
+
                     if (nowFrame.IsLock)
                     {
                         continue;
                     }
                     var nowDist = (nowFrame.RectTransform.position - Input.mousePosition).magnitude;
 
-                    if (nowDist < minFrameDist)
+                    if (nowDist < minFrameDist) // 가장 가까운 키워드 프레임 추출
                     {
                         nearFrame = nowFrame;
                         minFrameDist = nowDist;
                     }
                 }
             }
-           
 
-            if (Managers.Keyword.CurDragKeyword == null) 
+
+            if (Managers.Keyword.CurDragKeyword == null)  // 드래그 중이 아니라면 
             {
 
+                // 현재 포커싱 되어있는 키워드가 현재 가장 가까운 키워드가 아니라면
                 if (isFocusKeyword != nearKeyword)
                 {
                     if (isFocusKeyword != null)
                     {
-                        isFocusKeyword.OnPointerExit();
+                        isFocusKeyword.OnPointerExit(); // 포커싱 키워드 Exit 이벤트 호출
                         isFocusKeyword = null;
                     }
                     if (nearKeyword != null)
                     {
-                        nearKeyword.OnPointerEnter();
+                        nearKeyword.OnPointerEnter(); // 새로운 포커싱 키워드로 등록 후 Enter 이벤트 호출
                         isFocusKeyword = nearKeyword;
                     }
                 }
-               
-                if (Input.GetKeyDown(KeyCode.Mouse0))
+
+                if (Input.GetKeyDown(KeyCode.Mouse0)) // 드래그 시작 Input 이 들어왔는지 체크
                 {
                     if (isFocusKeyword != null)
                     {
@@ -609,7 +610,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
                         isFocusKeyword = null;
                     }
                 }
-                else if (Input.GetKeyDown(KeyCode.Mouse1))
+                else if (Input.GetKeyDown(KeyCode.Mouse1)) // 키워드 제거 Input 체크
                 {
                     if (isFocusKeyword != null)
                     {
@@ -621,7 +622,7 @@ public class PlayerController : MonoBehaviour , IDataHandler
 
                 if (isFocusFrame != null)
                 {
-                    isFocusFrame.OnPointerExit();
+                    isFocusFrame.OnPointerExit(); // 드래그 중이 아니라면 포커싱 프레임 Exit 이벤트 호출
                     isFocusFrame = null;
                 }
 
@@ -629,38 +630,39 @@ public class PlayerController : MonoBehaviour , IDataHandler
                 continue;
             }
 
-            
-            if (isFocusFrame != nearFrame)
+            // ----------키워드 드래그 중이라면-------------
+
+            if (isFocusFrame != nearFrame) // 포커싱 프레임이 현재 가장 가까운 프레임이 아니라면
             {
                 if (isFocusFrame != null)
                 {
-                    isFocusFrame.OnPointerExit();
+                    isFocusFrame.OnPointerExit(); // 포커싱 프레임 Exit 이벤트 호출
                     isFocusFrame = null;
                 }
                 if (nearFrame != null)
                 {
-                    nearFrame.OnPointerEnter();
+                    nearFrame.OnPointerEnter(); // 새로운 포커싱 프레임 등록 후 Enter 이벤트 호출
                     isFocusFrame = nearFrame;
                 }
             }
 
 
-            if (Input.GetKeyUp(KeyCode.Mouse0))
+            if (Input.GetKeyUp(KeyCode.Mouse0)) // 드래그 종료 Input 체크
             {
-                Managers.Keyword.CurDragKeyword.OnEndDrag(nearFrame);
+                Managers.Keyword.CurDragKeyword.OnEndDrag(nearFrame); //드래그 키워드 드래그 종료 이벤트 호출
             }
-            else if (Input.GetKey(KeyCode.Mouse0))
+            else if (Input.GetKey(KeyCode.Mouse0)) // 아직 드래그 중 이라면
             {
-
-                Managers.Keyword.CurDragKeyword.OnDrag(pointerEventData);
+                Managers.Keyword.CurDragKeyword.OnDrag(pointerEventData); // 드래그 키워드 드래그 이벤트 호출
 
             }
 
             yield return null;
         }
 
-        debugModeInput = null;
+        debugModeInput = null; // 코루틴 중복 호출 방지용 
     }
+
     public void EnterDebugMod()
     {
         Managers.Game.SetEnableDebugMod();
