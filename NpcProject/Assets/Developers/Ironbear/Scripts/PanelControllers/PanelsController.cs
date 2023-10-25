@@ -16,16 +16,20 @@ public class PanelsController : UI_Base
     private GameObject textPanel;
     [SerializeField]
     private GameObject tempPanel;
+    [SerializeField]
+    private GameObject creditPanel;
 
     [SerializeField]
     private Texture2D noramlCursor;
 
+    private CreditPanelController credit;
     private float fadeDuration = 1f;
 
     private bool isLogo = false;
     private bool isStart = false;
     private bool isPuzzle = false;
     private bool isText = false;
+    private bool isCredit = false;
 
 
     public override void Init()
@@ -37,12 +41,14 @@ public class PanelsController : UI_Base
         Cursor.SetCursor(noramlCursor, Vector2.zero, CursorMode.ForceSoftware);
         Cursor.lockState = CursorLockMode.Confined;
         Camera.main.ScreenPointToRay(Input.mousePosition);
+        credit = creditPanel.GetComponent<CreditPanelController>();
 
         logoPanel.SetActive(true);
         startPanel.SetActive(false);
         puzzlePanel.SetActive(false);
         textPanel.SetActive(false);
         tempPanel.SetActive(false);
+        creditPanel.SetActive(false);
         isLogo = true;
     }
 
@@ -105,5 +111,18 @@ public class PanelsController : UI_Base
 
         tempPanel.SetActive(true);
         tempCanvas.alpha = 1f;
+    }
+
+    public void CreditPanelActive()
+    {
+        CanvasGroup creditCanvas = creditPanel.GetComponent<CanvasGroup>();
+
+        creditPanel.SetActive(true);
+        creditCanvas.DOFade(1f, 1f).OnComplete(() =>
+        {
+            isCredit = true;
+            credit.PlayNextAnimation();
+            //credit.PlayScrollAnimation();
+        });
     }
 }
