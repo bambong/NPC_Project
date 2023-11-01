@@ -10,15 +10,40 @@ public class BridgeController : MonoBehaviour
     [SerializeField]
     private float timeInterval;
     private bool isSuccess = false;
+
+    [SerializeField]
+    private string guId;
+
+    private void Start()
+    {        
+        if(Managers.Data.IsClearEvent(guId))
+        {
+            Hide();
+        }
+    }
+
     [ContextMenu("SUCCESS")]
     public void OnSuccess() 
     {
-        if (isSuccess)
-        {
-            return;
-        }
+        //if (isSuccess)
+        //{
+        //    return;
+        //}
         isSuccess = true;
         StartCoroutine(Success());
+    }
+    [ContextMenu("HIDE BRIDGE")]
+    public void Hide()
+    {
+        for(int i = 0; i < bridgePartControllers.Count; ++i)
+        {
+            bridgePartControllers[i].Hide();
+        }
+    }
+    [ContextMenu("HIDE EVENT")]
+    public void HideEvent()
+    {
+        StartCoroutine(HideBridges());
     }
 
     IEnumerator Success() 
@@ -27,6 +52,16 @@ public class BridgeController : MonoBehaviour
         for (int i =0; i < bridgePartControllers.Count; ++i) 
         {
             bridgePartControllers[i].OnSuccess();
+            yield return time;
+        }
+    }
+
+    IEnumerator HideBridges()
+    {
+        var time = new WaitForSeconds(timeInterval);
+        for (int i = 0; i < bridgePartControllers.Count; ++i)
+        {
+            bridgePartControllers[i].HideEvent();
             yield return time;
         }
     }
