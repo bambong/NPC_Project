@@ -48,7 +48,7 @@ public class CreditPanelController : UI_Base
         txtCanvas = txtCanvas.GetComponent<CanvasGroup>();
         txtCanvas.alpha = 0f;
         parentTransform = transform;
-        boxArea.size = new Vector2(Screen.width + 100f, Screen.height + 1800f);
+        boxArea.size = new Vector2(Screen.width - 200f, Screen.height + 1800f);
     }
 
     public override void Init()
