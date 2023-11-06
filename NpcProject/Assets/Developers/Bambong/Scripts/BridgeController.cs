@@ -12,11 +12,11 @@ public class BridgeController : MonoBehaviour
     private bool isSuccess = false;
 
     [SerializeField]
-    private string guId;
+    private string hideEvnetGuid;
 
     private void Start()
     {        
-        if(Managers.Data.IsClearEvent(guId))
+        if(Managers.Data.IsClearEvent(hideEvnetGuid))
         {
             Hide();
         }

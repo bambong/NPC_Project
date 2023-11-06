@@ -10,7 +10,7 @@ public class LaserActionEvent : LaserAction
 
     public override void StartLaserEvent()
     {
-        laserEvent.Invoke();
+        laserEvent?.Invoke();
     }
 
     public override void StopLaserEvent()
