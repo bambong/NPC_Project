@@ -14,21 +14,14 @@ public class BridgeController : MonoBehaviour
     [SerializeField]
     private string hideEvnetGuid;
 
-    private void Start()
-    {        
-        if(Managers.Data.IsClearEvent(hideEvnetGuid))
-        {
-            Hide();
-        }
-    }
-
     [ContextMenu("SUCCESS")]
     public void OnSuccess() 
     {
-        //if (isSuccess)
-        //{
-        //    return;
-        //}
+        if (Managers.Data.IsClearEvent(hideEvnetGuid))
+        {
+            Hide();
+            return;
+        }
         isSuccess = true;
         StartCoroutine(Success());
     }
