@@ -90,7 +90,7 @@ public class CreditPanelController : UI_Base
         
         textSequence.Append(txtCanvas.DOFade(1f, 1.5f / animSpeed).SetEase(Ease.Linear));
         textSequence.AppendCallback(() => CreateBalls());
-        textSequence.AppendInterval(5f / animSpeed);
+        textSequence.AppendInterval(3f / animSpeed);
         textSequence.Append(txtCanvas.DOFade(0f, 1.5f / animSpeed).SetEase(Ease.Linear)).OnComplete(() =>
         {
             curIndex++;
@@ -110,13 +110,24 @@ public class CreditPanelController : UI_Base
     private void CreateBalls()
     {
         GameObject spriteInstance = Instantiate(spritePrefab, parentTransform);
+        Sequence spriteSeqence = DOTween.Sequence();
+
         if (spriteInstance != null)
         {
+            CanvasGroup spriteCanvas = spriteInstance.GetComponent<CanvasGroup>();
+            spriteCanvas.alpha = 0f;
+            spriteSeqence.Append(spriteCanvas.DOFade(1f, 1.5f / animSpeed));
+            spriteSeqence.AppendInterval(3f / animSpeed);
+            spriteSeqence.Append(spriteCanvas.DOFade(0f, 1.5f / animSpeed));
             Image spriteImage = spriteInstance.GetComponent<Image>();
-            float randomX = UnityEngine.Random.Range(-Screen.width / 2, Screen.width / 2);
-            spriteInstance.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-            spriteInstance.transform.localPosition = new Vector3(randomX, -(Screen.height / 2 + 150f), 0f);
+            float randomX = UnityEngine.Random.Range(-Screen.width / 2 + 200f, Screen.width / 2 - 200f);
+            float randomY = UnityEngine.Random.Range(-Screen.height / 2 + 100f, Screen.height / 2 - 100f);
+            float randomSize = UnityEngine.Random.Range(0.35f, 0.5f);
+            spriteInstance.transform.localScale = new Vector3(randomSize, randomSize, randomSize);
+            spriteInstance.transform.localPosition = new Vector3(randomX, randomY, 0f);
             spriteImage.sprite = creditItems[curIndex].creditSprite;
+
+            spriteSeqence.Play();
         }
     }
 
