@@ -35,8 +35,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 125, y: 0}
-  m_SizeDelta: {x: 277.3, y: 50}
+  m_AnchoredPosition: {x: 60.482666, y: 0}
+  m_SizeDelta: {x: 239.0881, y: 27.4208}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &593485612515998289
 CanvasRenderer:
@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB514\uBC84\uADF8 \uBAA8\uB4DC \uC0AC\uC6A9 "
+  m_text: "\uD0A4\uB97C \uB20C\uB7EC \uB514\uBC84\uADF8 \uBAA8\uB4DC \uD65C\uC131\uD654"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 44dd2bc0411514c4b90d19ce52ae271a, type: 2}
   m_sharedMaterial: {fileID: 5639784574564722751, guid: 44dd2bc0411514c4b90d19ce52ae271a, type: 2}
@@ -93,8 +93,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36.8
-  m_fontSizeBase: 36.8
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -257,8 +257,8 @@ MonoBehaviour:
   debugEnableNoti: {fileID: 5036155132415847744}
   startResetButtonPos: {x: 200, y: -100, z: 0}
   desireResetButtonPos: {x: -42, y: -100, z: 0}
-  startNotiButtonPos: {x: 420, y: 100, z: 0}
-  desireNotiButtonPos: {x: 0, y: 100, z: 0}
+  startNotiButtonPos: {x: 420, y: 20, z: 0}
+  desireNotiButtonPos: {x: -20, y: 20, z: 0}
   debugKeyText: {fileID: 7363954680270183945}
 --- !u!1 &2721170149375737182
 GameObject:
@@ -494,7 +494,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5036155132415847744}
   - component: {fileID: 5833557009506749236}
-  - component: {fileID: 3819415346222687176}
   m_Layer: 5
   m_Name: DebugEnableNoti
   m_TagString: Untagged
@@ -521,8 +520,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 100}
-  m_SizeDelta: {x: 400, y: 100}
+  m_AnchoredPosition: {x: -20, y: 20}
+  m_SizeDelta: {x: 300, y: 30}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &5833557009506749236
 CanvasRenderer:
@@ -532,36 +531,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5369409293173437416}
   m_CullTransparentMesh: 1
---- !u!114 &3819415346222687176
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5369409293173437416}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.4}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &5685024084128754508
 GameObject:
   m_ObjectHideFlags: 0
@@ -959,8 +928,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 5, y: 0}
-  m_SizeDelta: {x: 110, y: 110}
+  m_AnchoredPosition: {x: 27, y: 1}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &4364444284256713177
 CanvasRenderer:
@@ -1037,7 +1006,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7593472386423545386}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1047,8 +1016,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -40, y: -50}
+  m_AnchoredPosition: {x: 0, y: -0.4999981}
+  m_SizeDelta: {x: -6, y: -21.000004}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6205786748366820556
 CanvasRenderer:
@@ -1105,12 +1074,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 53.05
-  m_fontSizeBase: 36
+  m_fontSize: 16
+  m_fontSizeBase: 15
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMin: 16
+  m_fontSizeMax: 20
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
