@@ -27,7 +27,7 @@ public class CutScenePlayerController : MonoBehaviour
 
     public void Awake()
     {
-        spriteRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;        
+        //spriteRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;        
     }
 
     public void SetStartPoint(Transform transform, bool left)
