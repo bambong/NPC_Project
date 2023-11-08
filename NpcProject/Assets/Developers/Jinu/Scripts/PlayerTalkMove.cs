@@ -27,10 +27,8 @@ public class PlayerTalkMove : MonoBehaviour
         playerController.transform.position = startPosition.position;
 
         playerController.AnimIdleEnter(exitDir);
-        var talk = Managers.Talk.GetTalkEvent(talkId);
-        talk.OnComplete(() => endEvent?.Invoke());
-        Managers.Talk.PlayCurrentSceneTalk(talkId);
 
+        Managers.Game.SetStateNormal();
     }
     public void MoveToPlayer()
     {
