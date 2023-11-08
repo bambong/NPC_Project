@@ -53,17 +53,12 @@ public class NPCLaser : MonoBehaviour
 
     private void OnEnable()
     {
-        shoot = true;
-    
+        shoot = true;    
     }
 
     public void OnDisable()
     {
-        shoot = false;
-        enter = false;
 
-        EndLaserAction(curHit);
-        curHit = default;
     }
 
     private void Start()
@@ -88,6 +83,16 @@ public class NPCLaser : MonoBehaviour
             return;
         }
         ShootLaser();
+    }
+
+    public void OnStop()
+    {
+        shoot = false;
+        enter = false;
+
+        EndLaserAction(curHit);
+        curHit = default;
+        this.gameObject.SetActive(false);
     }
 
     private void ShootLaser()

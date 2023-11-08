@@ -14,6 +14,7 @@ public class LaserActionShooting : LaserAction
 
     public override void StopLaserEvent()
     {
+        npcLaser.OnStop();
         npcLaser.gameObject.SetActive(false);
     }
 }
