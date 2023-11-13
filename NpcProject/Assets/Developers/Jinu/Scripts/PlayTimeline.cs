@@ -13,7 +13,7 @@ public class PlayTimeline : GuIdBehaviour
     [SerializeField]
     private UnityEvent onComplete;
 
-    private void PlayEvent()
+    public void PlayEvent()
     {
         var cutScene = new CutSceneEvent(playableDirector);        
         cutScene.Play();

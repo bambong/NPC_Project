@@ -20,6 +20,16 @@ public class PlayerTalkMove : MonoBehaviour
         playerController = Managers.Game.Player;
     }
 
+    public void TeleportPlayer()
+    {
+        Managers.Game.SetStateEvent();
+
+        playerController.transform.position = startPosition.position;
+
+        playerController.AnimIdleEnter(exitDir);
+
+        Managers.Game.SetStateNormal();
+    }
     public void MoveToPlayer()
     {
         Managers.Game.SetStateEvent();

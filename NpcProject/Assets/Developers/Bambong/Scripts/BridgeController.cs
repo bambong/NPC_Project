@@ -12,23 +12,16 @@ public class BridgeController : MonoBehaviour
     private bool isSuccess = false;
 
     [SerializeField]
-    private string guId;
-
-    private void Start()
-    {        
-        if(Managers.Data.IsClearEvent(guId))
-        {
-            Hide();
-        }
-    }
+    private string hideEvnetGuid;
 
     [ContextMenu("SUCCESS")]
     public void OnSuccess() 
     {
-        //if (isSuccess)
-        //{
-        //    return;
-        //}
+        if (Managers.Data.IsClearEvent(hideEvnetGuid))
+        {
+            Hide();
+            return;
+        }
         isSuccess = true;
         StartCoroutine(Success());
     }

@@ -14,6 +14,15 @@ public class TempleScene : BaseScene
     [SerializeField]
     private string playerType = "Player";
 
+    [SerializeField]
+    private GameObject wall;
+
+    [SerializeField]
+    private string hideEventGuid;
+
+    [SerializeField]
+    private Define.Scene scene;
+
     public override void Clear()
     {
 
@@ -33,5 +42,15 @@ public class TempleScene : BaseScene
     private void Start()
     {
         PlayBgm();
+        if(Managers.Data.IsClearEvent(hideEventGuid))
+        {
+            wall.SetActive(true);
+        }
+    }
+
+    public void NextScene()
+    {
+        Managers.Game.Player.SetstateStop();
+        Managers.Scene.LoadScene(scene);
     }
 }

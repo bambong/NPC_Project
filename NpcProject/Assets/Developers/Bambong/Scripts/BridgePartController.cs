@@ -38,7 +38,7 @@ public class BridgePartController : MonoBehaviour
 
     public void Hide()
     {
-        this.transform.position = erasePos;
+        this.transform.localPosition = erasePos;
         this.transform.rotation = Quaternion.Euler(eraseRot);
     }
 }
